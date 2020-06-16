@@ -1,7 +1,42 @@
 const express = require('express')
 const app = express()
-const port = process.env.BACKEND_PORT || 8080
+const port = process.env.BACKEND_PORT || 8080 // move to /configs
+const config = require('./config/config');
 
-app.get('/', (req, res) => res.send('Hello World!'))
+mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+    logger.info('Connected to MongoDB');
+    app.get('/', (req, res) => res.send('Hello World!')) // move to /app or something
+    server = app.listen(config.port, () => {
+      logger.info(`Listening to port ${config.port}`);
+    });
+});
 
-app.listen(port, () => console.log(`HLP app listening at http://localhost:${port}`))
+
+/*
+
+const exitHandler = () => {
+  if (server) {
+    server.close(() => {
+      logger.info('Server closed');
+      process.exit(1);
+    });
+  } else {
+    process.exit(1);
+  }
+};
+
+const unexpectedErrorHandler = (error) => {
+  logger.error(error);
+  exitHandler();
+};
+
+process.on('uncaughtException', unexpectedErrorHandler);
+process.on('unhandledRejection', unexpectedErrorHandler);
+
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received');
+  if (server) {
+    server.close();
+  }
+});
+*/

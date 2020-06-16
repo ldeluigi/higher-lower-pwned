@@ -1,0 +1,18 @@
+version: '3'
+
+services: 
+    hlp-backend:
+        build: server/
+        networks: 
+            - hlp-network
+        ports:
+            - ${BACKEND_PORT}:${BACKEND_PORT}
+        environment: 
+            BACKEND_PORT: 8080
+            JWT_SECRET: ${JWT_SECRET}
+        restart: always
+
+networks: 
+    hlp-network:
+
+# DO VOLUMES + NODEMON + run angular tests in some fucking way

@@ -7,7 +7,13 @@ services:
             - hlp-network
         environment: 
             BACKEND_PORT: 8080
+            JWT_SECRET: ${JWT_SECRET}
+            MONGO_DB_NAME: ${MONGO_DB_NAME}
+            MONGO_DB_USERNAME: ${MONGO_DB_USERNAME}
+            MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
         restart: always
+        depends_on: 
+            - mongo
     
     nginx:
         build: .
@@ -15,7 +21,27 @@ services:
             - ${HOST_PORT}:80
         networks: 
             - hlp-network
+        depends_on: 
+            - hlp-backend
+    
+    mongo:
+        image: mongo:4
+        networks: 
+            - hlp-network
+        volumes: 
+            - ./mongo/mongod.conf:/etc/mongod.conf:ro
+            - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/:ro
+            #- ./mongo/data/db/:/data/db/
+            #- ./mongo/data/log/:/var/log/mongodb/
+        environment:
+            MONGO_DATABASE_NAME: ${MONGO_DB_NAME}
+            MONGO_DATABASE_USERNAME: ${MONGO_DB_USERNAME}
+            MONGO_DATABASE_PASSWORD: ${MONGO_DB_PASSWORD}
+            MONGO_LOG_DIR: /dev/null
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD}
+        command: ["-f", "/etc/mongod.conf"]
+
 
 networks: 
     hlp-network:
-    

@@ -1,15 +1,20 @@
+# Dockerfile for hlp-frontend
 FROM node:14-alpine AS builder
 
 WORKDIR /usr/src/app
+
+# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
+# Load sources
 COPY . .
 
-RUN npm run build --prod
+# Angular compilation for production
+RUN npm run build
 
-
+# Production image
 FROM nginx:1.19-alpine
 
 COPY nginx/ /etc/nginx/
-COPY --from=builder /usr/src/app/dist/higher-lower-pwned/ /usr/src/app/html/
+COPY --from=builder /usr/src/app/dist/higher-lower-pwned/ /usr/src/app/public/
