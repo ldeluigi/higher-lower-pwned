@@ -3,7 +3,7 @@
 This project is a web-based game where you guess what password is the most popular between two shown on screen.
 
 ## Technologies
-_Note: Versions listed here refer to the one used to build the project, but it should work with the most recent minor version of the same major._
+**Note:** _Versions listed here refer to the one used to build the project, but it should work with the most recent minor version of the same major._
 
 ### Needed on the host
 - [Angular CLI](https://github.com/angular/angular-cli) version 9.1.8.
@@ -75,3 +75,9 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Production mode
 
 To run the entire project in production mode just type `docker-compose up -d` in the root folder of the repository.
+
+## Stopping containers
+
+To properly stop running containers use `docker-compose [-f ...] down`.
+To stop and __clean volumes__ use `docker-compose [-f ...] down -v`.  
+**Note:** _Volumes left inside docker storage could fill up the space_
