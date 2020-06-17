@@ -42,7 +42,7 @@ This would mean that:
 
 First you need to install server dependencies with `npm install`, run inside the server folder `server/`.  
 To develop a server, run the docker compose file for __Development mode__ with:  
-`docker-compose -f docker-compose.dev.yml up -d`  
+`docker-compose -f docker-compose.dev.yml up -d`  from the root folder.
 Docker should create these containers:
 - `mongo` that manages the database
   - Data is saved in a named volume by docker `hlp-mongo-db-data`
