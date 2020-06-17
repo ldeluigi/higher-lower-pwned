@@ -1,6 +1,16 @@
 {
   "name": "higher-lower-pwned",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Angular client for Higher Lower Pwned",
+  "author": "Luca Deluigi",
+  "contributors": [
+    "Davide Evangelisti",
+    "Simone Magnani"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ldeluigi/higher-lower-pwned"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
