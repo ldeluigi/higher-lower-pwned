@@ -1,14 +1,13 @@
 const express = require('express')
 const app = express()
-const port = process.env.BACKEND_PORT || 8080 // move to /configs
 const config = require('./config/config');
 const mongoose = require('mongoose');
 
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
-    logger.info('Connected to MongoDB');
-    app.get('/', (req, res) => res.send('Hello World!')) // move to /app or something
+    console.log('Connected to MongoDB');
+    app.get('/', (req, res) => res.send('Hello World!!!')) // move to /app or something
     server = app.listen(config.port, () => {
-      logger.info(`Listening to port ${config.port}`);
+      console.log(`Listening to port ${config.port}`);
     });
 });
 
