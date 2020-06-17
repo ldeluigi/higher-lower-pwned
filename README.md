@@ -27,7 +27,7 @@ This project is a web-based game where you guess what password is the most popul
 Please keep in mind that the server needs some enviroment variables to be defined inside an `.env` in the root folder, which could look like:  
 ```
 HOST_PORT=9000
-JWT_SECRET=paperino
+JWT_SECRET=yummy
 MONGO_DB_NAME=hlp-db
 MONGO_DB_USERNAME=hlp
 MONGO_DB_PASSWORD=hotdog
