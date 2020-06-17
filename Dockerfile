@@ -16,5 +16,8 @@ RUN npm run build
 # Production image
 FROM nginx:1.19-alpine
 
+# Nginx configurations
 COPY nginx/ /etc/nginx/
+
+# Upload compiled static files
 COPY --from=builder /usr/src/app/dist/higher-lower-pwned/ /usr/src/app/public/
