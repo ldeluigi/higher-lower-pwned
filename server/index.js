@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.BACKEND_PORT || 8080 // move to /configs
 const config = require('./config/config');
+const mongoose = require('mongoose');
 
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
     logger.info('Connected to MongoDB');

@@ -1,11 +1,12 @@
 version: '3'
 
 services: 
-    hlp-backend:
+    backend:
         build: server/
         networks: 
             - hlp-network
         environment: 
+            NODE_ENV: production
             BACKEND_PORT: 8080
             JWT_SECRET: ${JWT_SECRET}
             MONGO_DB_NAME: ${MONGO_DB_NAME}
@@ -22,7 +23,7 @@ services:
         networks: 
             - hlp-network
         depends_on: 
-            - hlp-backend
+            - backend
     
     mongo:
         image: mongo:4
@@ -31,13 +32,13 @@ services:
         volumes: 
             - ./mongo/mongod.conf:/etc/mongod.conf:ro
             - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/:ro
-            #- ./mongo/data/db/:/data/db/
-            #- ./mongo/data/log/:/var/log/mongodb/
+            #- ./mongo/data/db/:/data/db/ #Not working on windows unless you do the workaround
+            - ./mongo/data/log/:/var/log/mongodb/
+            - ./mongo/.dbshell:/home/mongodb/.dbshell
         environment:
-            MONGO_DATABASE_NAME: ${MONGO_DB_NAME}
-            MONGO_DATABASE_USERNAME: ${MONGO_DB_USERNAME}
-            MONGO_DATABASE_PASSWORD: ${MONGO_DB_PASSWORD}
-            MONGO_LOG_DIR: /dev/null
+            MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+            MONGO_INITDB_USERNAME: ${MONGO_DB_USERNAME}
+            MONGO_INITDB_PASSWORD: ${MONGO_DB_PASSWORD}
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD}
         command: ["-f", "/etc/mongod.conf"]

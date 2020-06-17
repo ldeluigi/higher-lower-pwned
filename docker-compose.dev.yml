@@ -1,18 +1,46 @@
 version: '3'
 
 services: 
-    hlp-backend:
-        build: server/
-        networks: 
-            - hlp-network
-        ports:
-            - ${BACKEND_PORT}:${BACKEND_PORT}
+    backend:
+        build: 
+            context: server/
+            dockerfile: Dockerfile.dev
+        networks:
+            - hlp-network-dev
+        ports: 
+            - 8080:8080
         environment: 
+            NODE_ENV: development
             BACKEND_PORT: 8080
             JWT_SECRET: ${JWT_SECRET}
-        restart: always
+            MONGO_DB_NAME: ${MONGO_DB_NAME}
+            MONGO_DB_USERNAME: ${MONGO_DB_USERNAME}
+            MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
+        volumes:
+            - "./server:/usr/src/app"
+        depends_on: 
+            - mongo
+    
+    mongo:
+        image: mongo:4        
+        networks:
+            - hlp-network-dev
+        ports:
+            - 27017:27017
+        volumes: 
+            - ./mongo/mongod.conf:/etc/mongod.conf:ro
+            - ./mongo/initdb.d/:/docker-entrypoint-initdb.d/:ro
+            #- ./mongo/data/db/:/data/db/ #Not working on windows unless you do the workaround
+            - ./mongo/data/log/:/var/log/mongodb/
+            - ./mongo/.dbshell:/home/mongodb/.dbshell
+        environment:
+            MONGO_DATABASE_NAME: ${MONGO_DB_NAME}
+            MONGO_INITDB_USERNAME: ${MONGO_DB_USERNAME}
+            MONGO_INITDB_PASSWORD: ${MONGO_DB_PASSWORD}
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD}
+        command: ["-f", "/etc/mongod.conf"]
 
 networks: 
-    hlp-network:
-
+    hlp-network-dev:
 # DO VOLUMES + NODEMON + run angular tests in some fucking way
