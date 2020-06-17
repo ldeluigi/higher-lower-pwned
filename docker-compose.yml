@@ -35,7 +35,7 @@ services:
             - ./mongo/setup/:/docker-entrypoint-initdb.d/:ro
             - hlp-mongo-db-data:/data/db/                           # Not working on windows unless you do the workaround
             - ./mongo/data/log/:/var/log/mongodb/
-            - ./mongo/.dbshell:/home/mongodb/.dbshell
+            - ./mongo/dbshell:/home/mongodb/
         environment:
             MONGO_INITDB_USERNAME: ${MONGO_DB_USERNAME}
             MONGO_INITDB_PASSWORD: ${MONGO_DB_PASSWORD}
