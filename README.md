@@ -40,6 +40,7 @@ This would mean that:
 
 ### Development mode
 
+First you need to install server dependencies with `npm install`, run inside the server folder `server/`.  
 To develop a server, run the docker compose file for __Development mode__ with:  
 `docker-compose -f docker-compose.dev.yml up -d`  
 Docker should create these containers:
