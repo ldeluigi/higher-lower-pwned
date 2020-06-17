@@ -33,7 +33,7 @@ services:
         volumes: 
             - ./mongo/mongod.conf:/etc/mongod.conf:ro
             - ./mongo/setup/:/docker-entrypoint-initdb.d/:ro
-            - mongo-db-data:/data/db/                           # Not working on windows unless you do the workaround
+            - hlp-mongo-db-data:/data/db/                           # Not working on windows unless you do the workaround
             - ./mongo/data/log/:/var/log/mongodb/
             - ./mongo/.dbshell:/home/mongodb/.dbshell
         environment:
@@ -49,4 +49,4 @@ networks:
     hlp-network:
 
 volumes: 
-    mongo-db-data:
+    hlp-mongo-db-data:
