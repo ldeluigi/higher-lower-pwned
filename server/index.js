@@ -13,30 +13,8 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 
 
 /*
-
-const exitHandler = () => {
-  if (server) {
-    server.close(() => {
-      logger.info('Server closed');
-      process.exit(1);
-    });
-  } else {
-    process.exit(1);
-  }
-};
-
-const unexpectedErrorHandler = (error) => {
-  logger.error(error);
-  exitHandler();
-};
-
-process.on('uncaughtException', unexpectedErrorHandler);
-process.on('unhandledRejection', unexpectedErrorHandler);
-
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received');
-  if (server) {
-    server.close();
-  }
-});
+   NOTE:
+   Configuration of boilerplate server files is yet to be done.
+   Please refer to an online *GOOD* example and don't make a mess.
+   Thanks - Delu
 */

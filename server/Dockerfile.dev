@@ -1,7 +1,11 @@
 FROM node:14-alpine
 
+# Server files should be mounted as volume to this folder
 WORKDIR /usr/src/app
 
+# Server default exposed port
 EXPOSE 8080
 
+# Server development startup command
+# It's expected to run a development server with nodemon
 ENTRYPOINT ["npm", "run", "start-dev"]

@@ -78,6 +78,8 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To run the entire project in production mode just type `docker-compose up -d` in the root folder of the repository.
 
+**Note:** In production mode, only requests to `/api` path are forwarded to the server, and the forwarding removes the `/api` from the URL path. This means that additional configuration is needed for production in the frontend code.
+
 ## Stopping containers
 
 To properly stop running containers use `docker-compose [-f ...] down`.

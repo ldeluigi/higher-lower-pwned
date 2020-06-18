@@ -8,8 +8,7 @@ module.exports = {
         options: {
             useNewUrlParser: true,
             user: process.env.MONGO_DB_USERNAME || "mongodb",
-            pass: process.env.MONGO_DB_PASSWORD || "",
-            //auth: { authSource: "admin" }
+            pass: process.env.MONGO_DB_PASSWORD || ""
         }
     }
 };

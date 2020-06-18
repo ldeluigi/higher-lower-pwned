@@ -10,8 +10,8 @@ services:
             NODE_ENV: production
             BACKEND_PORT: 8080
             JWT_SECRET: ${JWT_SECRET}
-            MONGO_DB_NAME: ${MONGO_DB_NAME}
-            MONGO_DB_USERNAME: ${MONGO_DB_USERNAME}
+            MONGO_DB_NAME: ${MONGO_DB_NAME:?err}
+            MONGO_DB_USERNAME: ${MONGO_DB_USERNAME:?err}
             MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
         restart: always
         depends_on: 
@@ -35,11 +35,11 @@ services:
             - ./mongo/setup/:/docker-entrypoint-initdb.d/:ro
             - hlp-mongo-db-data:/data/db/                           # Not working on windows unless you do the workaround
             - ./mongo/data/log/:/var/log/mongodb/
-            - ./mongo/dbshell:/home/mongodb/
+            - ./mongo/dbshell:/home/mongodb/:ro
         environment:
-            MONGO_INITDB_USERNAME: ${MONGO_DB_USERNAME}
+            MONGO_INITDB_USERNAME: ${MONGO_DB_USERNAME:?err}
             MONGO_INITDB_PASSWORD: ${MONGO_DB_PASSWORD}
-            MONGO_INITDB_DATABASE:  ${MONGO_DB_NAME}
+            MONGO_INITDB_DATABASE:  ${MONGO_DB_NAME:?err}
             MONGO_INITDB_ROOT_USERNAME: root                        # admin username
             MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD}   # admin password
         command: ["-f", "/etc/mongod.conf"]
