@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'higher-lower-pwned'`, () => {
+  it(`should have as title 'hlp'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('higher-lower-pwned');
+    expect(app.title).toEqual('hlp');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('higher-lower-pwned app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('hlp app is running!');
   });
 });
