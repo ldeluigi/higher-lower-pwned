@@ -4,8 +4,8 @@
   "description": "The backend project for Higher Lower Pwned",
   "main": "index.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/ldeluigi/higher-lower-pwned/tree/master/server"
+    "type": "git",
+    "url": "https://github.com/ldeluigi/higher-lower-pwned/tree/master/server"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,9 +13,14 @@
     "start-dev": "nodemon index.js --legacy-watch"
   },
   "author": "Luca Deluigi",
-  "contributors": ["Davide Evangelisti", "Simone Magnani"],
+  "contributors": [
+    "Davide Evangelisti",
+    "Simone Magnani"
+  ],
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.9.19",
     "socket.io": "^2.3.0"
