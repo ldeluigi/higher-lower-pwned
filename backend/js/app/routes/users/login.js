@@ -5,6 +5,7 @@ const user = require("../../model/user").schema;
 const jwt = require("jsonwebtoken");
 const pwd = require("../../utils/password");
 const config = require("../../../config/config");
+const tokenSchema = require("../../model/token").schema;
 
 router.post("/login",
   [
@@ -30,23 +31,36 @@ router.post("/login",
       if (userQuery === null) {
         return res.status(404).json({ errors: ["Wrong credentials."] });
       }
-      let hash = pwd.sha512(req.body.password, userQuery.salt).hash;
+      let hash = pwd.sha512(req.body.password, userQuery.salt);
       if (hash != userQuery.password) {
         return res.status(400).json({ errors: ["Wrong credentials."] });
       }
-      let jwtInfo = {
+      let jwtID = pwd.genRandomString(32);
+      let jwtContent = {
         id: userQuery._id,
-        username: userQuery.username
+        username: userQuery.username,
+        refresh: jwtID
       };
-      const token = jwt.sign(jwtInfo, config.jwtSecret, { expiresIn: "10m" });
-      res.json({
-        data: {
-          id: userQuery._id,
-          username: userQuery.username,
-          token: token,
-          refresh: ""
-        }
-      });
+      let token = jwt.sign(jwtContent, config.jwtSecret, { expiresIn: "10m" });
+      let refresh = pwd.genRandomString(64);
+      try {
+        await tokenSchema.create({
+          token: refresh,
+          expire: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7 * 8), // 8 weeks from now
+          jwtRef: jwtID,
+          user: userQuery._id
+        });
+        res.json({
+          data: {
+            id: userQuery._id,
+            username: userQuery.username,
+            token: token,
+            refresh: refresh
+          }
+        });
+      } catch (err) {
+        res.status(400).json({ errors: [err.message] });
+      }
     } catch (err) {
       res.status(400).json({ errors: [err.message] });
     }
