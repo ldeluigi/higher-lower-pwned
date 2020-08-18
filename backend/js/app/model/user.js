@@ -7,18 +7,18 @@ let user = new Schema(
     username: {
       type: String,
       unique: true,
-      required: true,
+      required: true
     },
     email: {
-      type: String,
+      type: String
     },
     password: {
       type: String,
-      required: true,
+      required: true
     },
     salt: {
       type: String,
-      required: true,
+      required: true
     },
   },
   { collection: "Users" }

@@ -10,9 +10,6 @@ module.exports = {
     let hash = crypto.createHmac('sha512', salt); /** Hashing algorithm sha512 */
     hash.update(password);
     let value = hash.digest('hex');
-    return {
-      salt: salt,
-      hash: value
-    };
+    return value;
   }
 }

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
-const user = require("../../model/user").schema;
+const userSchema = require("../../model/user").schema;
 const userToDto = require("../../model/user").toDto;
 const pwd = require("../../utils/password");
 
@@ -32,11 +32,11 @@ router.post("/",
     let salt = pwd.genRandomString(16);
     let output = pwd.sha512(body.password, salt);
     try {
-      let result = await user.create({
+      let result = await userSchema.create({
         username: body.username,
         email: body.email,
-        password: output.hash,
-        salt: output.salt
+        password: output,
+        salt: salt
       });
       res.json({ data: userToDto(result) });
     } catch (err) {
