@@ -26,6 +26,8 @@ services:
     image: mongo:4
     networks:
       - hlp-network-dev
+    ports:
+      - 27017:27017
     volumes:
       - ./backend/mongo/mongod.conf:/etc/mongod.conf:ro
       - ./backend/mongo/setup/:/docker-entrypoint-initdb.d/:ro
