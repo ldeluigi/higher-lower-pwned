@@ -126,6 +126,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "hlp"
+    }
+  },
+  "defaultProject": "hlp",
+  "cli": {
+    "analytics": false
+  }
 }
