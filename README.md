@@ -67,7 +67,7 @@ To develop a client, follow the instructions in the [previous section](#developm
 
 ### Developing the Angular Web App client
 
-The client is developed and compiled on the host machine, so you need to run `npm install` in the root folder to download dependencies.
+The client is developed and compiled on the host machine, so you need to run `npm install` in the frontend folder `frontend/angular/hlp` to download dependencies.
 If you want to contribute to the main client made with Angular you can write your code while `ng serve` provides a live version if it, automatically updated and compiled.
 
 Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
