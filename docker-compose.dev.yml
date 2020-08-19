@@ -13,7 +13,7 @@ services:
     environment:
       NODE_ENV: development
       BACKEND_PORT: 8080
-      JWT_SECRET: ${JWT_SECRET}
+      JWT_SECRET: ${JWT_SECRET:?}
       MONGO_DB_NAME: ${MONGO_DB_NAME}
       MONGO_DB_USERNAME: ${MONGO_DB_USERNAME}
       MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
@@ -26,6 +26,8 @@ services:
     image: mongo:4
     networks:
       - hlp-network-dev
+    ports:
+      - 27017:27017
     volumes:
       - ./backend/mongo/mongod.conf:/etc/mongod.conf:ro
       - ./backend/mongo/setup/:/docker-entrypoint-initdb.d/:ro
