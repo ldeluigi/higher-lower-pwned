@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
 const pwd = require("../../utils/password");
 const config = require("../../../config/config");
 const tokenSchema = require("../../model/token").schema;
@@ -32,9 +31,7 @@ router.post(
                     errors: ["Refresh token is expired. Repeat the login process."],
                 });
             }
-            let tokenPayload = jwt.verify(token, config.jwtSecret, {
-                ignoreExpiration: true,
-            });
+            let tokenPayload = jwtTools.checkJWT(token, true);
             if (tokenPayload.refresh != tokenQuery.jwtRef) {
                 return res.status(400).json({ errors: ["Invalid token references."] });
             }
