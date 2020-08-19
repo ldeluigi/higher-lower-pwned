@@ -7,19 +7,20 @@ let token = new Schema(
   {
     token: {
       type: String,
-      required: true
+      index: true,
+      required: true,
     },
     expire: {
       type: Date,
     },
     jwtRef: {
       type: String,
-      required: true
+      required: true,
     },
     user: {
       type: ObjectId,
-      required: true
-    }
+      required: true,
+    },
   },
   { collection: "Tokens" }
 );
@@ -27,5 +28,5 @@ let token = new Schema(
 token.set("timestamps", true);
 
 module.exports = {
-  schema: mongoose.model("tokens", token)
-}
+  schema: mongoose.model("tokens", token),
+};
