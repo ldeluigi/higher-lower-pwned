@@ -6,6 +6,7 @@ const pwd = require("../../utils/password");
 const config = require("../../../config/config");
 const tokenSchema = require("../../model/token").schema;
 const jwtTools = require("../../utils/jwt");
+const userSchema = require("../../model/user").schema;
 
 router.post(
     "/refresh",
@@ -38,23 +39,21 @@ router.post(
                 return res.status(400).json({ errors: ["Invalid token references."] });
             }
             await tokenSchema.deleteOne({ _id: tokenQuery._id });
-            //TODO: CHECK USER IS GOOD BEFORE PROCEDING WITH A REFRESH
-            let userID = tokenPayload.id;
-            let username = tokenPayload.username;
-            //FOR NOW WE ARE USING OLD JWT DATA
-            try {
-                let { token, refresh } = await jwtTools.createJWT(userID, username);
-                res.json({
-                    data: {
-                        id: username,
-                        username: username,
-                        token: token,
-                        refresh: refresh
-                    }
-                });
-            } catch (err) {
-                res.status(400).json({ errors: [err.message] });
+            let userQuery = await userSchema.findById(tokenPayload.id);
+            if (userQuery === null) {
+                return res.status(400).json({ errors: ["User invalid. Token generation aborted."] });
             }
+            let userID = userQuery._id;
+            let username = userQuery.username;
+            let resultJWT = await jwtTools.createJWT(userID, username);
+            res.json({
+                data: {
+                    id: userID,
+                    username: username,
+                    token: resultJWT.token,
+                    refresh: resultJWT.refresh
+                }
+            });
         } catch (err) {
             res.status(400).json({ errors: [err.message] });
         }
