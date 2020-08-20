@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
+const { check, validationResult, param } = require("express-validator");
 const userSchema = require("../../model/user").schema;
 const userToDto = require("../../model/user").toDto;
 const pwd = require("../../utils/password");
-
+const jwtTools = require("../../utils/jwt");
 
 router.post("/",
   [
@@ -44,5 +44,26 @@ router.post("/",
     }
   });
 
+router.get("/:id",
+  [param("id").notEmpty().bail().isAlphanumeric()],
+  jwtTools.authentication(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    if (req.auth.id != req.params.id) {
+      return res.status(403).json({ errors: ["User not authorized."] });
+    }
+    try {
+      let userQuery = await userSchema.findById(req.params.id);
+      if (userQuery === null) {
+        return res.status(404).json({ errors: ["User not found."] });
+      }
+      res.json({ data: userToDto(userQuery) });
+    } catch (err) {
+      res.status(400).json({ errors: [err.message] });
+    }
+  });
 
 module.exports = router;

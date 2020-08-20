@@ -2,10 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const user = require("../../model/user").schema;
-const jwt = require("jsonwebtoken");
 const pwd = require("../../utils/password");
-const config = require("../../../config/config");
-const tokenSchema = require("../../model/token").schema;
+const jwtTools = require("../../utils/jwt");
 
 router.post("/login",
   [
@@ -35,21 +33,8 @@ router.post("/login",
       if (hash != userQuery.password) {
         return res.status(400).json({ errors: ["Wrong credentials."] });
       }
-      let jwtID = pwd.genRandomString(32);
-      let jwtContent = {
-        id: userQuery._id,
-        username: userQuery.username,
-        refresh: jwtID
-      };
-      let token = jwt.sign(jwtContent, config.jwtSecret, { expiresIn: "10m" });
-      let refresh = pwd.genRandomString(64);
       try {
-        await tokenSchema.create({
-          token: refresh,
-          expire: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7 * 8), // 8 weeks from now
-          jwtRef: jwtID,
-          user: userQuery._id
-        });
+        let { token, refresh } = await jwtTools.createJWT(userQuery._id, userQuery.username);
         res.json({
           data: {
             id: userQuery._id,

@@ -19,6 +19,14 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(route);
 
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({
+      errors: ["Invalid token."]
+    });
+  }
+});
+
 module.exports = {
   express: app,
   server: server,
