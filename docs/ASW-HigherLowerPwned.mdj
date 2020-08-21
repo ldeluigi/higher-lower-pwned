@@ -822,8 +822,9 @@
 									"_parent": {
 										"$ref": "AAAAAAFyVorpL+f1vTc="
 									},
-									"name": "date",
-									"type": "DATETIME"
+									"name": "start",
+									"type": "DATETIME",
+									"length": 0
 								},
 								{
 									"_type": "ERDColumn",
@@ -841,8 +842,8 @@
 									"_parent": {
 										"$ref": "AAAAAAFyVorpL+f1vTc="
 									},
-									"name": "duration",
-									"type": "INTEGER",
+									"name": "end",
+									"type": "DATETIME",
 									"length": 0
 								}
 							]
