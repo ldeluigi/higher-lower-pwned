@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const score = require("../../model/score").schema;
 const router = express.Router();
 
 const DEFAULTLIMIT = 50;
@@ -29,7 +30,7 @@ function isPeriodValid(period) {
   return validPeriod.includes(period);
 }
 
-router.get("/arcade", (req, res) => {
+router.get("/arcade", async (req, res) => {
   var actualLimit = DEFAULTLIMIT;
   var actualPeriod = DEFAULTPERIOD;
   console.log(req.params);
@@ -41,18 +42,19 @@ router.get("/arcade", (req, res) => {
     actualPeriod = req.params.period;
     console.log("changing period to " + actualPeriod);
   }
-  //var Score = mongoose.model('Score', scoreSchema); // da creare lo scoreSchema
   const minMax = periods[actualPeriod];
-  /*var result = Score.find(
-    {"createdAt": //dovrebbe avere anche il capo date.. è utile?
+  /*var result = await score.find(
+    {"date":
       {
         "$gte": minMax(1),
         "$lte": minMax(0)
       }
     }).limit(limit)
-    .then(scores => {res.json({data: scores})})
-    .catch(err => {res.status(501).json({error: err})});// da controllare il codice di errore*/
-  res.json({ data: [minMax, actualLimit] }); // da eliminare
+    if (result === null) {
+      return res.status(404).json({ errors: ["No leaderboards found"] });
+    }
+    res.json({ data: result });*/
+  await res.json({ data: [minMax, actualLimit] }); // da eliminare
 });
 
 module.exports = router;
