@@ -24,11 +24,11 @@ function minMaxDate(handleMin) {
 
 router.get("/arcade",[
   check("period")
-  .optional()
+  .optional({ nullable: true })
   .isIn(Object.keys(periods))
   .trim(),
 check("limit")
-  .optional()
+  .optional({ nullable: true })
   .isInt({min: 1, max: 1000})
   .trim()
 ], async (req, res) => {
