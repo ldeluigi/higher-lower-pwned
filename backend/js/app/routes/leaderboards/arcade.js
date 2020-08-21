@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const { check, validationResult } = require("express-validator");
+const score = require("../../model/score").schema;
 const router = express.Router();
 
 const DEFAULTLIMIT = 50;
@@ -20,39 +22,44 @@ function minMaxDate(handleMin) {
   return [minDay, today];
 }
 
-function isLimitValid(limit) {
-  return !isNaN(limit) && (limit >= 1 || limit <= 1000);
-}
-
-function isPeriodValid(period) {
-  const validPeriod = periods.entries;
-  return validPeriod.includes(period);
-}
-
-router.get("/arcade", (req, res) => {
+router.get("/arcade",[
+  check("period")
+  .optional()
+  .isIn(Object.keys(periods))
+  .trim(),
+check("limit")
+  .optional()
+  .isInt({min: 1, max: 1000})
+  .trim()
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   var actualLimit = DEFAULTLIMIT;
   var actualPeriod = DEFAULTPERIOD;
-  console.log(req.params);
-  if (req.params.limit !== undefined && isLimitValid(req.params.limit)) {
-    actualLimit = req.params.limit;
+  console.log(req.query);
+  if (req.query.limit !== undefined) {
+    actualLimit = req.query.limit;
     console.log("changing limit to " + actualLimit);
   }
-  if (req.params.period != undefined && isPeriodValid(req.params.period)) {
-    actualPeriod = req.params.period;
+  if (req.query.period !== undefined) {
+    actualPeriod = req.query.period;
     console.log("changing period to " + actualPeriod);
   }
-  //var Score = mongoose.model('Score', scoreSchema); // da creare lo scoreSchema
   const minMax = periods[actualPeriod];
-  /*var result = Score.find(
-    {"createdAt": //dovrebbe avere anche il capo date.. è utile?
+  /*var result = await score.find(
+    {"date":
       {
         "$gte": minMax(1),
         "$lte": minMax(0)
       }
     }).limit(limit)
-    .then(scores => {res.json({data: scores})})
-    .catch(err => {res.status(501).json({error: err})});// da controllare il codice di errore*/
-  res.json({ data: [minMax, actualLimit] }); // da eliminare
+    if (result === null) {
+      return res.status(404).json({ errors: ["No leaderboards found"] });
+    }
+    res.json({ data: result });*/
+  await res.json({ data: [minMax, actualLimit] }); // da eliminare
 });
 
 module.exports = router;
