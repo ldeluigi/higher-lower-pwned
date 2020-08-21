@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const pwd = require("../../utils/password");
 const config = require("../../../config/config");
 const tokenSchema = require("../../model/token").schema;
@@ -10,8 +10,14 @@ const userSchema = require("../../model/user").schema;
 router.post(
     "/refresh",
     [
-        check("token").notEmpty().bail().isJWT().bail().trim(),
-        check("refresh").notEmpty().bail().isAlphanumeric().bail().trim(),
+        body("token")
+            .notEmpty()
+            .isJWT()
+            .trim(),
+        body("refresh")
+            .notEmpty()
+            .isAlphanumeric()
+            .trim(),
     ],
     async (req, res) => {
         const errors = validationResult(req);

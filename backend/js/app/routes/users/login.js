@@ -1,21 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const user = require("../../model/user").schema;
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
 
 router.post("/login",
   [
-    check("username")
+    body("username")
       .notEmpty()
-      .bail()
       .isAlphanumeric()
-      .bail()
       .trim(),
-    check("password")
+    body("password")
       .isAlphanumeric()
-      .bail()
       .trim()
       .isLength({ min: 8, max: 1024 })
   ],

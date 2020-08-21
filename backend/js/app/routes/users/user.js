@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult, param } = require("express-validator");
+const { body, validationResult, param } = require("express-validator");
 const userSchema = require("../../model/user").schema;
 const userToDto = require("../../model/user").toDto;
 const pwd = require("../../utils/password");
@@ -8,18 +8,15 @@ const jwtTools = require("../../utils/jwt");
 
 router.post("/",
   [
-    check("username")
+    body("username")
       .notEmpty()
-      .bail()
       .isAlphanumeric()
-      .bail()
       .trim(),
-    check("password")
+    body("password")
       .isAlphanumeric()
-      .bail()
       .trim()
       .isLength({ min: 8, max: 1024 }),
-    check("email")
+    body("email")
       .normalizeEmail()
       .isEmail()
   ],
@@ -45,7 +42,9 @@ router.post("/",
   });
 
 router.get("/:id",
-  [param("id").notEmpty().bail().isAlphanumeric()],
+  [param("id")
+    .notEmpty()
+    .isAlphanumeric()],
   jwtTools.authentication(),
   async (req, res) => {
     const errors = validationResult(req);
@@ -65,5 +64,55 @@ router.get("/:id",
       res.status(400).json({ errors: [err.message] });
     }
   });
+
+router.put("/:id",
+  [param("id")
+    .notEmpty()
+    .isAlphanumeric(),
+  body("password")
+    .optional({ nullable: true })
+    .isAlphanumeric()
+    .trim()
+    .isLength({ min: 8, max: 1024 }),
+  body("email")
+    .optional({ nullable: true })
+    .normalizeEmail()
+    .isEmail()],
+  jwtTools.authentication(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    if (req.auth.id != req.params.id) {
+      return res.status(403).json({ errors: ["User not authorized."] });
+    }
+    let newPassword = req.body.password;
+    let passwordUpdated = false;
+    let newEmail = req.body.email;
+    try {
+      let userQuery = await userSchema.findById(req.params.id);
+      if (userQuery === null) {
+        return res.status(404).json({ errors: ["User not found."] });
+      }
+      if (newPassword !== undefined) {
+        let salt = pwd.genRandomString(16);
+        let output = pwd.sha512(newPassword, salt);
+        userQuery.password = output;
+        userQuery.salt = salt;
+        passwordUpdated = true;
+      }
+      if (newEmail !== undefined) {
+        userQuery.email = newEmail;
+      }
+      await userQuery.save();
+      let result = userToDto(userQuery);
+      result.password = passwordUpdated ? "updated" : "unchanged";
+      res.json({ data: result });
+    } catch (err) {
+      res.status(400).json({ errors: [err.message] });
+    }
+  });
+
 
 module.exports = router;
