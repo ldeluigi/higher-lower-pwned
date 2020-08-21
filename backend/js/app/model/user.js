@@ -20,6 +20,9 @@ let user = new Schema(
       type: String,
       required: true
     },
+    lastLogin: {
+      type: Date
+    }
   },
   { collection: "Users" }
 );
@@ -33,7 +36,8 @@ module.exports = {
       id: schema._id,
       username: schema.username,
       email: schema.email,
-      createdAt: schema.createdAt
+      registration: schema.createdAt,
+      lastLogin: schema.lastLogin
     };
   }
 }

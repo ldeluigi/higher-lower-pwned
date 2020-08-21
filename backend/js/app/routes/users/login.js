@@ -31,6 +31,8 @@ router.post("/login",
         return res.status(400).json({ errors: ["Wrong credentials."] });
       }
       try {
+        userQuery.lastLogin = new Date();
+        await userQuery.save();
         let { token, refresh } = await jwtTools.createJWT(userQuery._id, userQuery.username);
         res.json({
           data: {
