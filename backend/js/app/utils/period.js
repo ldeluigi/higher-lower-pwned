@@ -1,4 +1,4 @@
-const { check } = require("express-validator");
+const { query } = require("express-validator");
 
 function minMaxDate(handleMin) {
   const today = new Date();
@@ -20,7 +20,7 @@ module.exports = {
 
   DEFAULTPERIOD: "week",
 
-  checkPeriod: check("period")
+  checkPeriod: query("period")
     .optional({ nullable: true })
     .isIn(Object.keys(periods))
     .trim(),
