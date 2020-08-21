@@ -32,5 +32,5 @@ let score = new Schema(
 score.set("timestamps", true);
 
 module.exports = {
-    schema: mongoose.model("scores", token),
+    schema: mongoose.model("scores", score),
 };
