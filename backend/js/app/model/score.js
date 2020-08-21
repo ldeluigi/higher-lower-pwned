@@ -1,40 +1,36 @@
 const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
 let score = new Schema(
-  {
-    score: {
-      type: Int32Array,
-      required: true
+    {
+        score: {
+            type: Number,
+            required: true
+        },
+        end: {
+            type: Date,
+            required: true
+        },
+        guesses: {
+            type: Number,
+            required: true,
+        },
+        start: {
+            type: Date,
+            required: true,
+        },
+        user: {
+            type: ObjectId,
+            required: true,
+        },
     },
-    date: {
-      type: Date,
-      required: true
-    },
-    guesses: {
-      type: Int32Array,
-      required: true
-    },
-    duration: {
-      type: Int32Array,
-      required: true
-    },
-  },
-  { collection: "Scores" }
+    { collection: "Scores" }
 );
 
-user.set("timestamps", true);
+token.set("timestamps", true);
 
 module.exports = {
-  schema: mongoose.model("scores", score),
-  toDto: function (schema) {
-    return {
-      id: schema._id,
-      score: schema.score,
-      date: schema.date,
-      guesses: schema.guesses,
-      duration: schema.duration
-    };
-  }
-}
+    schema: mongoose.model("scores", token),
+};
