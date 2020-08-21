@@ -8,7 +8,7 @@ This project is a web-based game where you guess what password is the most popul
 
 ### Needed on the host
 
-- [Angular CLI](https://github.com/angular/angular-cli) version 9.1.8.
+- [Angular CLI](https://github.com/angular/angular-cli) version 10.0.9.
 - [NodeJS](https://nodejs.org/) version 12.18.0.
 - [Docker](https://www.docker.com/) engine version 19.03.1.
 
@@ -48,7 +48,7 @@ This would mean that:
 
 ### Development mode
 
-First you need to install server dependencies with `npm install`, run inside the server folder `server/`.  
+First you need to install server dependencies with `npm install`, run inside the server folder `backend/js`.  
 To develop a server, run the docker compose file for **Development mode** with:  
 `docker-compose -f docker-compose.dev.yml up -d` from the root folder.
 Docker should create these containers:
@@ -58,8 +58,9 @@ Docker should create these containers:
   - Logs are saved inside `/backend/mongo/data/log` on the host machine
   - Mongo setup is stored in `/backend/mongo/setup`
 - `hlp-backend-dev` with the live version of the nodejs backend mapped with host source files, and updated in real-time by [nodemon](https://www.npmjs.com/package/nodemon)
-  - Every file inside `/backend/js` is mapped inside the container
+  - Every file inside `/backend/js` is mapped inside the container, including _node_modules_
   - After an edit is detected by nodemon on the source files (.js, .json) index.js is restarted inside the container, so that changes are online as soon as possible
+  - You can look at the container logs for errors or debugging, with `docker logs <backend-container-id>`
 
 ## Development: client
 
@@ -94,4 +95,4 @@ To run the entire project in production mode just type `docker-compose up -d` in
 
 To properly stop running containers use `docker-compose [-f ...] down`.
 To stop and **clean volumes** use `docker-compose [-f ...] down -v`.  
-**Note:** _Volumes left inside docker storage could fill up the space_
+**Note:** _Volumes left inside docker storage could fill up the space on the host machine_
