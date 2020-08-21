@@ -29,7 +29,7 @@ let score = new Schema(
     { collection: "Scores" }
 );
 
-token.set("timestamps", true);
+score.set("timestamps", true);
 
 module.exports = {
     schema: mongoose.model("scores", token),
