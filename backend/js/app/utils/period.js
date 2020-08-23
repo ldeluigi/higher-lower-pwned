@@ -1,4 +1,5 @@
 const { query } = require("express-validator");
+const genericTools = require("./generic");
 
 function minMaxDate(handleMin) {
   const today = new Date();
@@ -15,10 +16,14 @@ const periods = {
   ),
 };
 
+const DEFAULTPERIOD = "week";
+
 module.exports = {
   periods: periods,
 
-  DEFAULTPERIOD: "week",
+  returnPeriodFromReq: (req) => {
+    return genericTools.getOrElse(req.query.period, DEFAULTPERIOD);
+  },
 
   checkPeriod: query("period")
     .optional({ nullable: true })

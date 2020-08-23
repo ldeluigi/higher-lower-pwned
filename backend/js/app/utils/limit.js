@@ -1,7 +1,12 @@
 const { query } = require("express-validator");
+const genericTools = require("./generic");
+
+const DEFAULTLIMIT = 50;
 
 module.exports = {
-  DEFAULTLIMIT: 50,
+  returnLimitFromReq: (req) => {
+    return genericTools.getOrElse(req.query.limit, DEFAULTLIMIT);
+  },
 
   checkLimit: query("limit")
     .optional({ nullable: true })
