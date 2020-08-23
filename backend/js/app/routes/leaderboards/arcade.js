@@ -14,19 +14,11 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    var actualLimit = limitTools.DEFAULTLIMIT;
-    var actualPeriod = periodTools.DEFAULTPERIOD;
     console.log(req.query);
-    if (req.query.limit !== undefined) {
-      actualLimit = req.query.limit;
-      console.log("changing limit to " + actualLimit);
-    }
-    if (req.query.period !== undefined) {
-      actualPeriod = req.query.period;
-      console.log("changing period to " + actualPeriod);
-    }
+    const actualLimit = limitTools.returnLimitFromReq(req);
+    const actualPeriod = periodTools.returnPeriodFromReq(req);
     const minMax = periodTools.periods[actualPeriod];
-    var result = await score
+    const result = await score
       .find({
         date: {
           $gte: minMax[1],
