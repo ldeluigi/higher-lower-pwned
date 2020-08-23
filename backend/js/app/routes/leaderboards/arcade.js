@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const { validationResult } = require("express-validator");
 const score = require("../../model/score").schema;
 const router = express.Router();
@@ -21,15 +20,24 @@ router.get(
     const result = await score
       .find({
         date: {
-          $gte: minMax[1],
-          $lte: minMax[0],
+          $gte: minMax[0],
+          $lte: minMax[1],
         },
       })
       .limit(parseInt(actualLimit));
     if (result === null) {
       return res.status(404).json({ errors: ["No leaderboards found"] });
     }
-    res.json({ data: result });
+    res.json({
+      /*query: {
+        date: {
+          $gte: minMax[0],
+          $lte: minMax[1],
+        },
+        limit: actualLimit,
+      },*/ //oggetto di debug
+      data: result,
+    });
   }
 );
 
