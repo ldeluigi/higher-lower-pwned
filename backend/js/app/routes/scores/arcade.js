@@ -7,7 +7,11 @@ const limitTools = require("../../utils/limit");
 const jwtTools = require("../../utils/jwt");
 const genericTools = require("../../utils/generic");
 
-const sortable = ["score", "date"];
+const valueScore = "score"
+const valueDate = "date"
+const valueScoreInDB = "score"
+const valueDateInDB = "start"
+const sortable = [valueScore, valueDate];
 
 router.get(
   "/:userid/arcade",
@@ -15,13 +19,18 @@ router.get(
     periodTools.checkPeriod,
     limitTools.checkLimit,
     query("page").optional({ nullable: true }).isInt({ min: 0 }).trim(),
-    query("sortBy").optional({ nullable: true }).isIn(sortable).trim(),
-    //jwtTools.headerJWT,
-    param("userid") /*todo*/
-      .trim(),
+    query("sortby").optional({ nullable: true }).isIn(sortable).trim(),
+    param("userid")
+      .notEmpty()
+      .isAlphanumeric(),
   ],
+  jwtTools.authentication(),
   async (req, res) => {
     const errors = validationResult(req);
+    if (req.auth.id != req.params.userid) {
+      console.log(req.auth.id);
+      return res.status(403).json({ errors: ["User not authorized."] });
+    }
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -29,18 +38,19 @@ router.get(
     const actualPeriod = periodTools.returnPeriodFromReq(req);
     const minMax = periodTools.periods[actualPeriod];
     const actualPage = genericTools.getOrElse(req.query.page, 0);
-    const actualSortBy = genericTools.getOrElse(req.query.sortBy, "score");
+    const actualSortby = genericTools.getOrElse(req.query.sortby, valueScore);
+    const sortValue = actualSortby === valueScore ? [[valueScoreInDB, -1]] : [[valueDateInDB, 1]]
     const result = await score
       .find({
-        date: {
-          $gte: minMax[1],
-          $lte: minMax[0],
+        start: {
+          $gte: minMax[0],
+          $lte: minMax[1]
         },
-        user: req.params.userid,
+        user: req.params.userid
       })
-      .limit(parseInt(actualLimit))
       .skip(actualPage * actualLimit)
-      .sort(actualSortBy);
+      .limit(parseInt(actualLimit))
+      .sort(sortValue);
     if (result === null) {
       return res.status(404).json({ errors: ["No leaderboards found"] });
     }
