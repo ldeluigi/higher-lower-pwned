@@ -26,10 +26,8 @@ router.get("/:id/stats",
     }
     const actualLimit = limitTools.returnLimitFromReq(req);
     const actualPeriod = periodTools.returnPeriodFromReq(req);
-    const minMax = periodTools.periods[actualPeriod];
 
-    const totalTimeElapsedFromNow = mapFromPeriodToDaysNumber[actualPeriod] * actualLimit * 24 * 60 * 60 * 1000
-    const validStartDateFrom = new Date().getTime() - totalTimeElapsedFromNow;
+    const validStartDateFrom = datePeriodsTimeBackNTimes(actualPeriod, actualLimit);
     const period =  mapFromPeriodToDBPeriod[actualPeriod];
     const resultHistory = await score
       .aggregate([
@@ -49,7 +47,16 @@ router.get("/:id/stats",
             "guesses": 1,
             "start": 1,
             "end": 1,
-            "avgPlaysPerDay": { $divide : [1, mapFromPeriodToDaysNumber[actualPeriod]]}
+            "avgPlaysPerDay": { $divide :
+              [
+                1,
+                { $divide:
+                  [
+                    { $subtract: [new Date().getTime(), datePeriodsTimeBackNTimes(actualPeriod, 1)]},
+                    1000 * 24 * 60 * 60
+                  ]
+                }
+              ]}
           }
         },
         {
@@ -131,5 +138,18 @@ const mapFromPeriodToDaysNumber = {
   month: 30,
   year: 365,
 };
+
+function datePeriodsTimeBackNTimes(period, times) {
+  if (!Object.keys(periods).includes(period)) throw new Error("Invalid Period")
+  if (times <= 0) throw new Error("Invalid times")
+  let currentDate = new Date()
+  let p = {
+    day: new Date().setDate(currentDate.getUTCDate() - 1*times),
+    week: new Date().setDate(currentDate.getUTCDate() - 7*times),
+    month: new Date().setMonth(currentDate.getMonth() - 1*times),
+    year:  new Date().setFullYear(currentDate.getFullYear() - 1*times)
+  };
+  return p[period]
+}
 
 module.exports = router;
