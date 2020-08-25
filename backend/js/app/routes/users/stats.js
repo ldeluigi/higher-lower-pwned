@@ -28,10 +28,17 @@ router.get("/:id/stats",
     const actualPeriod = periodTools.returnPeriodFromReq(req);
     const minMax = periodTools.periods[actualPeriod];
 
-    const totalDate = actualPeriod * actualLimit // tempo che devo andare indietro
-    const period =  mapFromPeriodToDBPeriod[actualPeriod]
+    const totalTimeElapsedFromNow = mapFromPeriodToDaysNumber[actualPeriod] * actualLimit * 24 * 60 * 60 * 1000
+    const validStartDateFrom = new Date().getTime() - totalTimeElapsedFromNow;
+    const period =  mapFromPeriodToDBPeriod[actualPeriod];
     const resultHistory = await score
       .aggregate([
+        {
+          $match: {
+            $expr:{
+              $gte: [ "$start", new Date(validStartDateFrom)]}
+            }
+        },
         {
           "$project": {
             "day": { "$dayOfYear": "$start" },
@@ -69,12 +76,18 @@ router.get("/:id/stats",
             "AvgDuration": "$AvgDuration",
             "avgPlaysPerDay": "$avgPlaysPerDay"
           }
+        },
+        {
+          $sort: {
+            "year": -1,
+            "periodNumber": -1
+          }
         }
       ]).limit(parseInt(actualLimit))
       const resultMaxScore = await score
         .findOne()
         .sort([["score", -1]])
-      const resultMaxSGuesses = await score
+      const resultMaxGuesses = await score
         .findOne()
         .sort([["guesses", -1]])
       const resultMaxDuration = await score
@@ -98,7 +111,7 @@ router.get("/:id/stats",
         ])
       res.json({
         maxScore: resultMaxScore.score,
-        maxSGuesses: resultMaxSGuesses.guesses,
+        maxGuesses: resultMaxGuesses.guesses,
         maxDuration: resultMaxDuration[0]._id,
         history: resultHistory
       })
