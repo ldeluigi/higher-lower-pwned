@@ -9,14 +9,15 @@ const pwd = require("../../utils/password");
 describe("user API", function () {
     it("should GET a user after login", async (done) => {
         const mock = jest.spyOn(user.schema, 'findOne');
-        mock.mockImplementation((input) => Promise.resolve({
+        const userMock = {
             username: "testusername",
             _id: "testid",
             password: pwd.sha512("testpassword", "testpasswordsalt"),
             salt: "testpasswordsalt",
             lastLogin: new Date(),
             save: async function (user) { }
-        }));
+        };
+        mock.mockImplementation((input) => Promise.resolve(userMock));
         const mock2 = jest.spyOn(token.schema, 'create');
         mock2.mockImplementation((input) => {
             input._id = "createdID";
@@ -26,13 +27,11 @@ describe("user API", function () {
             username: "testusername",
             password: "testpassword"
         });
-        console.log(response.body);
-        expect(response.status).toBe(200);
         let result = response.body.data;
-        expect(result).toHaveProperty("id", "testid");
-        expect(result).toHaveProperty("username", "testusername");
-        expect(result).toHaveProperty("token");
-        expect(result).toHaveProperty("refresh");
+        console.log(result)
+        response = await request.get("/users/testid").set("Authentication", "Bearer " + result.token);
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({ data: user.toDto(userMock) });
         mock.mockRestore();
         mock2.mockRestore();
         done();
