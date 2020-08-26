@@ -1,13 +1,13 @@
 const express = require("express");
-const { validationResult } = require("express-validator");
+const { validationResult, query } = require("express-validator");
 const score = require("../../model/score").schema;
 const router = express.Router();
-const periodTools = require("../../utils/period");
-const limitTools = require("../../utils/limit");
+const periodTools = require("../../helpers/period");
+const limitTools = require("../../helpers/limit");
 
 router.get(
   "/arcade",
-  [periodTools.checkPeriod, limitTools.checkLimit],
+  [periodTools.checkPeriod(query("period")), limitTools.checkLimit(query("limit"))],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
