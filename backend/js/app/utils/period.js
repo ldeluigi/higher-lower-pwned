@@ -16,6 +16,19 @@ const periods = {
   ),
 };
 
+function datePeriodsTimeBackNTimes(period, times) {
+  if (!Object.keys(periods).includes(period)) throw new Error("Invalid Period")
+  if (times <= 0) throw new Error("Invalid times")
+  let currentDate = new Date()
+  let p = {
+    day: new Date().setDate(currentDate.getUTCDate() - 1*times),
+    week: new Date().setDate(currentDate.getUTCDate() - 7*times),
+    month: new Date().setMonth(currentDate.getMonth() - 1*times),
+    year:  new Date().setFullYear(currentDate.getFullYear() - 1*times)
+  };
+  return p[period]
+}
+
 const DEFAULTPERIOD = "week";
 
 module.exports = {
@@ -29,4 +42,6 @@ module.exports = {
     .optional({ nullable: true })
     .isIn(Object.keys(periods))
     .trim(),
+
+    datePeriodsTimeBackNTimes: datePeriodsTimeBackNTimes
 };

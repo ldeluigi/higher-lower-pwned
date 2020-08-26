@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult, param } = require("express-validator");
 const periodTools = require("../../utils/period");
 const limitTools = require("../../utils/limit");
-const { periods } = require("../../utils/period");
+const { datePeriodsTimeBackNTimes } = require("../../utils/period");
 const score = require("../../model/score").schema;
 const jwtTools = require("../../utils/jwt");
 
@@ -12,8 +12,8 @@ router.get("/:id/stats",
     param("id")
       .notEmpty()
       .isAlphanumeric(),
-      periodTools.checkPeriod,
-      limitTools.checkLimit
+    periodTools.checkPeriod,
+    limitTools.checkLimit,
   ],
   jwtTools.authentication(),
   async (req, res) => {
@@ -28,102 +28,108 @@ router.get("/:id/stats",
     const actualPeriod = periodTools.returnPeriodFromReq(req);
 
     const validStartDateFrom = datePeriodsTimeBackNTimes(actualPeriod, actualLimit);
-    const period =  mapFromPeriodToDBPeriod[actualPeriod];
-    const resultHistory = await score
+    const periodDB = mapFromPeriodToDBPeriod[actualPeriod];
+
+    const history = await score
       .aggregate([
         {
           $match: {
-            $expr:{
-              $gte: [ "$start", new Date(validStartDateFrom)]}
+            $expr: {
+              $and: [
+                { $gte: ["$start", new Date(validStartDateFrom)] }, // filter only the valid date
+                { user: req.param.id }
+              ]
             }
-        },
-        {
-          "$project": {
-            "day": { "$dayOfYear": "$start" },
-            "week": { "$week" : "$start" },
-            "month": { "$month": "$start" },
-            "year": { "$year": "$start" },
-            "score": 1,
-            "guesses": 1,
-            "start": 1,
-            "end": 1,
-            "avgPlaysPerDay": { $divide :
-              [
-                1,
-                { $divide:
-                  [
-                    { $subtract: [new Date().getTime(), datePeriodsTimeBackNTimes(actualPeriod, 1)]},
-                    1000 * 24 * 60 * 60
-                  ]
-                }
-              ]}
-          }
-        },
-        {
-          $group: {
-            "_id": {
-              "periodNumber": period,
-              "year": "$year"
-            },
-            "AvgScore": { $avg: "$score"},
-            "AvgGuesses": { $avg: "$guesses"},
-            "AvgDuration": {
-              $avg: { $subtract: ["$end", "$start"]}
-            },
-            "avgPlaysPerDay": { $sum: "$avgPlaysPerDay" }
           }
         },
         {
           $project: {
-            "_id": null,
-            "periodNumber": "$_id.periodNumber",
-            "year": "$_id.year",
-            "AvgScore": "$AvgScore",
-            "AvgGuesses": "$AvgGuesses",
-            "AvgDuration": "$AvgDuration",
-            "avgPlaysPerDay": "$avgPlaysPerDay"
+            day: { $dayOfYear: "$start" },
+            week: { $week: "$start" },
+            month: { $month: "$start" },
+            year: { $year: "$start" },
+            score: true,
+            guesses: true,
+            start: true,
+            end: true,
+            gameWidthOnPeriod: {
+              $divide: // definisce quanto un game impatta sull'avg del gruppo
+                [
+                  1,
+                  {
+                    $divide: // get day count
+                      [
+                        { $subtract: [new Date().getTime(), datePeriodsTimeBackNTimes(actualPeriod, 1)] }, // get millisecond for every group
+                        1000 * 24 * 60 * 60
+                      ]
+                  }
+                ]
+            }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              periodNumber: periodDB,
+              year: "$year"
+            },
+            AvgScore: { $avg: "$score" },
+            AvgGuesses: { $avg: "$guesses" },
+            AvgDuration: {
+              $avg: { $subtract: ["$end", "$start"] }
+            },
+            avgPlaysPerDay: { $sum: "$gameWidthOnPeriod" }, // sum all the width to get the avg of the group
+          }
+        },
+        {
+          $project: {
+            _id: null,
+            periodNumber: "$_id.periodNumber",
+            year: "$_id.year",
+            AvgScore: "$AvgScore",
+            AvgGuesses: "$AvgGuesses",
+            AvgDuration: "$AvgDuration",
+            avgPlaysPerDay: "$avgPlaysPerDay",
           }
         },
         {
           $sort: {
-            "year": -1,
-            "periodNumber": -1
+            year: -1,
+            periodNumber: -1,
+          }
+        },
+      ])
+    const resultMaxValues = await score
+      .aggregate([
+        {
+          $match: { $expr: { user: req.param.id } }
+        },
+        {
+          $group: {
+            _id: "group_max",
+            maxScore: { $max: "$score" },
+            maxGuesses: { $max: "$guesses" },
+            maxDuration: { $max: { $subtract: ["$end", "$start"] } }
           }
         }
-      ]).limit(parseInt(actualLimit))
-      const resultMaxScore = await score
-        .findOne()
-        .sort([["score", -1]])
-      const resultMaxGuesses = await score
-        .findOne()
-        .sort([["guesses", -1]])
-      const resultMaxDuration = await score
-        .aggregate([
-          {
-            $project: {
-              status_count: {
-                $subtract: ["$end", "$start"]
-              }
-            }
-          },
-          {
-            $sort: { status_count: -1 }
-          },
-          { $limit: 1 },
-          {
-            $project: {
-              "_id": "$status_count"
-            }
-          }
-        ])
-      res.json({
-        maxScore: resultMaxScore.score,
-        maxGuesses: resultMaxGuesses.guesses,
-        maxDuration: resultMaxDuration[0]._id,
-        history: resultHistory
-      })
+      ]);
+    history.forEach(function (v) { delete v._id });
+    var maxScore = 0;
+    var maxGuesses = 0;
+    var maxDuration = 0;
+    if (resultMaxValues.length > 0) {
+      maxScore = resultMaxValues[0].maxScore;
+      maxGuesses = resultMaxValues[0].maxGuesses;
+      maxDuration = resultMaxValues[0].maxDuration;
+    }
+    res.json({
+      maxScore,
+      maxGuesses,
+      maxDuration,
+      history,
+    })
   }
-)
+);
 
 const mapFromPeriodToDBPeriod = {
   day: "$day",
@@ -138,18 +144,5 @@ const mapFromPeriodToDaysNumber = {
   month: 30,
   year: 365,
 };
-
-function datePeriodsTimeBackNTimes(period, times) {
-  if (!Object.keys(periods).includes(period)) throw new Error("Invalid Period")
-  if (times <= 0) throw new Error("Invalid times")
-  let currentDate = new Date()
-  let p = {
-    day: new Date().setDate(currentDate.getUTCDate() - 1*times),
-    week: new Date().setDate(currentDate.getUTCDate() - 7*times),
-    month: new Date().setMonth(currentDate.getMonth() - 1*times),
-    year:  new Date().setFullYear(currentDate.getFullYear() - 1*times)
-  };
-  return p[period]
-}
 
 module.exports = router;
