@@ -33,8 +33,8 @@ module.exports = {
   checkPeriod: function (check) {
     return check
       .optional({ nullable: true })
-      .isIn(Object.keys(periods))
-      .trim();
+      .trim()
+      .isIn(Object.keys(periods));
   },
 
   subtractPeriodNTimesFromToday: subtractPeriodNTimesFromToday
