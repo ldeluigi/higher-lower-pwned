@@ -106,6 +106,7 @@ describe("user API", function () {
     let response = await request.post("/users").send(userData);
     expect(response.status).toBe(200);
     expect(response.body.data).toEqual(expectedResult);
+    mock.mockRestore();
     done();
   });
 
