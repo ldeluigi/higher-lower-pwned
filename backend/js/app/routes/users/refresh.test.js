@@ -53,7 +53,6 @@ describe("refresh API", function () {
       token: result.token,
       refresh: result.refresh
     });
-    console.log(response.body.errors);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
     expect(response.body.data).toHaveProperty("id", userMock._id);
