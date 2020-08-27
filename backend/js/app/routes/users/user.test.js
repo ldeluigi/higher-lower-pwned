@@ -67,7 +67,6 @@ describe("user API", function () {
             username: "testusername",
             password: "testpassword"
         });
-        console.log(response.body.errors);
         let result = response.body.data;
         userMock.save = async function () {
             expect(this.password).toBe(pwd.sha512(modifyUserBody.password, this.salt));
