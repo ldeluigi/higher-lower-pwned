@@ -75,6 +75,7 @@ describe("user API", function () {
     response = await request.put("/users/testid").set("Authorization", "Bearer " + result.token)
       .send(modifyUserBody);
     expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("data");
     expect(response.body.data).toHaveProperty("email", modifyUserBody.email);
     expect(response.body.data).toHaveProperty("password", "updated");
     mock.mockRestore();
@@ -105,6 +106,7 @@ describe("user API", function () {
     };
     let response = await request.post("/users").send(userData);
     expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("data");
     expect(response.body.data).toEqual(expectedResult);
     mock.mockRestore();
     done();
