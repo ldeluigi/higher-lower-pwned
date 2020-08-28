@@ -1,0 +1,34 @@
+
+<button *ngFor="let period of periods" class="button-{{period}}"
+  (click)="onSelectPeriod(period)"
+  [disabled]="checkPeriod(period)">{{ period }}</button>
+
+<table>
+  <tbody>
+    <tr>
+      <td></td>
+      <td>avg</td>
+      <td>max</td>
+    </tr>
+    <tr>
+      <td>Score</td>
+      <td>{{myStats.avgScore}}</td>
+      <td>{{myStats.maxScore}}</td>
+    </tr>
+    <tr>
+      <td>Guesses</td>
+      <td>{{myStats.avgGuesses}}</td>
+      <td>{{myStats.maxGuesses}}</td>
+    </tr>
+    <tr>
+      <td>Plays per day</td>
+      <td>{{myStats.avgPlaysPerDay | number}}</td>
+      <td>{{myStats.maxPlaysPerDay}}</td>
+    </tr>
+    <tr>
+      <td>Duration</td>
+      <td>{{myStats.avgDuration | date:'HH:mm:ss'}}</td>
+      <td>{{myStats.maxDuration | date:'HH:mm:ss'}}</td>
+    </tr>
+  </tbody>
+</table>
