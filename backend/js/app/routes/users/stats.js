@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { body, validationResult, param } = require("express-validator");
-const periodTools = require("../../utils/period");
-const limitTools = require("../../utils/limit");
-const { datePeriodsTimeBackNTimes } = require("../../utils/period");
+const { query, validationResult, param } = require("express-validator");
+const periodTools = require("../../helpers/period");
+const limitTools = require("../../helpers/limit");
 const score = require("../../model/score").schema;
 const jwtTools = require("../../utils/jwt");
 
@@ -12,8 +11,8 @@ router.get("/:id/stats",
     param("id")
       .notEmpty()
       .isAlphanumeric(),
-    periodTools.checkPeriod,
-    limitTools.checkLimit,
+    periodTools.checkPeriod(query("period")),
+    limitTools.checkLimit(query("limit")),
   ],
   jwtTools.authentication(),
   async (req, res) => {
@@ -27,7 +26,7 @@ router.get("/:id/stats",
     const actualLimit = limitTools.returnLimitFromReq(req);
     const actualPeriod = periodTools.returnPeriodFromReq(req);
 
-    const validStartDateFrom = datePeriodsTimeBackNTimes(actualPeriod, actualLimit);
+    const validStartDateFrom = periodTools.subtractPeriodNTimesFromToday(actualPeriod, actualLimit);
     const periodDB = mapFromPeriodToDBPeriod[actualPeriod];
 
     const history = await score

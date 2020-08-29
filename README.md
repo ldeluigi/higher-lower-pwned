@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/ldeluigi/higher-lower-pwned/workflows/Node.js%20CI/badge.svg)
+
 # HigherLowerPwned
 
 This project is a web-based game where you guess what password is the most popular between two shown on screen.

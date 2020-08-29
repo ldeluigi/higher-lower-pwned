@@ -1,42 +1,49 @@
 const express = require("express");
-const { validationResult } = require("express-validator");
+const { validationResult, query } = require("express-validator");
 const score = require("../../model/score").schema;
+const scoreToDto = require("../../model/score").toDto;
 const router = express.Router();
-const periodTools = require("../../utils/period");
-const limitTools = require("../../utils/limit");
+const periodTools = require("../../helpers/period");
+const limitTools = require("../../helpers/limit");
 
 router.get(
   "/arcade",
-  [periodTools.checkPeriod, limitTools.checkLimit],
+  [
+    periodTools.checkPeriod(query("period")),
+    limitTools.checkLimit(query("limit"))
+  ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log(req.query);
-    const actualLimit = limitTools.returnLimitFromReq(req);
-    const actualPeriod = periodTools.returnPeriodFromReq(req);
-    const minMax = periodTools.periods[actualPeriod];
+    const queryLimit = req.query.limit || req.query.limit;
+    const queryPeriod = req.query.period || periodTools.default;
+    const minMax = periodTools.periods[queryPeriod];
     const result = await score
       .find({
-        date: {
+        end: {
           $gte: minMax[0],
           $lte: minMax[1],
         },
       })
-      .limit(parseInt(actualLimit));
+      .limit(parseInt(queryLimit))
+      .sort({
+        score: "desc",
+        end: "desc"
+      })
+      .populate('user');
     if (result === null) {
-      return res.status(404).json({ errors: ["No leaderboards found"] });
+      return res.status(400).json({ errors: ["Score query error."] });
     }
+    let mappedScores = result.map(s => {
+      if (s.user !== undefined && s.user !== null) {
+        return scoreToDto(s, s.user.username);
+      }
+      return scoreToDto(s);
+    });
     res.json({
-      /*query: {
-        date: {
-          $gte: minMax[0],
-          $lte: minMax[1],
-        },
-        limit: actualLimit,
-      },*/ //oggetto di debug
-      data: result,
+      data: mappedScores,
     });
   }
 );

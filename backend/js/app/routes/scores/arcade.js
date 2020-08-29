@@ -2,10 +2,9 @@ const express = require("express");
 const { query, param, validationResult } = require("express-validator");
 const score = require("../../model/score").schema;
 const router = express.Router();
-const periodTools = require("../../utils/period");
-const limitTools = require("../../utils/limit");
+const periodTools = require("../../helpers/period");
+const limitTools = require("../../helpers/limit");
 const jwtTools = require("../../utils/jwt");
-const genericTools = require("../../utils/generic");
 
 const valueScore = "score"
 const valueDate = "date"

@@ -1,13 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { validationResult } = require("express-validator");
-const periodTools = require("../../utils/period");
-const { datePeriodsTimeBackNTimes } = require("../../utils/period");
+const { validationResult, query } = require("express-validator");
+const periodTools = require("../../helpers/period");
 const score = require("../../model/score").schema;
 
 router.get("/",
   [
-    periodTools.checkPeriod
+    periodTools.checkPeriod(query("period"))
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -15,7 +14,7 @@ router.get("/",
       return res.status(400).json({ errors: errors.array() });
     }
     const actualPeriod = periodTools.returnPeriodFromReq(req);
-    const validStartDateFrom = datePeriodsTimeBackNTimes(actualPeriod, 1);
+    const validStartDateFrom = periodTools.subtractPeriodNTimesFromToday(actualPeriod, 1);
     const totalDays = (new Date().getTime() - new Date(validStartDateFrom).getTime()) / (1000 * 60 * 60 * 24);
 
     const dateFilter = {

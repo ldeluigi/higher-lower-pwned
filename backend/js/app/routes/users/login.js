@@ -43,7 +43,7 @@ router.post("/login",
           }
         });
       } catch (err) {
-        res.status(400).json({ errors: [err.message] });
+        res.status(400).json({ errors: ["Token creation error: " + err.message] });
       }
     } catch (err) {
       res.status(400).json({ errors: [err.message] });
