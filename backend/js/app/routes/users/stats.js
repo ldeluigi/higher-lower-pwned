@@ -122,10 +122,12 @@ router.get("/:id/stats",
       maxDuration = resultMaxValues[0].maxDuration;
     }
     res.json({
-      maxScore,
-      maxGuesses,
-      maxDuration,
-      history,
+      data: {
+        maxScore,
+        maxGuesses,
+        maxDuration,
+        history,
+      }
     })
   }
 );
