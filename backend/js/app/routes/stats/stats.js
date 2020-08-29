@@ -13,7 +13,8 @@ router.get("/",
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const actualPeriod = periodTools.returnPeriodFromReq(req);
+    const periodValue = req.query.period;
+    const actualPeriod = periodValue !== undefined ? periodValue : periodTools.default;
     const validStartDateFrom = periodTools.subtractPeriodNTimesFromToday(actualPeriod, 1);
     const totalDays = (new Date().getTime() - new Date(validStartDateFrom).getTime()) / (1000 * 60 * 60 * 24);
 
