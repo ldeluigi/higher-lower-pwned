@@ -1,0 +1,2 @@
+<a *ngIf="!this.userLogged" routerLink="/account/login" routerLinkActive="active"> Login </a>
+<button *ngIf="this.userLogged" (click)="this.logout()">LogOut</button>

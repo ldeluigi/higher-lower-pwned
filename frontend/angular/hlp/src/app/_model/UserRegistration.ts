@@ -1,6 +1,6 @@
 interface UserRegistration {
   username: string;
-  passward: string;
+  password: string;
   email: string;
 }
 

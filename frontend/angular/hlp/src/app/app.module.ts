@@ -6,25 +6,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StatsComponent } from './stats/stats.component';
-import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './account/login/login.component';
 
 import { ErrorInterceptor } from './_helper/error.interceptor';
 import { JWTInterceptor } from './_helper/JWT.interceptor';
-import { UpdateComponent } from './account/update/update.component';
-
-const routes: Routes = [
-  { path: 'stats', component: StatsComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'update', component: UpdateComponent }
-];
+import { AccountModule } from './account/account.module';
+import { LoginButtonComponent } from './_components/login-button/login-button.component';
+import { LayoutComponent } from './home/layout/layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StatsComponent,
-    LoginComponent,
-    UpdateComponent
+    LoginButtonComponent,
+    LayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,10 +26,7 @@ const routes: Routes = [
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(
-      routes,
-      { enableTracing: true } // <-- debugging purposes only
-    )
+    AccountModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

@@ -12,24 +12,25 @@ import { Response } from '../_model/serverResponse';
 })
 export class AccountService {
 
-  private userSubject: BehaviorSubject<User>;
+  private userSubject: BehaviorSubject<User | null>;
   private userLocalStorage = 'user';
-  public user: Observable<User>;
+  public user: Observable<User | null>;
 
   constructor(
     private router: Router,
     private http: HttpClient
   ) {
-    this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(this.userLocalStorage) || '{}'));
+    const value = localStorage.getItem(this.userLocalStorage);
+    this.userSubject = value == null ? new BehaviorSubject<User | null>(null) : new BehaviorSubject<User | null>(JSON.parse(value));
     this.user = this.userSubject.asObservable();
   }
 
-  public get userValue(): User {
+  public get userValue(): User | null {
     return this.userSubject.value;
   }
 
-  login(username: string, password: string): Observable<User> {
-    return this.http.post<Response<User>>(`${environment.apiUrl}/users/login`, {username, password})
+  login(username: string, password: string): Observable<User | null> {
+    return this.http.post<Response<User | null>>(`${environment.apiUrl}/users/login`, {username, password})
       .pipe(map(u => {
         localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
         this.userSubject.next(u.data);
@@ -40,7 +41,7 @@ export class AccountService {
   logout(): void {
     // remove user from local storage and set current user to null
     localStorage.removeItem(this.userLocalStorage);
-    this.userSubject.next({} as User);
+    this.userSubject.next(null);
     // TODO navigate function in the router
     // this.router.navigate(['/account/login']);
   }
@@ -58,14 +59,15 @@ export class AccountService {
       password,
       email
     };
-    const user: User = JSON.parse(localStorage.getItem(this.userLocalStorage) || '{}');
+    const user: User | null = JSON.parse(localStorage.getItem(this.userLocalStorage) || '{}');
     if (user === null) {
       return of(false);
+    } else {
+      return this.http.put(`${environment.apiUrl}/users/${user.id}`, params)
+      .pipe(map(x => {
+        return true;
+      }));
     }
-    return this.http.put(`${environment.apiUrl}/users/${user.id}`, params)
-        .pipe(map(x => {
-            return true;
-        }));
   }
 
 }

@@ -38,7 +38,9 @@ export class UpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.accountService.user.subscribe(user => {
-      this.username = user.username;
+      if (user !== null) {
+        this.username = user.username;
+      }
     });
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
