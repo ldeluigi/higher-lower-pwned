@@ -1,0 +1,35 @@
+<div class="card">
+  <h4 class="card-header">Update {{username}} email and password</h4>
+  <div class="card-body">
+      <form [formGroup]="formEmail" (ngSubmit)="onEmailSubmit()">
+          <div class="form-group">
+              <label for="email"> new email </label>
+              <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submittedEmail && formEmail.controls.email.errors }" />
+              <div *ngIf="submittedEmail && formEmail.controls.email.errors" class="invalid-feedback">
+                  <div *ngIf="formEmail.controls.email.errors?.required">email is required</div>
+              </div>
+          </div>
+          <div class="form-group">
+              <button [disabled]="loadingEmail" class="btn btn-primary">
+                  <span *ngIf="loadingEmail" class="spinner-border spinner-border-sm mr-1"></span>
+                  Update email
+              </button>
+          </div>
+      </form>
+      <form [formGroup]="formPwd" (ngSubmit)="onPasswordSubmit()">
+        <div class="form-group">
+          <label for="password"> new password </label>
+          <input type="text" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submittedPwd && formPwd.controls.password.errors }" />
+          <div *ngIf="submittedPwd && formPwd.controls.password.errors" class="invalid-feedback">
+              <div *ngIf="formPwd.controls.password.errors?.required">password is required</div>
+          </div>
+      </div>
+      <div class="form-group">
+          <button [disabled]="loadingPwd" class="btn btn-primary">
+              <span *ngIf="loadingPwd" class="spinner-border spinner-border-sm mr-1"></span>
+              Update password
+          </button>
+      </div>
+      </form>
+  </div>
+</div>
