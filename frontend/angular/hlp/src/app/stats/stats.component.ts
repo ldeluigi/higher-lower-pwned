@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Stats } from '../../model/stats';
+import { Stats } from '../_model/stats';
 
 @Component({
   selector: 'app-stats',
