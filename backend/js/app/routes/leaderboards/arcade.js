@@ -17,7 +17,7 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const queryLimit = req.query.limit || req.query.limit;
+    const queryLimit = req.query.limit || limitTools.limit;
     const queryPeriod = req.query.period || periodTools.default;
     const minMax = periodTools.periods[queryPeriod];
     const result = await score
