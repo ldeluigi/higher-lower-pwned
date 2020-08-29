@@ -67,25 +67,29 @@ router.get("/",
 
     if (result.length <= 0 || resultPlaysPerDay.length <= 0) {
       return res.json({
-        avgScore: 0,
-        maxScore: 0,
-        avgGuesses: 0,
-        maxGuesses: 0,
-        avgPlaysPerDay: 0,
-        maxPlaysPerDay: 0,
-        avgDuration: 0,
-        maxDuration: 0,
+        data: {
+          avgScore: 0,
+          maxScore: 0,
+          avgGuesses: 0,
+          maxGuesses: 0,
+          avgPlaysPerDay: 0,
+          maxPlaysPerDay: 0,
+          avgDuration: 0,
+          maxDuration: 0,
+        }
       });
     }
     res.json({
-      avgScore: result[0].avgScore,
-      maxScore: result[0].maxScore,
-      avgGuesses: result[0].avgGuesses,
-      maxGuesses: result[0].maxGuesses,
-      avgPlaysPerDay: (result[0].gamePlayed / totalDays),
-      maxPlaysPerDay: resultPlaysPerDay[0].maxPlaysPerDay,
-      avgDuration: result[0].avgDuration,
-      maxDuration: result[0].maxDuration,
+      data: {
+        avgScore: result[0].avgScore,
+        maxScore: result[0].maxScore,
+        avgGuesses: result[0].avgGuesses,
+        maxGuesses: result[0].maxGuesses,
+        avgPlaysPerDay: (result[0].gamePlayed / totalDays),
+        maxPlaysPerDay: resultPlaysPerDay[0].maxPlaysPerDay,
+        avgDuration: result[0].avgDuration,
+        maxDuration: result[0].maxDuration,
+      }
     })
   }
 );
