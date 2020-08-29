@@ -1,7 +1,6 @@
 
-<button *ngFor="let period of periods" class="button-{{period}}"
-  (click)="onSelectPeriod(period)"
-  [disabled]="checkPeriod(period)">{{ period }}</button>
+<app-period-buttons (period)="getStats($event)"
+  ></app-period-buttons>
 
 <table>
   <tbody>

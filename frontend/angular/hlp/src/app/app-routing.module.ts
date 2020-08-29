@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AccountModule } from './account/account.module';
-import { StatsComponent } from './stats/stats.component';
+import { StatsComponent } from './home/stats/stats.component';
 import { AuthGuard } from './_helper/auth.guard';
+import { LayoutComponent } from './home/layout/layout.component';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
 
 const routes: Routes = [
-  { path: 'stats', component: StatsComponent },
+  { path: 'home', component: LayoutComponent },
   { path: 'account', loadChildren: accountModule },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

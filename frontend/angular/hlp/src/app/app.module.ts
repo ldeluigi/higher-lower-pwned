@@ -5,13 +5,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { StatsComponent } from './stats/stats.component';
+import { StatsComponent } from './home/stats/stats.component';
 
 import { ErrorInterceptor } from './_helper/error.interceptor';
 import { JWTInterceptor } from './_helper/JWT.interceptor';
 import { AccountModule } from './account/account.module';
 import { LoginButtonComponent } from './_components/login-button/login-button.component';
 import { LayoutComponent } from './home/layout/layout.component';
+import { LeadeboardComponent } from './home/leadeboard/leadeboard.component';
+import { PeriodButtonsComponent } from './_components/period-buttons/period-buttons.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,8 @@ import { LayoutComponent } from './home/layout/layout.component';
     StatsComponent,
     LoginButtonComponent,
     LayoutComponent,
+    LeadeboardComponent,
+    PeriodButtonsComponent,
   ],
   imports: [
     BrowserModule,

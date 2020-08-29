@@ -1,0 +1,9 @@
+<h2>Leaderboard</h2>
+<app-period-buttons (period)="updateLeaderboard(undefined, $event)"></app-period-buttons>
+<ul class="leaderboards">
+  <li *ngFor="let item of leaderboards">
+    <span class="badge">score: {{item.score}}</span>
+    player: "{{item.username}}"<br>
+    <span>date: {{item.date | date}}</span>
+  </li>
+</ul>
