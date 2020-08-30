@@ -37,12 +37,10 @@ router.get("/:id/stats",
         .aggregate([
           {
             $match: {
-              $expr: {
-                $and: [
-                  { $gte: ["$end", validStartDateFrom] }, // filter only the valid date
-                  { user: userID }
-                ]
-              }
+              end: {
+                $gte: validStartDateFrom
+              },
+              user: userID
             }
           },
           {
@@ -119,13 +117,6 @@ const mapFromPeriodToDBPeriod = {
   week: "$week",
   month: "$month",
   year: "$year",
-};
-
-const mapFromPeriodToDaysNumber = {
-  day: 1,
-  week: 7,
-  month: 30,
-  year: 365,
 };
 
 module.exports = router;
