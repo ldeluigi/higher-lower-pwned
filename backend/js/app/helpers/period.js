@@ -18,16 +18,27 @@ function subtractPeriodNTimesFromToday(period, times) {
   if (times <= 0) throw new Error("Invalid times")
   let currentDate = new Date()
   let p = {
-    day: new Date().setDate(currentDate.getUTCDate() - 1 * times),
-    week: new Date().setDate(currentDate.getUTCDate() - 7 * times),
-    month: new Date().setMonth(currentDate.getMonth() - 1 * times),
-    year: new Date().setFullYear(currentDate.getFullYear() - 1 * times)
+    day: new Date(),
+    week: new Date(),
+    month: new Date(),
+    year: new Date()
   };
+  p.day.setDate(currentDate.getUTCDate() - 1 * times);
+  p.week.setDate(currentDate.getUTCDate() - 7 * times);
+  p.month.setMonth(currentDate.getMonth() - 1 * times);
+  p.year.setFullYear(currentDate.getFullYear() - 1 * times);
   return p[period]
+}
+
+function periodInDays(period) {
+  const periodMinMax = periods[period];
+  const periodInMilliseconds = periodMinMax[1] - periodMinMax[0];
+  return periodInMilliseconds / (24 * 60 * 60 * 1000);
 }
 
 module.exports = {
   periods: periods,
+  periodsInDays: periodInDays,
   default: "week",
 
   checkPeriod: function (check) {
