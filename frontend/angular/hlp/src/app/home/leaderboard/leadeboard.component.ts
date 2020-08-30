@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LeaderboardService } from '../../_services/leaderboard.service';
+import { StatisticService } from '../../_services/statistic.service';
 import { from } from 'rxjs';
 import { LbItem } from 'src/app/_model/lbItem';
 
@@ -13,7 +13,7 @@ export class LeadeboardComponent implements OnInit {
   leaderboards: LbItem[] = [];
 
   constructor(
-    private leaderboardService: LeaderboardService
+    private leaderboardService: StatisticService
   ) {
     this.leaderboardService.observableLeaderboard.subscribe(newLb => this.leaderboards = newLb);
   }

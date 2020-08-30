@@ -103,7 +103,6 @@ router.get("/:id/stats",
             }
           },
         ]);
-      //history.forEach((v) => { delete v._id });
       res.json({
         data: {
           id: userID,

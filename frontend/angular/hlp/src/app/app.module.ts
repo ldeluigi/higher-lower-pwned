@@ -10,9 +10,10 @@ import { StatsComponent } from './home/stats/stats.component';
 import { ErrorInterceptor } from './_helper/error.interceptor';
 import { JWTInterceptor } from './_helper/JWT.interceptor';
 import { AccountModule } from './account/account.module';
+import { UsersModule } from './users/users.module';
 import { LoginButtonComponent } from './_components/login-button/login-button.component';
 import { LayoutComponent } from './home/layout/layout.component';
-import { LeadeboardComponent } from './home/leadeboard/leadeboard.component';
+import { LeadeboardComponent } from './home/leaderboard/leadeboard.component';
 import { PeriodButtonsComponent } from './_components/period-buttons/period-buttons.component';
 
 @NgModule({
@@ -31,6 +32,7 @@ import { PeriodButtonsComponent } from './_components/period-buttons/period-butt
     ReactiveFormsModule,
     HttpClientModule,
     AccountModule,
+    UsersModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

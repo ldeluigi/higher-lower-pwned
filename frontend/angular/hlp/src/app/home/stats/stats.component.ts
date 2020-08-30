@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Stats } from '../../_model/stats';
-import { LeaderboardService } from '../../_services/leaderboard.service';
+import { StatisticService } from '../../_services/statistic.service';
 
 @Component({
   selector: 'app-stats',
@@ -12,20 +12,18 @@ export class StatsComponent implements OnInit {
   myStats = {} as Stats;
 
   constructor(
-    private statsService: LeaderboardService,
+    private statsService: StatisticService,
   ) { }
 
   ngOnInit(): void {
     this.statsService.observableStats
       .subscribe(s => {
-        console.log('Updated stats', s);
         this.myStats = s;
       });
     this.statsService.refreshStats();
   }
 
   getStats(p?: string): void {
-    console.log(p);
     this.statsService.refreshStats(p);
   }
 }
