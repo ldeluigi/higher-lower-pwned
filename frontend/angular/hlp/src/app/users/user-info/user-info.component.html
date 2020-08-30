@@ -1,0 +1,6 @@
+<p>user-info works!</p>
+<h3>Hi {{this.userInfo.username}}</h3>
+<span> Update your data <a routerLink="/account/update" routerLinkActive="active">here</a></span>
+<p>Your email is {{this.userInfo.email}}</p>
+<p>Registration date was {{this.userInfo.registration | date:'medium' }}</p>
+<p>Last login date was {{this.userInfo.lastLogin | date:'medium' }}</p>

@@ -6,10 +6,12 @@ import { AuthGuard } from './_helper/auth.guard';
 import { LayoutComponent } from './home/layout/layout.component';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
+const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
 
 const routes: Routes = [
   { path: 'home', component: LayoutComponent },
   { path: 'account', loadChildren: accountModule },
+  { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'home' }
 ];
 

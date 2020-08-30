@@ -6,11 +6,12 @@ import { environment } from '../../environments/environment';
 import { map, first } from 'rxjs/operators';
 import { Response } from '../_model/serverResponse';
 import { Stats } from '../_model/stats';
+import { addParamsToHttp } from '../_helper/httpUtils';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LeaderboardService {
+export class StatisticService {
 
   private leaderboardSubject: BehaviorSubject<LbItem[]>;
   private statsSubject: BehaviorSubject<Stats>;
@@ -35,10 +36,7 @@ export class LeaderboardService {
   }
 
   public refreshStats(period?: string): void {
-    let param = new HttpParams();
-    if (period !== undefined) {
-      param = param.set('period', period);
-    }
+    const param = addParamsToHttp(new HttpParams(), [{name: 'period', param: period}]);
     const url = `${environment.apiUrl}/stats`;
     this.http.get<Response<Stats>>(url, { params: param })
       .subscribe(response => {
@@ -47,16 +45,12 @@ export class LeaderboardService {
   }
 
   public refreshLeaderboard(limit?: number, period?: string): void {
-    let param = new HttpParams();
-    if (limit) {
-      param = param.set('limit', limit.toString());
-    }
-    if (period) {
-      param = param.set('period', period);
-    }
+    const params = addParamsToHttp(new HttpParams(), [
+      {name: 'limit',  param: limit?.toString()},
+      {name: 'period', param: period}
+    ]);
     const url = `${environment.apiUrl}/leaderboards/arcade`;
-    console.log('leaderboard', limit, period, url); // <<------------ REMOVE
-    this.http.get<Response<LbItem[]>>(url, { params: param })
+    this.http.get<Response<LbItem[]>>(url, { params })
       .subscribe(response => {
         this.leaderboardSubject.next(response.data);
       });
