@@ -37,6 +37,7 @@ module.exports = {
   toDto: function (schema, user = "anonymous") {
     return {
       score: schema.score,
+      guesses: schema.guesses,
       date: schema.end,
       username: user
     };
