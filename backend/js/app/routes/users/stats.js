@@ -32,8 +32,7 @@ router.get("/:id/stats",
       let validStartDateFrom = periodTools.subtractPeriodNTimesFromToday(queryPeriod, queryLimit);
       let periodGroupDB = mapFromPeriodToDBPeriod[queryPeriod];
 
-      let userID = req.param.id;
-
+      let userID = req.params.id;
       const history = await score
         .aggregate([
           {
