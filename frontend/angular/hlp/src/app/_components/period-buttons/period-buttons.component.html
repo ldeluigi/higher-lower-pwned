@@ -1,3 +1,6 @@
-<button *ngFor="let period of periods" class="button-{{period}}"
+<!-- <button *ngFor="let period of periods" class="button-{{period}}"
   (click)="onSelectPeriod(period)"
-  [disabled]="checkPeriod(period)">{{ period }}</button>
+  [disabled]="checkPeriod(period)">{{ period }}</button> -->
+  <mat-button-toggle-group #group="matButtonToggleGroup" aria-label="Font Style" [value]="selectedVal" (change)="onSelectPeriod(group.value)">
+    <mat-button-toggle *ngFor="let period of periods" value={{period}}>{{period}}</mat-button-toggle>
+  </mat-button-toggle-group>

@@ -8,12 +8,13 @@ interface HistoryItem {
   avgPlaysPerDay: number;
   // duration in millisecond
   avgDuration: number;
-}
-
-export interface UserStats {
   maxScore: number;
   maxGuesses: number;
   // max duration in milliseconds
   maxDuration: number;
+}
+
+export interface UserStats {
+  id: number;
   history: HistoryItem[];
 }
