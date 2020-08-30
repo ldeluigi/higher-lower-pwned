@@ -13,84 +13,88 @@ router.get("/",
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const periodValue = req.query.period;
-    const actualPeriod = periodValue !== undefined ? periodValue : periodTools.default;
-    const validStartDateFrom = periodTools.subtractPeriodNTimesFromToday(actualPeriod, 1);
-    const totalDays = (new Date().getTime() - new Date(validStartDateFrom).getTime()) / (1000 * 60 * 60 * 24);
+    const queryPeriod = req.query.period || periodTools.default;
+    const statsBeginDate = periodTools.subtractPeriodNTimesFromToday(queryPeriod, 1);
+    const totalDays = periodTools.periodsInDays(queryPeriod);
 
-    const dateFilter = {
-      $match: {
-        $expr: {
-          $gte: ["$start", new Date(validStartDateFrom)]
-        }
-      }
-    };
-
-    const resultPlaysPerDay = await score
-      .aggregate([
-        dateFilter,
+    try {
+      let result = await score.aggregate([
+        {
+          $match: {
+            end: {
+              $gte: statsBeginDate,
+              $lte: new Date()
+            }
+          }
+        },
         {
           $project: {
-            day: { $dayOfYear: "$start" },
+            day: { $dayOfYear: "$end" },
+            week: { $week: "$end" },
+            month: { $month: "$end" },
+            year: { $year: "$end" },
+            score: true,
+            guesses: true,
+            start: true,
+            end: true,
+
           }
         },
         {
-          $group: {
-            _id: "$day",
-            gamePlayed: { $sum: 1 },
+          $facet: {
+            allTime: [
+              {
+                $group: {
+                  _id: null,
+                  maxScore: { $max: "$score" },
+                  avgScore: { $avg: "$score" },
+                  maxGuesses: { $max: "$guesses" },
+                  avgGuesses: { $avg: "$guesses" },
+                  maxDuration: { $max: { $subtract: ["$end", "$start"] } },
+                  avgDuration: {
+                    $avg: { $subtract: ["$end", "$start"] }
+                  },
+                }
+              }
+            ],
+            byDay: [
+              {
+                $group: {
+                  _id: {
+                    day: "$day"
+                  },
+                  plays: { $sum: 1 }
+                }
+              },
+              {
+                $group: {
+                  _id: null,
+                  avgPlaysPerDay: { $avg: "$plays" },
+                  maxPlaysPerDay: { $max: "$plays" }
+                }
+              }
+            ]
           }
         },
         {
-          $group: {
-            _id: "group_id",
-            maxPlaysPerDay: { $max: "$gamePlayed" },
+          $project: {
+            avgScore: { $first: "$allTime.avgScore" },
+            maxScore: { $first: "$allTime.maxScore" },
+            avgGuesses: { $first: "$allTime.avgGuesses" },
+            maxGuesses: { $first: "$allTime.maxGuesses" },
+            avgDuration: { $first: "$allTime.avgDuration" },
+            maxDuration: { $first: "$allTime.maxDuration" },
+            avgPlaysPerDay: { $first: "$byDay.avgPlaysPerDay" },
+            maxPlaysPerDay: { $first: "$byDay.maxPlaysPerDay" }
           }
         }
       ]);
-
-    const result = await score
-      .aggregate([
-        dateFilter,
-        {
-          $group: {
-            _id: "group_id",
-            avgScore: { $avg: "$score" },
-            avgGuesses: { $avg: "$guesses" },
-            avgDuration: { $avg: { $subtract: ["$end", "$start"] } },
-            gamePlayed: { $sum: 1 },
-            maxScore: { $max: "$score" },
-            maxGuesses: { $max: "$guesses" },
-            maxDuration: { $max: { $subtract: ["$end", "$start"] } },
-          }
-        }
-      ]);
-
-    if (result.length <= 0 || resultPlaysPerDay.length <= 0) {
-      return res.json({
-        data: {
-          avgScore: 0,
-          maxScore: 0,
-          avgGuesses: 0,
-          maxGuesses: 0,
-          avgPlaysPerDay: 0,
-          maxPlaysPerDay: 0,
-          avgDuration: 0,
-          maxDuration: 0,
-        }
+      res.json({
+        data: result[0]
       });
+    } catch (err) {
+      res.status(400).json({ errors: [err.message] });
     }
-    res.json({
-      data: {
-        avgScore: result[0].avgScore,
-        maxScore: result[0].maxScore,
-        avgGuesses: result[0].avgGuesses,
-        maxGuesses: result[0].maxGuesses,
-        avgPlaysPerDay: (result[0].gamePlayed / totalDays),
-        maxPlaysPerDay: resultPlaysPerDay[0].maxPlaysPerDay,
-        avgDuration: result[0].avgDuration,
-        maxDuration: result[0].maxDuration,
-      }
-    })
   }
 );
 
