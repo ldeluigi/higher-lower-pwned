@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { User } from '../_model/user';
 import { UserRegistration, UserRegistrationResponse } from '../_model/UserRegistration';
+import { TokenRefresh } from '../_model/tokenRefresh';
 import { Route, Router } from '@angular/router';
 import { HttpClient, JsonpInterceptor } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Response } from '../_model/serverResponse';
@@ -20,8 +21,7 @@ export class AccountService {
     private router: Router,
     private http: HttpClient
   ) {
-    const value = localStorage.getItem(this.userLocalStorage);
-    this.userSubject = value == null ? new BehaviorSubject<User | null>(null) : new BehaviorSubject<User | null>(JSON.parse(value));
+    this.userSubject = new BehaviorSubject<User | null>(this.extractUser());
     this.user = this.userSubject.asObservable();
   }
 
@@ -29,8 +29,16 @@ export class AccountService {
     return this.userSubject.value;
   }
 
+  private extractUser(): User | null {
+    const u = localStorage.getItem(this.userLocalStorage);
+    if (u !== null) {
+      return JSON.parse(u);
+    }
+    return null;
+  }
+
   login(username: string, password: string): Observable<User | null> {
-    return this.http.post<Response<User | null>>(`${environment.apiUrl}/users/login`, {username, password})
+    return this.http.post<Response<User | null>>(`${environment.apiUrl}/users/login`, { username, password })
       .pipe(map(u => {
         localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
         this.userSubject.next(u.data);
@@ -59,15 +67,30 @@ export class AccountService {
       password,
       email
     };
-    const user: User | null = JSON.parse(localStorage.getItem(this.userLocalStorage) || '{}');
+    const user = this.extractUser();
     if (user === null) {
       return of(false);
     } else {
       return this.http.put(`${environment.apiUrl}/users/${user.id}`, params)
-      .pipe(map(x => {
-        return true;
-      }));
+        .pipe(map(x => {
+          return true;
+        }));
     }
   }
 
+  refreshToken(): Observable<TokenRefresh> {
+    const user: User | null = this.userValue;
+    if (user === null) {
+      return throwError('No user logged');
+    }
+    console.log(`${environment.apiUrl}/users/refresh`, user);
+    return this.http.post<Response<TokenRefresh>>(`${environment.apiUrl}/users/refresh`, { token: user.token, refresh: user.refresh })
+      .pipe(map(a => {
+        user.token = a.data.token;
+        user.refresh = a.data.refresh;
+        console.log(user.token, a.data.token);
+        this.userSubject.next(user);
+        return a.data;
+      }));
+  }
 }

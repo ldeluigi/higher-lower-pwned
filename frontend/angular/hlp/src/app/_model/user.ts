@@ -1,6 +1,6 @@
 export interface User {
-  username: string;
   id: string;
+  username: string;
   token: string;
-  tokenRefresh: string;
+  refresh: string;
 }

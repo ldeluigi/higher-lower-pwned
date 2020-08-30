@@ -15,6 +15,9 @@ import { LoginButtonComponent } from './_components/login-button/login-button.co
 import { LayoutComponent } from './home/layout/layout.component';
 import { LeadeboardComponent } from './home/leaderboard/leadeboard.component';
 import { PeriodButtonsComponent } from './_components/period-buttons/period-buttons.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+
 
 @NgModule({
   declarations: [
@@ -33,6 +36,8 @@ import { PeriodButtonsComponent } from './_components/period-buttons/period-butt
     HttpClientModule,
     AccountModule,
     UsersModule,
+    BrowserAnimationsModule,
+    MatButtonToggleModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

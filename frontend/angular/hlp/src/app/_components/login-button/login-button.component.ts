@@ -16,7 +16,7 @@ export class LoginButtonComponent implements OnInit {
     private accountService: AccountService
   ) {
     this.accountService.user.subscribe(user => {
-      this.userLogged = user != null;
+      this.userLogged = user !== null;
     });
   }
 
