@@ -6,53 +6,61 @@ const periodTools = require("../../helpers/period");
 const limitTools = require("../../helpers/limit");
 const jwtTools = require("../../utils/jwt");
 
-const valueScore = "score"
-const valueDate = "date"
-const valueScoreInDB = "score"
-const valueDateInDB = "start"
-const sortable = [valueScore, valueDate];
+const scoreSortKey = "score"
+const dateSortKey = "date"
+const sortStrategies = [scoreSortKey, dateSortKey];
 
 router.get(
   "/:userid/arcade",
   [
-    periodTools.checkPeriod,
-    limitTools.checkLimit,
-    query("page").optional({ nullable: true }).isInt({ min: 0 }).trim(),
-    query("sortby").optional({ nullable: true }).isIn(sortable).trim(),
     param("userid")
       .notEmpty()
       .isAlphanumeric(),
+    periodTools.checkPeriod(query("period")),
+    limitTools.checkLimit(query("limit")),
+    query("page").optional({ nullable: true }).trim().isInt({ min: 0 }),
+    query("sortby").optional({ nullable: true }).trim().isIn(sortStrategies)
   ],
   jwtTools.authentication(),
   async (req, res) => {
     const errors = validationResult(req);
-    if (req.auth.id != req.params.userid) {
-      console.log(req.auth.id);
-      return res.status(403).json({ errors: ["User not authorized."] });
-    }
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    if (req.auth.id != req.params.userid) {
+      return res.status(403).json({ errors: ["User not authorized."] });
+    }
     try {
-      const actualLimit = limitTools.returnLimitFromReq(req);
-      const actualPeriod = periodTools.returnPeriodFromReq(req);
-      const minMax = periodTools.periods[actualPeriod];
-      const actualPage = genericTools.getOrElse(req.query.page, 0);
-      const actualSortby = genericTools.getOrElse(req.query.sortby, valueScore);
-      const sortValue = actualSortby === valueScore ? [[valueScoreInDB, -1]] : [[valueDateInDB, 1]]
+      const queryLimit = req.query.limit || limitTools.default;
+      const queryPeriod = req.query.period || periodTools.default;
+      const periodMinMax = periodTools.periods[queryPeriod];
+      const queryPage = req.query.page || 0;
+      const querySortStrategy = req.query.sortby;
+      const userID = req.params.userid;
+      let sortStrategy = {};
+      switch (querySortStrategy) {
+        case scoreSortKey:
+          sortStrategy["score"] = "desc";
+          break;
+        case dateSortKey:
+          sortStrategy["end"] = "desc";
+          break;
+        default:
+          sortStrategy["score"] = "desc";
+      }
       const result = await score
         .find({
-          start: {
-            $gte: minMax[0],
-            $lte: minMax[1]
+          end: {
+            $gte: periodMinMax[0],
+            $lte: periodMinMax[1]
           },
-          user: req.params.userid
+          user: userID
         })
-        .skip(actualPage * actualLimit)
-        .limit(parseInt(actualLimit))
-        .sort(sortValue);
+        .skip(queryPage * queryLimit)
+        .limit(parseInt(queryLimit))
+        .sort(sortStrategy);
       if (result === null) {
-        return res.status(404).json({ errors: ["No leaderboards found"] });
+        return res.status(404).json({ errors: ["Score query error."] });
       }
       res.json({ data: result });
     } catch (err) {
