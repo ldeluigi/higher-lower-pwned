@@ -4,6 +4,7 @@ const { query, validationResult, param } = require("express-validator");
 const periodTools = require("../../helpers/period");
 const score = require("../../model/score").schema;
 const jwtTools = require("../../utils/jwt");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 router.get("/:id/stats",
   [
@@ -39,8 +40,8 @@ router.get("/:id/stats",
             $match: {
               $expr: {
                 $and: [
-                  { $gte: ["$end", validStartDateFrom] }, // filter only the valid date
-                  { $eq: ["$user", userID] }
+                  { $eq: ["$user", ObjectId(userID)] },
+                  { $gte: ["$end", validStartDateFrom] } // filter only the valid date
                 ]
               }
             }
