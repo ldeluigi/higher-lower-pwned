@@ -1,41 +1,33 @@
-const games = new Map();
-
-function newID() {
-  let keys = Array.from(games.keys);
-  if (keys.length <= 0) return 0;
-  keys.sort().reverse();
-  if (keys[keys.length - 1] > 0) {
-    return 0;
-  }
-  while (keys.length > 1) {
-    var last = keys.pop();
-    if (keys[keys.length - 1] - last > 1) {
-      return last + 1;
-    }
-  }
-  return keys[0] + 1;
-}
-
-function newGame(userID, user) {
-  if (userID !== undefined && user !== undefined) {
-  }
-  // TODO implement
-  return {
-    ok: "ok"
-  };
-}
+const fs = require('fs').promises;
+const path = require('path');
 
 module.exports = {
-  newGame: function (userID, username) {
-    let gameID = newID();
-    games.set(gameID, newGame(userID, username));
-    return gameID.toString();
+  setup: async function () {
+    let passwordFiles = await fs.readdir(path.join(__dirname, "/passwords"));
+    passwordFiles = passwordFiles.filter(fn => fn.endsWith(".csv"));
+    if (passwordFiles.length <= 0) throw new Error("Password files missing.");
   },
-  newGuess: function (gameID) {
-    if (!games.has(gameID)) {
-      throw new Error("Game not found.");
+  newGame: async function (gameID) {
+    return true;
+  },
+  currentGuess: async function (gameID) {
+    return {
+      password1: "p1",
+      value1: 1000,
+      password2: "p2",
+      timeout: 10000,
+      score: 100,
+      guesses: 1,
+      duration: 100000
+    };
+  },
+  deleteGame: async function (gameID) {
+    return true;
+  },
+  submitGuess: async function (gameID, guess) {
+    if (guess !== 1 && guess !== 2) {
+      throw new Error("Guess must be 1 or 2");
     }
-    // TODO implement
-    return games.get(gameID);
+    return guess === 1;
   }
 }

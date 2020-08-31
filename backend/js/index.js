@@ -1,10 +1,18 @@
 const config = require("./config/config");
 const mongoose = require("mongoose");
 const server = require("./config/server").server;
+const game = require("./app/game/game");
 
-mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
-  console.log("Connected to MongoDB");
-  server.listen(config.port, () => {
-    console.log("Listening on " + config.port);
-  });
-});
+(async () => {
+  try {
+    await mongoose.connect(config.mongoose.url, config.mongoose.options)
+    console.log("Connected to MongoDB");
+    await game.setup();
+    console.log("Game setup done");
+    server.listen(config.port, () => {
+      console.log("Listening on " + config.port);
+    });
+  } catch (err) {
+    console.log('Error: ' + err)
+  }
+})();
