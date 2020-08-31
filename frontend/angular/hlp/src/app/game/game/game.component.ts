@@ -23,16 +23,19 @@ export class GameComponent implements OnInit {
   card: CardData = { word: this.word, score: this.score.toString() };
   card2: CardData = { word: 'fjesa', score: '****' };
 
+  loading = false;
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
   up(): void {
-
+    this.loading = true;
   }
 
   down(): void {
+    this.loading = true;
   }
 
   next(newWord: string, oldScore: number): void {
@@ -48,6 +51,7 @@ export class GameComponent implements OnInit {
         word: this.word2,
         score: '***'
       };
+      this.loading = false;
     }, 2000);
   }
 
