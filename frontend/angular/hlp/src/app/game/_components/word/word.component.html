@@ -1,5 +1,25 @@
-<p>
-  {{word}} with score:
-  <span *ngIf="showScore">{{score}}</span>
-  <span *ngIf="!showScore">****</span>
-</p>
+<div [@testAnim2]="newCard" (@testAnim2.done)="onAnimation2Done($event)">
+  <mat-card class="word-card">
+    <mat-card-header>
+      <mat-card-title> {{ card.word }}. </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>with score: {{ card.score }}</div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div
+  *ngIf="newCard !== false"
+  (@testAnim.done)="onAnimationDone($event)"
+  [@testAnim]
+>
+  <mat-card class="word-card">
+    <mat-card-header>
+      <mat-card-title> {{ dataNewCard.word }}. </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>with score: {{ dataNewCard.score }}</div>
+    </mat-card-content>
+  </mat-card>
+</div>

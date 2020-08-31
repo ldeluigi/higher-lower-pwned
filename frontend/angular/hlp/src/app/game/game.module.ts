@@ -5,6 +5,7 @@ import { GameRoutingModule } from './game-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { WordComponent } from './_components/word/word.component';
 import { GameComponent } from './game/game.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     GameRoutingModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule
   ]
 })
 export class GameModule { }
