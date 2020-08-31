@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.open-close-container {
+  border: 1px solid #dddddd;
+  margin-top: 1em;
+  padding: 20px 20px 0px 20px;
+  color: #000000;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+app-word {
+  margin: 0px auto;
+  text-align: center;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0px 0px;
+}
+
+.btn {
+  outline: none;
+  border: none;
+  background-color: #9C27B0;
+  padding: 5px 20px;
+  margin: 3px 10px;
+  border-radius: 3px;
+  color: #fff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #8E24AA;
+}
+
+.btn:active {
+  background-color: #7B1FA2;
+}
