@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [LayoutComponent, UserInfoComponent, UserStatsComponent],
@@ -27,6 +28,7 @@ import { SharedModule } from '../shared/shared.module';
     MatPaginatorModule,
     SharedModule,
     ChartsModule,
+    MatSnackBarModule,
   ],
 })
 export class UsersModule {}
