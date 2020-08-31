@@ -24,6 +24,31 @@ let game = new Schema(
             type: ObjectId,
             ref: 'users'
         },
+        gameID: {
+            type: String,
+            unique: true,
+            required: true
+        },
+        currentP1: {
+            type: String,
+            required: true
+        },
+        valueP1: {
+            type: Number,
+            required: true
+        },
+        currentP2: {
+            type: String,
+            required: true
+        },
+        valueP2: {
+            type: Number,
+            required: true
+        },
+        expiration: {
+            type: Date,
+            required: true
+        }
     },
     { collection: "Games" }
 );
