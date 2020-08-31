@@ -20,7 +20,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(catchError(err => {
-      if (err instanceof HttpErrorResponse && err.status === 401 && this.accountService.user !== undefined) {
+      if (err instanceof HttpErrorResponse && err.status === 401 && this.accountService.user !== null) {
         // refresh the token
         return this.handle401Error(request, next);
       }

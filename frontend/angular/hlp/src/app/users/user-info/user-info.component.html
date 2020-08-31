@@ -1,6 +1,37 @@
-<p>user-info works!</p>
-<h3>Hi {{this.userInfo.username}}</h3>
-<span> Update your data <a routerLink="/account/update" routerLinkActive="active">here</a></span>
-<p>Your email is {{this.userInfo.email}}</p>
-<p>Registration date was {{this.userInfo.registration | date:'medium' }}</p>
-<p>Last login date was {{this.userInfo.lastLogin | date:'medium' }}</p>
+<mat-card>
+  <mat-card class="username-card">
+    <mat-card-title>{{ this.userInfo.username }}</mat-card-title>
+    <mat-card-subtitle>Username</mat-card-subtitle>
+  </mat-card>
+  <mat-card class="password-card">
+    <mat-card-title>
+      ******
+      <button mat-mini-fab aria-label="Edit button" (click)="openDialog('password')">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-subtitle>Password</mat-card-subtitle>
+  </mat-card>
+
+  <mat-card class="email-card">
+    <mat-card-title>
+      {{ this.userInfo.email }}
+      <button mat-mini-fab aria-label="Edit button" (click)="openDialog('email')">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-subtitle>
+      Email
+    </mat-card-subtitle>
+  </mat-card>
+  <mat-card class="reg-date-card">
+    <mat-card-title>{{
+      this.userInfo.registration | date: "medium"
+    }}</mat-card-title>
+    <mat-card-subtitle>Registration date</mat-card-subtitle>
+  </mat-card>
+  <mat-card class="last-update-card">
+    <mat-card-title>{{this.userInfo.lastLogin | date: "medium"}}</mat-card-title>
+    <mat-card-subtitle>Last login date</mat-card-subtitle>
+  </mat-card>
+</mat-card>

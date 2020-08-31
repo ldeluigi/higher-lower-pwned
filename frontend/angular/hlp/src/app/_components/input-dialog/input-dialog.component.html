@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Insert {{data.paramName}}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>{{data.paramName}}</mat-label>
+    <input matInput [(ngModel)]="data.value" type={{data.paramName}}>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.value" cdkFocusInitial>Ok</button>
+</div>

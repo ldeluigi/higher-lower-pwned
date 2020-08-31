@@ -16,8 +16,15 @@ import { LayoutComponent } from './home/layout/layout.component';
 import { LeadeboardComponent } from './home/leaderboard/leadeboard.component';
 import { PeriodButtonsComponent } from './_components/period-buttons/period-buttons.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { InputDialogComponent } from './_components/input-dialog/input-dialog.component';
+import { MatTableModule } from '@angular/material/table';
 
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -27,6 +34,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     LayoutComponent,
     LeadeboardComponent,
     PeriodButtonsComponent,
+    InputDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,7 +45,13 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     AccountModule,
     UsersModule,
     BrowserAnimationsModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatCardModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

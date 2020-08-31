@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountService } from 'src/app/_services/account.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { UserRegistration } from '../../_model/UserRegistration';
 import { first } from 'rxjs/operators';
 @Component({
@@ -12,9 +12,9 @@ import { first } from 'rxjs/operators';
 export class RegistrationComponent implements OnInit {
 
   form: FormGroup;
-  loading = false;
-  submitted = false;
+  error = '';
   returnUrl = '';
+  hide = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,7 +25,7 @@ export class RegistrationComponent implements OnInit {
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      email: ['', Validators.required]
+      email: ['', Validators.email]
     });
   }
 
@@ -35,18 +35,15 @@ export class RegistrationComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  // tslint:disable-next-line: typedef
-  get f() { return this.form.controls; }
+  get f(): { [key: string]: AbstractControl; } { return this.form.controls; }
 
-  // tslint:disable-next-line: no-unused-expression
   onSubmit(): void {
-    this.submitted = true;
-
+    this.error = '';
     if (this.form.invalid) {
+      this.error = 'Invalid username, password or email';
       return;
     }
 
-    this.loading = true;
     const user: UserRegistration = {
       username: this.f.username.value,
       password: this.f.password.value,
@@ -59,8 +56,7 @@ export class RegistrationComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         error => {
-          // TODO print error somewhere
-          this.loading = false;
+          this.error = 'Invalid data';
         });
   }
 }

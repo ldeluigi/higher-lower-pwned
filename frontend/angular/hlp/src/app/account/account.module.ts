@@ -8,6 +8,13 @@ import { RegistrationComponent } from './registration/registration.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LayoutComponent } from './layout/layout.component';
 
+// Material
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +26,12 @@ import { LayoutComponent } from './layout/layout.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AccountRoutingModule
+    AccountRoutingModule,
+    MatCardModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule
   ]
 })
 export class AccountModule { }

@@ -1,9 +1,36 @@
 <h2>Leaderboard</h2>
 <app-period-buttons (period)="updateLeaderboard(undefined, $event)"></app-period-buttons>
-<ul class="leaderboards">
-  <li *ngFor="let item of leaderboards">
-    <span class="badge">score: {{item.score}}</span>
-    player: "{{item.username}}"<br>
-    <span>date: {{item.date | date}}</span>
-  </li>
-</ul>
+<mat-form-field>
+  <mat-label>Limit</mat-label>
+  <input matInput (keyup)="updateLeaderboard()" [formControl]="limit" input="number" placeholder="Ex. 50" #input>
+</mat-form-field>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+    <!-- Player Column -->
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef> Player </th>
+      <td mat-cell *matCellDef="let element">
+        [{{dataSource.data.indexOf(element) + 1}}]
+        {{element.username}}
+      </td>
+    </ng-container>
+
+    <!-- Score Column -->
+    <ng-container matColumnDef="score">
+      <th mat-header-cell *matHeaderCellDef> Score </th>
+      <td mat-cell *matCellDef="let element"> {{element.score}} </td>
+    </ng-container>
+
+    <!-- Date Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.date | date:'medium'}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+</div>

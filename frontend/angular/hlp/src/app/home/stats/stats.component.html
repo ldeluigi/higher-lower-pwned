@@ -1,33 +1,26 @@
-
+<h2>Stats</h2>
 <app-period-buttons (period)="getStats($event)"
   ></app-period-buttons>
 
-<table>
-  <tbody>
-    <tr>
-      <td></td>
-      <td>avg</td>
-      <td>max</td>
-    </tr>
-    <tr>
-      <td>Score</td>
-      <td>{{myStats.avgScore}}</td>
-      <td>{{myStats.maxScore}}</td>
-    </tr>
-    <tr>
-      <td>Guesses</td>
-      <td>{{myStats.avgGuesses}}</td>
-      <td>{{myStats.maxGuesses}}</td>
-    </tr>
-    <tr>
-      <td>Plays per day</td>
-      <td>{{myStats.avgPlaysPerDay | number}}</td>
-      <td>{{myStats.maxPlaysPerDay}}</td>
-    </tr>
-    <tr>
-      <td>Duration</td>
-      <td>{{myStats.avgDuration | date:'HH:mm:ss'}}</td>
-      <td>{{myStats.maxDuration | date:'HH:mm:ss'}}</td>
-    </tr>
-  </tbody>
-</table>
+  <mat-table [dataSource]="myStats" class="mat-elevation-z8">
+    <!-- Position Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="avg">
+      <mat-header-cell *matHeaderCellDef> Average </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.avg}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="max">
+      <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.max}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
