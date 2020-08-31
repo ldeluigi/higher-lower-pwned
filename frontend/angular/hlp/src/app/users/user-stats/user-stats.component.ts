@@ -102,7 +102,7 @@ export class UserStatsComponent implements OnInit {
     this.updateUserStats();
   }
 
-  updateUserStats(limit?: number, period?: string): void {
+  updateUserStats(period?: string): void {
     if (period !== undefined) {
       this.period = period;
     }
