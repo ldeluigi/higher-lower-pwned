@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Response } from '../_model/serverResponse';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,10 +20,15 @@ export class AccountService {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar
   ) {
     this.userSubject = new BehaviorSubject<User | null>(this.extractUser());
     this.user = this.userSubject.asObservable();
+  }
+
+  private log(message: string): void {
+    this.snackBar.open(message, 'ok', {duration: 3000});
   }
 
   public get userValue(): User | null {
@@ -42,6 +48,7 @@ export class AccountService {
       .pipe(map(u => {
         localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
         this.userSubject.next(u.data);
+        this.log('Logged in properly');
         return u.data;
       }));
   }
@@ -52,6 +59,7 @@ export class AccountService {
     this.userSubject.next(null);
     // TODO navigate function in the router
     this.router.navigate(['/account/login']);
+    this.log('Logged out properly');
   }
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {
@@ -69,10 +77,12 @@ export class AccountService {
     };
     const user = this.extractUser();
     if (user === null) {
+      this.log('Can\'t update your data');
       return of(false);
     } else {
       return this.http.put(`${environment.apiUrl}/users/${user.id}`, params)
         .pipe(map(x => {
+          this.log('Data update correctly');
           return true;
         }));
     }

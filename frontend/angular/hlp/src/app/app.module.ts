@@ -14,7 +14,7 @@ import { UsersModule } from './users/users.module';
 import { LoginButtonComponent } from './_components/login-button/login-button.component';
 import { LayoutComponent } from './home/layout/layout.component';
 import { LeadeboardComponent } from './home/leaderboard/leadeboard.component';
-import { PeriodButtonsComponent } from './_components/period-buttons/period-buttons.component';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
@@ -30,6 +30,8 @@ import { LinksComponent } from './home/links/links.component';
 import { MatIconModule } from '@angular/material/icon';
 import { UserHomeComponent } from './home/user-home/user-home.component';
 
+import { SharedModule } from './shared/shared.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +39,6 @@ import { UserHomeComponent } from './home/user-home/user-home.component';
     LoginButtonComponent,
     LayoutComponent,
     LeadeboardComponent,
-    PeriodButtonsComponent,
     InputDialogComponent,
     LinksComponent,
     UserHomeComponent,
@@ -59,7 +60,8 @@ import { UserHomeComponent } from './home/user-home/user-home.component';
     MatTableModule,
     MatPaginatorModule,
     MatExpansionModule,
-    MatIconModule
+    MatIconModule,
+    SharedModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

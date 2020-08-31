@@ -6,12 +6,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LayoutComponent } from './layout/layout.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { UserStatsComponent } from './user-stats/user-stats.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [LayoutComponent, UserInfoComponent, UserStatsComponent],
@@ -20,11 +20,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     CommonModule,
     ReactiveFormsModule,
     UsersRoutingModule,
-    MatButtonModule,
     MatInputModule,
     MatIconModule,
     MatTableModule,
     MatPaginatorModule,
+    SharedModule
   ],
 })
 export class UsersModule {}

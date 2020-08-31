@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule,
+    SharedModule
   ]
 })
 export class AccountModule { }
