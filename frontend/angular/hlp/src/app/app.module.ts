@@ -11,6 +11,8 @@ import { ErrorInterceptor } from './_helper/error.interceptor';
 import { JWTInterceptor } from './_helper/JWT.interceptor';
 import { AccountModule } from './account/account.module';
 import { UsersModule } from './users/users.module';
+import { GameModule } from './game/game.module';
+
 import { LoginButtonComponent } from './_components/login-button/login-button.component';
 import { LayoutComponent } from './home/layout/layout.component';
 import { LeadeboardComponent } from './home/leaderboard/leadeboard.component';
@@ -61,7 +63,8 @@ import { SharedModule } from './shared/shared.module';
     MatPaginatorModule,
     MatExpansionModule,
     MatIconModule,
-    SharedModule
+    SharedModule,
+    GameModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },
