@@ -55,6 +55,10 @@ afterEach((done) => {
 
 describe("arcade socket.io API", function () {
     it("should be ok", async (done) => {
+        socket.on("onerror", (msg) => {
+            done.fail(new Error(msg.description));
+        });
+        // TODO mock db and test
         done();
     });
 });
