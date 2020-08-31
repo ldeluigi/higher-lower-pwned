@@ -15,7 +15,6 @@ import { AccountService } from 'src/app/_services/account.service';
 export class UserInfoComponent implements OnInit {
 
   userInfo: UserInfo = {} as UserInfo;
-  userStats: UserStats = {} as UserStats;
 
   constructor(
     private router: Router,
@@ -24,20 +23,14 @@ export class UserInfoComponent implements OnInit {
     private accountService: AccountService
   ) {
     usersTools.userInfo.subscribe(info => this.userInfo = info);
-    usersTools.data.subscribe(data => this.userStats = data);
   }
 
   ngOnInit(): void {
-    this.usersTools.loadUserInfo().subscribe();
-    this.usersTools.loadData().subscribe();
+    this.updateUserInfo();
   }
 
   updateUserInfo(): void {
     this.usersTools.loadUserInfo().subscribe();
-  }
-
-  updateUserStats(period?: string, limit?: number): void {
-    this.usersTools.loadData(period, limit).subscribe();
   }
 
   openDialog(paramName: string): void {

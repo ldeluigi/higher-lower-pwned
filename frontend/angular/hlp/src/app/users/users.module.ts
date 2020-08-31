@@ -9,9 +9,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { UserStatsComponent } from './user-stats/user-stats.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
-  declarations: [LayoutComponent, UserInfoComponent],
+  declarations: [LayoutComponent, UserInfoComponent, UserStatsComponent],
   imports: [
     MatCardModule,
     CommonModule,
@@ -20,6 +23,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatInputModule,
     MatIconModule,
-  ]
+    MatTableModule,
+    MatPaginatorModule,
+  ],
 })
-export class UsersModule { }
+export class UsersModule {}
