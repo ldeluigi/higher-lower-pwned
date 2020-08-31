@@ -10,7 +10,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { BrowserModule } from '@angular/platform-browser';
 
 const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
 
@@ -21,7 +20,6 @@ const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
     GameRoutingModule,
     MatButtonModule,
     MatCardModule,
-    BrowserModule,
     SocketIoModule.forRoot(config)
   ]
 })
