@@ -79,6 +79,15 @@ module.exports = {
       }
       await scoreSchema.create(newScore);
       await gameSchema.deleteOne({ gameID: gameID });
+      return {
+        score: gameQuery.score,
+        guesses: gameQuery.guesses,
+        duration: gameQuery.duration,
+        password1: gameQuery.currentP1,
+        value1: gameQuery.valueP1,
+        password2: gameQuery.currentP2,
+        value2: gameQuery.valueP2
+      };
     } catch (err) {
       throw new Error("Could not delete game data. (" + err.message + ")");
     }

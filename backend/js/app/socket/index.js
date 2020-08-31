@@ -46,12 +46,8 @@ module.exports = function (sio) {
           socket.emit("guess", nextGuess);
         } else {
           try {
-            await game.deleteGame(socket.id);
-            socket.emit("gameEnd", {
-              score: nextGuess.score,
-              guesses: nextGuess.guesses,
-              duration: nextGuess.duration
-            });
+            let endData = await game.deleteGame(socket.id);
+            socket.emit("gameEnd", endData);
           } catch (err) {
             socket.emit("onerror", {
               code: 202,
@@ -82,20 +78,8 @@ module.exports = function (sio) {
             }
           } else {
             try {
-              let gameInfo = await game.currentGuess(socket.id);
-              try {
-                await game.deleteGame(socket.id);
-                socket.emit("gameEnd", {
-                  score: gameInfo.score,
-                  guesses: gameInfo.guesses,
-                  duration: gameInfo.duration
-                });
-              } catch (err) {
-                socket.emit("onerror", {
-                  code: 304,
-                  description: err.message
-                });
-              }
+              let endData = await game.deleteGame(socket.id);
+              socket.emit("gameEnd", endData);
             } catch (err) {
               socket.emit("onerror", {
                 code: 303,
