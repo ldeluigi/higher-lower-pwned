@@ -1,3 +1,3 @@
-<a *ngIf="!this.userLogged" routerLink="/account/login" routerLinkActive="active"> Login </a>
-<a *ngIf="this.userLogged" routerLink="/users" routerLinkActive="active">User</a>
-<a *ngIf="this.userLogged" routerLink="/home" routerLinkActive="active" (click)="this.logout()">LogOut</a>
+<a mat-button *ngIf="!this.userLogged" routerLink="/account/login" routerLinkActive="active" > Login </a>
+<a mat-button *ngIf="this.userLogged" routerLink="/users" routerLinkActive="active">User</a>
+<a mat-button *ngIf="this.userLogged" routerLink="/home" routerLinkActive="active" (click)="this.logout()">LogOut</a>
