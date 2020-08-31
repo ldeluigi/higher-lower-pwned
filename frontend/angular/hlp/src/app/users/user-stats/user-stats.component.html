@@ -18,7 +18,7 @@
     </ng-container>
     <ng-container matColumnDef="avgDuration">
       <th mat-header-cell *matHeaderCellDef>Average duration</th>
-      <td mat-cell *matCellDef="let element">{{ element.avgDuration }}</td>
+      <td mat-cell *matCellDef="let element">{{ timeC(element.avgDuration) }}</td>
     </ng-container>
     <ng-container matColumnDef="maxScore">
       <th mat-header-cell *matHeaderCellDef>Max score</th>
@@ -30,7 +30,7 @@
     </ng-container>
     <ng-container matColumnDef="maxDuration">
       <th mat-header-cell *matHeaderCellDef>Max duration</th>
-      <td mat-cell *matCellDef="let element">{{ element.maxDuration }}</td>
+      <td mat-cell *matCellDef="let element">{{ timeC(element.maxDuration) }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

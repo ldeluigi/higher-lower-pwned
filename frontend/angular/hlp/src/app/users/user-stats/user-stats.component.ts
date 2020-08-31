@@ -7,6 +7,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { InputDialogComponent } from 'src/app/_components/input-dialog/input-dialog.component';
 import { AccountService } from 'src/app/_services/account.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { timeConversion } from '../../_helper/timeConversion';
 
 @Component({
   selector: 'app-user-stats',
@@ -43,5 +44,9 @@ export class UserStatsComponent implements OnInit {
 
   updateUserStats(limit?: number, period?: string): void {
     this.usersTools.loadData(period, limit).subscribe();
+  }
+
+  timeC(millisecond: number): string {
+    return timeConversion(millisecond);
   }
 }

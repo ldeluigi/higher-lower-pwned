@@ -13,7 +13,7 @@
       <mat-header-cell *matHeaderCellDef> Average </mat-header-cell>
       <mat-cell *matCellDef="let element">
         <span *ngIf="element.name !== 'Duration (seconds)'">{{element.avg}}</span>
-        <span *ngIf="element.name === 'Duration (seconds)'">{{ timeConversion(element.avg) }}</span>
+        <span *ngIf="element.name === 'Duration (seconds)'">{{ timeC(element.avg) }}</span>
       </mat-cell>
     </ng-container>
 
@@ -22,7 +22,7 @@
       <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
       <mat-cell *matCellDef="let element">
         <span *ngIf="element.name !== 'Duration (seconds)'">{{element.max}}</span>
-        <span *ngIf="element.name === 'Duration (seconds)'">{{ timeConversion(element.max) }}</span>
+        <span *ngIf="element.name === 'Duration (seconds)'">{{ timeC(element.max) }}</span>
       </mat-cell>
     </ng-container>
 
