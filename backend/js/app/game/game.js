@@ -10,8 +10,8 @@ const correctGuessScore = 100;
 
 async function pickPasswordAndValue() {
   return {
-    password: "ok",
-    value: 678
+    password: "testpassword" + Math.round(Math.random() * 100),
+    value: Math.round(Math.random() * 100000)
   };
 }
 
