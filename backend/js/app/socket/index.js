@@ -22,7 +22,7 @@ module.exports = function (sio) {
   }).on("connection", function (socket) {
     console.log("Connected with id ", socket.userData);
     socket.on("start", async () => {
-      let gameID = await game.newGame(socket.id);
+      await game.newGame(socket.id);
       let nextGuess = await game.currentGuess(socket.id);
       socket.emit("guess", nextGuess);
     });
