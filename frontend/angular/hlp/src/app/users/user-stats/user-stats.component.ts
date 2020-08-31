@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { UserDataService } from '../../_services/user-data.service';
-import { UserStats, HistoryItem } from '../../_model/userStats';
+import { HistoryItem } from '../../_model/userStats';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { InputDialogComponent } from 'src/app/_components/input-dialog/input-dialog.component';
-import { AccountService } from 'src/app/_services/account.service';
+import { ChartType, ChartOptions } from 'chart.js';
 import { MatPaginator } from '@angular/material/paginator';
 import { timeConversion } from '../../_helper/timeConversion';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-user-stats',
@@ -15,6 +13,59 @@ import { timeConversion } from '../../_helper/timeConversion';
   styleUrls: ['./user-stats.component.scss'],
 })
 export class UserStatsComponent implements OnInit {
+  lineChartType: ChartType = 'line';
+  lineChartData: Array<any> = [
+    { data: [65, 59, 80, 81, 56, 55, 40], label: 'My First dataset' },
+  ];
+
+  lineChartOptions: ChartOptions & { annotation: any } = {
+    responsive: true,
+    scales: {
+      // We use this empty structure as a placeholder for dynamic theming.
+      xAxes: [{}],
+      yAxes: [
+        {
+          id: 'y-axis-0',
+          position: 'left',
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+    annotation: {
+      annotations: [
+        {
+          type: 'line',
+          mode: 'vertical',
+          scaleID: 'x-axis-0',
+          value: 'March',
+          borderColor: 'orange',
+          borderWidth: 2,
+          label: {
+            enabled: true,
+            fontColor: 'orange',
+            content: 'LineAnno',
+          },
+        },
+      ],
+    },
+  };
+
+  lineChartColors: Array<any> = [
+    {
+      backgroundColor: 'rgba(105, 0, 132, .2)',
+      borderColor: 'rgba(200, 99, 132, .7)',
+      borderWidth: 2,
+    },
+  ];
+
+  limit = new FormControl('', [
+    Validators.required,
+    Validators.pattern('^[0-9]*$'),
+    Validators.max(1000),
+  ]);
+
   dataSource = new MatTableDataSource<HistoryItem>([]);
   displayedColumns = [
     'avgScore',
@@ -27,13 +78,22 @@ export class UserStatsComponent implements OnInit {
   ];
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  period: string | undefined;
 
   constructor(private usersTools: UserDataService) {
     usersTools.data.subscribe((data) => {
-      console.log(data);
-      if (data !== undefined) this.dataSource.data = data.history || [];
-      console.log(this.dataSource.data);
-      console.log(data.history);
+      let array = data !== undefined ? data.history || [] : [];
+      this.dataSource.data = array;
+      this.lineChartData = [
+        {
+          data: array.map((hist) => hist.avgScore),
+          label: 'Avg Score',
+        },
+        {
+          data: array.map((hist) => hist.maxScore),
+          label: 'Max Score',
+        },
+      ];
     });
   }
 
@@ -43,7 +103,15 @@ export class UserStatsComponent implements OnInit {
   }
 
   updateUserStats(limit?: number, period?: string): void {
-    this.usersTools.loadData(period, limit).subscribe();
+    if (period !== undefined) {
+      this.period = period;
+    }
+    if (this.limit.invalid) {
+      console.log(this.period);
+      this.usersTools.loadData(this.period, undefined).subscribe();
+      return;
+    }
+    this.usersTools.loadData(this.period, this.limit.value).subscribe();
   }
 
   timeC(millisecond: number): string {
