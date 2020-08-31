@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const https = require('https');
 const fsPromises = fs.promises;
-const csv = require('csv-parser');
+const csv = require('async-csv');
 
 const folder = "./";
 
@@ -38,25 +38,45 @@ async function startUpdating(f) {
         throw new Error("Provided non txt file!");
     }
     let asCSV = f.replace(new RegExp("\.txt$"), ".csv");
-
+    let skipMap = new Map();
+    if (true == fs.existsSync(asCSV)) {
+        let csvRes = await csv.parse(await fsPromises.readFile(asCSV));
+        csvRes.shift();
+        skipMap = csvRes.reduce((map, obj) => {
+            map.set(obj[0], {
+                hash: obj[1],
+                number: obj[2]
+            });
+            return map;
+        }, new Map());
+    }
     await fsPromises.writeFile(asCSV, "password,hash,number\n");
     const readInterface = readline.createInterface(({
         input: fs.createReadStream(f),
     }));
-
     for await (const line of readInterface) {
-        let result = await downloadPasswordData(line);
-        await fsPromises.appendFile(asCSV,
-            result.password + "," +
-            result.hash + "," +
-            result.number + "\n");
-        console.log(result);
+        let trimLine = line.trim();
+        if (skipMap.has(trimLine)) {
+            let result = skipMap.get(trimLine);
+            result.password = trimLine;
+            await fsPromises.appendFile(asCSV,
+                result.password + "," +
+                result.hash + "," +
+                result.number + "\n");
+            console.log("Skipped: ", result);
+        } else {
+            let result = await downloadPasswordData(trimLine);
+            await fsPromises.appendFile(asCSV,
+                result.password + "," +
+                result.hash + "," +
+                result.number + "\n");
+            console.log(result);
+        }
     }
 }
 
-function downloadPasswordData(psw) {
+function downloadPasswordData(password) {
     return new Promise((resolve, reject) => {
-        let password = psw.trim();
         let pSHA1 = sha1(password).toUpperCase();
         let shaBeginning = pSHA1.substr(0, 5);
 

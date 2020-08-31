@@ -20,34 +20,107 @@ module.exports = function (sio) {
       next();
     }
   }).on("connection", function (socket) {
-    console.log("Connected with id ", socket.userData);
     socket.on("start", async () => {
-      await game.newGame(socket.id);
-      let nextGuess = await game.currentGuess(socket.id);
-      socket.emit("guess", nextGuess);
+      try {
+        await game.newGame(socket.id, socket.userData.id);
+        try {
+          let nextGuess = await game.currentGuess(socket.id);
+          socket.emit("guess", nextGuess);
+        } catch (err) {
+          socket.emit("onerror", {
+            code: 102,
+            description: err.message
+          });
+        }
+      } catch (err) {
+        socket.emit("onerror", {
+          code: 101,
+          description: err.message
+        });
+      }
     });
     socket.on("repeat", async () => {
-      let nextGuess = await game.currentGuess(socket.id);
-      socket.emit("guess", nextGuess);
+      try {
+        let nextGuess = await game.currentGuess(socket.id);
+        if (nextGuess.expiration > 0) {
+          socket.emit("guess", nextGuess);
+        } else {
+          try {
+            await game.deleteGame(socket.id);
+            socket.emit("gameEnd", {
+              score: nextGuess.score,
+              guesses: nextGuess.guesses,
+              duration: nextGuess.duration
+            });
+          } catch (err) {
+            socket.emit("onerror", {
+              code: 202,
+              description: err.message
+            });
+          }
+        }
+      } catch (err) {
+        socket.emit("onerror", {
+          code: 201,
+          description: err.message
+        });
+      }
     });
     socket.on("answer", async (answer) => {
       if (answer.higher === 1 || answer.higher === 2) {
-        let isCorrect = await game.submitGuess(socket.id, answer.higher);
-        if (isCorrect) {
-          let nextGuess = await game.currentGuess(socket.id);
-          socket.emit("guess", nextGuess);
-        } else {
-          let gameInfo = await game.currentGuess(socket.id);
-          socket.emit("gameEnd", {
-            score: gameInfo.score,
-            guesses: gameInfo.guesses,
-            duration: gameInfo.duration
+        try {
+          let isCorrect = await game.submitGuess(socket.id, answer.higher);
+          if (isCorrect) {
+            try {
+              let nextGuess = await game.currentGuess(socket.id);
+              socket.emit("guess", nextGuess);
+            } catch (err) {
+              socket.emit("onerror", {
+                code: 302,
+                description: err.message
+              });
+            }
+          } else {
+            try {
+              let gameInfo = await game.currentGuess(socket.id);
+              try {
+                await game.deleteGame(socket.id);
+                socket.emit("gameEnd", {
+                  score: gameInfo.score,
+                  guesses: gameInfo.guesses,
+                  duration: gameInfo.duration
+                });
+              } catch (err) {
+                socket.emit("onerror", {
+                  code: 304,
+                  description: err.message
+                });
+              }
+            } catch (err) {
+              socket.emit("onerror", {
+                code: 303,
+                description: err.message
+              });
+            }
+          }
+        } catch (err) {
+          socket.emit("onerror", {
+            code: 301,
+            description: err.message
           });
         }
       }
     });
     socket.on("disconnect", async (reason) => {
-      await game.deleteGame(socket.id);
+      try {
+        await game.deleteGame(socket.id);
+      } catch (err) {
+        socket.emit("onerror", {
+          code: 401,
+          description: err.message
+        });
+      }
+
     })
   });
   return sio;

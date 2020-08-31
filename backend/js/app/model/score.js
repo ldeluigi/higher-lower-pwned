@@ -24,7 +24,6 @@ let score = new Schema(
     user: {
       type: ObjectId,
       ref: 'users',
-      required: true,
     },
   },
   { collection: "Scores" }
