@@ -110,5 +110,6 @@ module.exports = {
     } catch (err) {
       throw new Error("Could not alter game data. (" + err.message + ")");
     }
+    return true;
   }
 }
