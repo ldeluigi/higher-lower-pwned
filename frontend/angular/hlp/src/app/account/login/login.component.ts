@@ -7,10 +7,9 @@ import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
   form: FormGroup;
   loading = false;
   submitted = false;
@@ -26,7 +25,7 @@ export class LoginComponent implements OnInit {
   ) {
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -37,7 +36,9 @@ export class LoginComponent implements OnInit {
 
   // convenience getter for easy access to form fields
   // tslint:disable-next-line: typedef
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   onSubmit(): void {
     this.error = '';
@@ -48,14 +49,16 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.accountService.login(this.f.username.value, this.f.password.value)
+    this.accountService
+      .login(this.f.username.value, this.f.password.value)
       .pipe(first())
       .subscribe(
-        data => {
+        (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        error => {
-          this.error = error;
-        });
+        (error) => {
+          this.error = 'Log In failed';
+        }
+      );
   }
 }

@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AccountService } from 'src/app/_services/account.service';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { UserRegistration } from '../../_model/UserRegistration';
 import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss']
+  styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
-
   form: FormGroup;
   error = '';
   returnUrl = '';
@@ -20,12 +24,12 @@ export class RegistrationComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder
   ) {
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      email: ['', Validators.email]
+      email: ['', Validators.email],
     });
   }
 
@@ -35,28 +39,32 @@ export class RegistrationComponent implements OnInit {
   }
 
   // convenience getter for easy access to form fields
-  get f(): { [key: string]: AbstractControl; } { return this.form.controls; }
+  get f(): { [key: string]: AbstractControl } {
+    return this.form.controls;
+  }
 
   onSubmit(): void {
     this.error = '';
     if (this.form.invalid) {
-      this.error = 'Invalid username, password or email';
+      this.error = 'Missing fields or invalid E-mail';
       return;
     }
 
     const user: UserRegistration = {
       username: this.f.username.value,
       password: this.f.password.value,
-      email: this.f.email.value
+      email: this.f.email.value,
     };
-    this.accountService.register(user)
+    this.accountService
+      .register(user)
       .pipe(first())
       .subscribe(
-        data => {
+        (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        error => {
+        (error) => {
           this.error = 'Invalid data';
-        });
+        }
+      );
   }
 }
