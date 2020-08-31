@@ -1,6 +1,5 @@
-<h2>Leaderboard</h2>
 <app-period-buttons (period)="updateLeaderboard(undefined, $event)"></app-period-buttons>
-<mat-form-field>
+<mat-form-field class="input">
   <mat-label>Limit</mat-label>
   <input matInput (keyup)="updateLeaderboard()" [formControl]="limit" input="number" placeholder="Ex. 50" #input>
 </mat-form-field>

@@ -1,7 +1,7 @@
-<div class="column">
-  User info when logged else a picture?
+<div class="left-column">
+  &nbsp;
 </div>
-<div class="column">
+<div class="center-column">
   <p>
     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
   </p>
@@ -9,7 +9,29 @@
     game button
   </p>
 </div>
-<div class="column">
-  <app-leadeboard class="app-leadboard"></app-leadeboard>
-  <app-stats class="app-stats"></app-stats>
+<div class="right-column">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Stats
+        </mat-panel-title>
+        <mat-panel-description>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-stats class="app-stats"></app-stats>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Leaderboard
+        </mat-panel-title>
+        <mat-panel-description>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-leadeboard class="app-leadboard"></app-leadeboard>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

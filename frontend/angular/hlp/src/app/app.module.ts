@@ -23,7 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { InputDialogComponent } from './_components/input-dialog/input-dialog.component';
 import { MatTableModule } from '@angular/material/table';
-
+import {MatExpansionModule} from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
@@ -51,7 +51,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatButtonModule,
     MatDialogModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },
