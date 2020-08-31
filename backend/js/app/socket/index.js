@@ -18,7 +18,7 @@ module.exports = function (sio) {
       next();
     }
   }).on("connection", function (socket) {
-    console.log("Connected");
+    console.log("Connected with id " + socket.userData);
 
   });
   return sio;
