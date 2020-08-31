@@ -5,7 +5,7 @@
   <app-word [card]="card2"></app-word>
 </div>
 <div>
-  <button mat-button (click)="up()">Up</button>
+  <button [disabled]="loading" mat-button (click)="up(); next(word2, id)">Up</button>
   <br>
-  <button mat-button (click)="next(word2, id)">Down</button>
+  <button [disabled]="loading" mat-button (click)="up(); next(word2, id)">Down</button>
 </div>
