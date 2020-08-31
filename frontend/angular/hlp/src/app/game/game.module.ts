@@ -7,9 +7,12 @@ import { WordComponent } from './_components/word/word.component';
 import { GameComponent } from './game/game.component';
 import { MatCardModule } from '@angular/material/card';
 
-
 import { MatButtonModule } from '@angular/material/button';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { BrowserModule } from '@angular/platform-browser';
+
+const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
 
 @NgModule({
   declarations: [LayoutComponent, WordComponent, GameComponent],
@@ -17,7 +20,9 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     GameRoutingModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    BrowserModule,
+    SocketIoModule.forRoot(config)
   ]
 })
 export class GameModule { }
