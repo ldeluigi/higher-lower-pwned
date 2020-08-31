@@ -1,0 +1,51 @@
+@mixin margin-padding {
+  margin: 1%;
+  padding: 1%;
+}
+
+.left-column {
+  float: left;
+  width: 24%;
+  @include margin-padding();
+}
+
+.center-column {
+  float: left;
+  width: 42%;
+  @include margin-padding();
+  margin: 0 auto;
+  text-align: center;
+}
+
+.right-column {
+  float: left;
+  width: 24%;
+  @include margin-padding();
+}
+
+.app-leadboard {
+  padding: 15px;
+}
+.app-stats {
+  padding: 15px;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.user-home {
+  padding: 5px;
+}
+
+.start-button {
+  width: 30%;
+  height: 20%;
+  color: aliceblue;
+  background: red;
+  font-size: 150%;
+}

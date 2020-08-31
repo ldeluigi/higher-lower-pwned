@@ -23,8 +23,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { InputDialogComponent } from './_components/input-dialog/input-dialog.component';
 import { MatTableModule } from '@angular/material/table';
-
+import {MatExpansionModule} from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { LinksComponent } from './home/links/links.component';
+
+import { MatIconModule } from '@angular/material/icon';
+import { UserHomeComponent } from './home/user-home/user-home.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +39,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     LeadeboardComponent,
     PeriodButtonsComponent,
     InputDialogComponent,
+    LinksComponent,
+    UserHomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +57,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatButtonModule,
     MatDialogModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatExpansionModule,
+    MatIconModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },
