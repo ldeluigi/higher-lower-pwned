@@ -51,7 +51,7 @@ export class AccountService {
     localStorage.removeItem(this.userLocalStorage);
     this.userSubject.next(null);
     // TODO navigate function in the router
-    // this.router.navigate(['/account/login']);
+    this.router.navigate(['/account/login']);
   }
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {
