@@ -19,9 +19,9 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "async-csv": "^2.1.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "csv-parser": "^2.3.3",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "express-validator": "^6.6.1",
