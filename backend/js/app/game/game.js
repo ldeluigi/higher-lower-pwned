@@ -88,22 +88,22 @@ module.exports = {
       throw new Error("Guess must be 1 or 2");
     }
     try {
-      let gameData = await gameSchema.findOne({ gameID: gameID });
+      let gameQuery = await gameSchema.findOne({ gameID: gameID });
       if (gameQuery === null) throw new Error("Game not found.");
       if (gameQuery.expiration < new Date()) {
         return false;
       }
       if ((gameQuery.valueP1 >= gameQuery.valueP2 && guess === 1) ||
         (gameQuery.valueP1 <= gameQuery.valueP2 && guess === 2)) {
-        gameData.currentP1 = gameData.currentP2;
-        gameData.valueP1 = gameData.valueP2;
+        gameQuery.currentP1 = gameQuery.currentP2;
+        gameQuery.valueP1 = gameQuery.valueP2;
         let newP = await pickPasswordAndValue();
-        gameData.currentP2 = newP.password;
-        gameData.valueP2 = newP.value;
-        gameData.guesses += 1;
-        gameData.score += correctGuessScore;
-        gameData.expiration = new Date(gameData.expiration.getTime() + correctGuessMillis);
-        await gameData.save();
+        gameQuery.currentP2 = newP.password;
+        gameQuery.valueP2 = newP.value;
+        gameQuery.guesses += 1;
+        gameQuery.score += correctGuessScore;
+        gameQuery.expiration = new Date(gameQuery.expiration.getTime() + correctGuessMillis);
+        await gameQuery.save();
       } else {
         return false;
       }
