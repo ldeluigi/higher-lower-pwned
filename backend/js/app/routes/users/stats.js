@@ -37,10 +37,12 @@ router.get("/:id/stats",
         .aggregate([
           {
             $match: {
-              end: {
-                $gte: validStartDateFrom
-              },
-              user: userID
+              $expr: {
+                $and: [
+                  { $gte: ["$end", validStartDateFrom] }, // filter only the valid date
+                  { user: userID }
+                ]
+              }
             }
           },
           {
