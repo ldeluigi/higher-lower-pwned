@@ -66,16 +66,16 @@ module.exports = {
   },
   deleteGame: async function (gameID) {
     try {
-      let gameData = await gameSchema.findOne({ gameID: gameID });
+      let gameQuery = await gameSchema.findOne({ gameID: gameID });
       if (gameQuery === null) throw new Error("Game not found.");
       let newScore = {
-        score: gameData.score,
+        score: gameQuery.score,
         end: new Date(),
-        guesses: gameData.guesses,
-        start: gameData.start
+        guesses: gameQuery.guesses,
+        start: gameQuery.start
       };
-      if (gameData.user) {
-        newScore.user = gameData.user;
+      if (gameQuery.user) {
+        newScore.user = gameQuery.user;
       }
       await scoreSchema.create(newScore);
       await gameSchema.deleteOne({ gameID: gameID });
