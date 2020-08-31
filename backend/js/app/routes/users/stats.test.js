@@ -6,6 +6,7 @@ const score = require("../../model/score");
 const token = require("../../model/token");
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
+const { mongoose } = require("../../../config/config");
 
 
 
@@ -14,7 +15,7 @@ describe("user stats API", function () {
         const mock = jest.spyOn(user.schema, 'findOne');
         const userMock = {
             username: "testusername",
-            _id: "testid",
+            _id: "abcabcabcabcabcabcabcabc",
             password: pwd.sha512("testpassword", "testpasswordsalt"),
             email: "testemail@email.com",
             salt: "testpasswordsalt",
@@ -53,10 +54,11 @@ describe("user stats API", function () {
         mock3.mockImplementation((input) => Promise.resolve(userStatsMock));
 
         const payload = { limit: 30, period: 'week' }
-        response = await request.get("/users/testid/stats", params = payload).set("Authorization", "Bearer " + result.token);
+        response = await request.get("/users/abcabcabcabcabcabcabcabc/stats", params = payload).set("Authorization", "Bearer " + result.token);
+        console.log(response.body)
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
-        expect(response.body.data).toEqual({ id: "testid", history: userStatsMock });
+        expect(response.body.data).toEqual({ id: "abcabcabcabcabcabcabcabc", history: userStatsMock });
         mock.mockRestore();
         mock2.mockRestore();
         mock3.mockRestore();
