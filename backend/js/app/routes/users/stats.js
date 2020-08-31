@@ -40,7 +40,7 @@ router.get("/:id/stats",
               $expr: {
                 $and: [
                   { $gte: ["$end", validStartDateFrom] }, // filter only the valid date
-                  { user: userID }
+                  { $eq: ["$user", userID] }
                 ]
               }
             }
