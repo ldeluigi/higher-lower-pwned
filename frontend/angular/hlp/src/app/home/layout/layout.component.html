@@ -1,14 +1,23 @@
+<h1 class="mat-display-3" style="text-align: center;">Higher Lower Pawned game</h1>
 <div class="left-column">
   &nbsp;
   <app-user-home class="user-home" *ngIf="userIsLogged()"></app-user-home>
 </div>
 <div class="center-column">
-  <p>
-    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-  </p>
-  <p>
+
+    <p class="mat-body-2">
+      Is your password been pawned?
+    </p>
+    <p class="mat-body-2">
+      A frustratingly addictive game of higher or lower using pawned password.
+    </p>
+    <p class="mat-body-2">
+      The data is based on ... TODO .
+    </p>
+
+
     <button mat-raised-button class="start-button">START</button>
-  </p>
+
 </div>
 <div class="right-column">
   <mat-accordion>
@@ -22,8 +31,6 @@
       </mat-expansion-panel-header>
       <app-stats class="app-stats"></app-stats>
     </mat-expansion-panel>
-  </mat-accordion>
-  <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>

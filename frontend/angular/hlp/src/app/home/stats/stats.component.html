@@ -11,13 +11,19 @@
     <!-- Name Column -->
     <ng-container matColumnDef="avg">
       <mat-header-cell *matHeaderCellDef> Average </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.avg}} </mat-cell>
+      <mat-cell *matCellDef="let element">
+        <span *ngIf="element.name !== 'Duration (seconds)'">{{element.avg}}</span>
+        <span *ngIf="element.name === 'Duration (seconds)'">{{ timeC(element.avg) }}</span>
+      </mat-cell>
     </ng-container>
 
     <!-- Weight Column -->
     <ng-container matColumnDef="max">
       <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.max}} </mat-cell>
+      <mat-cell *matCellDef="let element">
+        <span *ngIf="element.name !== 'Duration (seconds)'">{{element.max}}</span>
+        <span *ngIf="element.name === 'Duration (seconds)'">{{ timeC(element.max) }}</span>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

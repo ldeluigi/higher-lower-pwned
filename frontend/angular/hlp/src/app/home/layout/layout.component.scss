@@ -13,8 +13,11 @@
   float: left;
   width: 42%;
   @include margin-padding();
+  padding-top: 100px;
   margin: 0 auto;
   text-align: center;
+  align-items: center;
+  min-height: 50%;
 }
 
 .right-column {
