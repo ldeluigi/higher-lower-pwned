@@ -1,4 +1,4 @@
-interface HistoryItem {
+export interface HistoryItem {
   // it's depend on the request, period can be dayOfTheYear, weekOfTheYear, month, year
   periodNumber: number;
   year: number;
