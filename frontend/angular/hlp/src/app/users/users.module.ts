@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserStatsComponent } from './user-stats/user-stats.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -24,7 +25,8 @@ import { SharedModule } from '../shared/shared.module';
     MatIconModule,
     MatTableModule,
     MatPaginatorModule,
-    SharedModule
+    SharedModule,
+    ChartsModule,
   ],
 })
 export class UsersModule {}
