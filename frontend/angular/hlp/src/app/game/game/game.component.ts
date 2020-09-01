@@ -80,6 +80,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private gameEnd(value2: number, score: number = -1): void {
     this.rollNumber(value2, 800, n => this.card2.score = n);
     this.log('The game is ended. ' + (score >= 0 ?  `Your score is ${score}` : 'With a server error.'));
+    this.gameSocket.disconnect();
     this.sub?.unsubscribe();
     this.sub = null;
     this.playing = false;
@@ -91,8 +92,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private next(newWord: string, oldScore: number): void {
-    // this.score = this.score + 1;
-    // this.card2.score = oldScore.toString();
     this.rollNumber(oldScore, 600, n => this.card2.score = n);
     console.log('Timeout started');
     setTimeout(() => {
@@ -106,11 +105,9 @@ export class GameComponent implements OnInit, OnDestroy {
     }, 800);
   }
 
-
   private rollNumber(end: number, time: number, update: (n: number) => void): void {
-    const distance = end;
     const frames = 100;
-    const delta = Math.floor(distance / frames);
+    const delta = Math.floor(end / frames);
     const deltaT = Math.floor(time / frames);
 
     if (this.numberSubscription !== null) {
@@ -130,16 +127,20 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private setProgressBar(milliseconds: number): void {
-    const time = milliseconds;
-    const timer$ = interval(50);
+    const progressBarMax = 100;
+    const frames = 100;
+    const delta = progressBarMax / frames;
+    const deltaT = Math.floor(milliseconds / frames);
+    const timer$ = interval(deltaT);
 
     if (this.sub !== null) {
       this.sub.unsubscribe();
     }
 
-    this.sub = timer$.subscribe((per) => {
-      this.progressbarValue = 100 - (per * 50) * 100 / milliseconds;
-      if (per * 50 >= milliseconds && this.sub !== null) {
+    this.sub = timer$.subscribe((d) => {
+      const currentValue = delta * d;
+      this.progressbarValue = progressBarMax - currentValue;
+      if (currentValue >= frames && this.sub !== null) {
         this.sub.unsubscribe();
         this.sub = null;
       }
