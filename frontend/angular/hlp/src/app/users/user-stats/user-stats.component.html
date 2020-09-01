@@ -1,25 +1,26 @@
+<div class="inputs">
+  <app-period-buttons
+    class="input"
+    (period)="updateUserStats($event)"
+  ></app-period-buttons>
+  <mat-form-field class="input">
+    <mat-label>period number</mat-label>
+    <input
+      matInput
+      (keyup)="updateUserStats()"
+      [formControl]="limit"
+      input="number"
+      placeholder="Ex. 50, max 1000"
+      #input
+    />
+  </mat-form-field>
+</div>
 <mat-accordion>
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title> Stats </mat-panel-title>
       <mat-panel-description> </mat-panel-description>
     </mat-expansion-panel-header>
-    <div class="inputs">
-      <app-period-buttons
-        (period)="updateUserStats($event)"
-      ></app-period-buttons>
-      <mat-form-field class="input">
-        <mat-label>period number</mat-label>
-        <input
-          matInput
-          (keyup)="updateUserStats()"
-          [formControl]="limit"
-          input="number"
-          placeholder="Ex. 50, max 1000"
-          #input
-        />
-      </mat-form-field>
-    </div>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="avgScore">
