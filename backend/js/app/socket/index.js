@@ -10,7 +10,7 @@ module.exports = function (sio) {
     if (socket.handshake.query && socket.handshake.query.token) {
       try {
         let userData = jwtTools.checkJWT(socket.handshake.query.token);
-        socket.userData.id = userData.user;
+        socket.userData.id = userData.id;
         next();
       } catch (err) {
         next(new Error("Authentication failed: " + err.message));
@@ -98,7 +98,7 @@ module.exports = function (sio) {
     socket.on("disconnect", async (reason) => {
       try {
         await game.deleteGame(socket.id);
-      } catch (err) {}
+      } catch (err) { }
     })
   });
   return sio;
