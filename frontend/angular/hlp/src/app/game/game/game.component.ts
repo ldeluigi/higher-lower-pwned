@@ -30,7 +30,7 @@ export class GameComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnDestroy(): void {
-    console.log('OnDestry', this.subscription);
+    // console.log('OnDestry', this.subscription);
     if (this.subscription !== null) {
       this.subscription.unsubscribe();
     }
@@ -58,7 +58,10 @@ export class GameComponent implements OnInit, OnDestroy {
         } else {
           this.next(ng.password2, ng.value1);
         }
-        this.setProgressBar(ng.timeout);
+        this.setProgressBar(ng.timeout)
+          .then(_ => {
+            this.gameSocket.repeat();
+          });
       } else if (ge.value2) {
         console.log('game end');
         this.gameEnd(ge.value2, ge.score);
@@ -126,7 +129,7 @@ export class GameComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setProgressBar(milliseconds: number): void {
+  private async setProgressBar(milliseconds: number): Promise<void> {
     const progressBarMax = 100;
     const frames = 100;
     const delta = progressBarMax / frames;
@@ -136,14 +139,17 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.sub !== null) {
       this.sub.unsubscribe();
     }
-
-    this.sub = timer$.subscribe((d) => {
-      const currentValue = delta * d;
-      this.progressbarValue = progressBarMax - currentValue;
-      if (currentValue >= frames && this.sub !== null) {
-        this.sub.unsubscribe();
-        this.sub = null;
-      }
+    return new Promise<void>(resolve => {
+      this.sub = timer$.subscribe((d) => {
+        const currentValue = delta * d;
+        this.progressbarValue = progressBarMax - currentValue;
+        if (currentValue >= frames && this.sub !== null) {
+          this.sub.unsubscribe();
+          this.sub = null;
+          resolve();
+        }
+      });
     });
+
   }
 }

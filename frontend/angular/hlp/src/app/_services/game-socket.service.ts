@@ -77,7 +77,9 @@ export class GameSocketService implements OnDestroy {
   }
 
   repeat(): void {
-    this.socket.emit('repeat');
+    if (this.gameOn) {
+      this.socket.emit('repeat');
+    }
   }
 
   answer(answer: number): void {
