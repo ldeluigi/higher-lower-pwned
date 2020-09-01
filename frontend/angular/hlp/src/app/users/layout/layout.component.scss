@@ -3,10 +3,11 @@
     margin: 0 1%;
     height: 100%;
     float: left;
-    width: 30%;
+    width: 28%;
   }
 
   .right-col {
+    margin: 0 1%;
     height: 100%;
     float: left;
     width: 68%;
@@ -16,10 +17,11 @@
 @media (orientation: portrait), screen and (max-width: 995px) {
   .left-col {
     margin: 1%;
-    width: 100%;
+    width: 98%;
   }
 
   .right-col {
-    width: 100%;
+    margin: 0 1%;
+    width: 98%;
   }
 }
