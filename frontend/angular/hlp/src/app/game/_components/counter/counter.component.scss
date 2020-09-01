@@ -1,0 +1,17 @@
+:host {
+  display: inline-block;
+  font-size: 30px;
+  font-weight: 400;
+  // border: 1px solid rgba(0, 0, 0, 0.3);
+  // padding: 10px;
+  border-radius: 5px;
+  position: relative;
+  height: 80px;
+  width: 150px;
+  // overflow: hidden;
+}
+
+span {
+  position: absolute;
+  text-align: center;
+}

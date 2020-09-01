@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class GameComponent implements OnInit, OnDestroy {
   card: CardData = { word: '', score: 0 };
   card2: CardData = { word: '' };
+  actualScore = 0;
 
   progressbarValue = 100;
   private sub: Subscription | null = null;
@@ -58,6 +59,7 @@ export class GameComponent implements OnInit, OnDestroy {
         } else {
           this.next(ng.password2, ng.value1);
         }
+        this.actualScore = ng.score;
         this.setProgressBar(ng.timeout)
           .then(_ => {
             this.gameSocket.repeat();
@@ -76,6 +78,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   start(): void {
     this.gameSocket.startGame();
+    this.actualScore = 0;
     this.playing = true;
     this.loading = false;
   }

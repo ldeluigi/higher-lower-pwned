@@ -13,11 +13,12 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
+import { CounterComponent } from './_components/counter/counter.component';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}/arcade`, options: { autoConnect : false }};
 
 @NgModule({
-  declarations: [LayoutComponent, WordComponent, GameComponent],
+  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent],
   imports: [
     CommonModule,
     GameRoutingModule,
