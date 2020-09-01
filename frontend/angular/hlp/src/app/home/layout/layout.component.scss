@@ -17,13 +17,13 @@ $footer-high: 70px;
 
   .left-column {
     float: left;
-    max-width: 24%;
+    width: 24%;
     @include margin-padding();
   }
 
   .center-column {
     float: left;
-    max-width: 42%;
+    width: 42%;
     @include margin-padding();
     padding-top: 100px;
     margin: 0 auto;
