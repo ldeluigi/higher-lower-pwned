@@ -1,4 +1,4 @@
-<app-period-buttons (period)="updateUserStats($event)"></app-period-buttons>
+<div class="input"><app-period-buttons (period)="updateUserStats($event)"></app-period-buttons>
 <mat-form-field class="input">
   <mat-label>period number</mat-label>
   <input
@@ -9,7 +9,7 @@
     placeholder="Ex. 50, max 1000"
     #input
   />
-</mat-form-field>
+</mat-form-field></div>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="avgScore">
