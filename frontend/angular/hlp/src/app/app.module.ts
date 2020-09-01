@@ -33,6 +33,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserHomeComponent } from './home/user-home/user-home.component';
 
 import { SharedModule } from './shared/shared.module';
+import { NoUserHomeComponent } from './home/no-user-home/no-user-home.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { SharedModule } from './shared/shared.module';
     InputDialogComponent,
     LinksComponent,
     UserHomeComponent,
+    NoUserHomeComponent,
   ],
   imports: [
     BrowserModule,
