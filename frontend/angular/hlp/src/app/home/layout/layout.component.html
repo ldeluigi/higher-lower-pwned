@@ -1,43 +1,41 @@
-<h1 class="mat-display-3" style="text-align: center;">Higher Lower Pwned game</h1>
+<h1 class="mat-display-3" style="text-align: center">
+  Higher Lower Pwned game
+</h1>
 <div class="left-column">
-  <app-no-user-home class="user-home" *ngIf="!userIsLogged()"></app-no-user-home>
+  <app-no-user-home
+    class="user-home"
+    *ngIf="!userIsLogged()"
+  ></app-no-user-home>
   <app-user-home class="user-home" *ngIf="userIsLogged()"></app-user-home>
 </div>
 <div class="center-column">
+  <p class="mat-body-2">Is your password been pwned?</p>
+  <p class="mat-body-2">
+    A frustratingly addictive game of higher or lower using pwned password.
+  </p>
+  <p class="mat-body-2">The data is based on ... TODO .</p>
 
-    <p class="mat-body-2">
-      Is your password been pwned?
-    </p>
-    <p class="mat-body-2">
-      A frustratingly addictive game of higher or lower using pwned password.
-    </p>
-    <p class="mat-body-2">
-      The data is based on ... TODO .
-    </p>
-
-
-    <a mat-raised-button routerLink="/game" routerLinkActive="active" class="start-button">START</a>
-
+  <a
+    mat-raised-button
+    routerLink="/game"
+    routerLinkActive="active"
+    class="start-button"
+    >START</a
+  >
 </div>
 <div class="right-column">
   <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>
-          Stats
-        </mat-panel-title>
-        <mat-panel-description>
-        </mat-panel-description>
+        <mat-panel-title> Stats </mat-panel-title>
+        <mat-panel-description> </mat-panel-description>
       </mat-expansion-panel-header>
       <app-stats class="app-stats"></app-stats>
     </mat-expansion-panel>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
-        <mat-panel-title>
-          Leaderboard
-        </mat-panel-title>
-        <mat-panel-description>
-        </mat-panel-description>
+        <mat-panel-title> Leaderboard </mat-panel-title>
+        <mat-panel-description> </mat-panel-description>
       </mat-expansion-panel-header>
       <app-leadeboard class="app-leadboard"></app-leadeboard>
     </mat-expansion-panel>

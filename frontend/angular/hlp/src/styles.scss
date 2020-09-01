@@ -1,7 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-html,
-body {
+html {
   height: 100%;
 }
 body {
@@ -11,18 +10,23 @@ body {
 
 body {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 200% 200%;
-  animation: gradient 15s ease infinite;
+  background-size: 500% 100%;
+  animation: gradient 5s ease infinite;
 }
 
 @keyframes gradient {
   0% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
   50% {
-    background-position: 100% 50%;
+    background-position: 100% 0%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0% 0%;
   }
+}
+
+div.mat-expansion-panel-body {
+  padding: 5px;
+  max-width: 100%;
 }

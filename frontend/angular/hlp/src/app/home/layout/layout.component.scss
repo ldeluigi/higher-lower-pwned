@@ -1,44 +1,98 @@
+$footer-high: 70px;
+
+* {
+  max-width: 96%;
+}
+
 @mixin margin-padding {
   margin: 1%;
   padding: 1%;
 }
 
-.left-column {
-  float: left;
-  width: 24%;
-  @include margin-padding();
+@media screen and (min-width: 995px) and (orientation: landscape) {
+  .mat-display-3 {
+    @include margin-padding();
+    max-height: 10%;
+  }
+
+  .left-column {
+    float: left;
+    max-width: 24%;
+    @include margin-padding();
+  }
+
+  .center-column {
+    float: left;
+    max-width: 42%;
+    @include margin-padding();
+    padding-top: 100px;
+    margin: 0 auto;
+    text-align: center;
+    align-items: center;
+    min-height: 50%;
+    margin-bottom: $footer-high;
+  }
+
+  .right-column {
+    float: right;
+    width: 24%;
+    @include margin-padding();
+  }
+
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: $footer-high;
+    width: 100%;
+    text-align: center;
+  }
 }
 
-.center-column {
-  float: left;
-  width: 42%;
-  @include margin-padding();
-  padding-top: 100px;
-  margin: 0 auto;
-  text-align: center;
-  align-items: center;
-  min-height: 50%;
+@media screen and (max-width: 992px) {
+  body {
+    background-color: blue;
+  }
 }
 
-.right-column {
-  float: left;
-  width: 24%;
-  @include margin-padding();
+@media (orientation: portrait), screen and (max-width: 995px) {
+  .mat-display-3 {
+    max-height: 10%;
+    @include margin-padding();
+  }
+
+  .left-column {
+    display: none;
+  }
+  .center-column {
+    max-height: 40%;
+    width: 96%;
+    @include margin-padding();
+    margin: 0 auto;
+    text-align: center;
+    align-items: center;
+  }
+
+  .right-column {
+    width: 96%;
+    @include margin-padding();
+  }
+
+  footer {
+    position: static;
+    left: 0;
+    bottom: 0;
+    height: $footer-high;
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .app-leadboard {
-  padding: 15px;
+  padding: 2px;
 }
 .app-stats {
-  padding: 15px;
-}
-
-footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
+  padding: 2px;
 }
 
 .user-home {
