@@ -36,7 +36,7 @@ export class GameSocketService implements OnDestroy {
   startGame(): void {
     if (this.accountService.userValue !== null) {
       console.log('add token');
-      this.socket.ioSocket.io.opts.query = { token: this.accountService.userValue.token }
+      this.socket.ioSocket.io.opts.query = { token: this.accountService.userValue.token };
     } else {
       console.log('remove toke');
       this.socket.ioSocket.io.opts.query = { };
@@ -56,6 +56,7 @@ export class GameSocketService implements OnDestroy {
   disconnect(): void {
     console.log('disconnect');
     this.socket.disconnect();
+    this.socket.removeAllListeners();
   }
 
   ngOnDestroy(): void {
