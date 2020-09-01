@@ -4,15 +4,30 @@
 <div class="wrapper">
   <app-word [card]="card2"></app-word>
 </div>
-<div>
-  <mat-progress-bar mode="determinate" [value]="progressbarValue"></mat-progress-bar>
-</div>
-<div>
-  <button class="up" mat-raised-button [disabled]="loading" (click)="response(2)">Up</button>
-  <br>
-  <button class="down" [disabled]="loading" mat-raised-button (click)="response(1)">Down</button>
-</div>
 <div *ngIf="!playing">
-  Are you ready?
+  Are you ready? <br />
   <button [disabled]="playing" mat-button (click)="start()">Let's go</button>
+</div>
+<div *ngIf="playing">
+  <mat-progress-bar
+    mode="determinate"
+    [value]="progressbarValue"
+  ></mat-progress-bar>
+  <button
+    class="up"
+    mat-raised-button
+    [disabled]="loading"
+    (click)="response(2)"
+  >
+    Up
+  </button>
+  <br />
+  <button
+    class="down"
+    [disabled]="loading"
+    mat-raised-button
+    (click)="response(1)"
+  >
+    Down
+  </button>
 </div>

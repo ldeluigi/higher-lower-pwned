@@ -26,7 +26,7 @@ app-word {
 .btn {
   outline: none;
   border: none;
-  background-color: #9C27B0;
+  background-color: #9c27b0;
   padding: 5px 20px;
   margin: 3px 10px;
   border-radius: 3px;
@@ -36,18 +36,18 @@ app-word {
 }
 
 .btn:hover {
-  background-color: #8E24AA;
+  background-color: #8e24aa;
 }
 
 .btn:active {
-  background-color: #7B1FA2;
+  background-color: #7b1fa2;
 }
 
 button {
   margin: 10px auto;
   width: 200px;
   font-size: xx-large;
-  height: 100px;
+  max-height: 30%;
 }
 
 button.up {
