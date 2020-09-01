@@ -3,7 +3,7 @@ import { trigger, state, style, animate, transition, AnimationEvent, AnimationTr
 
 export interface CardData {
   word: string;
-  score: string;
+  score?: number;
 }
 
 @Component({
@@ -20,6 +20,9 @@ export class WordComponent implements OnInit {
   card: CardData = {} as CardData;
   newCard: CardData | boolean = false;
   dataNewCard: CardData = {} as CardData;
+
+  emptyScore = '******';
+
   @Input('card')
   set onCardChange(card: CardData) {
     this.newCard = card;
@@ -31,12 +34,18 @@ export class WordComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getCard(card: CardData | boolean): CardData {
+    return typeof card !== 'boolean' ? card : {
+      word: ''
+    };
+  }
+
   onAnimationDone(event: AnimationEvent): void {
     if (this.newCard !== false) {
       // console.log('1=>', this.newCard, event);
       this.card = this.newCard as CardData;
       this.newCard = false;
-      this.dataNewCard = {} as CardData;
+      // this.dataNewCard = {} as CardData;
     }
   }
   onAnimation2Done(event: AnimationEvent): void {

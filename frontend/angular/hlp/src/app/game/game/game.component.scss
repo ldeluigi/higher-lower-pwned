@@ -42,3 +42,20 @@ app-word {
 .btn:active {
   background-color: #7B1FA2;
 }
+
+button {
+  margin: 10px auto;
+  width: 200px;
+  font-size: xx-large;
+  height: 100px;
+}
+
+button.up {
+  background: red;
+  color: white;
+}
+
+button.down {
+  background: blue;
+  color: white;
+}

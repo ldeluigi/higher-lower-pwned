@@ -6,12 +6,15 @@ import { LayoutComponent } from './layout/layout.component';
 import { WordComponent } from './_components/word/word.component';
 import { GameComponent } from './game/game.component';
 import { MatCardModule } from '@angular/material/card';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+
 
 import { MatButtonModule } from '@angular/material/button';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
 
-const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
+const config: SocketIoConfig = { url: `${environment.apiUrl}/arcade`, options: { autoConnect : false }};
 
 @NgModule({
   declarations: [LayoutComponent, WordComponent, GameComponent],
@@ -20,7 +23,8 @@ const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
     GameRoutingModule,
     MatButtonModule,
     MatCardModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    MatProgressBarModule
   ]
 })
 export class GameModule { }
