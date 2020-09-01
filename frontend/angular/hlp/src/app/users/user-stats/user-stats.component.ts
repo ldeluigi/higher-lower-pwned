@@ -14,11 +14,11 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class UserStatsComponent implements OnInit {
   lineChartType: ChartType = 'line';
-  lineChartData: Array<any> = [
+  lineChartData: Array<object> = [
     { data: [65, 59, 80, 81, 56, 55, 40], label: 'My First dataset' },
   ];
 
-  lineChartOptions: ChartOptions & { annotation: any } = {
+  lineChartOptions: ChartOptions & { annotation: object } = {
     responsive: true,
     scales: {
       // We use this empty structure as a placeholder for dynamic theming.
@@ -52,7 +52,7 @@ export class UserStatsComponent implements OnInit {
     },
   };
 
-  lineChartColors: Array<any> = [
+  lineChartColors: Array<object> = [
     {
       backgroundColor: 'rgba(105, 0, 132, .2)',
       borderColor: 'rgba(200, 99, 132, .7)',
