@@ -11,14 +11,12 @@ module.exports = function (sio) {
       try {
         let userData = jwtTools.checkJWT(socket.handshake.query.token);
         socket.userData.id = userData.id;
-        next();
+        return next();
       } catch (err) {
-        next(new Error("Authentication failed: " + err.message));
+        return next(new Error("Authentication failed: " + err.message));
       }
     }
-    else {
-      next();
-    }
+    return next();
   }).on("connection", function (socket) {
     socket.on("start", async () => {
       try {
