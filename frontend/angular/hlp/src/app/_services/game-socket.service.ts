@@ -11,14 +11,13 @@ import { AccountService } from './account.service';
 })
 export class GameSocketService implements OnDestroy {
   public game: Observable<GameEnd | NextGuess>;
-  private gameOn = false;
+  private connectionOpen = false;
 
   constructor(
     private socket: io.Socket,
     private accountService: AccountService
   ) {
     this.game = new Observable<GameEnd | NextGuess>((s) => {
-
       this.socket.removeAllListeners();
       this.socket.on('guess', (nextGuess: NextGuess) => {
         // console.log('>guess: ', nextGuess);
@@ -48,14 +47,17 @@ export class GameSocketService implements OnDestroy {
   }
 
   startGame(): void {
-    if (!this.gameOn) {
-      this.setUpStartGame();
-    } else {
+    if (!this.connectionOpen) {
+      this.setUpAndConnect()
+        .then(_ => {
+          this.socket.emit('start');
+        });
+    } else { // connection already up
       // console.log('game alreay started');
     }
   }
 
-  private setUpStartGame(): void {
+  private async setUpAndConnect(): Promise<unknown> {
     if (this.accountService.userValue !== null) {
       // console.log('add token');
       this.socket.ioSocket.io.opts.query = { token: this.accountService.userValue.token };
@@ -63,34 +65,34 @@ export class GameSocketService implements OnDestroy {
       // console.log('remove toke');
       this.socket.ioSocket.io.opts.query = {};
     }
-    this.socket.fromOneTimeEvent('connect')
-      .then(e => {
-        this.gameOn = true;
-        this.socket.emit('start');
-      });
     this.socket.fromOneTimeEvent('disconnect')
-      .then((result) => {
-        // console.log('disconnected');
-        this.gameOn = false;
-      });
+    .then(_ => {
+      // console.log('disconnected');
+      this.connectionOpen = false;
+    });
     this.socket.connect();
+    await this.socket.fromOneTimeEvent('connect');
+    this.connectionOpen = true;
+    return;
   }
 
   repeat(): void {
-    if (this.gameOn) {
+    if (this.connectionOpen) {
       this.socket.emit('repeat');
     }
   }
 
   answer(answer: number): void {
-    if (this.gameOn) {
+    if (this.connectionOpen) {
       this.socket.emit('answer', { higher: answer });
     }
   }
 
   disconnect(): void {
-    // console.log('disconnect');
-    this.socket.disconnect();
+    if (this.connectionOpen) {
+      // console.log('disconnect');
+      this.socket.disconnect();
+    }
   }
 
   ngOnDestroy(): void {
