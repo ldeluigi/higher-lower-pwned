@@ -98,13 +98,7 @@ module.exports = function (sio) {
     socket.on("disconnect", async (reason) => {
       try {
         await game.deleteGame(socket.id);
-      } catch (err) {
-        socket.emit("onerror", {
-          code: 401,
-          description: err.message
-        });
-      }
-
+      } catch (err) {}
     })
   });
   return sio;
