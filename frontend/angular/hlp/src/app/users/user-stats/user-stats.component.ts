@@ -107,7 +107,6 @@ export class UserStatsComponent implements OnInit {
       this.period = period;
     }
     if (this.limit.invalid) {
-      console.log(this.period);
       this.usersTools.loadData(this.period, undefined).subscribe();
       return;
     }
