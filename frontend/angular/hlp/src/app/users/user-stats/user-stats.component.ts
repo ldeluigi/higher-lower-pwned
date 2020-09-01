@@ -82,7 +82,7 @@ export class UserStatsComponent implements OnInit {
 
   constructor(private usersTools: UserDataService) {
     usersTools.data.subscribe((data) => {
-      let array = data !== undefined ? data.history || [] : [];
+      const array = data?.history || [];
       this.dataSource.data = array;
       this.lineChartData = [
         {
