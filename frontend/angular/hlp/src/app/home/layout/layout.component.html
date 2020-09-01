@@ -1,6 +1,6 @@
 <h1 class="mat-display-3" style="text-align: center;">Higher Lower Pawned game</h1>
 <div class="left-column">
-  &nbsp;
+  <app-no-user-home class="user-home" *ngIf="!userIsLogged()"></app-no-user-home>
   <app-user-home class="user-home" *ngIf="userIsLogged()"></app-user-home>
 </div>
 <div class="center-column">
