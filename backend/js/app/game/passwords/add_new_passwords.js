@@ -7,6 +7,7 @@ const fsPromises = fs.promises;
 const csv = require('async-csv');
 
 const folder = "./";
+const debug = false;
 
 (async () => {
     try {
@@ -63,14 +64,17 @@ async function startUpdating(f) {
                 result.password + "," +
                 result.hash + "," +
                 result.number + "\n");
-            console.log("Skipped: ", result);
+            if (debug)
+                console.log("Skipped: ", result);
+            skipMap.delete(trimLine);
         } else {
             let result = await downloadPasswordData(trimLine);
             await fsPromises.appendFile(asCSV,
                 result.password + "," +
                 result.hash + "," +
                 result.number + "\n");
-            console.log(result);
+            if (debug)
+                console.log(result);
         }
     }
 }
