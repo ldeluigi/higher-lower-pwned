@@ -1,9 +1,5 @@
 $footer-high: 70px;
 
-* {
-  max-width: 96%;
-}
-
 @mixin margin-padding {
   margin: 1%;
   padding: 1%;
@@ -49,12 +45,6 @@ $footer-high: 70px;
   }
 }
 
-@media screen and (max-width: 992px) {
-  body {
-    background-color: blue;
-  }
-}
-
 @media (orientation: portrait), screen and (max-width: 995px) {
   .mat-display-3 {
     max-height: 10%;
@@ -93,10 +83,6 @@ $footer-high: 70px;
 }
 .app-stats {
   padding: 2px;
-}
-
-.user-home {
-  padding: 5px;
 }
 
 .start-button {
