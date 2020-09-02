@@ -1,14 +1,22 @@
-<h1 class="mat-display-3" style="text-align: center">
-  The Pwned Game
+<h1 class="mat-display-4" >
+  <div @title1>
+    The&nbsp;
+  </div>
+  <div @title2>
+    Pwned&nbsp;
+  </div>
+  <div @title3>
+    Game
+  </div>
 </h1>
-<div class="left-column">
+<div class="left-column" @fadeIn>
   <app-no-user-home
     class="user-home"
     *ngIf="!userIsLogged()"
   ></app-no-user-home>
   <app-user-home class="user-home" *ngIf="userIsLogged()"></app-user-home>
 </div>
-<div class="center-column">
+<div class="center-column" @fadeIn>
   <p class="mat-body-2">Is your password been pwned?</p>
   <p class="mat-body-2">
     A frustratingly addictive game of higher or lower using pwned password.
@@ -32,7 +40,7 @@
       </mat-expansion-panel-header>
       <app-stats class="app-stats"></app-stats>
     </mat-expansion-panel>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="false">
       <mat-expansion-panel-header>
         <mat-panel-title> Leaderboard </mat-panel-title>
         <mat-panel-description> </mat-panel-description>
