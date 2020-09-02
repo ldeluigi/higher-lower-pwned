@@ -20,7 +20,9 @@ export class CounterComponent implements OnInit {
   }
   @Input('counter')
   set onCounterChange(counter: number) {
-    this.newCounter = counter;
+    if (this.counter !== counter) {
+      this.newCounter = counter;
+    }
   }
 
   onAnimationDone(event: AnimationEvent): void {
