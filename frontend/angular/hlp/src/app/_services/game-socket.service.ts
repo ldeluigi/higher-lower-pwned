@@ -37,7 +37,11 @@ export class GameSocketService implements OnDestroy {
           if (this.accountService.userValue !== null) {
             this.accountService.refreshToken().subscribe(t => {
               this.startGame();
-            });
+            },
+            error => {
+              this.accountService.logout('Can\'t conneto to the service, login again and retry');
+            }
+            );
           } else {
             s.error('Connection lost');
           }
