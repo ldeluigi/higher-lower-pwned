@@ -17,6 +17,7 @@ export class GameComponent implements OnInit, OnDestroy {
   actualScore = 0;
 
   progressbarValue = 100;
+  timeLeft = 0;
   private sub: Subscription | null = null;
   private numberSubscription: Subscription | null = null;
 
@@ -145,6 +146,8 @@ export class GameComponent implements OnInit, OnDestroy {
     return new Promise<void>(resolve => {
       this.sub = timer$.subscribe((d) => {
         const currentValue = delta * d;
+        const currentMillis = deltaT * d;
+        this.timeLeft = milliseconds - currentMillis;
         this.progressbarValue = progressBarMax - currentValue;
         if (currentValue >= frames && this.sub !== null) {
           this.sub.unsubscribe();

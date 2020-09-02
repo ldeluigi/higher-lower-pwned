@@ -12,6 +12,9 @@
   <button [disabled]="playing" mat-button (click)="start()">Let's go</button>
 </div>
 <div *ngIf="playing">
+  <div>
+    {{ timeLeft | date:'s:S' }} s
+  </div>
   <mat-progress-bar
     mode="determinate"
     [value]="progressbarValue"

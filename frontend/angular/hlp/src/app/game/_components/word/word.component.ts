@@ -17,7 +17,7 @@ export interface CardData {
 })
 export class WordComponent implements OnInit {
 
-  card: CardData = {} as CardData;
+  card: CardData = {word: ''} as CardData;
   newCard: CardData | boolean = false;
   dataNewCard: CardData = {} as CardData;
 
