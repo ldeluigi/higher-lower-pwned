@@ -53,12 +53,13 @@ export class AccountService {
       }));
   }
 
-  logout(): void {
+  logout(message?: string): void {
     // remove user from local storage and set current user to null
     localStorage.removeItem(this.userLocalStorage);
     this.userSubject.next(null);
     // TODO navigate function in the router
-    this.log('Logged out properly');
+    this.log(message || 'Logged out properly');
+    this.router.navigate(['/']);
   }
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {

@@ -1,4 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/theming";
+@include mat-core();
+@import "./app/styles/roboto.scss";
+
+* {
+  @include angular-material-typography($roboto-custom-typography);
+}
 
 html {
   height: 100%;
@@ -30,3 +37,4 @@ div.mat-expansion-panel-body {
   padding: 5px;
   max-width: 100%;
 }
+
