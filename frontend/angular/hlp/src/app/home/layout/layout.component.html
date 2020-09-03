@@ -10,11 +10,13 @@
   </div>
 </h1>
 <div class="left-column" @fadeIn>
-  <app-no-user-home
-    class="user-home"
-    *ngIf="!userIsLogged()"
-  ></app-no-user-home>
-  <app-user-home class="user-home" *ngIf="userIsLogged()"></app-user-home>
+  <span *ngIf="this.userIsLogged(); then userLogged else userNotLogged"></span>
+  <ng-template #userLogged>
+    <app-no-user-home class="user-home"></app-no-user-home>
+  </ng-template>
+  <ng-template #userNotLogged>
+    <app-user-home class="user-home"></app-user-home>
+  </ng-template>
 </div>
 <div class="center-column" @fadeIn>
   <p class="mat-body-2">Is your password been pwned?</p>

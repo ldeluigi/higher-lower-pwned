@@ -7,11 +7,12 @@
 <div class="wrapper">
   <app-word [card]="card2"></app-word>
 </div>
-<div *ngIf="!playing">
+<div *ngIf="playing; then gameIsOn else gameIsNotOn"></div>
+<ng-template #gameIsNotOn>
   Are you ready? <br />
   <button [disabled]="playing" mat-button (click)="start()">Let's go</button>
-</div>
-<div *ngIf="playing">
+</ng-template>
+<ng-template #gameIsOn>
   <div>
     {{ timeLeft | date:'s:S' }} s
   </div>
@@ -36,4 +37,4 @@
   >
     Down
   </button>
-</div>
+</ng-template>
