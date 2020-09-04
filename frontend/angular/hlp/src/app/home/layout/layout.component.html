@@ -11,10 +11,10 @@
 </h1>
 <div class="left-column" @fadeIn>
   <span *ngIf="this.userIsLogged(); then userLogged else userNotLogged"></span>
-  <ng-template #userLogged>
+  <ng-template #userNotLogged>
     <app-no-user-home class="user-home"></app-no-user-home>
   </ng-template>
-  <ng-template #userNotLogged>
+  <ng-template #userLogged>
     <app-user-home class="user-home"></app-user-home>
   </ng-template>
 </div>
