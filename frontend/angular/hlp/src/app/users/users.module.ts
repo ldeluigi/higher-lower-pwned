@@ -14,6 +14,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [LayoutComponent, UserInfoComponent, UserStatsComponent],
@@ -29,6 +30,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     SharedModule,
     ChartsModule,
     MatSnackBarModule,
+    MatExpansionModule,
   ],
+  schemas: [],
 })
 export class UsersModule {}

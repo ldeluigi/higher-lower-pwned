@@ -1,61 +1,90 @@
-<div class="input"><app-period-buttons (period)="updateUserStats($event)"></app-period-buttons>
-<mat-form-field class="input">
-  <mat-label>period number</mat-label>
-  <input
-    matInput
-    (keyup)="updateUserStats()"
-    [formControl]="limit"
-    input="number"
-    placeholder="Ex. 50, max 1000"
-    #input
-  />
-</mat-form-field></div>
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
-    <ng-container matColumnDef="avgScore">
-      <th mat-header-cell *matHeaderCellDef>Average score</th>
-      <td mat-cell *matCellDef="let element">{{ element.avgScore }}</td>
-    </ng-container>
-    <ng-container matColumnDef="avgGuesses">
-      <th mat-header-cell *matHeaderCellDef>Average guesses</th>
-      <td mat-cell *matCellDef="let element">{{ element.avgGuesses }}</td>
-    </ng-container>
-    <ng-container matColumnDef="avgPlaysPerDay">
-      <th mat-header-cell *matHeaderCellDef>Average plays per day</th>
-      <td mat-cell *matCellDef="let element">{{ element.avgPlaysPerDay }}</td>
-    </ng-container>
-    <ng-container matColumnDef="avgDuration">
-      <th mat-header-cell *matHeaderCellDef>Average duration</th>
-      <td mat-cell *matCellDef="let element">
-        {{ timeC(element.avgDuration) }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="maxScore">
-      <th mat-header-cell *matHeaderCellDef>Max score</th>
-      <td mat-cell *matCellDef="let element">{{ element.maxScore }}</td>
-    </ng-container>
-    <ng-container matColumnDef="maxGuesses">
-      <th mat-header-cell *matHeaderCellDef>Max guesses</th>
-      <td mat-cell *matCellDef="let element">{{ element.maxGuesses }}</td>
-    </ng-container>
-    <ng-container matColumnDef="maxDuration">
-      <th mat-header-cell *matHeaderCellDef>Max duration</th>
-      <td mat-cell *matCellDef="let element">
-        {{ timeC(element.maxDuration) }}
-      </td>
-    </ng-container>
+<div class="inputs">
+  <app-period-buttons
+    class="input"
+    (period)="updateUserStats($event)"
+  ></app-period-buttons>
+  <mat-form-field class="input">
+    <mat-label>period number</mat-label>
+    <input
+      matInput
+      (keyup)="updateUserStats()"
+      [formControl]="limit"
+      input="number"
+      placeholder="Ex. 50, max 1000"
+      #input
+    />
+  </mat-form-field>
+</div>
+<mat-accordion>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Stats </mat-panel-title>
+      <mat-panel-description> </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="avgScore">
+          <th mat-header-cell *matHeaderCellDef>Average score</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.avgScore | number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="avgGuesses">
+          <th mat-header-cell *matHeaderCellDef>Average guesses</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.avgGuesses | number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="avgPlaysPerDay">
+          <th mat-header-cell *matHeaderCellDef>Average plays per day</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.avgPlaysPerDay | number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="avgDuration">
+          <th mat-header-cell *matHeaderCellDef>Average duration</th>
+          <td mat-cell *matCellDef="let element">
+            {{ timeC(element.avgDuration) }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="maxScore">
+          <th mat-header-cell *matHeaderCellDef>Max score</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.maxScore | number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="maxGuesses">
+          <th mat-header-cell *matHeaderCellDef>Max guesses</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.maxGuesses | number }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="maxDuration">
+          <th mat-header-cell *matHeaderCellDef>Max duration</th>
+          <td mat-cell *matCellDef="let element">
+            {{ timeC(element.maxDuration) }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Graph </mat-panel-title>
+      <mat-panel-description> </mat-panel-description>
+    </mat-expansion-panel-header>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-  <mat-paginator showFirstLastButtons></mat-paginator>
-</div>
-<div style="display: block">
-  <canvas
-    baseChart
-    [datasets]="lineChartData"
-    [colors]="lineChartColors"
-    [options]="lineChartOptions"
-    [chartType]="lineChartType"
-  ></canvas>
-</div>
+    <div style="display: block">
+      <canvas
+        baseChart
+        [datasets]="lineChartData"
+        [colors]="lineChartColors"
+        [options]="lineChartOptions"
+        [chartType]="lineChartType"
+      ></canvas>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -17,7 +17,7 @@ export interface CardData {
 })
 export class WordComponent implements OnInit {
 
-  card: CardData = {} as CardData;
+  card: CardData = {word: ''} as CardData;
   newCard: CardData | boolean = false;
   dataNewCard: CardData = {} as CardData;
 
@@ -58,27 +58,27 @@ const DURATION = '0.3s';
 
 export function anim(): AnimationTriggerMetadata {
   return trigger('testAnim', [
-     transition(':enter', [
-       style({
-          opacity: 0,
-          transform: 'translateY(100%)'
-        }),
-        animate('0.5s', style({
-          opacity: 0.9,
-          transform: 'translateY(-100%)'
-        }))
-      ])
-    ]);
+    transition(':enter', [
+      style({
+        opacity: 0,
+        transform: 'translateY(100%)'
+      }),
+      animate('0.5s', style({
+        opacity: 0.9,
+        transform: 'translateY(-100%)'
+      }))
+    ])
+  ]);
 }
 
 export function anim2(): AnimationTriggerMetadata {
   return trigger('testAnim2', [
-     transition('false => *', [
-        animate('0.5s', style({
-          opacity: 0,
-          transform: 'translateY(-200%)'
-        }))
-      ])
-    ]);
+    transition('false => *', [
+      animate('0.5s', style({
+        opacity: 0,
+        transform: 'translateY(-200%)'
+      }))
+    ])
+  ]);
 }
 

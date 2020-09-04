@@ -1,0 +1,27 @@
+@media screen and (min-width: 995px) and (orientation: landscape) {
+  .left-col {
+    margin: 0 1%;
+    height: 100%;
+    float: left;
+    width: 28%;
+  }
+
+  .right-col {
+    margin: 0 1%;
+    height: 100%;
+    float: left;
+    width: 68%;
+  }
+}
+
+@media (orientation: portrait), screen and (max-width: 995px) {
+  .left-col {
+    margin: 1%;
+    width: 98%;
+  }
+
+  .right-col {
+    margin: 0 1%;
+    width: 98%;
+  }
+}

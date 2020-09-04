@@ -1,14 +1,24 @@
-<h1 class="mat-display-3" style="text-align: center">
-  Higher Lower Pwned game
+<h1 class="mat-display-4" >
+  <div @title1>
+    The&nbsp;
+  </div>
+  <div @title2>
+    Pwned&nbsp;
+  </div>
+  <div @title3>
+    Game
+  </div>
 </h1>
-<div class="left-column">
-  <app-no-user-home
-    class="user-home"
-    *ngIf="!userIsLogged()"
-  ></app-no-user-home>
-  <app-user-home class="user-home" *ngIf="userIsLogged()"></app-user-home>
+<div class="left-column" @fadeIn>
+  <span *ngIf="this.userIsLogged(); then userLogged else userNotLogged"></span>
+  <ng-template #userLogged>
+    <app-no-user-home class="user-home"></app-no-user-home>
+  </ng-template>
+  <ng-template #userNotLogged>
+    <app-user-home class="user-home"></app-user-home>
+  </ng-template>
 </div>
-<div class="center-column">
+<div class="center-column" @fadeIn>
   <p class="mat-body-2">Is your password been pwned?</p>
   <p class="mat-body-2">
     A frustratingly addictive game of higher or lower using pwned password.
@@ -25,14 +35,14 @@
 </div>
 <div class="right-column">
   <mat-accordion>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
         <mat-panel-title> Stats </mat-panel-title>
         <mat-panel-description> </mat-panel-description>
       </mat-expansion-panel-header>
       <app-stats class="app-stats"></app-stats>
     </mat-expansion-panel>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="false">
       <mat-expansion-panel-header>
         <mat-panel-title> Leaderboard </mat-panel-title>
         <mat-panel-description> </mat-panel-description>
