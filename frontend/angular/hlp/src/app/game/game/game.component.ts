@@ -1,4 +1,4 @@
-import { Component, OnInit, Type, OnDestroy } from '@angular/core';
+import { Component, OnInit, Type, OnDestroy, AfterViewInit } from '@angular/core';
 import { GameSocketService } from '../../_services/game-socket.service';
 import { CardData } from '../_components/word/word.component';
 import { GameEnd } from '../_model/gameEnd';
@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   card: CardData = { word: '', score: 0 };
   card2: CardData = { word: '' };
   actualScore = 0;
@@ -23,6 +23,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   loading = true;
   playing = false;
+  private firstWord = true;
 
   private subscription: Subscription | null = null;
 
@@ -30,6 +31,10 @@ export class GameComponent implements OnInit, OnDestroy {
     private gameSocket: GameSocketService,
     private snackBar: MatSnackBar
   ) { }
+
+  ngAfterViewInit(): void {
+    this.start();
+  }
 
   ngOnDestroy(): void {
     // console.log('OnDestry', this.subscription);
@@ -49,7 +54,8 @@ export class GameComponent implements OnInit, OnDestroy {
       const ng = r as NextGuess;
       const ge = r as GameEnd;
       if (ng.timeout) {
-        if (this.card.word === '') {
+        if (this.firstWord) {
+          this.firstWord = false;
           this.card = {
             word: ng.password1,
             score: ng.value1
@@ -78,10 +84,11 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   start(): void {
-    this.gameSocket.startGame();
     this.actualScore = 0;
     this.playing = true;
     this.loading = false;
+    this.firstWord = true;
+    this.gameSocket.startGame();
   }
 
   private gameEnd(value2: number, score: number = -1): void {

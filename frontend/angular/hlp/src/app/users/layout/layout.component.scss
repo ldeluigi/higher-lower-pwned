@@ -15,8 +15,9 @@
 }
 
 @media (orientation: portrait), screen and (max-width: 995px) {
+
   .left-col {
-    margin: 1%;
+    margin: 0 1%;
     width: 98%;
   }
 

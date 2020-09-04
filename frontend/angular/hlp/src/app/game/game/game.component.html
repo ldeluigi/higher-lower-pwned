@@ -1,10 +1,10 @@
 <div class="wrapper-small">
   <app-counter [counter]="actualScore"></app-counter>
 </div>
-<div class="wrapper">
+<div class="wrapper card1">
   <app-word [card]="card"></app-word>
 </div>
-<div class="wrapper">
+<div class="wrapper card2">
   <app-word [card]="card2"></app-word>
 </div>
 <div *ngIf="playing; then gameIsOn else gameIsNotOn"></div>

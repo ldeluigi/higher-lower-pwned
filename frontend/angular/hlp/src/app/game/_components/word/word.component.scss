@@ -1,6 +1,6 @@
 :host {
   display: inline-block;
-  font-size: 30px;
+  font-size: 150%;
   font-weight: 400;
   border: 0px solid rgba(0, 0, 0, 0.3);
   padding: 10px;
@@ -11,11 +11,6 @@
   overflow: hidden;
 }
 
-mat-card {
-  background: lavender;
-  font-size: 30px;
-}
-
 mat-card-header {
   text-align: center;
 
@@ -23,5 +18,13 @@ mat-card-header {
 
 mat-card-title {
   text-align: center;
+  font-size: 150% !important;
+}
+
+mat-card-content {
+  text-align: right;
+  p {
+    font-size: 150% !important;
+  }
 }
 

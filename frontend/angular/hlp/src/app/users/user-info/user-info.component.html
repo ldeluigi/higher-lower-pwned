@@ -26,12 +26,12 @@
   </mat-card>
   <mat-card class="reg-date-card">
     <mat-card-title>{{
-      this.userInfo.registration | date: "medium"
+      this.userInfo.registration | date: "mediumDate"
     }}</mat-card-title>
     <mat-card-subtitle>Registration date</mat-card-subtitle>
   </mat-card>
   <mat-card class="last-update-card">
-    <mat-card-title>{{this.userInfo.lastLogin | date: "medium"}}</mat-card-title>
+    <mat-card-title>{{this.userInfo.lastLogin | date: "M/d/yy, H:mm"}}</mat-card-title>
     <mat-card-subtitle>Last login date</mat-card-subtitle>
   </mat-card>
 </mat-card>
