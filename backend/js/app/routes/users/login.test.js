@@ -4,7 +4,6 @@ const request = supertest(app);
 const user = require("../../model/user");
 const token = require("../../model/token");
 const pwd = require("../../utils/password");
-const jwt = require("express-jwt");
 const jwtTools = require("../../utils/jwt");
 
 

@@ -1,5 +1,5 @@
 const jwtTools = require('../utils/jwt');
-const game = require("../game/game");
+const arcade = require("../game/arcade");
 
 module.exports = function (sio) {
   io = sio.of("/arcade");
@@ -20,9 +20,9 @@ module.exports = function (sio) {
   }).on("connection", function (socket) {
     socket.on("start", async () => {
       try {
-        await game.newGame(socket.id, socket.userData.id);
+        await arcade.newGame(socket.id, socket.userData.id);
         try {
-          let nextGuess = await game.currentGuess(socket.id);
+          let nextGuess = await arcade.currentGuess(socket.id);
           socket.emit("guess", nextGuess);
         } catch (err) {
           socket.emit("onerror", {
@@ -39,12 +39,12 @@ module.exports = function (sio) {
     });
     socket.on("repeat", async () => {
       try {
-        let nextGuess = await game.currentGuess(socket.id);
+        let nextGuess = await arcade.currentGuess(socket.id);
         if (nextGuess.expiration > 0) {
           socket.emit("guess", nextGuess);
         } else {
           try {
-            let endData = await game.deleteGame(socket.id);
+            let endData = await arcade.deleteGame(socket.id);
             socket.emit("gameEnd", endData);
           } catch (err) {
             socket.emit("onerror", {
@@ -63,10 +63,10 @@ module.exports = function (sio) {
     socket.on("answer", async (answer) => {
       if (answer.higher === 1 || answer.higher === 2) {
         try {
-          let isCorrect = await game.submitGuess(socket.id, answer.higher);
+          let isCorrect = await arcade.submitGuess(socket.id, answer.higher);
           if (isCorrect) {
             try {
-              let nextGuess = await game.currentGuess(socket.id);
+              let nextGuess = await arcade.currentGuess(socket.id);
               socket.emit("guess", nextGuess);
             } catch (err) {
               socket.emit("onerror", {
@@ -76,7 +76,7 @@ module.exports = function (sio) {
             }
           } else {
             try {
-              let endData = await game.deleteGame(socket.id);
+              let endData = await arcade.deleteGame(socket.id);
               socket.emit("gameEnd", endData);
             } catch (err) {
               socket.emit("onerror", {
@@ -95,7 +95,7 @@ module.exports = function (sio) {
     });
     socket.on("disconnect", async (reason) => {
       try {
-        await game.deleteGame(socket.id);
+        await arcade.deleteGame(socket.id);
       } catch (err) { }
     })
   });

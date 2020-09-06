@@ -1,7 +1,7 @@
 const config = require("./config/config");
 const mongoose = require("mongoose");
 const server = require("./config/server").server;
-const game = require("./app/game/game");
+const game = require("./app/game/arcade");
 
 (async () => {
   try {
