@@ -1,4 +1,3 @@
-
 const app = require("../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
@@ -6,13 +5,18 @@ const cio = require("socket.io-client");
 const http = require("http");
 const sio = require("socket.io");
 const ioBack = require("./arcade");
+const arcade = require("../game/arcade");
+
+const gameSchema = require("../model/game").schema;
+const scoreSchema = require("../model/score").schema;
 
 var serverListen;
 var serverAddress;
 var ioServer;
 var socket;
 
-beforeAll((done) => {
+beforeAll(async (done) => {
+  await arcade.setup();
   serverListen = http.createServer().listen();
   serverAddress = serverListen.address();
   ioServer = ioBack(sio(serverListen));
@@ -54,11 +58,37 @@ afterEach((done) => {
 
 
 describe("arcade socket.io API", function () {
-  it("should be ok", async (done) => {
+  it("should start a game without jwt", (done) => {
+    const mock = jest.spyOn(gameSchema, 'findOne');
+    mock.mockImplementation((input) => Promise.resolve(null));
+    const mock2 = jest.spyOn(gameSchema, 'create');
+    mock2.mockImplementation((input) => {
+      mock.mockImplementation((input) => Promise.resolve({
+        expiration: new Date("03-05-2020"),
+        currentP1: "a",
+        currentP2: "b",
+        valueP1: 1,
+        valueP2: 2,
+        score: 8,
+        guesses: 2,
+        start: new Date("02-05-2020")
+      }));
+      return Promise.resolve(null);
+    });
     socket.on("onerror", (msg) => {
       done.fail(new Error(msg.description));
     });
-    // TODO mock db and test
-    done();
+    socket.on("guess", (answer) => {
+      expect(answer).toHaveProperty("password1");
+      expect(answer).toHaveProperty("value1");
+      expect(answer).toHaveProperty("password2");
+      expect(answer).toHaveProperty("timeout");
+      expect(answer).toHaveProperty("score");
+      expect(answer).toHaveProperty("guesses");
+      mock2.mockRestore();
+      mock.mockRestore();
+      done();
+    });
+    socket.emit("start");
   });
 });
