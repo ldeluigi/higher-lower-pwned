@@ -1,14 +1,14 @@
 const config = require("./config/config");
 const mongoose = require("mongoose");
 const server = require("./config/server").server;
-const game = require("./app/game/arcade");
+const arcade = require("./app/game/arcade");
 
 (async () => {
   try {
     await mongoose.connect(config.mongoose.url, config.mongoose.options)
     console.log("Connected to MongoDB");
-    await game.setup();
-    console.log("Game setup done");
+    await arcade.setup();
+    console.log("Arcade setup done");
     server.listen(config.port, () => {
       console.log("Listening on " + config.port);
     });
