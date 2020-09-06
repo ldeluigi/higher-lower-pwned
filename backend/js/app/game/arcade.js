@@ -162,7 +162,10 @@ async function countLines(fileName) {
     input: fs.createReadStream(fileName),
   });
   let i = 0;
-  for await (_ of readInterface) i++;
+  for await (const line of readInterface) {
+    if (line.length <= 1) continue;
+    i++;
+  }
   return i;
 }
 
@@ -172,6 +175,7 @@ async function readOneCSVLine(fileName, lineIndex) {
   });
   let i = -1;
   for await (const line of readInterface) {
+    if (line.length <= 1) continue;
     if (i == lineIndex) return line;
     i++;
   }
