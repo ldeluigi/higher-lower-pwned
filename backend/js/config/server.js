@@ -4,8 +4,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 const server = require("http").Server(app);
-const socketApi = require("../app/socket");
-const io = socketApi(socket(server));
+const socketArcadeApi = require("../app/socket/arcade");
+const io = socketArcadeApi(socket(server));
 
 const route = require("../app/routes");
 

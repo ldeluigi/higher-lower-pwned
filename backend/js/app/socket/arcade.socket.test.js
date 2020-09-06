@@ -5,7 +5,7 @@ const request = supertest(app);
 const cio = require("socket.io-client");
 const http = require("http");
 const sio = require("socket.io");
-const ioBack = require("./index");
+const ioBack = require("./arcade");
 
 var serverListen;
 var serverAddress;
