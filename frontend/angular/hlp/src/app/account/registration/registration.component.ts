@@ -27,9 +27,19 @@ export class RegistrationComponent implements OnInit {
     private formBuilder: FormBuilder
   ) {
     this.form = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-      email: ['', Validators.email],
+      username: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(30),
+      ])],
+      password: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(8),
+      ])],
+      email: ['', Validators.compose([
+        Validators.required,
+        Validators.email
+      ])],
     });
   }
 
@@ -45,8 +55,20 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit(): void {
     this.error = '';
+    const errors: string[] = [];
     if (this.form.invalid) {
-      this.error = 'Missing fields or invalid E-mail';
+      if (this.f.username.invalid) {
+        errors.push('username');
+      }
+      if (this.f.password.invalid) {
+        errors.push('password');
+      }
+      if (this.f.email.invalid) {
+        errors.push('email');
+      }
+      if (errors.length > 0) {
+        this.error = 'Invalid ' + errors.join(', ') + '.';
+      }
       return;
     }
 
@@ -62,8 +84,8 @@ export class RegistrationComponent implements OnInit {
         (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        (error) => {
-          this.error = 'Invalid data';
+        (error: [{param: string}]) => {
+          this.error = 'Invalid ' + error.map(elem => elem.param).join(' ,') + '.';
         }
       );
   }

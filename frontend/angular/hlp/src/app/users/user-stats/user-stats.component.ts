@@ -15,7 +15,7 @@ import { FormControl, Validators } from '@angular/forms';
 export class UserStatsComponent implements OnInit {
   lineChartType: ChartType = 'line';
   lineChartData: Array<object> = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'My First dataset' },
+    { data: [65, 59, 80, 81, 56, 55, 40], label: 'My First dataset' }, // TODO Magna che è?
   ];
 
   lineChartOptions: ChartOptions & { annotation: object } = {
@@ -60,10 +60,11 @@ export class UserStatsComponent implements OnInit {
     },
   ];
 
-  limit = new FormControl('', [
+  limit = new FormControl('10', [
     Validators.required,
     Validators.pattern('^[0-9]*$'),
-    Validators.max(1000),
+    Validators.max(30),
+    Validators.min(1)
   ]);
 
   dataSource = new MatTableDataSource<HistoryItem>([]);

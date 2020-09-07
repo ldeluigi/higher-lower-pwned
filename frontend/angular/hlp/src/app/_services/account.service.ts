@@ -93,12 +93,12 @@ export class AccountService {
     if (user === null) {
       return throwError('No user logged');
     }
-    console.log(`${environment.apiUrl}/users/refresh`, user);
+    // console.log(`${environment.apiUrl}/users/refresh`, user);
     return this.http.post<Response<TokenRefresh>>(`${environment.apiUrl}/users/refresh`, { token: user.token, refresh: user.refresh })
       .pipe(map(a => {
         user.token = a.data.token;
         user.refresh = a.data.refresh;
-        console.log(user.token, a.data.token);
+        // console.log(user.token, a.data.token);
         this.userSubject.next(user);
         return a.data;
       }));

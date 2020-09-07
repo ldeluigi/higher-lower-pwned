@@ -45,7 +45,17 @@ export class LoginComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
-      this.error = 'Username or password invalid';
+      this.error = '';
+      if (this.f.username.invalid) {
+        this.error += 'Missing username';
+      }
+      if (this.f.password.invalid) {
+        if (this.error.length > 0) {
+          this.error += ' and password';
+        } else {
+          this.error += 'Missing password';
+        }
+      }
       return;
     }
 
@@ -57,7 +67,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
-          this.error = 'Log In failed';
+          this.error = 'Login failed. Please try again.';
         }
       );
   }

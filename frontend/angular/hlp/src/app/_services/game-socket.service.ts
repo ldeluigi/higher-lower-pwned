@@ -39,7 +39,7 @@ export class GameSocketService implements OnDestroy {
               this.startGame();
             },
             error => {
-              this.accountService.logout('Can\'t conneto to the service, login again and retry');
+              this.accountService.logout('Can\'t connet to the service, login again and retry');
             }
             );
           } else {
@@ -50,7 +50,7 @@ export class GameSocketService implements OnDestroy {
     });
   }
 
-  startGame(): void {
+  async startGame(): Promise<void> {
     if (!this.connectionOpen) {
       this.setUpAndConnect()
         .then(_ => {
@@ -61,7 +61,7 @@ export class GameSocketService implements OnDestroy {
     }
   }
 
-  private async setUpAndConnect(): Promise<unknown> {
+  private async setUpAndConnect(): Promise<void> {
     if (this.accountService.userValue !== null) {
       // console.log('add token');
       this.socket.ioSocket.io.opts.query = { token: this.accountService.userValue.token };

@@ -24,8 +24,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         // refresh the token
         return this.handle401Error(request, next);
       }
+      // console.log(err);
 
-      const error = err.error.message || err.statusText;
+      const error = err.error.errors || err.statusText;
       return throwError(error);
     }));
   }
@@ -45,7 +46,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       return this.accountService.refreshToken()
       .pipe(catchError(err => {
         this.accountService.logout();
-        return throwError('Error in token refrsh');
+        return throwError('Error in token refresh');
       }))
       .pipe(
         switchMap(t => {

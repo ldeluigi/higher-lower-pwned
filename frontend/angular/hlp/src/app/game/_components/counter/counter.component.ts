@@ -28,7 +28,7 @@ export class CounterComponent implements OnInit {
   onAnimationDone(event: AnimationEvent): void {
     // if (event.fromState === 'void') {
     if (this.newCounter !== false) {
-      console.log('1=>', this.newCounter, event);
+      // console.log('1=>', this.newCounter, event);
       this.counter = this.newCounter as number;
       this.newCounter = false;
     }
@@ -36,7 +36,7 @@ export class CounterComponent implements OnInit {
   }
 
   onAnimation2Done(event: AnimationEvent): void {
-      console.log('2=>', this.newCounter, event);
+      // console.log('2=>', this.newCounter, event);
   }
 }
 

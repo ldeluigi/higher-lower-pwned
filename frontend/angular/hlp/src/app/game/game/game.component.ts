@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
 })
-export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameComponent implements OnInit, OnDestroy {
   card: CardData = { word: '', score: 0 };
   card2: CardData = { word: '' };
   actualScore = 0;
@@ -32,10 +32,6 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
     private snackBar: MatSnackBar
   ) { }
 
-  ngAfterViewInit(): void {
-    this.start();
-  }
-
   ngOnDestroy(): void {
     // console.log('OnDestry', this.subscription);
     if (this.subscription !== null) {
@@ -49,7 +45,7 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    console.log('OnInit');
+    // console.log('OnInit');
     this.subscription = this.gameSocket.game.subscribe(r => {
       const ng = r as NextGuess;
       const ge = r as GameEnd;
@@ -72,15 +68,16 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
             this.gameSocket.repeat();
           });
       } else if (ge.value2) {
-        console.log('game end');
+        // console.log('game end');
         this.gameEnd(ge.value2, ge.score);
       }
     },
       error => {
-        console.log(error);
+        // console.log(error);
         this.gameEnd(-1);
       }
     );
+    this.start();
   }
 
   start(): void {
@@ -107,9 +104,9 @@ export class GameComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private next(newWord: string, oldScore: number): void {
     this.rollNumber(oldScore, 600, n => this.card2.score = n);
-    console.log('Timeout started');
+    // console.log('Timeout started');
     setTimeout(() => {
-      console.log('Timeout ended');
+      // console.log('Timeout ended');
       this.card = this.card2;
       this.card.score = oldScore;
       this.card2 = {
