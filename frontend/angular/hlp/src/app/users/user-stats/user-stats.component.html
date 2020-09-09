@@ -23,9 +23,10 @@
     </mat-expansion-panel-header>
 
     <div style="display: block">
-      <canvas
+      <canvas mdbChart
         baseChart
         [datasets]="lineChartData"
+        [labels]="chartLabels"
         [colors]="lineChartColors"
         [options]="lineChartOptions"
         [chartType]="lineChartType"
@@ -39,26 +40,56 @@
     </mat-expansion-panel-header>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="day">
+          <th mat-header-cell *matHeaderCellDef>Day</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element | historyItemToStartDate: 'day' | date:'dd/M/yy' }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="month">
+          <th mat-header-cell *matHeaderCellDef>Month</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element | historyItemToStartDate: 'month' | date:'M/yy' }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="year">
+          <th mat-header-cell *matHeaderCellDef>Year</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element | historyItemToStartDate: 'year' | date:'yyyy' }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef> From </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element | historyItemToStartDate: actualPeriod | date:'dd/M/yy' }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="endDate">
+          <th mat-header-cell *matHeaderCellDef> To </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element | historyItemToEndDate: actualPeriod | date:'dd/M/yy' }}
+          </td>
+        </ng-container>
         <ng-container matColumnDef="avgScore">
-          <th mat-header-cell *matHeaderCellDef>Average score</th>
+          <th mat-header-cell *matHeaderCellDef>Avg. score</th>
           <td mat-cell *matCellDef="let element">
             {{ element.avgScore | number }}
           </td>
         </ng-container>
         <ng-container matColumnDef="avgGuesses">
-          <th mat-header-cell *matHeaderCellDef>Average guesses</th>
+          <th mat-header-cell *matHeaderCellDef>Avg. guesses</th>
           <td mat-cell *matCellDef="let element">
             {{ element.avgGuesses | number }}
           </td>
         </ng-container>
         <ng-container matColumnDef="avgPlaysPerDay">
-          <th mat-header-cell *matHeaderCellDef>Average plays per day</th>
+          <th mat-header-cell *matHeaderCellDef>Avg. plays per day</th>
           <td mat-cell *matCellDef="let element">
             {{ element.avgPlaysPerDay | number }}
           </td>
         </ng-container>
         <ng-container matColumnDef="avgDuration">
-          <th mat-header-cell *matHeaderCellDef>Average duration</th>
+          <th mat-header-cell *matHeaderCellDef>Avg. duration</th>
           <td mat-cell *matCellDef="let element">
             {{ timeC(element.avgDuration) }}
           </td>
