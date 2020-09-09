@@ -18,15 +18,15 @@ function subtractPeriodNTimesFromToday(period, times) {
   if (times <= 0) throw new Error("Invalid times")
   let currentDate = new Date()
   let p = {
-    day: new Date(),
-    week: new Date(),
-    month: new Date(),
-    year: new Date()
+    day: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay() - times),
+    week: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay() - (7 * times)),
+    month: new Date(currentDate.getFullYear(), currentDate.getMonth() - times, currentDate.getDay()),
+    year: new Date(currentDate.getFullYear() - times, currentDate.getMonth(), currentDate.getDay())
   };
-  p.day.setDate(currentDate.getUTCDate() - 1 * times);
-  p.week.setDate(currentDate.getUTCDate() - 7 * times);
-  p.month.setMonth(currentDate.getMonth() - 1 * times);
-  p.year.setFullYear(currentDate.getFullYear() - 1 * times);
+  // p.day.setDate(currentDate.getUTCDate() - 1 * times);
+  // p.week.setDate(currentDate.getUTCDate() - 7 * times);
+  // p.month.setMonth(currentDate.getMonth() - 1 * times);
+  // p.year.setFullYear(currentDate.getFullYear() - 1 * times);
   return p[period]
 }
 
