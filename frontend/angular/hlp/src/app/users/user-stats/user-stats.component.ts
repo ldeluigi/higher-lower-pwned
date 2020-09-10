@@ -16,51 +16,42 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./user-stats.component.scss'],
 })
 export class UserStatsComponent implements OnInit {
-  lineChartType: ChartType = 'line';
+  lineChartType: ChartType = 'bar';
   lineChartData: Array<object> = [];
 
   chartLabels: Array<string> = [];
 
-  lineChartOptions: ChartOptions & { annotation: object } = {
+  lineChartOptions: ChartOptions = {
     responsive: true,
     scales: {
       // We use this empty structure as a placeholder for dynamic theming.
-      xAxes: [{}],
-      yAxes: [
+      xAxes: [
         {
-          id: 'y-axis-0',
-          position: 'left',
-          ticks: {
-            beginAtZero: true,
-          },
+          stacked: true,
         },
       ],
-    },
-    annotation: {
-      annotations: [
+      yAxes: [
         {
-          type: 'line',
-          mode: 'vertical',
-          scaleID: 'x-axis-0',
-          value: 'March',
-          borderColor: 'orange',
-          borderWidth: 2,
-          label: {
-            enabled: true,
-            fontColor: 'orange',
-            content: 'LineAnno',
-          },
+          stacked: false,
+          ticks: {
+            beginAtZero: true
+          }
         },
       ],
     },
   };
 
   lineChartColors: Array<object> = [
-    {
-      backgroundColor: 'rgba(105, 0, 132, .2)',
-      borderColor: 'rgba(200, 99, 132, .7)',
+    { // avg
+      backgroundColor: 'rgba(200, 0, 0, .3)',
+      borderColor: 'rgba(200, 0, 0, .5)',
       borderWidth: 2,
     },
+    { // max
+      backgroundColor: 'rgba(51, 51, 255, .6)',
+      borderColor: 'rgba(51, 51, 255, .8)',
+      borderWidth: 2,
+    }
   ];
 
   limit = new FormControl('10', [
@@ -95,14 +86,14 @@ export class UserStatsComponent implements OnInit {
   ) {
     usersTools.data.subscribe((data) => {
       const array = data?.history || [];
+      console.log('array', array);
       this.dataSource.data = array;
       let scores: HistoryItem[] = [];
       let label: Array<string> = [];
-      if (array.length > 1) {
-        const periodStart = new Date().getDay();
-        const yearStart = new Date().getFullYear();
+      if (array.length > 0) {
         const end = this.periodBegin();
         const periods = periodIterator(end.period, this.actualLimitValue, end.year, this.actualPeriod);
+        let lastElement: HistoryItem = {maxScore: 0} as HistoryItem;
         periods.forEach(e => {
           const periodN = e.period;
           const findResult = array.find(e2 => e2.periodNumber === periodN && e2.year === e.year);
@@ -117,44 +108,63 @@ export class UserStatsComponent implements OnInit {
             maxGuesses: 0,
             maxDuration: 0,
           };
-          scores.push(element);
-          const startDate = startDatePipe.transform(element, this.actualPeriod);
-          if (this.actualPeriod === 'day') {
-            label.push(datePipe.transform(startDate, 'dd/M/yy') as string);
+          console.log(lastElement, element);
+          if (lastElement.maxScore === 0 && element.maxScore === 0) {
+            const lastLabel = label.pop();
+            if (lastLabel) {
+              label.push('...');
+            }
           } else {
-            const format = this.actualPeriod === 'week' ? 'dd/M/yy' : this.actualPeriod === 'month' ? 'MM/yy' : 'yyyy';
-            if (this.actualPeriod === 'week') {
-              label.push(
-                datePipe.transform(startDate, format) as string +
-                ' - ' +
-                datePipe.transform(endDatePipe.transform(element, this.actualPeriod), format) as string
-              );
+            scores.push(element);
+
+            const startDate = startDatePipe.transform(element, this.actualPeriod);
+            if (this.actualPeriod === 'day') {
+              label.push(datePipe.transform(startDate, 'dd/M/yy') as string);
             } else {
-              label.push(datePipe.transform(startDate, format) as string);
+              const format = this.actualPeriod === 'week' ? 'dd/M/yy' : this.actualPeriod === 'month' ? 'MM/yy' : 'yyyy';
+              if (this.actualPeriod === 'week') {
+                label.push(
+                  datePipe.transform(startDate, format) as string +
+                  ' - ' +
+                  datePipe.transform(endDatePipe.transform(element, this.actualPeriod), format) as string
+                );
+              } else {
+                label.push(datePipe.transform(startDate, format) as string);
+              }
             }
           }
+          // save lastElement
+          lastElement = element;
+
         });
       }
+      console.log('scores:', scores, 'label:', label);
       let lastIndex = 0;
       for (let i = 0; i < scores.length; i++) {
-        if (scores[i].maxDuration > 0) {
-          lastIndex = i - 1;
+        if (scores[i].maxScore > 0) {
+          lastIndex = i;
           break;
         }
       }
       if (lastIndex > 0) {
         scores = scores.splice(lastIndex);
-        label = label.splice(lastIndex);
+        label = label.splice(lastIndex - 1);
       }
+      console.log('scores:', scores, 'label:', label);
       this.chartLabels = label;
       this.lineChartData = [
         {
           data: scores.map((hist) => Math.floor(hist.avgScore)),
           label: 'Avg Score',
+          categoryPercentage: 1,
+          barPercentage: 0.6,
+          type: 'line'
         },
         {
           data: scores.map((hist) => hist.maxScore),
           label: 'Max Score',
+          categoryPercentage: 1,
+          barPercentage: 0.2,
         },
       ];
     });
@@ -185,7 +195,7 @@ export class UserStatsComponent implements OnInit {
       const old = new Date(now.getFullYear(), 0, this.daysIntoYear(now) - this.actualLimitValue + 1);
       return { period: this.daysIntoYear(old), year: old.getFullYear() };
     } else if (this.actualPeriod === 'week') {
-      const old = new Date(now.getFullYear(), 0, this.daysIntoYear(now) + (-this.actualLimitValue + 1) * 7);
+      const old = new Date(now.getFullYear(), 0, this.daysIntoYear(now) + (-this.actualLimitValue) * 7);
       return { period: Math.floor(this.daysIntoYear(old) / 7), year: old.getFullYear() };
     } else if (this.actualPeriod === 'month') {
       const old = new Date(now.getFullYear(), now.getMonth() - this.actualLimitValue + 1, 1);
@@ -194,7 +204,7 @@ export class UserStatsComponent implements OnInit {
       const old = new Date(now.getFullYear() - this.actualLimitValue, 1, 1);
       return { period: old.getFullYear(), year: old.getFullYear() };
     }
-    throw new Error('Illegal actual period');
+    throw new Error('Illegal period');
   }
 
   ngOnInit(): void {
