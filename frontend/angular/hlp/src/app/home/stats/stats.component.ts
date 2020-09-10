@@ -39,7 +39,7 @@ export class StatsComponent implements OnInit {
     stat.push({ name: 'Guesses', avg: stats.avgGuesses || 0, max: stats.maxGuesses || 0 });
     stat.push({ name: 'PlaysPerDay', avg: stats.avgPlaysPerDay || 0, max: stats.maxPlaysPerDay || 0 });
     stat.push({
-      name: 'Duration (seconds)',
+      name: 'Duration',
       avg: stats.avgDuration || 0,
       max: stats.maxDuration || 0,
     });

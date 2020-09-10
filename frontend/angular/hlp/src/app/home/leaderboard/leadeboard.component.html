@@ -6,11 +6,16 @@
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
 
+    <!-- position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> Rank </th>
+      <td mat-cell *matCellDef="let element"> {{dataSource.data.indexOf(element) + 1}} </td>
+    </ng-container>
+
     <!-- Player Column -->
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef> Player </th>
       <td mat-cell *matCellDef="let element">
-        [{{dataSource.data.indexOf(element) + 1}}]
         {{element.username}}
       </td>
     </ng-container>

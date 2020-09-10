@@ -6,19 +6,30 @@ function timeConversion(milliseconds: number): string {
   // Get hours from milliseconds
   const hours = milliseconds / (1000 * 60 * 60);
   const absoluteHours = Math.floor(hours);
-  const h = absoluteHours > 9 ? absoluteHours : '0' + absoluteHours;
+  const h = absoluteHours;
 
   // Get remainder from hours and convert to minutes
   const minutes = (hours - absoluteHours) * 60;
   const absoluteMinutes = Math.floor(minutes);
-  const m = absoluteMinutes > 9 ? absoluteMinutes : '0' + absoluteMinutes;
+  const m = absoluteMinutes;
 
   // Get remainder from minutes and convert to seconds
   const seconds = (minutes - absoluteMinutes) * 60;
   const absoluteSeconds = Math.floor(seconds);
-  const s = absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
+  const s = absoluteSeconds;
 
-  return h + ':' + m + ':' + s;
+  // Get remainder from seconds and convert to milliseconds
+  const milliseconds2 = (seconds - absoluteSeconds) * 1000;
+  const absoluteMilliseconds = Math.floor(milliseconds2);
+  const mm = absoluteMilliseconds;
+
+  if (h > 0) {
+    return h + ':' + m + ':' + s;
+  } else if (m > 0) {
+    return m + ':' + s + '.' + mm;
+  } else {
+    return s + '.' + mm;
+  }
 }
 
 function daysIntoYear(date: Date): number {

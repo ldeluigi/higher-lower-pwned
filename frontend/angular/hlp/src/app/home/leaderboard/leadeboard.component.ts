@@ -19,7 +19,7 @@ export class LeadeboardComponent implements OnInit {
     Validators.max(1000)
   ]);
   period: string | undefined;
-  displayedColumns = ['username', 'score', 'date'];
+  displayedColumns = ['position', 'username', 'score', 'date'];
   dataSource = new MatTableDataSource<LbItem>([]);
 
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
