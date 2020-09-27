@@ -25,6 +25,10 @@ let score = new Schema(
       type: ObjectId,
       ref: 'users',
     },
+    mode: {
+      type: String,
+      required: true
+    },
   },
   { collection: "Scores" }
 );

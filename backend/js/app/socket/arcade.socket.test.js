@@ -6,6 +6,7 @@ const http = require("http");
 const sio = require("socket.io");
 const ioBack = require("./arcade");
 const arcade = require("../game/arcade");
+const passwordsSetup = require("../game/passwords").setup;
 
 const gameSchema = require("../model/game").schema;
 const scoreSchema = require("../model/score").schema;
@@ -16,7 +17,7 @@ var ioServer;
 var socket;
 
 beforeAll(async (done) => {
-  await arcade.setup();
+  await passwordsSetup();
   serverListen = http.createServer().listen();
   serverAddress = serverListen.address();
   ioServer = ioBack(sio(serverListen));

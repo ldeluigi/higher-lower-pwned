@@ -26,6 +26,7 @@ router.get(
           $gte: minMax[0],
           $lte: minMax[1],
         },
+        mode: "arcade"
       })
       .limit(parseInt(queryLimit))
       .sort({

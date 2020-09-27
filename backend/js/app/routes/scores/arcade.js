@@ -54,6 +54,7 @@ router.get(
             $gte: periodMinMax[0],
             $lte: periodMinMax[1]
           },
+          mode: "arcade",
           user: userID
         })
         .skip(queryPage * queryLimit)

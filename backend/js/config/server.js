@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const app = express();
 const server = require("http").Server(app);
 const socketArcadeApi = require("../app/socket/arcade");
-const io = socketArcadeApi(socket(server));
+const socketDuelApi = require("../app/socket/duel");
+const io = socketDuelApi(socketArcadeApi(socket(server)));
 
 const route = require("../app/routes");
 

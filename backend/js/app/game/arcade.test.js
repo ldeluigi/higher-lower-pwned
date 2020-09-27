@@ -1,22 +1,17 @@
 let arcade = require("./arcade");
 const gameSchema = require("../model/game").schema;
 const scoreSchema = require("../model/score").schema;
+const passwordSetup = require("./passwords").setup;
 
 beforeEach(async (done) => {
   // reset global data
   arcade = require("./arcade");
-  await arcade.setup();
+  await passwordSetup();
   done();
 });
 
 
 describe("Arcade module", function () {
-  it("should correctly setup", async (done) => {
-    arcade = require("./arcade");
-    await arcade.setup();
-    done();
-  });
-
   it("should correctly create a game as anonymous", async (done) => {
     const mock = jest.spyOn(gameSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve(null));

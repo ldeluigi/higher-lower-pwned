@@ -18,7 +18,6 @@ describe("leaderboards API", function () {
   it("should GET /arcade scores for last week", async (done) => {
     const mock = jest.spyOn(score.schema, 'find');
     const fakeScores = [
-
       {
         _id: "5f483ebb859d884db14288c1",
         score: 17,
@@ -28,14 +27,16 @@ describe("leaderboards API", function () {
         user: {
           _id: "testid",
           username: "testusername"
-        }
+        },
+        mode: "arcade"
       },
       {
         _id: "5f483db2859d884db1428861",
         score: 10,
         end: new Date("2020-08-27T20:26:20.202Z"),
         guesses: 5,
-        start: new Date("2020-08-27T20:22:20.202Z")
+        start: new Date("2020-08-27T20:22:20.202Z"),
+        mode: "arcade"
       }
     ];
     mock.mockImplementation((input) => {
