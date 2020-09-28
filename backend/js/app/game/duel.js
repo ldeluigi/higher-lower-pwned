@@ -9,6 +9,10 @@ const correctGuessScore = 100;
 
 module.exports = {
   newGame: async function (gameID1, gameID2, userID1, userID2) {
+    if (gameID1 == gameID2 ||
+      (userID1 !== undefined && userID2 !== undefined && userID1 == userID2)) {
+      throw new Error("You can't play against yourself");
+    }
     let p1 = await passwords.pickPasswordAndValue();
     let p2 = await passwords.pickPasswordAndValue();
     let gameStart = new Date();
@@ -50,31 +54,42 @@ module.exports = {
   },
   currentGuess: async function (gameID) {
     try {
-      let gameQuery = await duelSchema.findOne({ gameIDA: gameID });
-      let isA = true;
-      if (gameQuery === null) {
-        gameQuery = await duelSchema.findOne({ gameIDB: gameID });
-        isA = false;
-      }
+      let gameQuery = await duelSchema.findOne({
+        $or: [
+          { gameIDA: gameID },
+          { gameIDB: gameID }
+        ]
+      });
       if (gameQuery === null) throw new Error("Game not found.");
+      let isA = (gameQuery.gameIDA == gameID);
 
+      let timeoutA = gameQuery.expirationA.getTime() - Date.now();
+      if (gameQuery.guessesA > gameQuery.guessesB) {
+        timeoutA = Number.MAX_SAFE_INTEGER;
+      }
+      let timeoutB = gameQuery.expirationB.getTime() - Date.now();
+      if (gameQuery.guessesB > gameQuery.guessesA) {
+        timeoutB = Number.MAX_SAFE_INTEGER;
+      }
       let Aobj = {
         password1: gameQuery.currentP1,
         value1: gameQuery.valueP1,
         password2: gameQuery.currentP2,
-        timeout: gameQuery.expirationA.getTime() - Date.now(),
+        timeout: timeoutA,
         score: gameQuery.scoreA,
         guesses: gameQuery.guessesA,
-        duration: Date.now() - gameQuery.start.getTime()
+        duration: Date.now() - gameQuery.start.getTime(),
+        lost: timeoutA < 0
       };
       let Bobj = {
         password1: gameQuery.currentP1,
         value1: gameQuery.valueP1,
         password2: gameQuery.currentP2,
-        timeout: gameQuery.expirationB.getTime() - Date.now(),
+        timeout: timeoutB,
         score: gameQuery.scoreB,
         guesses: gameQuery.guessesB,
-        duration: Date.now() - gameQuery.start.getTime()
+        duration: Date.now() - gameQuery.start.getTime(),
+        lost: timeoutB < 0
       };
       if (isA) {
         return {
@@ -96,13 +111,14 @@ module.exports = {
   },
   deleteGame: async function (gameID, loser = true) {
     try {
-      let gameQuery = await duelSchema.findOne({ gameIDA: gameID });
-      let isA = true;
-      if (gameQuery === null) {
-        gameQuery = await duelSchema.findOne({ gameIDB: gameID });
-        isA = false;
-      }
+      let gameQuery = await duelSchema.findOne({
+        $or: [
+          { gameIDA: gameID },
+          { gameIDB: gameID }
+        ]
+      });
       if (gameQuery === null) throw new Error("Game not found.");
+      let isA = (gameQuery.gameIDA == gameID);
       // A score
       let AnewScore = {
         score: gameQuery.scoreA,
@@ -128,43 +144,46 @@ module.exports = {
         BnewScore.user = gameQuery.userB;
       }
       await scoreSchema.create(BnewScore);
+      try {
+        await duelSchema.deleteOne({ gameID: gameID });
 
-      await duelSchema.deleteOne({ gameID: gameID });
-
-      let Aobj = {
-        score: gameQuery.scoreA,
-        guesses: gameQuery.guessesA,
-        duration: AnewScore.end - AnewScore.start,
-        password1: gameQuery.currentP1,
-        value1: gameQuery.valueP1,
-        password2: gameQuery.currentP2,
-        value2: gameQuery.valueP2
-      };
-      let Bobj = {
-        score: gameQuery.scoreB,
-        guesses: gameQuery.guessesB,
-        duration: BnewScore.end - BnewScore.start,
-        password1: gameQuery.currentP1,
-        value1: gameQuery.valueP1,
-        password2: gameQuery.currentP2,
-        value2: gameQuery.valueP2
-      };
-      if (isA) {
+        let Aobj = {
+          score: gameQuery.scoreA,
+          guesses: gameQuery.guessesA,
+          duration: AnewScore.end - AnewScore.start,
+          password1: gameQuery.currentP1,
+          value1: gameQuery.valueP1,
+          password2: gameQuery.currentP2,
+          value2: gameQuery.valueP2
+        };
+        let Bobj = {
+          score: gameQuery.scoreB,
+          guesses: gameQuery.guessesB,
+          duration: BnewScore.end - BnewScore.start,
+          password1: gameQuery.currentP1,
+          value1: gameQuery.valueP1,
+          password2: gameQuery.currentP2,
+          value2: gameQuery.valueP2
+        };
+        if (isA) {
+          return {
+            data: [
+              Aobj,
+              Bobj
+            ]
+          };
+        }
         return {
           data: [
-            Aobj,
-            Bobj
+            Bobj,
+            Aobj
           ]
         };
+      } catch (err) {
+        throw new Error("Could not delete game data. (" + err.message + ")");
       }
-      return {
-        data: [
-          Bobj,
-          Aobj
-        ]
-      };
     } catch (err) {
-      throw new Error("Could not delete game data. (" + err.message + ")");
+      throw new Error("Could not create score data. (" + err.message + ")");
     }
   },
   submitGuess: async function (gameID, guess) {
@@ -172,13 +191,14 @@ module.exports = {
       throw new Error("Guess must be 1 or 2");
     }
     try {
-      let gameQuery = await duelSchema.findOne({ gameIDA: gameID });
-      let isA = true;
-      if (gameQuery === null) {
-        gameQuery = await duelSchema.findOne({ gameIDB: gameID });
-        isA = false;
-      }
+      let gameQuery = await duelSchema.findOne({
+        $or: [
+          { gameIDA: gameID },
+          { gameIDB: gameID }
+        ]
+      });
       if (gameQuery === null) throw new Error("Game not found.");
+      let isA = (gameQuery.gameIDA == gameID);
 
       if (isA && gameQuery.expirationA < new Date()) {
         return false;

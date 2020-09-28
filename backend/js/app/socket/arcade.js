@@ -1,8 +1,10 @@
 const jwtTools = require('../utils/jwt');
 const arcade = require("../game/arcade");
 
+const namespace = "/arcade";
+
 module.exports = function (sio) {
-  io = sio.of("/arcade");
+  io = sio.of(namespace);
   io.use(function (socket, next) {
     socket.userData = {
       id: null
@@ -40,7 +42,7 @@ module.exports = function (sio) {
     socket.on("repeat", async () => {
       try {
         let nextGuess = await arcade.currentGuess(socket.id);
-        if (nextGuess.expiration > 0) {
+        if (!nextGuess.lost) {
           socket.emit("guess", nextGuess);
         } else {
           try {
@@ -99,5 +101,6 @@ module.exports = function (sio) {
       } catch (err) { }
     })
   });
+  console.log("Mounted socket.io arcade module to " + namespace);
   return sio;
 };

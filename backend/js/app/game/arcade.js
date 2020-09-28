@@ -38,14 +38,16 @@ module.exports = {
     try {
       let gameQuery = await gameSchema.findOne({ gameID: gameID });
       if (gameQuery === null) throw new Error("Game not found.");
+      let timeout = gameQuery.expiration.getTime() - Date.now();
       return {
         password1: gameQuery.currentP1,
         value1: gameQuery.valueP1,
         password2: gameQuery.currentP2,
-        timeout: gameQuery.expiration.getTime() - Date.now(),
+        timeout: timeout,
         score: gameQuery.score,
         guesses: gameQuery.guesses,
-        duration: Date.now() - gameQuery.start.getTime()
+        duration: Date.now() - gameQuery.start.getTime(),
+        lost: timeout <= 0
       };
     } catch (err) {
       throw new Error("Could not fetch game data. (" + err.message + ")");
@@ -66,18 +68,22 @@ module.exports = {
         newScore.user = gameQuery.user;
       }
       await scoreSchema.create(newScore);
-      await gameSchema.deleteOne({ gameID: gameID });
-      return {
-        score: gameQuery.score,
-        guesses: gameQuery.guesses,
-        duration: newScore.end - newScore.start,
-        password1: gameQuery.currentP1,
-        value1: gameQuery.valueP1,
-        password2: gameQuery.currentP2,
-        value2: gameQuery.valueP2
-      };
+      try {
+        await gameSchema.deleteOne({ gameID: gameID });
+        return {
+          score: gameQuery.score,
+          guesses: gameQuery.guesses,
+          duration: newScore.end - newScore.start,
+          password1: gameQuery.currentP1,
+          value1: gameQuery.valueP1,
+          password2: gameQuery.currentP2,
+          value2: gameQuery.valueP2
+        };
+      } catch (err) {
+        throw new Error("Could not delete game data. (" + err.message + ")");
+      }
     } catch (err) {
-      throw new Error("Could not delete game data. (" + err.message + ")");
+      throw new Error("Could not create score data. (" + err.message + ")");
     }
   },
   submitGuess: async function (gameID, guess) {

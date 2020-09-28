@@ -37,6 +37,7 @@ describe("Arcade module", function () {
     });
     try {
       await arcade.newGame("1");
+      done.fail("Should have thrown an error.");
     } catch (err) {
       expect(err).toHaveProperty("message");
     }
@@ -72,6 +73,7 @@ describe("Arcade module", function () {
     mock.mockImplementation((input) => Promise.resolve(null));
     try {
       await arcade.currentGuess("1");
+      done.fail("Should have thrown an error.");
     } catch (err) {
       expect(err).toHaveProperty("message");
     }
@@ -125,6 +127,7 @@ describe("Arcade module", function () {
     });
     try {
       await arcade.deleteGame("1");
+      done.fail("Should have thrown an error.");
     } catch (err) {
       expect(err).toHaveProperty("message");
     }
@@ -179,6 +182,7 @@ describe("Arcade module", function () {
     mock.mockImplementation((input) => Promise.resolve(null));
     try {
       await arcade.submitGuess("1", 1);
+      done.fail("Should have thrown an error.");
     } catch (err) {
       expect(err).toHaveProperty("message");
     }
@@ -202,6 +206,7 @@ describe("Arcade module", function () {
     }));
     try {
       await arcade.submitGuess("1", 3);
+      done.fail("Should have thrown an error.");
     } catch (err) {
       expect(err).toHaveProperty("message");
     }
@@ -223,11 +228,8 @@ describe("Arcade module", function () {
       start: new Date(Date.now() - 100000),
       save: () => Promise.resolve()
     }));
-    try {
-      await arcade.submitGuess("1", 2);
-    } catch (err) {
-      expect(err).toHaveProperty("message");
-    }
+    let res = await arcade.submitGuess("1", 1);
+    expect(res).toBe(false);
     mock.mockRestore();
     done();
   });
