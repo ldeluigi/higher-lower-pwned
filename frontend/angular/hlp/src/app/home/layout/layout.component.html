@@ -1,16 +1,10 @@
-<h1 class="mat-display-4" >
-  <div @title1>
-    The&nbsp;
-  </div>
-  <div @title2>
-    Pwned&nbsp;
-  </div>
-  <div @title3>
-    Game
-  </div>
+<h1 class="mat-display-4" style="text-align: center">
+  <div @title1>The&nbsp;</div>
+  <div @title2>Pwned&nbsp;</div>
+  <div @title3>Game</div>
 </h1>
 <div class="left-column" @fadeIn>
-  <span *ngIf="this.userIsLogged(); then userLogged else userNotLogged"></span>
+  <span *ngIf="this.userIsLogged(); then userLogged; else userNotLogged"></span>
   <ng-template #userNotLogged>
     <app-no-user-home class="user-home"></app-no-user-home>
   </ng-template>

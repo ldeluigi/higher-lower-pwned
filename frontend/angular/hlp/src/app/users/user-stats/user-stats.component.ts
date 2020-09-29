@@ -34,31 +34,33 @@ export class UserStatsComponent implements OnInit {
         {
           stacked: false,
           ticks: {
-            beginAtZero: true
-          }
+            beginAtZero: true,
+          },
         },
       ],
     },
   };
 
   lineChartColors: Array<object> = [
-    { // avg
+    {
+      // avg
       backgroundColor: 'rgba(200, 0, 0, .3)',
       borderColor: 'rgba(200, 0, 0, .5)',
       borderWidth: 2,
     },
-    { // max
+    {
+      // max
       backgroundColor: 'rgba(51, 51, 255, .6)',
       borderColor: 'rgba(51, 51, 255, .8)',
       borderWidth: 2,
-    }
+    },
   ];
 
   limit = new FormControl('10', [
     Validators.required,
     Validators.pattern('^[0-9]*$'),
     Validators.max(30),
-    Validators.min(1)
+    Validators.min(1),
   ]);
 
   private actualLimitValue = 10;
@@ -92,22 +94,31 @@ export class UserStatsComponent implements OnInit {
       let label: Array<string> = [];
       if (array.length > 0) {
         const end = this.periodBegin();
-        const periods = periodIterator(end.period, this.actualLimitValue, end.year, this.actualPeriod);
-        let lastElement: HistoryItem = {maxScore: 0} as HistoryItem;
-        periods.forEach(e => {
+        const periods = periodIterator(
+          end.period,
+          this.actualLimitValue,
+          end.year,
+          this.actualPeriod
+        );
+        let lastElement: HistoryItem = { maxScore: 0 } as HistoryItem;
+        periods.forEach((e) => {
           const periodN = e.period;
-          const findResult = array.find(e2 => e2.periodNumber === periodN && e2.year === e.year);
-          const element = findResult ? findResult : {
-            periodNumber: periodN,
-            year: e.year,
-            avgScore: 0,
-            avgGuesses: 0,
-            avgPlaysPerDay: 0,
-            avgDuration: 0,
-            maxScore: 0,
-            maxGuesses: 0,
-            maxDuration: 0,
-          };
+          const findResult = array.find(
+            (e2) => e2.periodNumber === periodN && e2.year === e.year
+          );
+          const element = findResult
+            ? findResult
+            : {
+                periodNumber: periodN,
+                year: e.year,
+                avgScore: 0,
+                avgGuesses: 0,
+                avgPlaysPerDay: 0,
+                avgDuration: 0,
+                maxScore: 0,
+                maxGuesses: 0,
+                maxDuration: 0,
+              };
           console.log(lastElement, element);
           if (lastElement.maxScore === 0 && element.maxScore === 0) {
             const lastLabel = label.pop();
@@ -117,16 +128,27 @@ export class UserStatsComponent implements OnInit {
           } else {
             scores.push(element);
 
-            const startDate = startDatePipe.transform(element, this.actualPeriod);
+            const startDate = startDatePipe.transform(
+              element,
+              this.actualPeriod
+            );
             if (this.actualPeriod === 'day') {
-              label.push(datePipe.transform(startDate, 'dd/M/yy') as string);
+              label.push(datePipe.transform(startDate, 'dd/MM/yy') as string);
             } else {
-              const format = this.actualPeriod === 'week' ? 'dd/M/yy' : this.actualPeriod === 'month' ? 'MM/yy' : 'yyyy';
+              const format =
+                this.actualPeriod === 'week'
+                  ? 'dd/MM/yy'
+                  : this.actualPeriod === 'month'
+                  ? 'MM/yy'
+                  : 'yyyy';
               if (this.actualPeriod === 'week') {
                 label.push(
-                  datePipe.transform(startDate, format) as string +
-                  ' - ' +
-                  datePipe.transform(endDatePipe.transform(element, this.actualPeriod), format) as string
+                  ((datePipe.transform(startDate, format) as string) +
+                    ' - ' +
+                    datePipe.transform(
+                      endDatePipe.transform(element, this.actualPeriod),
+                      format
+                    )) as string
                 );
               } else {
                 label.push(datePipe.transform(startDate, format) as string);
@@ -135,7 +157,6 @@ export class UserStatsComponent implements OnInit {
           }
           // save lastElement
           lastElement = element;
-
         });
       }
       console.log('scores:', scores, 'label:', label);
@@ -158,7 +179,7 @@ export class UserStatsComponent implements OnInit {
           label: 'Avg Score',
           categoryPercentage: 1,
           barPercentage: 0.6,
-          type: 'line'
+          type: 'line',
         },
         {
           data: scores.map((hist) => hist.maxScore),
@@ -177,28 +198,55 @@ export class UserStatsComponent implements OnInit {
   private updateStatsLayout(): void {
     if (this.actualPeriod) {
       if (this.actualPeriod === 'week') {
-        this.displayedColumns = this.prependToDefaultColumns(['startDate', 'endDate']);
+        this.displayedColumns = this.prependToDefaultColumns([
+          'startDate',
+          'endDate',
+        ]);
       } else {
-        this.displayedColumns = this.prependToDefaultColumns([this.actualPeriod]);
+        this.displayedColumns = this.prependToDefaultColumns([
+          this.actualPeriod,
+        ]);
       }
     }
   }
 
   private daysIntoYear(date: Date): number {
-    return (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 1)) / 24 / 60 / 60 / 1000;
+    return (
+      (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
+        Date.UTC(date.getFullYear(), 0, 1)) /
+      24 /
+      60 /
+      60 /
+      1000
+    );
   }
 
-  private periodBegin(): { period: number, year: number } {
+  private periodBegin(): { period: number; year: number } {
     const now = new Date();
     const currentYear = now.getFullYear();
     if (this.actualPeriod === 'day') {
-      const old = new Date(now.getFullYear(), 0, this.daysIntoYear(now) - this.actualLimitValue + 1);
+      const old = new Date(
+        now.getFullYear(),
+        0,
+        this.daysIntoYear(now) - this.actualLimitValue + 1
+      );
       return { period: this.daysIntoYear(old), year: old.getFullYear() };
     } else if (this.actualPeriod === 'week') {
-      const old = new Date(now.getFullYear(), 0, this.daysIntoYear(now) + (-this.actualLimitValue) * 7);
-      return { period: Math.floor(this.daysIntoYear(old) / 7), year: old.getFullYear() };
+      const old = new Date(
+        now.getFullYear(),
+        0,
+        this.daysIntoYear(now) + -this.actualLimitValue * 7
+      );
+      return {
+        period: Math.floor(this.daysIntoYear(old) / 7),
+        year: old.getFullYear(),
+      };
     } else if (this.actualPeriod === 'month') {
-      const old = new Date(now.getFullYear(), now.getMonth() - this.actualLimitValue + 1, 1);
+      const old = new Date(
+        now.getFullYear(),
+        now.getMonth() - this.actualLimitValue + 1,
+        1
+      );
       return { period: old.getMonth(), year: old.getFullYear() };
     } else if (this.actualPeriod === 'year') {
       const old = new Date(now.getFullYear() - this.actualLimitValue, 1, 1);
