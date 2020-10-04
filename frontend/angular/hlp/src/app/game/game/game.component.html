@@ -7,16 +7,14 @@
 <div class="wrapper card2">
   <app-word [card]="card2"></app-word>
 </div>
-<div *ngIf="playing; then gameIsOn else gameIsNotOn"></div>
+<div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>
 <ng-template #gameIsNotOn>
   <button mat-button (click)="start()">Play again</button>
   or
   <button mat-button routerLink="/home" routerLinkActive="active">Home</button>
 </ng-template>
 <ng-template #gameIsOn>
-  <div>
-    {{ timeLeft | date:'s:S' }} s
-  </div>
+  <div>{{ timeLeft | date: "s:S" }} s</div>
   <mat-progress-bar
     mode="determinate"
     [value]="progressbarValue"
@@ -29,7 +27,7 @@
   >
     Up
   </button>
-  <br/>
+  <br />
   <button
     class="down"
     [disabled]="loading"

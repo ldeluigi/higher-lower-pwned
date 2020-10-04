@@ -34,6 +34,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // console.log('OnDestry', this.subscription);
+    this.playing = false;
     if (this.subscription !== null) {
       this.subscription.unsubscribe();
     }
@@ -46,32 +47,33 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // console.log('OnInit');
-    this.subscription = this.gameSocket.game.subscribe(r => {
-      const ng = r as NextGuess;
-      const ge = r as GameEnd;
-      if (ng.timeout) {
-        if (this.firstWord) {
-          this.firstWord = false;
-          this.card = {
-            word: ng.password1,
-            score: ng.value1
-          };
-          this.card2 = {
-            word: ng.password2
-          };
-        } else {
-          this.next(ng.password2, ng.value1);
+    this.subscription = this.gameSocket.game.subscribe(
+      r => {
+        const ng = r as NextGuess;
+        const ge = r as GameEnd;
+        if (ng.timeout) {
+          if (this.firstWord) {
+            this.firstWord = false;
+            this.card = {
+              word: ng.password1,
+              score: ng.value1
+            };
+            this.card2 = {
+              word: ng.password2
+            };
+          } else {
+            this.next(ng.password2, ng.value1);
+          }
+          this.actualScore = ng.score;
+          this.setTimer(ng.timeout)
+            .then(_ => {
+              this.gameSocket.repeat();
+            });
+        } else if (ge.value2) {
+          // console.log('game end');
+          this.gameEnd(ge.value2, ge.score);
         }
-        this.actualScore = ng.score;
-        this.setProgressBar(ng.timeout)
-          .then(_ => {
-            this.gameSocket.repeat();
-          });
-      } else if (ge.value2) {
-        // console.log('game end');
-        this.gameEnd(ge.value2, ge.score);
-      }
-    },
+      },
       error => {
         // console.log(error);
         this.gameEnd(-1);
@@ -81,11 +83,13 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   start(): void {
-    this.actualScore = 0;
-    this.playing = true;
-    this.loading = false;
-    this.firstWord = true;
-    this.gameSocket.startGame();
+    this.gameSocket.startGame()
+      .then(() => {
+        this.actualScore = 0;
+        this.playing = true;
+        this.loading = false;
+        this.firstWord = true;
+      });
   }
 
   private gameEnd(value2: number, score: number = -1): void {
@@ -95,6 +99,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
     this.sub = null;
     this.playing = false;
+    this.loading = false;
   }
 
   response(value: number): void {
@@ -103,20 +108,21 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private next(newWord: string, oldScore: number): void {
-    this.rollNumber(oldScore, 600, n => this.card2.score = n);
-    // console.log('Timeout started');
-    setTimeout(() => {
-      // console.log('Timeout ended');
-      this.card = this.card2;
-      this.card.score = oldScore;
-      this.card2 = {
-        word: newWord
-      };
-      this.loading = false;
-    }, 800);
+    this.rollNumber(oldScore, 600, n => this.card2.score = n)
+      .then(() => {
+        setTimeout(() => {
+          // console.log('Timeout ended');
+          this.card = this.card2;
+          this.card.score = oldScore;
+          this.card2 = {
+            word: newWord
+          };
+          this.loading = false;
+      }, 200);
+    });
   }
 
-  private rollNumber(end: number, time: number, update: (n: number) => void): void {
+  private rollNumber(end: number, time: number, update: (n: number) => void): Promise<void> {
     const frames = 100;
     const delta = Math.floor(end / frames);
     const deltaT = Math.floor(time / frames);
@@ -126,20 +132,22 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     const timer$ = interval(deltaT);
-
-    this.numberSubscription = timer$.subscribe(tic => {
-      const newValue = delta * tic;
-      update(newValue);
-      if (newValue >= end) {
-        update(end);
-        this.numberSubscription?.unsubscribe();
-      }
+    return new Promise<void>(resolve => {
+      this.numberSubscription = timer$.subscribe(tic => {
+        const newValue = delta * tic;
+        update(newValue);
+        if (newValue >= end) {
+          update(end);
+          this.numberSubscription?.unsubscribe();
+          resolve();
+        }
+      });
     });
   }
 
-  private async setProgressBar(milliseconds: number): Promise<void> {
+  private async setTimer(milliseconds: number): Promise<void> {
     const progressBarMax = 100;
-    const frames = 100;
+    const frames = 200;
     const delta = progressBarMax / frames;
     const deltaT = Math.floor(milliseconds / frames);
     const timer$ = interval(deltaT);
@@ -147,15 +155,18 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.sub !== null) {
       this.sub.unsubscribe();
     }
+
     return new Promise<void>(resolve => {
       this.sub = timer$.subscribe((d) => {
         const currentValue = delta * d;
         const currentMillis = deltaT * d;
         this.timeLeft = milliseconds - currentMillis;
         this.progressbarValue = progressBarMax - currentValue;
-        if (currentValue >= frames && this.sub !== null) {
+        if (this.timeLeft <= 0 && this.sub !== null) {
           this.sub.unsubscribe();
           this.sub = null;
+          this.progressbarValue = 0;
+          this.timeLeft = 0;
           resolve();
         }
       });

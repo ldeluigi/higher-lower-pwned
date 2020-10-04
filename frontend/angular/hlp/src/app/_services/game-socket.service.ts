@@ -24,7 +24,7 @@ export class GameSocketService implements OnDestroy {
         s.next(nextGuess);
       });
       this.socket.on('onerror', (err: Error) => {
-        // console.log('>onerror: ', err);
+        console.log('>onerror: ', err);
         s.error(err);
       });
       this.socket.on('gameEnd', (gameEnd: GameEnd) => {
