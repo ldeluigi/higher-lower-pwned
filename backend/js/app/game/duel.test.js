@@ -1,5 +1,5 @@
 let duel = require("./duel");
-const duelSchema = require('../model/duel').schema;
+const duelSchema = require('../model/battle').schema;
 const scoreSchema = require("../model/score").schema;
 const passwordSetup = require("./passwords").setup;
 
@@ -17,10 +17,9 @@ describe("Duel module", function () {
     mock.mockImplementation((input) => Promise.resolve(null));
     const mock2 = jest.spyOn(duelSchema, 'create');
     mock2.mockImplementation((input) => {
-      expect(input).toHaveProperty('scoreA', 0);
-      expect(input).toHaveProperty('scoreB', 0);
-      expect(input).toHaveProperty('guessesA', 0);
-      expect(input).toHaveProperty('guessesB', 0);
+      expect(input).toHaveProperty('games');
+      expect(input.games[0]).toHaveProperty('score', 0);
+      expect(input.games[0]).toHaveProperty('guesses', 0);
       return Promise.resolve();
     });
     await duel.newGame("1", "2");
@@ -51,18 +50,24 @@ describe("Duel module", function () {
   it("should return the current guess if available", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
-      gameIDA: "1",
-      gameIDB: "2",
-      expirationA: new Date("03-05-2020"),
-      expirationB: new Date("03-05-2020"),
+      games: [
+        {
+          gameID: "1",
+          expiration: new Date("03-05-2020"),
+          score: 8,
+          guesses: 2
+        },
+        {
+          gameID: "2",
+          expiration: new Date("03-05-2020"),
+          score: 9,
+          guesses: 3
+        }
+      ],
       currentP1: "a",
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      scoreA: 8,
-      scoreB: 9,
-      guessesA: 2,
-      guessesB: 3,
       start: new Date("02-05-2020")
     }));
     let res = await duel.currentGuess("1");
@@ -95,38 +100,44 @@ describe("Duel module", function () {
   it("should delete a game and save score if available", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
-      gameIDA: "1",
-      gameIDB: "2",
-      expirationA: new Date("03-05-2020"),
-      expirationB: new Date("03-05-2020"),
+      games: [
+        {
+          gameID: "1",
+          expiration: new Date(Date.now() - 10000),
+          score: 8,
+          guesses: 2
+        },
+        {
+          gameID: "2",
+          expiration: new Date(Date.now() + 10000),
+          score: 9,
+          guesses: 3
+        }
+      ],
       currentP1: "a",
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      scoreA: 8,
-      scoreB: 9,
-      guessesA: 2,
-      guessesB: 3,
       start: new Date("02-05-2020")
     }));
     const mock2 = jest.spyOn(scoreSchema, 'create');
     mock2.mockImplementation((input) => {
       if (input.mode == "duel.lose") {
-        expect(input).toHaveProperty("score", 9);
-        expect(input).toHaveProperty("guesses", 3);
-      } else {
         expect(input).toHaveProperty("score", 8);
         expect(input).toHaveProperty("guesses", 2);
+      } else {
+        expect(input).toHaveProperty("score", 9);
+        expect(input).toHaveProperty("guesses", 3);
       }
       Promise.resolve(input);
     });
     const mock3 = jest.spyOn(duelSchema, 'deleteOne');
     mock3.mockImplementation((input) => Promise.resolve());
     let res = await duel.deleteGame("2");
-    expect(res.data[1]).toHaveProperty("score", 8);
-    expect(res.data[1]).toHaveProperty("guesses", 2);
-    expect(res.data[0]).toHaveProperty("score", 9);
-    expect(res.data[0]).toHaveProperty("guesses", 3);
+    expect(res.data[1]).toHaveProperty("score", 9);
+    expect(res.data[1]).toHaveProperty("guesses", 3);
+    expect(res.data[0]).toHaveProperty("score", 8);
+    expect(res.data[0]).toHaveProperty("guesses", 2);
     expect(res.data[0]).toHaveProperty("password1", "a");
     expect(res.data[0]).toHaveProperty("password2", "b");
     expect(res.data[0]).toHaveProperty("value1", 1);
@@ -162,18 +173,24 @@ describe("Duel module", function () {
   it("should correctly submit a correct guess", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
-      gameIDA: "1",
-      gameIDB: "2",
-      expirationA: new Date(Date.now() + 100000),
-      expirationB: new Date(Date.now() + 100005),
+      games: [
+        {
+          gameID: "1",
+          expiration: new Date(Date.now() + 100000),
+          score: 8,
+          guesses: 2
+        },
+        {
+          gameID: "2",
+          expiration: new Date(Date.now() + 100005),
+          score: 8,
+          guesses: 2
+        }
+      ],
       currentP1: "a",
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      scoreA: 8,
-      scoreB: 8,
-      guessesA: 2,
-      guessesB: 2,
       start: new Date(Date.now() - 100000),
       save: () => Promise.resolve()
     }));
@@ -186,18 +203,24 @@ describe("Duel module", function () {
   it("should not submit a wrong guess", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
-      gameIDA: "1",
-      gameIDB: "2",
-      expirationA: new Date(Date.now() + 100000),
-      expirationB: new Date(Date.now() + 100005),
+      games: [
+        {
+          gameID: "1",
+          expiration: new Date(Date.now() + 100000),
+          score: 8,
+          guesses: 2
+        },
+        {
+          gameID: "2",
+          expiration: new Date(Date.now() + 100005),
+          score: 8,
+          guesses: 2
+        }
+      ],
       currentP1: "a",
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      scoreA: 8,
-      scoreB: 8,
-      guessesA: 2,
-      guessesB: 2,
       start: new Date(Date.now() - 100000),
       save: () => Promise.resolve()
     }));
@@ -223,18 +246,24 @@ describe("Duel module", function () {
   it("should not submit a guess if guess is illegal", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
-      gameIDA: "1",
-      gameIDB: "2",
-      expirationA: new Date(Date.now() + 100000),
-      expirationB: new Date(Date.now() + 100005),
+      games: [
+        {
+          gameID: "1",
+          expiration: new Date(Date.now() + 100000),
+          score: 8,
+          guesses: 2
+        },
+        {
+          gameID: "2",
+          expiration: new Date(Date.now() + 100005),
+          score: 8,
+          guesses: 2
+        }
+      ],
       currentP1: "a",
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      scoreA: 8,
-      scoreB: 8,
-      guessesA: 2,
-      guessesB: 2,
       start: new Date(Date.now() - 100000),
       save: () => Promise.resolve()
     }));
@@ -251,18 +280,24 @@ describe("Duel module", function () {
   it("should not submit a guess if game is expired", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
-      gameIDA: "1",
-      gameIDB: "2",
-      expirationA: new Date(Date.now() - 100001),
-      expirationB: new Date(Date.now() + 100005),
+      games: [
+        {
+          gameID: "1",
+          expiration: new Date(Date.now() + 100000),
+          score: 8,
+          guesses: 2
+        },
+        {
+          gameID: "2",
+          expiration: new Date(Date.now() + 100005),
+          score: 8,
+          guesses: 2
+        }
+      ],
       currentP1: "a",
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      scoreA: 8,
-      scoreB: 8,
-      guessesA: 2,
-      guessesB: 2,
       start: new Date(Date.now() - 100000),
       save: () => Promise.resolve()
     }));
@@ -275,18 +310,24 @@ describe("Duel module", function () {
   it("should not submit a guess if that player already did it", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
-      gameIDA: "1",
-      gameIDB: "2",
-      expirationA: new Date(Date.now() + 100000),
-      expirationB: new Date(Date.now() + 100005),
+      games: [
+        {
+          gameID: "1",
+          expiration: new Date(Date.now() + 100000),
+          score: 9,
+          guesses: 3
+        },
+        {
+          gameID: "2",
+          expiration: new Date(Date.now() + 100005),
+          score: 8,
+          guesses: 2
+        }
+      ],
       currentP1: "a",
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      scoreA: 9,
-      scoreB: 8,
-      guessesA: 3,
-      guessesB: 2,
       start: new Date(Date.now() - 100000),
       save: () => Promise.resolve()
     }));

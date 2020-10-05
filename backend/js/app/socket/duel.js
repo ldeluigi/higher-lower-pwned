@@ -7,7 +7,7 @@ const lobbyRoomPrefix = "lobby@";
 
 const matchmaking = {
   lobbies: new Map(),
-  isPlaying: function (userID) {
+  isInRoom: function (userID) {
     return Array.from(this.lobbies.values()).filter(x => Array.from(x.users.keys()).includes(userID)).length > 0;
   },
   openRooms: function () {
@@ -33,6 +33,9 @@ const matchmaking = {
       name: roomName
     });
     return true;
+  },
+  deleteRoom: function (roomName) {
+    return this.lobbies.delete(roomName);
   },
   getOpponents: function (roomName, userID) {
     return Array.from(this.lobbies.get(roomName).users.entries()).filter(x => x[0] != userID);
@@ -60,7 +63,7 @@ module.exports = function (sio) {
     return next();
   }).on("connection", function (socket) {
     socket.on("start", async () => {
-      if (matchmaking.isPlaying(socket.id)) {
+      if (matchmaking.isInRoom(socket.id)) {
         socket.emit("onerror", {
           code: 105,
           description: "Already in a room."
@@ -82,12 +85,13 @@ module.exports = function (sio) {
           return;
         }
         socket.join(myRoomName);
-        let opponent = matchmaking.getOpponents(myRoomName, socket.id)[0];
         try {
-          await duel.newGame(socket.id, opponent[0], socket.userData.id, opponent[1].userID);
+          io.to(myRoomName).emit("player-join");
+          let opponents = matchmaking.getOpponents(myRoomName, socket.id);
+          // Because it's a duel, the game should start right now:
+          await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
           try {
-            // TODO broadcast guess
-            // TODO delete from mm
+            matchmaking.deleteRoom(myRoomName);
           } catch (err) {
             socket.emit("onerror", {
               code: 103,
@@ -118,12 +122,14 @@ module.exports = function (sio) {
     socket.on("repeat", async () => {
       try {
         let nextGuess = await duel.currentGuess(socket.id);
-        if (!nextGuess.data[0].lost && !nextGuess.data[1].lost) {
+        if (!nextGuess.data[nextGuess.index].lost) {
           socket.emit("guess", nextGuess);
         } else {
           try {
-            let endData = await duel.deleteGame(socket.id, nextGuess.data[0].lost);
-            // TODO change delete game and send endData to everyone
+            // Game ends with the first player to lose
+            let endData = await duel.deleteGame(socket.id);
+            let myRoomName = Object.keys(socket.rooms).filter(s => s.startsWith(lobbyRoomPrefix))[0];
+            io.to(myRoomName).emit("player-lost", endData);
           } catch (err) {
             socket.emit("onerror", {
               code: 202,
@@ -142,9 +148,12 @@ module.exports = function (sio) {
       if (answer.higher === 1 || answer.higher === 2) {
         try {
           let isCorrect = await duel.submitGuess(socket.id, answer.higher);
+          let myRoomName = Object.keys(socket.rooms).filter(s => s.startsWith(lobbyRoomPrefix))[0];
           if (isCorrect) {
             try {
-              // TODO broadcast query
+              let cg = await duel.currentGuess(socket.id);
+              socket.emit("guess", cg);
+              socket.to(myRoomName).emit("player-guess", cg);
             } catch (err) {
               socket.emit("onerror", {
                 code: 302,
@@ -154,7 +163,7 @@ module.exports = function (sio) {
           } else {
             try {
               let endData = await duel.deleteGame(socket.id);
-              // TODO send endData to everyone
+              io.to(myRoomName).emit("player-lost", endData);
             } catch (err) {
               socket.emit("onerror", {
                 code: 303,
@@ -172,9 +181,7 @@ module.exports = function (sio) {
     });
     socket.on("disconnect", async (reason) => {
       try {
-        await duel.deleteGame(socket.id);
-        // TODO notify everyone
-        console.log(socket.rooms)
+        await duel.deleteGame(socket.id, true);
       } catch (err) { }
     })
   });

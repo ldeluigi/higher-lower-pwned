@@ -55,7 +55,6 @@ describe("user stats API", function () {
 
         const payload = { limit: 30, period: 'week' }
         response = await request.get("/users/abcabcabcabcabcabcabcabc/stats", params = payload).set("Authorization", "Bearer " + result.token);
-        console.log(response.body)
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
         expect(response.body.data).toEqual({ id: "abcabcabcabcabcabcabcabc", history: userStatsMock });
