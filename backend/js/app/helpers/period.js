@@ -1,5 +1,7 @@
 function minMaxDate(handleMin) {
   const today = new Date();
+  // we want take the current day
+  today.setHours(23,59,59,999);
   const minDay = new Date(handleMin(today));
   return [minDay, today];
 }
