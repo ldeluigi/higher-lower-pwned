@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { User } from '../_model/user';
 import { UserRegistration, UserRegistrationResponse } from '../_model/UserRegistration';
 import { TokenRefresh } from '../_model/tokenRefresh';
@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService {
+export class AccountService implements OnDestroy {
 
   private userSubject: BehaviorSubject<User | null>;
   private userLocalStorage = 'user';
@@ -25,6 +25,11 @@ export class AccountService {
   ) {
     this.userSubject = new BehaviorSubject<User | null>(this.extractUser());
     this.user = this.userSubject.asObservable();
+  }
+  ngOnDestroy(): void {
+    if (this.userValue !== null) {
+      this.logout();
+    }
   }
 
   private log(message: string): void {
