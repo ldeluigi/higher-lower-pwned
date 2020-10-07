@@ -88,7 +88,7 @@ export class UserStatsComponent implements OnInit {
   ) {
     usersTools.data.subscribe((data) => {
       const array = data?.history || [];
-      console.log('array', array);
+      // console.log('array', array);
       this.dataSource.data = array;
       let scores: HistoryItem[] = [];
       let label: Array<string> = [];
@@ -102,6 +102,7 @@ export class UserStatsComponent implements OnInit {
         );
         let lastElement: HistoryItem = { maxScore: 0 } as HistoryItem;
         periods.forEach((e) => {
+          // console.log(e);
           const periodN = e.period;
           const findResult = array.find(
             (e2) => e2.periodNumber === periodN && e2.year === e.year
@@ -119,11 +120,13 @@ export class UserStatsComponent implements OnInit {
                 maxGuesses: 0,
                 maxDuration: 0,
               };
-          console.log(lastElement, element);
+          // console.log(lastElement, element);
           if (lastElement.maxScore === 0 && element.maxScore === 0) {
             const lastLabel = label.pop();
             if (lastLabel) {
-              label.push('...');
+              if (periods[-1] !== e) {
+                label.push('...');
+              }
             }
           } else {
             scores.push(element);
@@ -159,7 +162,7 @@ export class UserStatsComponent implements OnInit {
           lastElement = element;
         });
       }
-      console.log('scores:', scores, 'label:', label);
+      // console.log('scores:', scores, 'label:', label);
       let lastIndex = 0;
       for (let i = 0; i < scores.length; i++) {
         if (scores[i].maxScore > 0) {
@@ -171,7 +174,7 @@ export class UserStatsComponent implements OnInit {
         scores = scores.splice(lastIndex);
         label = label.splice(lastIndex - 1);
       }
-      console.log('scores:', scores, 'label:', label);
+      // console.log('scores:', scores, 'label:', label);
       this.chartLabels = label;
       this.lineChartData = [
         {
@@ -223,36 +226,40 @@ export class UserStatsComponent implements OnInit {
 
   private periodBegin(): { period: number; year: number } {
     const now = new Date();
+    now.setHours(23, 59, 59, 999);
     const currentYear = now.getFullYear();
-    if (this.actualPeriod === 'day') {
-      const old = new Date(
-        now.getFullYear(),
-        0,
-        this.daysIntoYear(now) - this.actualLimitValue + 1
-      );
-      return { period: this.daysIntoYear(old), year: old.getFullYear() };
-    } else if (this.actualPeriod === 'week') {
-      const old = new Date(
-        now.getFullYear(),
-        0,
-        this.daysIntoYear(now) + -this.actualLimitValue * 7
-      );
-      return {
-        period: Math.floor(this.daysIntoYear(old) / 7),
-        year: old.getFullYear(),
-      };
-    } else if (this.actualPeriod === 'month') {
-      const old = new Date(
-        now.getFullYear(),
-        now.getMonth() - this.actualLimitValue + 1,
-        1
-      );
-      return { period: old.getMonth(), year: old.getFullYear() };
-    } else if (this.actualPeriod === 'year') {
-      const old = new Date(now.getFullYear() - this.actualLimitValue, 1, 1);
-      return { period: old.getFullYear(), year: old.getFullYear() };
+    switch (this.actualPeriod) {
+      case 'day':
+        const old1 = new Date(
+          now.getFullYear(),
+          0,
+          this.daysIntoYear(now) - this.actualLimitValue + 1
+        );
+        return { period: this.daysIntoYear(old1), year: old1.getFullYear() };
+      case 'week':
+        const weekVariance = new Date(now.getFullYear(), 0, 1).getDay();
+        const old2 = new Date(
+          now.getFullYear(),
+          0,
+          this.daysIntoYear(now) + -this.actualLimitValue * 7
+        );
+        return {
+          period: Math.floor((this.daysIntoYear(old2) - weekVariance + 7) / 7),
+          year: old2.getFullYear(),
+        };
+      case 'month':
+        const old3 = new Date(
+          now.getFullYear(),
+          now.getMonth() - this.actualLimitValue + 1,
+          1
+        );
+        return { period: old3.getMonth(), year: old3.getFullYear() };
+      case 'year':
+        const old4 = new Date(now.getFullYear() - this.actualLimitValue, 1, 1);
+        return { period: old4.getFullYear(), year: old4.getFullYear() };
+      default:
+        throw new Error('Illegal period');
     }
-    throw new Error('Illegal period');
   }
 
   ngOnInit(): void {

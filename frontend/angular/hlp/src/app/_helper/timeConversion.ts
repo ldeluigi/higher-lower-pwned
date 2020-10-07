@@ -44,20 +44,30 @@ function periodIterator(startPeriod: number, times: number, yearStart: number, p
   for (let index = 0; index <= times; index++) {
     let date: Date = new Date();
     let p = 0;
-    if (periodType === 'day') {
-      date = new Date(yearStart, 0, startPeriod + index);
-      p = daysIntoYear(date);
-    } else if (periodType === 'week') {
-      date = new Date(yearStart, 0, (startPeriod + index) * 7);
-      p = Math.floor(daysIntoYear(date) / 7);
-    } else if (periodType === 'month') {
-      date = new Date(yearStart, (startPeriod + index), 1);
-      p = date.getMonth();
-    } else if (periodType === 'year' && startPeriod === yearStart) {
-      date = new Date(yearStart + index, 1, 1);
-      p = date.getFullYear();
-    } else {
-      throw new Error('Invalid period type');
+    switch (periodType) {
+      case 'day':
+        date = new Date(yearStart, 0, startPeriod + index);
+        p = daysIntoYear(date) + 1;
+        break;
+      case 'week':
+        const weekVariance = new Date(yearStart, 0, 1).getDay();
+        date = new Date(yearStart, 0, (startPeriod + index) * 7);
+        p = Math.floor((daysIntoYear(date) - weekVariance + 7) / 7);
+        break;
+      case 'month':
+        date = new Date(yearStart, (startPeriod + index), 1);
+        p = date.getMonth();
+        break;
+      case 'year':
+        if (startPeriod === yearStart) {
+          date = new Date(yearStart + index, 1, 1);
+          p = date.getFullYear();
+        } else {
+          throw new Error('Invalid period type');
+        }
+        break;
+      default:
+        throw new Error('Invalid period type');
     }
     result.push({ period: p, year: date.getUTCFullYear() });
   }
