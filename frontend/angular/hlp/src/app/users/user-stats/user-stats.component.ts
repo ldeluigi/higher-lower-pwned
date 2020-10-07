@@ -125,8 +125,10 @@ export class UserStatsComponent implements OnInit {
           if (lastElement.maxScore === 0 && element.maxScore === 0) {
             const lastLabel = label.pop();
             if (lastLabel) {
-              if (periods[-1] !== e) {
+              if (periods[periods.length - 1] !== e) {
                 label.push(Const.GRAPH_EMPTY_PERIODS);
+              } else {
+                scores.pop();
               }
             }
           } else {
