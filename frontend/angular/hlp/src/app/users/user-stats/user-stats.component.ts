@@ -4,11 +4,12 @@ import { HistoryItem } from '../../_model/userStats';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartType, ChartOptions } from 'chart.js';
 import { MatPaginator } from '@angular/material/paginator';
-import { timeConversion, periodIterator } from '../../_helper/timeConversion';
+import { timeConversion, periodIterator, daysOfTheYear } from '../../_helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
 import { HistoryItemToEndDatePipe } from 'src/app/_helper/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from 'src/app/_helper/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
+import * as Const from './user-stats.constant';
 
 @Component({
   selector: 'app-user-stats',
@@ -125,7 +126,7 @@ export class UserStatsComponent implements OnInit {
             const lastLabel = label.pop();
             if (lastLabel) {
               if (periods[-1] !== e) {
-                label.push('...');
+                label.push(Const.GRAPH_EMPTY_PERIODS);
               }
             }
           } else {
@@ -136,14 +137,14 @@ export class UserStatsComponent implements OnInit {
               this.actualPeriod
             );
             if (this.actualPeriod === 'day') {
-              label.push(datePipe.transform(startDate, 'dd/MM/yy') as string);
+              label.push(datePipe.transform(startDate, Const.FORMAT_DAY) as string);
             } else {
               const format =
                 this.actualPeriod === 'week'
-                  ? 'dd/MM/yy'
+                  ? Const.FORMAT_WEEK
                   : this.actualPeriod === 'month'
-                  ? 'MM/yy'
-                  : 'yyyy';
+                  ? Const.FORMAT_MONTH
+                  : Const.FORMAT_YEAR;
               if (this.actualPeriod === 'week') {
                 label.push(
                   ((datePipe.transform(startDate, format) as string) +
@@ -213,17 +214,6 @@ export class UserStatsComponent implements OnInit {
     }
   }
 
-  private daysIntoYear(date: Date): number {
-    return (
-      (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
-        Date.UTC(date.getFullYear(), 0, 1)) /
-      24 /
-      60 /
-      60 /
-      1000
-    );
-  }
-
   private periodBegin(): { period: number; year: number } {
     const now = new Date();
     now.setHours(23, 59, 59, 999);
@@ -233,18 +223,18 @@ export class UserStatsComponent implements OnInit {
         const old1 = new Date(
           now.getFullYear(),
           0,
-          this.daysIntoYear(now) - this.actualLimitValue + 1
+          daysOfTheYear(now) - this.actualLimitValue + 1
         );
-        return { period: this.daysIntoYear(old1), year: old1.getFullYear() };
+        return { period: daysOfTheYear(old1), year: old1.getFullYear() };
       case 'week':
         const weekVariance = new Date(now.getFullYear(), 0, 1).getDay();
         const old2 = new Date(
           now.getFullYear(),
           0,
-          this.daysIntoYear(now) + -this.actualLimitValue * 7
+          daysOfTheYear(now) + -this.actualLimitValue * 7
         );
         return {
-          period: Math.floor((this.daysIntoYear(old2) - weekVariance + 7) / 7),
+          period: Math.floor((daysOfTheYear(old2) - weekVariance + 7) / 7),
           year: old2.getFullYear(),
         };
       case 'month':

@@ -32,7 +32,7 @@ function timeConversion(milliseconds: number): string {
   }
 }
 
-function daysIntoYear(date: Date): number {
+function daysOfTheYear(date: Date): number {
   return Math.floor(
     (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0))
     / 24 / 60 / 60 / 1000
@@ -47,12 +47,12 @@ function periodIterator(startPeriod: number, times: number, yearStart: number, p
     switch (periodType) {
       case 'day':
         date = new Date(yearStart, 0, startPeriod + index);
-        p = daysIntoYear(date) + 1;
+        p = daysOfTheYear(date) + 1;
         break;
       case 'week':
         const weekVariance = new Date(yearStart, 0, 1).getDay();
         date = new Date(yearStart, 0, (startPeriod + index) * 7);
-        p = Math.floor((daysIntoYear(date) - weekVariance + 7) / 7);
+        p = Math.floor((daysOfTheYear(date) - weekVariance + 7) / 7);
         break;
       case 'month':
         date = new Date(yearStart, (startPeriod + index), 1);
@@ -77,5 +77,6 @@ function periodIterator(startPeriod: number, times: number, yearStart: number, p
 export {
   timeConversion,
   convertDayNumberInDate,
-  periodIterator
+  periodIterator,
+  daysOfTheYear
 };
