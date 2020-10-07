@@ -6,18 +6,37 @@ $footer-high: 70px;
 }
 
 @media screen and (min-width: 995px) and (orientation: landscape) {
-  .mat-display-3 {
+  .mat-display-4 {
     @include margin-padding();
     max-height: 10%;
+    align-items: center;
+    display: flex;
+  }
+
+  .mat-display-4 div {
+    padding: 1%;
+    max-width: 30%;
+  }
+
+  .mat-display-4 div#right {
+    @include margin-padding();
+    margin-right: auto;
+  }
+
+  .mat-display-4 div#left {
+    @include margin-padding();
+    margin-left: auto;
   }
 
   .left-column {
+    z-index: 2;
     float: left;
     width: 24%;
     @include margin-padding();
   }
 
   .center-column {
+    z-index: 2;
     float: left;
     width: 42%;
     @include margin-padding();
@@ -30,9 +49,13 @@ $footer-high: 70px;
   }
 
   .right-column {
+    z-index: 2;
     float: right;
     width: 24%;
     @include margin-padding();
+    * {
+      z-index: 2;
+    }
   }
 
   footer {
@@ -42,13 +65,21 @@ $footer-high: 70px;
     height: $footer-high;
     width: 100%;
     text-align: center;
+    z-index: 1;
   }
 }
 
 @media (orientation: portrait), screen and (max-width: 995px) {
-  .mat-display-3 {
+  .mat-display-4 {
     max-height: 10%;
     @include margin-padding();
+  }
+
+  .mat-display-4 div {
+    line-height: 1em;
+    font-size: 0.85em;
+    max-height: 2%;
+    width: 100%;
   }
 
   .left-column {
