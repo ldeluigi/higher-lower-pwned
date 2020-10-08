@@ -18,7 +18,7 @@ export class HistoryItemToEndDatePipe implements PipeTransform {
       const weekVariance = new Date(date.getFullYear(), 0, 1).getDay();
       date = new Date(value.year, 0, 7 * (value.periodNumber + 1) - weekVariance);
     } else if (period === 'month') {
-      date = new Date(value.year, value.periodNumber + 1, 0);
+      date = new Date(value.year, value.periodNumber, 0);
     } else if (period === 'year') {
       date = new Date(value.year + 1, 0, 0);
     } else {

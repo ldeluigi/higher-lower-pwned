@@ -106,7 +106,7 @@ export class UserStatsComponent implements OnInit {
           // console.log(e);
           const periodN = e.period;
           const findResult = array.find(
-            (e2) => e2.periodNumber === periodN && e2.year === e.year
+            (item) => item.periodNumber === periodN && item.year === e.year
           );
           const element = findResult
             ? findResult
@@ -134,31 +134,31 @@ export class UserStatsComponent implements OnInit {
           } else {
             scores.push(element);
 
+            console.log(element);
             const startDate = startDatePipe.transform(
               element,
               this.actualPeriod
             );
-            if (this.actualPeriod === 'day') {
-              label.push(datePipe.transform(startDate, Const.FORMAT_DAY) as string);
-            } else {
-              const format =
-                this.actualPeriod === 'week'
-                  ? Const.FORMAT_WEEK
-                  : this.actualPeriod === 'month'
-                  ? Const.FORMAT_MONTH
-                  : Const.FORMAT_YEAR;
-              if (this.actualPeriod === 'week') {
+            switch (this.actualPeriod) {
+              case 'day':
+                label.push(datePipe.transform(startDate, Const.FORMAT_DAY) as string);
+                break;
+              case 'week':
                 label.push(
-                  ((datePipe.transform(startDate, format) as string) +
+                  ((datePipe.transform(startDate, Const.FORMAT_WEEK) as string) +
                     ' - ' +
                     datePipe.transform(
                       endDatePipe.transform(element, this.actualPeriod),
-                      format
+                      Const.FORMAT_WEEK
                     )) as string
                 );
-              } else {
-                label.push(datePipe.transform(startDate, format) as string);
-              }
+                break;
+              case 'month':
+                label.push(datePipe.transform(startDate, Const.FORMAT_MONTH) as string);
+                break;
+              case 'year':
+                label.push(datePipe.transform(startDate, Const.FORMAT_YEAR) as string);
+                break;
             }
           }
           // save lastElement
