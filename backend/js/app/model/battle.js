@@ -29,6 +29,10 @@ let game = new Schema(
       expiration: {
         type: Date,
         required: true
+      },
+      lost: {
+        type: Boolean,
+        default: false
       }
     }],
     start: {
@@ -49,6 +53,10 @@ let game = new Schema(
     },
     valueP2: {
       type: Number,
+      required: true
+    },
+    mode: {
+      type: String,
       required: true
     }
   },
