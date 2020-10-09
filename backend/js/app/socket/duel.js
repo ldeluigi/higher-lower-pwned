@@ -8,7 +8,10 @@ const lobbyRoomPrefix = "lobby@";
 const matchmaking = {
   lobbies: new Map(),
   isInRoom: function (userID) {
-    return Array.from(this.lobbies.values()).filter(x => Array.from(x.users.keys()).includes(userID)).length > 0;
+    return this.roomsFor(userID).length > 0;
+  },
+  roomsFor: function (userID) {
+    return Array.from(this.lobbies.values()).filter(x => Array.from(x.users.keys()).includes(userID));
   },
   openRooms: function () {
     return Array.from(this.lobbies.values()).filter(this.isOpen).map(x => x.name);
@@ -21,6 +24,13 @@ const matchmaking = {
     if (this.isOpen(room)) {
       this.lobbies.get(roomName).users.set(userID, userObj);
       return true;
+    }
+    return false;
+  },
+  leaveRoom: function (roomName, userID) {
+    let room = this.lobbies.get(roomName);
+    if (this.isOpen(room)) {
+      return this.lobbies.get(roomName).users.delete(userID);
     }
     return false;
   },
@@ -122,21 +132,7 @@ module.exports = function (sio) {
     socket.on("repeat", async () => {
       try {
         let nextGuess = await duel.currentGuess(socket.id);
-        if (!nextGuess.data[nextGuess.index].lost) {
-          socket.emit("guess", nextGuess);
-        } else {
-          try {
-            // Game ends with the first player to lose
-            let endData = await duel.deleteGame(socket.id);
-            let myRoomName = Object.keys(socket.rooms).filter(s => s.startsWith(lobbyRoomPrefix))[0];
-            io.to(myRoomName).emit("player-lost", endData);
-          } catch (err) {
-            socket.emit("onerror", {
-              code: 202,
-              description: err.message
-            });
-          }
-        }
+        socket.emit("guess", nextGuess);
       } catch (err) {
         socket.emit("onerror", {
           code: 201,
@@ -152,21 +148,10 @@ module.exports = function (sio) {
           if (isCorrect) {
             try {
               let cg = await duel.currentGuess(socket.id);
-              socket.emit("guess", cg);
-              socket.to(myRoomName).emit("player-guess", cg);
+              io.to(myRoomName).emit("guess", cg);
             } catch (err) {
               socket.emit("onerror", {
                 code: 302,
-                description: err.message
-              });
-            }
-          } else {
-            try {
-              let endData = await duel.deleteGame(socket.id);
-              io.to(myRoomName).emit("player-lost", endData);
-            } catch (err) {
-              socket.emit("onerror", {
-                code: 303,
                 description: err.message
               });
             }
@@ -179,9 +164,29 @@ module.exports = function (sio) {
         }
       }
     });
+    socket.on("quit", async (answer) => {
+      try {
+        if (matchmaking.isInRoom(socket.id)) {
+          matchmaking.roomsFor(socket.id).forEach(room => {
+            matchmaking.leaveRoom(room, socket.id);
+          });
+        }
+        await duel.quitGame(socket.id);
+      } catch (err) {
+        socket.emit("onerror", {
+          code: 401,
+          description: err.message
+        });
+      }
+    });
     socket.on("disconnect", async (reason) => {
       try {
-        await duel.deleteGame(socket.id, true);
+        if (matchmaking.isInRoom(socket.id)) {
+          matchmaking.roomsFor(socket.id).forEach(room => {
+            matchmaking.leaveRoom(room, socket.id);
+          });
+        }
+        await duel.quitGame(socket.id);
       } catch (err) { }
     })
   });
