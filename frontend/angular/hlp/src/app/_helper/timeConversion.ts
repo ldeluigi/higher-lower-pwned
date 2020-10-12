@@ -34,13 +34,22 @@ function timeConversion(milliseconds: number): string {
 
 function daysOfTheYear(date: Date): number {
   return Math.floor(
-    (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0))
-    / 24 / 60 / 60 / 1000
+    (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
+      Date.UTC(date.getFullYear(), 0, 0)) /
+      24 /
+      60 /
+      60 /
+      1000
   );
 }
 
-function periodIterator(startPeriod: number, times: number, yearStart: number, periodType: string): { period: number, year: number }[] {
-  const result: { period: number, year: number }[] = [];
+function periodIterator(
+  startPeriod: number,
+  times: number,
+  yearStart: number,
+  periodType: string
+): { period: number; year: number }[] {
+  const result: { period: number; year: number }[] = [];
   for (let index = 0; index <= times; index++) {
     let date: Date = new Date();
     let p = 0;
@@ -55,7 +64,7 @@ function periodIterator(startPeriod: number, times: number, yearStart: number, p
         p = Math.floor((daysOfTheYear(date) - weekVariance + 7) / 7);
         break;
       case 'month':
-        date = new Date(yearStart, (startPeriod + index), 1);
+        date = new Date(yearStart, startPeriod + index, 1);
         p = date.getMonth();
         break;
       case 'year':
@@ -78,5 +87,5 @@ export {
   timeConversion,
   convertDayNumberInDate,
   periodIterator,
-  daysOfTheYear
+  daysOfTheYear,
 };
