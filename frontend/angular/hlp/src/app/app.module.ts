@@ -17,6 +17,7 @@ import { LoginButtonComponent } from './_components/login-button/login-button.co
 import { LayoutComponent } from './home/layout/layout.component';
 import { LeadeboardComponent } from './home/leaderboard/leadeboard.component';
 
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
@@ -25,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { InputDialogComponent } from './_components/input-dialog/input-dialog.component';
 import { MatTableModule } from '@angular/material/table';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule} from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { LinksComponent } from './home/links/links.component';
 
@@ -48,6 +49,7 @@ import { NoUserHomeComponent } from './home/no-user-home/no-user-home.component'
     NoUserHomeComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,
@@ -55,7 +57,6 @@ import { NoUserHomeComponent } from './home/no-user-home/no-user-home.component'
     HttpClientModule,
     AccountModule,
     UsersModule,
-    BrowserAnimationsModule,
     MatButtonToggleModule,
     MatCardModule,
     MatInputModule,

@@ -54,8 +54,6 @@ export class WordComponent implements OnInit {
 
 }
 
-const DURATION = '0.3s';
-
 export function anim(): AnimationTriggerMetadata {
   return trigger('testAnim', [
     transition(':enter', [

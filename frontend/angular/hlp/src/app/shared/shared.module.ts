@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { HistoryItemToEndDatePipe } from '../_helper/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from '../_helper/history-item-to-start-date.pipe';
 
-
 @NgModule({
   imports: [
     CommonModule,

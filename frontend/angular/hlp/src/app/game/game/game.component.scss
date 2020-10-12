@@ -17,10 +17,16 @@ app-word {
 }
 
 .wrapper {
-  display: flex;
+  position: relative;
+  align-self: center;
   align-items: center;
-  justify-content: center;
-  margin: 0px 0px;
+  overflow: visible;
+  height: 30%;
+}
+
+.commands {
+  position: relative;
+  margin: 1%;
 }
 
 .wrapper-small {
