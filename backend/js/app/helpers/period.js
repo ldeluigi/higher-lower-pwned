@@ -23,34 +23,22 @@ function subtractPeriodNTimesFromToday(period, times) {
     day: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      currentDate.getDate() - times,
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds()
+      currentDate.getDate() - times
     ),
     week: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      currentDate.getDate() - 7 * times,
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds()
+      currentDate.getDate() - 7 * times
     ),
     month: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth() - times,
-      currentDate.getDate(),
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds()
+      currentDate.getDate()
     ),
     year: new Date(
       currentDate.getFullYear() - times,
       currentDate.getMonth(),
-      currentDate.getDate(),
-      currentDate.getHours(),
-      currentDate.getMinutes(),
-      currentDate.getSeconds()
+      currentDate.getDate()
     ),
   };
   // p.day.setDate(currentDate.getUTCDate() - 1 * times);
