@@ -19,10 +19,11 @@ export class DuelComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-
-
     this.subscription = this.gameSocket.game.subscribe(elem => {
       console.log(elem);
+      this.card.word = elem.password1;
+      this.card.score = elem.value1;
+      this.card2.word = elem.password2;
     });
   }
 
