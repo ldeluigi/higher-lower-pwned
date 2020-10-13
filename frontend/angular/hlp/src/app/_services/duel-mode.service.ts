@@ -15,8 +15,8 @@ import { AccountService } from './account.service';
 })
 export class DuelModeService implements OnDestroy {
 
-  private gameSubject: Subject<GameEnd | NextGuess | {}>;
-  game: Observable<GameEnd | NextGuess | {}>;
+  private gameSubject: Subject<DuelGuess>;
+  game: Observable<DuelGuess>;
   connectionOpen = false;
 
   constructor(
@@ -27,10 +27,10 @@ export class DuelModeService implements OnDestroy {
     const config: SocketIoConfig = { url: `${environment.apiUrl}/duel`, options: { autoConnect: false } };
     this.socket.ioSocket.io.config = config;
 
-    this.gameSubject = new Subject<GameEnd | NextGuess | {}>();
+    this.gameSubject = new Subject<DuelGuess>();
     this.socket.removeAllListeners();
 
-    this.socket.on('guess', (nextGuess: {}) => {
+    this.socket.on('guess', (nextGuess: DuelGuess) => {
       console.log('>guess: ', nextGuess);
       this.gameSubject.next(nextGuess);
     });
