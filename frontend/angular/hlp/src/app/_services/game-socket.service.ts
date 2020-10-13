@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import * as io from 'ngx-socket-io';
+// import * as io from 'ngx-socket-io';
 import { Error } from '../game/_model/error';
 import { GameEnd } from '../game/_model/gameEnd';
 import { NextGuess } from '../game/_model/nextGuess';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AccountService } from './account.service';
+import { SocketArcade } from '../game/SocketArcade';
 
 @Injectable({
   providedIn: 'root',
@@ -14,17 +15,18 @@ export class GameSocketService implements OnDestroy {
   private connectionOpen = false;
 
   constructor(
-    private socket: io.Socket,
+    private socket: SocketArcade,
     private accountService: AccountService
   ) {
+    console.log(socket);
     this.game = new Observable<GameEnd | NextGuess>((s) => {
       this.socket.removeAllListeners();
       this.socket.on('guess', (nextGuess: NextGuess) => {
         // console.log('>guess: ', nextGuess);
         s.next(nextGuess);
       });
-      this.socket.on('onerror', (err: Error) => {
-        console.log('>onerror: ', err);
+      this.socket.on('on-error', (err: Error) => {
+        // console.log('>on-error: ', err);
         s.error(err);
       });
       this.socket.on('gameEnd', (gameEnd: GameEnd) => {

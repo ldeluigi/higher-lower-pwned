@@ -2,7 +2,10 @@ import { isDataSource } from '@angular/cdk/collections';
 import { OnDestroy } from '@angular/core';
 import { Injectable } from '@angular/core';
 import * as io from 'ngx-socket-io';
-import { Subject } from 'rxjs';
+import { SocketIoConfig } from 'ngx-socket-io';
+import { Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { SocketDuel } from '../game/SocketDuel';
 import { GameEnd } from '../game/_model/gameEnd';
 import { DuelGuess, NextGuess } from '../game/_model/nextGuess';
 import { AccountService } from './account.service';
@@ -12,23 +15,28 @@ import { AccountService } from './account.service';
 })
 export class DuelModeService implements OnDestroy {
 
-  private gameSubject: Subject<GameEnd | NextGuess>;
+  private gameSubject: Subject<GameEnd | NextGuess | {}>;
+  game: Observable<GameEnd | NextGuess | {}>;
   connectionOpen = false;
 
   constructor(
-    private socket: io.Socket,
+    private socket: SocketDuel,
     private accountService: AccountService
   ) {
-    this.gameSubject = new Subject<GameEnd | NextGuess>();
+
+    const config: SocketIoConfig = { url: `${environment.apiUrl}/duel`, options: { autoConnect: false } };
+    this.socket.ioSocket.io.config = config;
+
+    this.gameSubject = new Subject<GameEnd | NextGuess | {}>();
     this.socket.removeAllListeners();
 
-    this.socket.on('guess', (nextGuess: NextGuess) => {
+    this.socket.on('guess', (nextGuess: {}) => {
       console.log('>guess: ', nextGuess);
       this.gameSubject.next(nextGuess);
     });
 
-    this.socket.on('onerror', (err: Error) => {
-      console.log('>onerror: ', err);
+    this.socket.on('on-error', (err: Error) => {
+      console.log('>on-error: ', err);
       this.gameSubject.error(err);
     });
 
@@ -41,6 +49,8 @@ export class DuelModeService implements OnDestroy {
       console.log('>player-join: ');
       // this.gameSubject.next(gameEnd);
     });
+
+    this.game = this.gameSubject.asObservable();
   }
 
   async startGame(): Promise<void> {
@@ -48,6 +58,7 @@ export class DuelModeService implements OnDestroy {
       this.setUpAndConnect()
         .then(_ => {
           this.socket.emit('start');
+          console.log(this.socket.ioSocket.io.engine.id);
         });
     } else { // connection already up
       // console.log('game alreay started');

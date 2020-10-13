@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { GameSocketService } from 'src/app/_services/game-socket.service';
+import { DuelModeService } from 'src/app/_services/duel-mode.service';
 import { CardData } from '../_components/word/word.component';
 
 @Component({
@@ -15,10 +15,12 @@ export class DuelComponent implements OnInit, OnDestroy {
   subscription: Subscription | undefined;
 
   constructor(
-    private gameSocket: GameSocketService,
+    private gameSocket: DuelModeService,
   ) { }
 
   ngOnInit(): void {
+
+
     this.subscription = this.gameSocket.game.subscribe(elem => {
       console.log(elem);
     });
@@ -31,16 +33,17 @@ export class DuelComponent implements OnInit, OnDestroy {
   }
 
   up(): void {
-    console.log('up');
     this.gameSocket.answer(1);
   }
   down(): void {
-    console.log('down');
     this.gameSocket.answer(2);
   }
 
   start(): void {
-    console.log('start');
     this.gameSocket.startGame().then(() => console.log('done'));
+  }
+
+  reset(): void {
+    this.gameSocket.repeat();
   }
 }

@@ -8,16 +8,14 @@ import { GameComponent } from './game/game.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
-
 import { MatButtonModule } from '@angular/material/button';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { environment } from 'src/environments/environment';
 import { CounterComponent } from './_components/counter/counter.component';
 import { WordSpinnerComponent } from './word-spinner/word-spinner.component';
 import { DuelComponent } from './duel/duel.component';
-
-const config: SocketIoConfig = { url: `${environment.apiUrl}/arcade`, options: { autoConnect: false } };
+import { SocketArcade } from './SocketArcade';
+import { SocketDuel } from './SocketDuel';
 
 @NgModule({
   declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent, DuelComponent],
@@ -26,8 +24,9 @@ const config: SocketIoConfig = { url: `${environment.apiUrl}/arcade`, options: {
     GameRoutingModule,
     MatButtonModule,
     MatCardModule,
-    SocketIoModule.forRoot(config),
+    SocketIoModule,
     MatProgressBarModule
-  ]
+  ],
+  providers: [SocketArcade, SocketDuel]
 })
 export class GameModule { }
