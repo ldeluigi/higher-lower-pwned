@@ -21,6 +21,8 @@ import * as Const from './user-stats.constant';
   styleUrls: ['./user-stats.component.scss'],
 })
 export class UserStatsComponent implements OnInit {
+  expanded = true;
+
   lineChartType: ChartType = 'bar';
   lineChartData: Array<object> = [];
 
@@ -190,6 +192,8 @@ export class UserStatsComponent implements OnInit {
         scores.splice(lastIndex);
         label.splice(lastIndex);
       }
+      this.expanded = scores.length != 0;
+
       this.chartLabels = label;
       this.lineChartData = [
         {
