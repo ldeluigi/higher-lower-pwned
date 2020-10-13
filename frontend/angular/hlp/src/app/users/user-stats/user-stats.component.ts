@@ -179,18 +179,17 @@ export class UserStatsComponent implements OnInit {
         });
       }
       // console.log('scores:', scores, 'label:', label);
-      let lastIndex = 0;
-      for (let i = 0; i < scores.length; i++) {
+      let lastIndex = scores.length;
+      for (let i = scores.length - 1; i > 0; i--) {
         if (scores[i].maxScore > 0) {
-          lastIndex = i;
           break;
         }
+        lastIndex = i;
       }
-      if (lastIndex > 0) {
-        scores = scores.splice(lastIndex);
-        label = label.splice(lastIndex - 1);
+      if (lastIndex < scores.length) {
+        scores.splice(lastIndex);
+        label.splice(lastIndex);
       }
-      // console.log('scores:', scores, 'label:', label);
       this.chartLabels = label;
       this.lineChartData = [
         {
