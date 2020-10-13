@@ -1,6 +1,8 @@
+import { ViewChild } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DuelModeService } from 'src/app/_services/duel-mode.service';
+import { WordSpinnerComponent } from '../word-spinner/word-spinner.component';
 import { CardData } from '../_components/word/word.component';
 
 @Component({
@@ -14,6 +16,11 @@ export class DuelComponent implements OnInit, OnDestroy {
   card2: CardData = { word: '' };
   subscription: Subscription | undefined;
 
+  actualScore = 0;
+
+  @ViewChild(WordSpinnerComponent)
+  private wordAnimation!: WordSpinnerComponent;
+
   constructor(
     private gameSocket: DuelModeService,
   ) { }
@@ -21,9 +28,8 @@ export class DuelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.gameSocket.game.subscribe(elem => {
       console.log(elem);
-      this.card.word = elem.password1;
-      this.card.score = elem.value1;
-      this.card2.word = elem.password2;
+      this.wordAnimation.next({oldScore: elem.value1, newWord: elem.password2 });
+      this.actualScore = elem.score ? elem.score : 0;
     });
   }
 
@@ -36,6 +42,7 @@ export class DuelComponent implements OnInit, OnDestroy {
   up(): void {
     this.gameSocket.answer(1);
   }
+
   down(): void {
     this.gameSocket.answer(2);
   }
@@ -44,7 +51,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.gameSocket.startGame().then(() => console.log('done'));
   }
 
-  reset(): void {
+  repete(): void {
     this.gameSocket.repeat();
   }
 }

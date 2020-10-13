@@ -19,6 +19,7 @@ export function vsAnimation(): AnimationTriggerMetadata {
 export function wordAnimation(): AnimationTriggerMetadata {
   const DURATION = '0.8s';
   return trigger('wordAnimation', [
+
     transition('void => second', [
       style({
         opacity: 0,
@@ -92,6 +93,9 @@ export function cardAnimation(): AnimationTriggerMetadata {
   const firstBackgroun = 'red';
   const secondBackgroun = 'lightblue';
   return trigger('cardAnimation', [
+    state('void', style( {
+      opacity: 0,
+    })),
     transition('void => second', [
       style({
         opacity: 0,
