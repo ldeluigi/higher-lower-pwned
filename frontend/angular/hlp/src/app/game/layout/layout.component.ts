@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -7,7 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LayoutComponent implements OnInit {
 
-  constructor() { }
+  mode = 'arcade';
+
+  @Input('mode')
+  set onCardChange(mode: string) {
+    this.mode = mode;
+  }
+
+  constructor(
+    private route: ActivatedRoute
+  ) {
+    route.data.subscribe(elem => this.mode = elem.mode);
+  }
 
   ngOnInit(): void {
   }

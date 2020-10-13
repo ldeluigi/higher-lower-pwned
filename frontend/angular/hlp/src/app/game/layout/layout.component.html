@@ -1,1 +1,2 @@
-<app-game class="game"></app-game>
+<app-game *ngIf="mode === 'arcade'" class="game"></app-game>
+<app-duel *ngIf="mode === 'duel'"></app-duel>

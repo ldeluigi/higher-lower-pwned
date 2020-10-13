@@ -15,11 +15,12 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { CounterComponent } from './_components/counter/counter.component';
 import { WordSpinnerComponent } from './word-spinner/word-spinner.component';
+import { DuelComponent } from './duel/duel.component';
 
 const config: SocketIoConfig = { url: `${environment.apiUrl}/arcade`, options: { autoConnect: false } };
 
 @NgModule({
-  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent],
+  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent, DuelComponent],
   imports: [
     CommonModule,
     GameRoutingModule,
