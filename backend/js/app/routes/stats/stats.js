@@ -56,6 +56,7 @@ router.get(
                   avgDuration: {
                     $avg: { $subtract: ["$end", "$start"] },
                   },
+                  plays: { $sum: 1 }
                 },
               },
             ],
@@ -86,7 +87,14 @@ router.get(
             maxGuesses: { $first: "$allTime.maxGuesses" },
             avgDuration: { $first: "$allTime.avgDuration" },
             maxDuration: { $first: "$allTime.maxDuration" },
-            avgPlaysPerDay: { $first: "$byDay.avgPlaysPerDay" }, //{ $first: $byDay.maxPlaysPerDay / totalDays }
+            avgPlaysPerDay: {
+              $divide: [
+                {
+                  $first: "$allTime.plays"
+                },
+                totalDays
+              ]
+            },
             maxPlaysPerDay: { $first: "$byDay.maxPlaysPerDay" },
           },
         },
