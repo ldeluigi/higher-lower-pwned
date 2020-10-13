@@ -1,7 +1,7 @@
 function minMaxDate(handleMin) {
   const today = new Date();
   // we want take the current day
-  today.setHours(23,59,59,999);
+  today.setHours(23, 59, 59, 999);
   const minDay = new Date(handleMin(today));
   return [minDay, today];
 }
@@ -16,20 +16,36 @@ const periods = {
 };
 
 function subtractPeriodNTimesFromToday(period, times) {
-  if (!Object.keys(periods).includes(period)) throw new Error("Invalid Period")
-  if (times <= 0) throw new Error("Invalid times")
-  let currentDate = new Date()
+  if (!Object.keys(periods).includes(period)) throw new Error("Invalid Period");
+  if (times <= 0) throw new Error("Invalid times");
+  let currentDate = new Date();
   let p = {
-    day: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay() - times),
-    week: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay() - (7 * times)),
-    month: new Date(currentDate.getFullYear(), currentDate.getMonth() - times, currentDate.getDay()),
-    year: new Date(currentDate.getFullYear() - times, currentDate.getMonth(), currentDate.getDay())
+    day: new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate() - times
+    ),
+    week: new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate() - 7 * times
+    ),
+    month: new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() - times,
+      currentDate.getDate()
+    ),
+    year: new Date(
+      currentDate.getFullYear() - times,
+      currentDate.getMonth(),
+      currentDate.getDate()
+    ),
   };
   // p.day.setDate(currentDate.getUTCDate() - 1 * times);
   // p.week.setDate(currentDate.getUTCDate() - 7 * times);
   // p.month.setMonth(currentDate.getMonth() - 1 * times);
   // p.year.setFullYear(currentDate.getFullYear() - 1 * times);
-  return p[period]
+  return p[period];
 }
 
 function periodInDays(period) {
@@ -44,11 +60,8 @@ module.exports = {
   default: "week",
 
   checkPeriod: function (check) {
-    return check
-      .optional({ nullable: true })
-      .trim()
-      .isIn(Object.keys(periods));
+    return check.optional({ nullable: true }).trim().isIn(Object.keys(periods));
   },
 
-  subtractPeriodNTimesFromToday: subtractPeriodNTimesFromToday
+  subtractPeriodNTimesFromToday: subtractPeriodNTimesFromToday,
 };

@@ -5,6 +5,8 @@ const namespace = "/duel";
 
 const lobbyRoomPrefix = "lobby@";
 
+const maxLobbySpace = 2;
+
 const matchmaking = {
   lobbies: new Map(),
   isInRoom: function (userID) {
@@ -74,7 +76,7 @@ module.exports = function (sio) {
   }).on("connection", function (socket) {
     socket.on("start", async () => {
       if (matchmaking.isInRoom(socket.id)) {
-        socket.emit("onerror", {
+        socket.emit("on-error", {
           code: 105,
           description: "Already in a room."
         });
@@ -88,7 +90,7 @@ module.exports = function (sio) {
         if (!matchmaking.joinRoom(myRoomName, socket.id, {
           userID: socket.userData.id
         })) {
-          socket.emit("onerror", {
+          socket.emit("on-error", {
             code: 104,
             description: "Internal server error."
           });
@@ -96,20 +98,26 @@ module.exports = function (sio) {
         }
         socket.join(myRoomName);
         try {
-          io.to(myRoomName).emit("player-join");
           let opponents = matchmaking.getOpponents(myRoomName, socket.id);
-          // Because it's a duel, the game should start right now:
-          await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
-          try {
-            matchmaking.deleteRoom(myRoomName);
-          } catch (err) {
-            socket.emit("onerror", {
-              code: 103,
-              description: err.message
-            });
+          io.to(myRoomName).emit("player-join", {
+            players: opponents.length + 1,
+            max: maxLobbySpace
+          });
+          if (opponents.length + 1 >= maxLobbySpace) {
+            await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
+            let curr = await duel.currentGuess(socket.id);
+            io.to(myRoomName).emit("guess", curr);
+            try {
+              matchmaking.deleteRoom(myRoomName);
+            } catch (err) {
+              socket.emit("on-error", {
+                code: 103,
+                description: err.message
+              });
+            }
           }
         } catch (err) {
-          socket.emit("onerror", {
+          socket.emit("on-error", {
             code: 102,
             description: err.message
           });
@@ -121,8 +129,13 @@ module.exports = function (sio) {
         })) {
           socket.join(myRoomName);
           socket.emit("waiting-opponents");
+          let opponents = matchmaking.getOpponents(myRoomName, socket.id);
+          io.to(myRoomName).emit("player-join", {
+            players: opponents.length + 1,
+            max: 2
+          });
         } else {
-          socket.emit("onerror", {
+          socket.emit("on-error", {
             code: 101,
             description: "Internal server error."
           });
@@ -134,7 +147,7 @@ module.exports = function (sio) {
         let nextGuess = await duel.currentGuess(socket.id);
         socket.emit("guess", nextGuess);
       } catch (err) {
-        socket.emit("onerror", {
+        socket.emit("on-error", {
           code: 201,
           description: err.message
         });
@@ -150,14 +163,14 @@ module.exports = function (sio) {
               let cg = await duel.currentGuess(socket.id);
               io.to(myRoomName).emit("guess", cg);
             } catch (err) {
-              socket.emit("onerror", {
+              socket.emit("on-error", {
                 code: 302,
                 description: err.message
               });
             }
           }
         } catch (err) {
-          socket.emit("onerror", {
+          socket.emit("on-error", {
             code: 301,
             description: err.message
           });
@@ -173,7 +186,7 @@ module.exports = function (sio) {
         }
         await duel.quitGame(socket.id);
       } catch (err) {
-        socket.emit("onerror", {
+        socket.emit("on-error", {
           code: 401,
           description: err.message
         });
