@@ -9,7 +9,8 @@ const correctGuessScore = 100;
 
 module.exports = {
     newGame: async function (gameIDs, userIDs, modeName = "royale") {
-        if (hasDuplicates(gameIDs) || hasDuplicates(userIDs.filter(e => e !== undefined))) {
+        if (hasDuplicates(gameIDs) || hasDuplicates(userIDs.filter(e => e !== undefined && e !== null))) {
+            console.log(gameIDs, userIDs);
             throw new Error("Someone is trying to play with themselves.");
         }
         let p1 = await passwords.pickPasswordAndValue();
@@ -41,18 +42,21 @@ module.exports = {
         try {
             let gameQuery = await battleSchema.findOne({
                 games: {
-                    $or: [
-                        {
-                            gameID: {
-                                $in: gameIDs
+                    $elemMatch: {
+                        $or: [
+                            {
+                                gameID: {
+                                    $in: gameIDs
+                                }
+                            },
+                            {
+                                user: {
+                                    $in: userIDs
+                                }
                             }
-                        },
-                        {
-                            user: {
-                                $in: userIDs
-                            }
-                        }
-                    ]
+                        ]
+
+                    }
                 }
             });
             if (gameQuery === null) await battleSchema.create(newGame);
@@ -64,19 +68,17 @@ module.exports = {
     // -----------------------------------------------------------------------------------------------------------
     isPlaying: async function (gameID, userID) {
         let query = {
-            $or: [
-                {
-                    games: {
+            games: {
+                $elemMatch: {
+                    $or: [{
                         gameID: gameID
-                    }
+                    }]
                 }
-            ]
+            }
         };
         if (userID) {
-            query.$or.push({
-                games: {
-                    userID: userID
-                }
+            query.games.$elemMatch.$or.push({
+                userID: userID
             });
         }
         return null != await battleSchema.findOne(query);
@@ -86,7 +88,9 @@ module.exports = {
         try {
             let gameQuery = await battleSchema.findOne({
                 games: {
-                    gameID: gameID
+                    $elemMatch: {
+                        gameID: gameID
+                    }
                 }
             });
             if (gameQuery === null) throw new Error("Game not found.");
@@ -147,7 +151,9 @@ module.exports = {
         try {
             let gameQuery = await battleSchema.findOne({
                 games: {
-                    gameID: gameID
+                    $elemMatch: {
+                        gameID: gameID
+                    }
                 }
             });
             if (gameQuery === null) throw new Error("Game not found.");
@@ -199,7 +205,9 @@ module.exports = {
         try {
             let gameQuery = await battleSchema.findOne({
                 games: {
-                    gameID: gameID
+                    $elemMatch: {
+                        gameID: gameID
+                    }
                 }
             });
             if (gameQuery === null) throw new Error("Game not found.");
