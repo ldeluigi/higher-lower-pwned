@@ -1,17 +1,23 @@
-import { Component, OnInit, Type, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Type, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { GameSocketService } from '../../_services/game-socket.service';
 import { CardData } from '../_components/word/word.component';
 import { GameEnd } from '../_model/gameEnd';
 import { NextGuess } from '../_model/nextGuess';
 import { Observable, interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { WordSpinnerComponent } from '../word-spinner/word-spinner.component';
+import { GameSetup, EndGame, NextCard } from '../_model/animation';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss'],
+  styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit, OnDestroy {
+
+  @ViewChild(WordSpinnerComponent)
+  private wordAnimation!: WordSpinnerComponent;
+
   card: CardData = { word: '', score: 0 };
   card2: CardData = { word: '' };
   actualScore = 0;
@@ -61,6 +67,7 @@ export class GameComponent implements OnInit, OnDestroy {
             this.card2 = {
               word: ng.password2
             };
+            this.wordAnimation.gameSetup({ word1: ng.password1, word2: ng.password2, score1: ng.value1});
           } else {
             this.next(ng.password2, ng.value1);
           }
@@ -94,12 +101,15 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private gameEnd(value2: number, score: number = -1): void {
     this.rollNumber(value2, 800, n => this.card2.score = n);
-    this.log('The game is ended. ' + (score >= 0 ?  `Your score is ${score}` : 'With a server error.'));
-    this.gameSocket.disconnect();
-    this.sub?.unsubscribe();
-    this.sub = null;
-    this.playing = false;
-    this.loading = false;
+    this.wordAnimation.end({oldScore: value2})
+      .then(() => {
+        this.log('The game is ended. ' + (score >= 0 ?  `Your score is ${score}` : 'With a server error.'));
+        this.gameSocket.disconnect();
+        this.sub?.unsubscribe();
+        this.sub = null;
+        this.playing = false;
+        this.loading = false;
+      });
   }
 
   response(value: number): void {
@@ -108,7 +118,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private next(newWord: string, oldScore: number): void {
-    this.rollNumber(oldScore, 600, n => this.card2.score = n)
+    this.wordAnimation.next({oldScore, newWord})
       .then(() => {
         setTimeout(() => {
           // console.log('Timeout ended');

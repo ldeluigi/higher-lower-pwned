@@ -1,13 +1,18 @@
 <div class="wrapper-small">
   <app-counter [counter]="actualScore"></app-counter>
 </div>
-<div class="wrapper card1">
+<!-- <div class="wrapper card1">
   <app-word [card]="card"></app-word>
 </div>
 <div class="wrapper card2">
   <app-word [card]="card2"></app-word>
+</div> -->
+<div class="wrapper">
+  <app-word-spinner></app-word-spinner>
 </div>
-<div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>
+<div class="commands">
+  <div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>
+</div>
 <ng-template #gameIsNotOn>
   <button mat-button (click)="start()">Play again</button>
   or

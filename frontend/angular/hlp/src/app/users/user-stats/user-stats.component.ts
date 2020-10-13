@@ -4,11 +4,16 @@ import { HistoryItem } from '../../_model/userStats';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartType, ChartOptions } from 'chart.js';
 import { MatPaginator } from '@angular/material/paginator';
-import { timeConversion, periodIterator } from '../../_helper/timeConversion';
+import {
+  timeConversion,
+  periodIterator,
+  daysOfTheYear,
+} from '../../_helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
 import { HistoryItemToEndDatePipe } from 'src/app/_helper/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from 'src/app/_helper/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
+import * as Const from './user-stats.constant';
 
 @Component({
   selector: 'app-user-stats',
@@ -56,7 +61,7 @@ export class UserStatsComponent implements OnInit {
     },
   ];
 
-  limit = new FormControl('10', [
+  limit = new FormControl('', [
     Validators.required,
     Validators.pattern('^[0-9]*$'),
     Validators.max(30),
@@ -88,7 +93,7 @@ export class UserStatsComponent implements OnInit {
   ) {
     usersTools.data.subscribe((data) => {
       const array = data?.history || [];
-      console.log('array', array);
+      // console.log('array', array);
       this.dataSource.data = array;
       let scores: HistoryItem[] = [];
       let label: Array<string> = [];
@@ -102,9 +107,10 @@ export class UserStatsComponent implements OnInit {
         );
         let lastElement: HistoryItem = { maxScore: 0 } as HistoryItem;
         periods.forEach((e) => {
+          // console.log(e);
           const periodN = e.period;
           const findResult = array.find(
-            (e2) => e2.periodNumber === periodN && e2.year === e.year
+            (item) => item.periodNumber === periodN && item.year === e.year
           );
           const element = findResult
             ? findResult
@@ -119,47 +125,60 @@ export class UserStatsComponent implements OnInit {
                 maxGuesses: 0,
                 maxDuration: 0,
               };
-          console.log(lastElement, element);
+          // console.log(lastElement, element);
           if (lastElement.maxScore === 0 && element.maxScore === 0) {
             const lastLabel = label.pop();
             if (lastLabel) {
-              label.push('...');
+              if (periods[periods.length - 1] !== e) {
+                label.push(Const.GRAPH_EMPTY_PERIODS);
+              } else {
+                scores.pop();
+              }
             }
           } else {
             scores.push(element);
 
+            console.log(element);
             const startDate = startDatePipe.transform(
               element,
               this.actualPeriod
             );
-            if (this.actualPeriod === 'day') {
-              label.push(datePipe.transform(startDate, 'dd/MM/yy') as string);
-            } else {
-              const format =
-                this.actualPeriod === 'week'
-                  ? 'dd/MM/yy'
-                  : this.actualPeriod === 'month'
-                  ? 'MM/yy'
-                  : 'yyyy';
-              if (this.actualPeriod === 'week') {
+            switch (this.actualPeriod) {
+              case 'day':
                 label.push(
-                  ((datePipe.transform(startDate, format) as string) +
+                  datePipe.transform(startDate, Const.FORMAT_DAY) as string
+                );
+                break;
+              case 'week':
+                label.push(
+                  ((datePipe.transform(
+                    startDate,
+                    Const.FORMAT_WEEK
+                  ) as string) +
                     ' - ' +
                     datePipe.transform(
                       endDatePipe.transform(element, this.actualPeriod),
-                      format
+                      Const.FORMAT_WEEK
                     )) as string
                 );
-              } else {
-                label.push(datePipe.transform(startDate, format) as string);
-              }
+                break;
+              case 'month':
+                label.push(
+                  datePipe.transform(startDate, Const.FORMAT_MONTH) as string
+                );
+                break;
+              case 'year':
+                label.push(
+                  datePipe.transform(startDate, Const.FORMAT_YEAR) as string
+                );
+                break;
             }
           }
           // save lastElement
           lastElement = element;
         });
       }
-      console.log('scores:', scores, 'label:', label);
+      // console.log('scores:', scores, 'label:', label);
       let lastIndex = 0;
       for (let i = 0; i < scores.length; i++) {
         if (scores[i].maxScore > 0) {
@@ -171,7 +190,7 @@ export class UserStatsComponent implements OnInit {
         scores = scores.splice(lastIndex);
         label = label.splice(lastIndex - 1);
       }
-      console.log('scores:', scores, 'label:', label);
+      // console.log('scores:', scores, 'label:', label);
       this.chartLabels = label;
       this.lineChartData = [
         {
@@ -210,49 +229,42 @@ export class UserStatsComponent implements OnInit {
     }
   }
 
-  private daysIntoYear(date: Date): number {
-    return (
-      (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
-        Date.UTC(date.getFullYear(), 0, 1)) /
-      24 /
-      60 /
-      60 /
-      1000
-    );
-  }
-
   private periodBegin(): { period: number; year: number } {
     const now = new Date();
+    now.setHours(23, 59, 59, 999);
     const currentYear = now.getFullYear();
-    if (this.actualPeriod === 'day') {
-      const old = new Date(
-        now.getFullYear(),
-        0,
-        this.daysIntoYear(now) - this.actualLimitValue + 1
-      );
-      return { period: this.daysIntoYear(old), year: old.getFullYear() };
-    } else if (this.actualPeriod === 'week') {
-      const old = new Date(
-        now.getFullYear(),
-        0,
-        this.daysIntoYear(now) + -this.actualLimitValue * 7
-      );
-      return {
-        period: Math.floor(this.daysIntoYear(old) / 7),
-        year: old.getFullYear(),
-      };
-    } else if (this.actualPeriod === 'month') {
-      const old = new Date(
-        now.getFullYear(),
-        now.getMonth() - this.actualLimitValue + 1,
-        1
-      );
-      return { period: old.getMonth(), year: old.getFullYear() };
-    } else if (this.actualPeriod === 'year') {
-      const old = new Date(now.getFullYear() - this.actualLimitValue, 1, 1);
-      return { period: old.getFullYear(), year: old.getFullYear() };
+    switch (this.actualPeriod) {
+      case 'day':
+        const old1 = new Date(
+          currentYear,
+          0,
+          daysOfTheYear(now) - this.actualLimitValue + 1
+        );
+        return { period: daysOfTheYear(old1), year: old1.getFullYear() };
+      case 'week':
+        const weekVariance = new Date(currentYear, 0, 1).getDay();
+        const old2 = new Date(
+          currentYear,
+          0,
+          daysOfTheYear(now) + -this.actualLimitValue * 7
+        );
+        return {
+          period: Math.floor((daysOfTheYear(old2) - weekVariance + 7) / 7),
+          year: old2.getFullYear(),
+        };
+      case 'month':
+        const old3 = new Date(
+          currentYear,
+          now.getMonth() - this.actualLimitValue + 1,
+          1
+        );
+        return { period: old3.getMonth(), year: old3.getFullYear() };
+      case 'year':
+        const old4 = new Date(currentYear - this.actualLimitValue, 1, 1);
+        return { period: old4.getFullYear(), year: old4.getFullYear() };
+      default:
+        throw new Error('Illegal period');
     }
-    throw new Error('Illegal period');
   }
 
   ngOnInit(): void {
@@ -264,12 +276,12 @@ export class UserStatsComponent implements OnInit {
     if (period) {
       this.actualPeriod = period;
     }
-    if (this.limit.invalid) {
-      this.limit.setValue(10);
-    }
-    this.actualLimitValue = this.limit.value;
     this.updateStatsLayout();
-    this.usersTools.loadData(this.actualPeriod, this.limit.value).subscribe();
+    if (this.limit.invalid) {
+      this.usersTools.loadData(this.actualPeriod, undefined).subscribe();
+    } else {
+      this.usersTools.loadData(this.actualPeriod, this.limit.value).subscribe();
+    }
   }
 
   timeC(millisecond: number): string {

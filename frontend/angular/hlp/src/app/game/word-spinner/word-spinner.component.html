@@ -1,0 +1,41 @@
+<!-- <div class="container">
+  <dl *ngFor="let item of elements">
+    <dt [@wordAnimation]="item.status" (@wordAnimation.done)="onAnimationListDone($event)">
+      <mat-card class="word-card">
+        <mat-card-header>
+          <mat-card-title> {{ item.word }} </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ item.score }}</p>
+        </mat-card-content>
+      </mat-card>
+    </dt>
+  </dl>
+</div> -->
+<div class="test">
+  <div id="top" [@cardAnimation]="element1.status">
+    <div id="dummy10p"></div>
+    <div>
+      <h1 [@wordAnimation]="element1.status"  (@wordAnimation.done)="onAnimationListDone($event)"> {{ element1.word }} </h1>
+      <div id="dummy10p"></div>
+      <p>
+        {{ element1.score }}
+      </p>
+    </div>
+  </div>
+  <div id="vs" [@vsAnimation]="rotateVs">
+    <span>
+      VS
+    </span>
+  </div>
+  <div id="bot" [@cardAnimation]="element2.status">
+    <div id="dummy10p"></div>
+    <div>
+      <h1 [@wordAnimation]="element2.status"  (@wordAnimation.done)="onAnimationListDone($event)"> {{ element2.word }} </h1>
+      <div id="dummy10p"></div>
+      <p>
+        {{ element2.score }}
+      </p>
+    </div>
+  </div>
+</div>
