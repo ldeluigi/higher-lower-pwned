@@ -5,6 +5,8 @@ const namespace = "/duel";
 
 const lobbyRoomPrefix = "lobby@";
 
+const maxLobbySpace = 2;
+
 const matchmaking = {
   lobbies: new Map(),
   isInRoom: function (userID) {
@@ -99,19 +101,20 @@ module.exports = function (sio) {
           let opponents = matchmaking.getOpponents(myRoomName, socket.id);
           io.to(myRoomName).emit("player-join", {
             players: opponents.length + 1,
-            max: 2
+            max: maxLobbySpace
           });
-          // Because it's a duel, the game should start right now:
-          await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
-          let curr = await duel.currentGuess(socket.id);
-          io.to(myRoomName).emit("guess", curr);
-          try {
-            matchmaking.deleteRoom(myRoomName);
-          } catch (err) {
-            socket.emit("on-error", {
-              code: 103,
-              description: err.message
-            });
+          if (opponents.length + 1 >= maxLobbySpace) {
+            await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
+            let curr = await duel.currentGuess(socket.id);
+            io.to(myRoomName).emit("guess", curr);
+            try {
+              matchmaking.deleteRoom(myRoomName);
+            } catch (err) {
+              socket.emit("on-error", {
+                code: 103,
+                description: err.message
+              });
+            }
           }
         } catch (err) {
           socket.emit("on-error", {
@@ -126,6 +129,11 @@ module.exports = function (sio) {
         })) {
           socket.join(myRoomName);
           socket.emit("waiting-opponents");
+          let opponents = matchmaking.getOpponents(myRoomName, socket.id);
+          io.to(myRoomName).emit("player-join", {
+            players: opponents.length + 1,
+            max: 2
+          });
         } else {
           socket.emit("on-error", {
             code: 101,
