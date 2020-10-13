@@ -68,7 +68,8 @@ describe("Duel module", function () {
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      start: new Date("02-05-2020")
+      start: new Date("02-05-2020"),
+      save: async function () { }
     }));
     let res = await duel.currentGuess("1");
     expect(res).toHaveProperty("data");
@@ -97,7 +98,7 @@ describe("Duel module", function () {
     done();
   });
 
-  it("should delete a game and save score if available", async (done) => {
+  it("should quit a game and save score if available", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
       games: [
@@ -118,7 +119,8 @@ describe("Duel module", function () {
       currentP2: "b",
       valueP1: 1,
       valueP2: 2,
-      start: new Date("02-05-2020")
+      start: new Date("02-05-2020"),
+      save: async function () { }
     }));
     const mock2 = jest.spyOn(scoreSchema, 'create');
     mock2.mockImplementation((input) => {
@@ -133,15 +135,8 @@ describe("Duel module", function () {
     });
     const mock3 = jest.spyOn(duelSchema, 'deleteOne');
     mock3.mockImplementation((input) => Promise.resolve());
-    let res = await duel.deleteGame("2");
-    expect(res.data[1]).toHaveProperty("score", 9);
-    expect(res.data[1]).toHaveProperty("guesses", 3);
-    expect(res.data[0]).toHaveProperty("score", 8);
-    expect(res.data[0]).toHaveProperty("guesses", 2);
-    expect(res.data[0]).toHaveProperty("password1", "a");
-    expect(res.data[0]).toHaveProperty("password2", "b");
-    expect(res.data[0]).toHaveProperty("value1", 1);
-    expect(res.data[0]).toHaveProperty("value2", 2);
+    let res = await duel.quitGame("2");
+    expect(res).toBe(true);
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
@@ -150,7 +145,9 @@ describe("Duel module", function () {
 
   it("should not delete a game if it's not available", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve(null));
+    mock.mockImplementation((input) => Promise.resolve({
+      save: async function () { }
+    }));
     const mock2 = jest.spyOn(scoreSchema, 'create');
     mock2.mockImplementation((input) => Promise.resolve(input));
     const mock3 = jest.spyOn(duelSchema, 'deleteOne');
@@ -200,7 +197,7 @@ describe("Duel module", function () {
     done();
   });
 
-  it("should not submit a wrong guess", async (done) => {
+  it("should submit even a wrong guess", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
       games: [
@@ -225,7 +222,7 @@ describe("Duel module", function () {
       save: () => Promise.resolve()
     }));
     let res = await duel.submitGuess("1", 1);
-    expect(res).toBe(false);
+    expect(res).toBe(true);
     mock.mockRestore();
     done();
   });
@@ -277,19 +274,19 @@ describe("Duel module", function () {
     done();
   });
 
-  it("should not submit a guess if game is expired", async (done) => {
+  it("should submit a guess even if game is expired", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
     mock.mockImplementation((input) => Promise.resolve({
       games: [
         {
           gameID: "1",
-          expiration: new Date(Date.now() + 100000),
+          expiration: new Date(Date.now() - 100000),
           score: 8,
           guesses: 2
         },
         {
           gameID: "2",
-          expiration: new Date(Date.now() + 100005),
+          expiration: new Date(Date.now() - 100005),
           score: 8,
           guesses: 2
         }
@@ -302,7 +299,7 @@ describe("Duel module", function () {
       save: () => Promise.resolve()
     }));
     let res = await duel.submitGuess("1", 1);
-    expect(res).toBe(false);
+    expect(res).toBe(true);
     mock.mockRestore();
     done();
   });

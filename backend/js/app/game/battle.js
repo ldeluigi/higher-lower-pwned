@@ -90,6 +90,12 @@ module.exports = {
                 }
             });
             if (gameQuery === null) throw new Error("Game not found.");
+            let now = Date.now();
+            let index = gameQuery.games.findIndex(e => e.gameID == gameID);
+            if (index < 0) throw new Error("ID not found");
+            let game = gameQuery.games[index];
+            let minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
+            let playingNumber = gameQuery.games.filter(e => !e.lost).length;
             let everyoneExpired = gameQuery.games.filter(e => {
                 let timeout = game.guesses > minGuesses ?
                     Number.MAX_SAFE_INTEGER :
@@ -106,12 +112,9 @@ module.exports = {
                     throw new Error("Could not update game after someone didn't answer (" + err.message + ")");
                 }
             }
-            let minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
-            let now = Date.now();
-            let index = gameQuery.games.findIndex(e => e.gameID == gameID);
-            if (index < 0) throw new Error("ID not found");
+            minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
             let leftBehind = gameQuery.games.filter(e => !e.lost && e.guesses == minGuesses).length;
-            let playingNumber = gameQuery.games.filter(e => !e.lost).length;
+            playingNumber = gameQuery.games.filter(e => !e.lost).length;
             let someoneIsBehind = leftBehind < playingNumber;
             let playerObjs = gameQuery.games.map(game => {
                 let res = {
@@ -180,7 +183,7 @@ module.exports = {
                     await gameQuery.save();
                     return true;
                 } catch (err) {
-                    throw new Error("Could not player from game data. (" + err.message + ")");
+                    throw new Error("Could not delete player from game data. (" + err.message + ")");
                 }
             }
         } catch (err) {
