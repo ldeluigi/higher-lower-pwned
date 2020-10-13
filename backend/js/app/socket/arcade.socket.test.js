@@ -76,7 +76,7 @@ describe("arcade socket.io API", function () {
       }));
       return Promise.resolve(null);
     });
-    socket.on("onerror", (msg) => {
+    socket.on("on-error", (msg) => {
       done.fail(new Error(msg.description));
     });
     socket.on("guess", (answer) => {
