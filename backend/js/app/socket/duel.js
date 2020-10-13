@@ -104,9 +104,6 @@ module.exports = function (sio) {
             max: maxLobbySpace
           });
           if (opponents.length + 1 >= maxLobbySpace) {
-            await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
-            let curr = await duel.currentGuess(socket.id);
-            io.to(myRoomName).emit("guess", curr);
             try {
               matchmaking.deleteRoom(myRoomName);
             } catch (err) {
@@ -115,6 +112,9 @@ module.exports = function (sio) {
                 description: err.message
               });
             }
+            await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
+            let curr = await duel.currentGuess(socket.id);
+            io.to(myRoomName).emit("guess", curr);
           }
         } catch (err) {
           socket.emit("on-error", {
