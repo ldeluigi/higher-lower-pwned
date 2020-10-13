@@ -27,13 +27,13 @@ module.exports = function (sio) {
           let nextGuess = await arcade.currentGuess(socket.id);
           socket.emit("guess", nextGuess);
         } catch (err) {
-          socket.emit("onerror", {
+          socket.emit("on-error", {
             code: 102,
             description: err.message
           });
         }
       } catch (err) {
-        socket.emit("onerror", {
+        socket.emit("on-error", {
           code: 101,
           description: err.message
         });
@@ -49,14 +49,14 @@ module.exports = function (sio) {
             let endData = await arcade.deleteGame(socket.id);
             socket.emit("gameEnd", endData);
           } catch (err) {
-            socket.emit("onerror", {
+            socket.emit("on-error", {
               code: 202,
               description: err.message
             });
           }
         }
       } catch (err) {
-        socket.emit("onerror", {
+        socket.emit("on-error", {
           code: 201,
           description: err.message
         });
@@ -71,7 +71,7 @@ module.exports = function (sio) {
               let nextGuess = await arcade.currentGuess(socket.id);
               socket.emit("guess", nextGuess);
             } catch (err) {
-              socket.emit("onerror", {
+              socket.emit("on-error", {
                 code: 302,
                 description: err.message
               });
@@ -81,14 +81,14 @@ module.exports = function (sio) {
               let endData = await arcade.deleteGame(socket.id);
               socket.emit("gameEnd", endData);
             } catch (err) {
-              socket.emit("onerror", {
+              socket.emit("on-error", {
                 code: 303,
                 description: err.message
               });
             }
           }
         } catch (err) {
-          socket.emit("onerror", {
+          socket.emit("on-error", {
             code: 301,
             description: err.message
           });
