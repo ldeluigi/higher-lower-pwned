@@ -85,12 +85,14 @@ module.exports = function (sio) {
       }
 
       let notFullRooms = matchmaking.openRooms();
+      let userObject = {
+        userID: socket.userData.id,
+        name: await userUtils.getUsername(socket.userData.id)
+      };
 
       if (notFullRooms.length > 0) {
         let myRoomName = notFullRooms[0];
-        if (!matchmaking.joinRoom(myRoomName, socket.id, {
-          userID: socket.userData.id
-        })) {
+        if (!matchmaking.joinRoom(myRoomName, socket.id, userObject)) {
           socket.emit("on-error", {
             code: 104,
             description: "Internal server error."
@@ -101,7 +103,7 @@ module.exports = function (sio) {
         try {
           let opponents = matchmaking.getOpponents(myRoomName, socket.id);
           io.to(myRoomName).emit("player-join", {
-            name: await userUtils.getUsername(socket.userData.id),
+            name: userObject.name,
             id: socket.id,
             players: opponents.length + 1,
             max: maxLobbySpace
@@ -127,13 +129,21 @@ module.exports = function (sio) {
         }
       } else {
         let myRoomName = lobbyRoomPrefix + socket.id;
-        if (matchmaking.createRoom(myRoomName) && matchmaking.joinRoom(myRoomName, socket.id, {
-          userID: socket.userData.id
-        })) {
+        if (matchmaking.createRoom(myRoomName) && matchmaking.joinRoom(myRoomName, socket.id, userObject)) {
           socket.join(myRoomName);
-          socket.emit("waiting-opponents");
           let opponents = matchmaking.getOpponents(myRoomName, socket.id);
+          console.log(opponents);
+          socket.emit("waiting-opponents", {
+            opponents: opponents.map(x => {
+              return {
+                id: x[0],
+                name: x[1].name
+              };
+            })
+          });
           io.to(myRoomName).emit("player-join", {
+            id: socket.id,
+            name: userObject.name,
             players: opponents.length + 1,
             max: 2
           });
