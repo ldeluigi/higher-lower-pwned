@@ -14,7 +14,7 @@ const matchmaking = {
     return this.roomsFor(userID).length > 0;
   },
   roomsFor: function (userID) {
-    return Array.from(this.lobbies.values()).filter(x => Array.from(x.users.keys()).includes(userID));
+    return Array.from(this.lobbies.entries()).filter(x => Array.from(x[1].users.keys()).includes(userID)).map(x => x[0]);
   },
   openRooms: function () {
     return Array.from(this.lobbies.values()).filter(this.isOpen).map(x => x.name);
@@ -32,8 +32,13 @@ const matchmaking = {
   },
   leaveRoom: function (roomName, userID) {
     let room = this.lobbies.get(roomName);
-    if (this.isOpen(room)) {
-      return this.lobbies.get(roomName).users.delete(userID);
+    if (room) {
+      let ops = this.getOpponents(roomName, userID);
+      if (ops.length > 0) {
+        return this.lobbies.get(roomName).users.delete(userID);
+      } else {
+        return this.deleteRoom(roomName);
+      }
     }
     return false;
   },
@@ -132,7 +137,6 @@ module.exports = function (sio) {
         if (matchmaking.createRoom(myRoomName) && matchmaking.joinRoom(myRoomName, socket.id, userObject)) {
           socket.join(myRoomName);
           let opponents = matchmaking.getOpponents(myRoomName, socket.id);
-          console.log(opponents);
           socket.emit("waiting-opponents", {
             opponents: opponents.map(x => {
               return {
