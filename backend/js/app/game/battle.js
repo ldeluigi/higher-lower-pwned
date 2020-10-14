@@ -227,7 +227,7 @@ module.exports = {
         game.guesses += 1;
         if ((gameQuery.valueP1 >= gameQuery.valueP2 && guess === 1) ||
           (gameQuery.valueP1 <= gameQuery.valueP2 && guess === 2)) {
-          game.score += correctGuessScore + Math.floor((game.expiration.getTime() - now) / 1000);
+          game.score += correctGuessScore + Math.floor((game.expiration.getTime() - now.getTime()) / 1000);
           game.expiration = new Date(game.expiration.getTime() + correctGuessMillis);
           game.lastGuess = now;
         } else {
@@ -238,7 +238,7 @@ module.exports = {
       if (game.guesses == minGuesses && leftBehind == 1) {
         gameQuery.games.forEach(g => {
           if (g.lastGuess) {
-            g.expiration = new Date(g.expiration.getTime() + now - g.lastGuess.getTime());
+            g.expiration = new Date(g.expiration.getTime() + now.getTime() - g.lastGuess.getTime());
           }
           if (g.expiration < now) {
             g.lost = true;
