@@ -102,6 +102,7 @@ module.exports = function (sio) {
           let opponents = matchmaking.getOpponents(myRoomName, socket.id);
           io.to(myRoomName).emit("player-join", {
             name: await userUtils.getUsername(socket.userData.id),
+            id: socket.id,
             players: opponents.length + 1,
             max: maxLobbySpace
           });
