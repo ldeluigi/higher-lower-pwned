@@ -1,5 +1,6 @@
 const jwtTools = require('../utils/jwt');
 const duel = require("../game/duel");
+const userUtils = require("../helpers/users");
 
 const namespace = "/duel";
 
@@ -100,6 +101,7 @@ module.exports = function (sio) {
         try {
           let opponents = matchmaking.getOpponents(myRoomName, socket.id);
           io.to(myRoomName).emit("player-join", {
+            name: await userUtils.getUsername(socket.userData.id),
             players: opponents.length + 1,
             max: maxLobbySpace
           });
