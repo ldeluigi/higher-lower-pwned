@@ -113,7 +113,7 @@ module.exports = function (sio) {
             players: opponents.length + 1,
             max: maxLobbySpace
           });
-          socket.emit("waiting-opponents", {
+          socket.emit("opponents", {
             opponents: opponents.map(x => {
               return {
                 id: x[0],
