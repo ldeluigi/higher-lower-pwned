@@ -113,6 +113,14 @@ module.exports = function (sio) {
             players: opponents.length + 1,
             max: maxLobbySpace
           });
+          socket.emit("waiting-opponents", {
+            opponents: opponents.map(x => {
+              return {
+                id: x[0],
+                name: x[1].name
+              };
+            })
+          });
           if (opponents.length + 1 >= maxLobbySpace) {
             try {
               matchmaking.deleteRoom(myRoomName);
