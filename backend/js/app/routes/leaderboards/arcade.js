@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const leaderboardHelper = require("../../helpers/leaderboard");
+const leaderboardHelper = require("../../helpers/leaderboards");
 
 router.get(
   "/arcade",
