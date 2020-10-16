@@ -1,16 +1,25 @@
+
 <div class="wrapper-small">
   <app-counter [counter]="actualScore"></app-counter>
 </div>
-<div class="wrapper">
-  <app-word-spinner></app-word-spinner>
-</div>
-<p>duel works!</p>
-<h1>{{card.word}}</h1>
-<p>{{ card.word }}</p>
+<div class="container">
 
-<h1>{{card2.word}}</h1>
-<p>{{ card2.score }}</p>
+  <div id="leaderboard">
+    <app-player-list [players]="players"></app-player-list>
+  </div>
+  <div id="word">
+    <app-word-spinner></app-word-spinner>
+    <mat-progress-bar
+    mode="determinate"
+    [value]="progressbarValue"
+    ></mat-progress-bar>
+  </div>
+  <div id="dummy"></div>
+</div>
 <button (click)="start()">start</button>
-<button (click)="up()">up</button>
-<button (click)="down()">down</button>
-<button (click)="repete()">repete</button>
+<div *ngIf="this.playing">
+  <button (click)="up()">up</button>
+  <button (click)="down()">down</button>
+  <button (click)="repete()">repete</button>
+</div>
+<button (click)="disconnect()">disconnect</button>
