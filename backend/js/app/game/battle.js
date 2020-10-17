@@ -101,9 +101,9 @@ module.exports = {
       let minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
       let playingNumber = gameQuery.games.filter(e => !e.lost).length;
       let everyoneExpired = gameQuery.games.filter(e => {
-        let timeout = game.guesses > minGuesses ?
+        let timeout = e.guesses > minGuesses ?
           Number.MAX_SAFE_INTEGER :
-          game.expiration.getTime() - now;
+          e.expiration.getTime() - now;
         return timeout < 0 && !e.lost;
       }).length == playingNumber;
       if (everyoneExpired) {
@@ -114,6 +114,13 @@ module.exports = {
           await gameQuery.save();
         } catch (err) {
           throw new Error("Could not update game after someone didn't answer (" + err.message + ")");
+        }
+      } else if (playingNumber == 1 && !game.lost) {
+        try {
+          game.victory = true;
+          await gameQuery.save();
+        } catch (err) {
+          throw new Error("Could not update game after someone won (" + err.message + ")");
         }
       }
       minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
@@ -167,7 +174,7 @@ module.exports = {
           end: now,
           guesses: game.guesses,
           start: gameQuery.start,
-          mode: gameQuery.mode + "." + (lastOne ? "win" : "lost")
+          mode: gameQuery.mode + "." + (game.victory ? "win" : "lost")
         };
         if (game.user) {
           res.user = game.user;

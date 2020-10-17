@@ -33,6 +33,10 @@ let game = new Schema(
       lost: {
         type: Boolean,
         default: false
+      },
+      victory: {
+        type: Boolean,
+        default: false
       }
     }],
     start: {
