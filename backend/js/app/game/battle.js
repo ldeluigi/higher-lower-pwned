@@ -98,7 +98,7 @@ module.exports = {
       let index = gameQuery.games.findIndex(e => e.gameID == gameID);
       if (index < 0) throw new Error("ID not found");
       let game = gameQuery.games[index];
-      let minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
+      let minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
       let playingNumber = gameQuery.games.filter(e => !e.lost).length;
       let everyoneExpired = gameQuery.games.filter(e => {
         let timeout = e.guesses > minGuesses ?
@@ -111,22 +111,17 @@ module.exports = {
           gameQuery.games.forEach(e => {
             e.lost = true;
           });
+          checkVictories(gameQuery);
           await gameQuery.save();
         } catch (err) {
           throw new Error("Could not update game after someone didn't answer (" + err.message + ")");
         }
-      } else if (playingNumber == 1 && !game.lost) {
-        try {
-          game.victory = true;
-          await gameQuery.save();
-        } catch (err) {
-          throw new Error("Could not update game after someone won (" + err.message + ")");
-        }
       }
-      minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
+      minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
       let leftBehind = gameQuery.games.filter(e => !e.lost && e.guesses == minGuesses).length;
       playingNumber = gameQuery.games.filter(e => !e.lost).length;
       let someoneIsBehind = leftBehind < playingNumber;
+      console.log(minGuesses)
       let playerObjs = gameQuery.games.map(game => {
         let res = {
           password1: gameQuery.currentP1,
@@ -168,6 +163,7 @@ module.exports = {
       let index = gameQuery.games.findIndex(e => e.gameID == gameID);
       if (index < 0) throw new Error("ID not found");
       let lastOne = gameQuery.games.length == 1;
+      checkVictories(gameQuery);
       let score = (game => {
         let res = {
           score: game.score,
@@ -256,6 +252,7 @@ module.exports = {
         } else {
           guessHandler();
         }
+        checkVictories(gameQuery);
         gameQuery.currentP1 = gameQuery.currentP2;
         gameQuery.valueP1 = gameQuery.valueP2;
         let newP = await passwords.pickPasswordAndValue();
@@ -283,4 +280,39 @@ module.exports = {
 
 function hasDuplicates(array) {
   return (new Set(array)).size !== array.length;
+}
+
+function checkVictories(gameQuery) {
+  if (gameQuery.games.filter(e => e.victory).length > 0)
+    return;
+  let playingNumber = gameQuery.games.filter(e => !e.lost);
+  if (playingNumber.length == 1) {
+    playingNumber[0].victory = true;
+  } else {
+    let now = Date.now();
+    let minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
+    let everyoneExpired = gameQuery.games.filter(e => {
+      let timeout = e.guesses > minGuesses ?
+        Number.MAX_SAFE_INTEGER :
+        e.expiration.getTime() - now;
+      return timeout < 0 && !e.lost;
+    }).length == playingNumber;
+    if (playingNumber == 0) {
+      let maxScore = Math.max(...gameQuery.games.map(e => e.score));
+      gameQuery.games.forEach(e => {
+        if (e.score == maxScore) {
+          e.victory = true;
+        }
+      });
+    } else if (everyoneExpired) {
+      let maxExpiration = Math.max(gameQuery.games.filter(e => !e.lost).map(e => {
+        return e.expiration.getTime();
+      }));
+      gameQuery.games.forEach(e => {
+        if (e.expiration.getTime() == maxExpiration) {
+          e.victory = true;
+        }
+      });
+    }
+  }
 }
