@@ -3,8 +3,8 @@ const battleSchema = require('../model/battle').schema;
 const scoreSchema = require('../model/score').schema;
 
 
-const startTimeMillis = 1000 * 10;
-const correctGuessMillis = 1000 * 5;
+const startTimeMillis = 1000 * 100;
+const correctGuessMillis = 1000 * 50;
 const correctGuessScore = 100;
 
 module.exports = {
@@ -135,6 +135,9 @@ module.exports = {
           res.score = game.score;
           res.timeout = timeout;
           res.lost = game.lost;
+        }
+        if (playingNumber == 0) {
+          res.value2 = game.valueP2;
         }
         return res;
       });
