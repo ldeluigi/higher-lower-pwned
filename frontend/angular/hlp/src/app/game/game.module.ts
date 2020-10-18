@@ -17,9 +17,10 @@ import { DuelComponent } from './duel/duel.component';
 import { SocketArcade } from './SocketArcade';
 import { SocketDuel } from './SocketDuel';
 import { PlayerListComponent } from './_components/player-list/player-list.component';
+import { ButtonUpDownComponent } from './_components/button-up-down/button-up-down.component';
 
 @NgModule({
-  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent, DuelComponent, PlayerListComponent],
+  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent, DuelComponent, PlayerListComponent, ButtonUpDownComponent],
   imports: [
     CommonModule,
     GameRoutingModule,

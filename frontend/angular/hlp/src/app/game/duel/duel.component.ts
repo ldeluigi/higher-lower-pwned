@@ -23,7 +23,6 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   playersSub: Subscription | undefined;
   gameDataSub: Subscription | undefined;
-  playerDataSub: Subscription | undefined;
 
   players: Player[] = [];
 
@@ -31,6 +30,7 @@ export class DuelComponent implements OnInit, OnDestroy {
   playing = false;
   alreadyLost = false;
   stillInGame = false;
+  imBehind = false;
 
   myName: string | undefined;
 
@@ -69,33 +69,48 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.disconnect();
-    this.playerDataSub?.unsubscribe();
-    this.playerDataSub = undefined;
+    this.gameDataSub?.unsubscribe();
+    this.gameDataSub = undefined;
     this.playersSub?.unsubscribe();
     this.playersSub = undefined;
   }
 
   up(): void {
     this.gameSocket.answer(2);
+    this.imBehind = false;
   }
 
   down(): void {
     this.gameSocket.answer(1);
+    this.imBehind = false;
   }
 
   start(): void {
-    this.disconnect();
+    this.imBehind = false;
     this.alreadyLost = false;
     this.stillInGame = false;
     this.players = [];
     this.gameSocket.startGame()
       .then(() => {
         this.playing = true;
+        this.word2 = undefined;
       })
       .catch(e => this.playing = false);
   }
 
+  private onEnd(): void {
+    if (!this.alreadyLost) {
+      if (this.timeoutValue) {
+        clearTimeout(this.timeoutValue);
+      }
+      this.subTimer?.unsubscribe();
+      this.subTimer = undefined;
+      this.stillInGame = false;
+    }
+  }
+
   disconnect(): void {
+    this.onEnd();
     this.myName = undefined;
     this.stillInGame = false;
     this.playing = false;
@@ -108,9 +123,7 @@ export class DuelComponent implements OnInit, OnDestroy {
   }
 
   private endGame(data: NextDuelGuess): void {
-    this.subTimer?.unsubscribe();
-    this.subTimer = undefined;
-    this.stillInGame = false;
+    this.onEnd();
     this.wordAnimation.end({ oldScore: data.value1 });
     console.log('---> LOST!!!');
   }
@@ -164,7 +177,7 @@ export class DuelComponent implements OnInit, OnDestroy {
       word1: guess.password1,
       word2: guess.password2,
       score1: guess.value1
-    });
+    }).then(() => this.imBehind = true);
     this.playing = true;
     this.stillInGame = true;
     this.alreadyLost = false;
@@ -176,7 +189,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.wordAnimation.next({
       newWord: guess.password2,
       oldScore: guess.value1
-    });
+    }).then(() => this.imBehind = true);
     this.actualScore = guess.score ? guess.score : 0;
   }
 
@@ -208,6 +221,13 @@ export class DuelComponent implements OnInit, OnDestroy {
         player.guesses = pData.guesses;
       }
     });
+    const disconnectedPlayer: Player[] = [];
+    this.players.forEach(p => {
+      if (data.ids.find(e => e === p.id) === undefined) {
+        disconnectedPlayer.push(p);
+      }
+    });
+    this.players = this.players.filter(p => !disconnectedPlayer.some(p2 => p.id === p2.id));
   }
 
   private async setTimer(milliseconds: number): Promise<void> {
@@ -236,5 +256,15 @@ export class DuelComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+
+  buttonState(): string {
+    if (this.alreadyLost) {
+      return 'lost';
+    }
+    if (this.imBehind) {
+      return '';
+    }
+    return 'waiting';
   }
 }

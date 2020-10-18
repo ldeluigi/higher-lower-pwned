@@ -31,10 +31,12 @@
     </mat-card>
   </div>
 </div>
-<button (click)="start()">start</button>
-<div *ngIf="this.playing">
-  <button class="up" mat-raised-button (click)="up()">up</button>
-  <button class="down" mat-raised-button (click)="down()">down</button>
-  <button mat-raised-button (click)="repete()">repete</button>
+<button *ngIf="!this.playing" (click)="start()">start</button>
+<div class="gameBtnC" *ngIf="this.playing">
+  <div class="dummyGBtn"></div>
+  <div class="gameBtn">
+    <app-button-up-down [state]="buttonState()" (upEmitter)="up()" (downEmitter)="down()"></app-button-up-down>
+  </div>
+  <div class="dummyGBtn2"> </div>
 </div>
 <button (click)="disconnect()">disconnect</button>
