@@ -1,4 +1,23 @@
+mat-card {
+  width: calc(100% - 32px);
+}
+
 mat-card-subtitle {
   color: black;
   text-align: right;
+}
+
+#behind {
+  background-color: lightcoral;
+
+}
+
+#lost {
+  background-color: darkslategrey;
+  color: white;
+
+  mat-card-subtitle {
+    color: white;
+  }
+
 }

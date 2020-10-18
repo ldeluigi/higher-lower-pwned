@@ -4,16 +4,17 @@ import { Injectable } from '@angular/core';
 import * as io from 'ngx-socket-io';
 import { SocketIoConfig } from 'ngx-socket-io';
 import { Observable, Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { SocketDuel } from '../game/SocketDuel';
 import { GameEnd } from '../game/_model/gameEnd';
-import { DuelGuess, NextGuess } from '../game/_model/nextGuess';
+import { NextDuelGuess, NextGuess } from '../game/_model/nextGuess';
 import { PlayerIdName, PlayerJoin } from '../game/_model/player-join';
 import { AccountService } from './account.service';
 
-export interface Response {
+export interface GameData {
   ids: string[];
-  data: DuelGuess[];
+  data: NextDuelGuess[];
 }
 
 @Injectable({
@@ -21,15 +22,12 @@ export interface Response {
 })
 export class DuelModeService implements OnDestroy {
 
-  private playerDataSubject: Subject<DuelGuess>;
   private playersSubject: Subject<PlayerJoin | PlayerIdName>;
-  private gameDataSubject: Subject<Response>;
-  playerData: Observable<DuelGuess>;
-  gameData: Observable<Response>;
-  player: Observable<PlayerJoin | PlayerIdName>;
+  private gameDataSubject: Subject<GameData>;
+  players: Observable<PlayerJoin | PlayerIdName>;
+  gameData: Observable<GameData>;
   connectionOpen = false;
   myId = '';
-
 
   constructor(
     private socket: SocketDuel,
@@ -40,14 +38,12 @@ export class DuelModeService implements OnDestroy {
     this.socket.ioSocket.io.config = config;
 
     this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
-    this.playerDataSubject = new Subject<DuelGuess>();
-    this.gameDataSubject = new Subject<Response>();
+    this.gameDataSubject = new Subject<GameData>();
 
     this.socket.removeAllListeners();
 
-    this.socket.on('guess', (res: Response) => {
+    this.socket.on('guess', (res: GameData) => {
       console.log('>guess: ', res);
-      this.playerDataSubject.next(this.extractMyData(res));
       this.gameDataSubject.next(res);
     });
 
@@ -70,9 +66,8 @@ export class DuelModeService implements OnDestroy {
       this.playersSubject.next(data);
     });
 
-    this.playerData = this.playerDataSubject.asObservable();
     this.gameData = this.gameDataSubject.asObservable();
-    this.player = this.playersSubject.asObservable();
+    this.players = this.playersSubject.asObservable();
   }
 
   async startGame(): Promise<void> {
@@ -106,18 +101,13 @@ export class DuelModeService implements OnDestroy {
     return;
   }
 
-  private extractMyData(data: Response): DuelGuess {
+  private extractMyData(data: GameData): NextDuelGuess {
     const myID: string = this.socket.ioSocket.io.engine.id;
     const myIndex = data.ids.indexOf('/duel#' + myID);
     if (myIndex >= 0) {
       return data.data[myIndex];
     }
-    return {} as DuelGuess;
-  }
-
-  private haveILost(data: Response): boolean {
-    const lost = this.extractMyData(data).lost;
-    return lost ? lost : false;
+    return {} as NextDuelGuess;
   }
 
   repeat(): void {

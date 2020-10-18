@@ -8,18 +8,33 @@
     <app-player-list [players]="players"></app-player-list>
   </div>
   <div id="word">
-    <app-word-spinner></app-word-spinner>
-    <mat-progress-bar
-    mode="determinate"
-    [value]="progressbarValue"
-    ></mat-progress-bar>
+    <span *ngIf="this.playing">
+
+      <app-word-spinner></app-word-spinner>
+      <mat-progress-bar
+      mode="determinate"
+      [value]="progressbarValue"
+      *ngIf="this.stillInGame"
+      ></mat-progress-bar>
+    </span>
   </div>
-  <div id="dummy"></div>
+  <div id="dummy">
+    <mat-card *ngIf="myName !== undefined">
+      <mat-card-header>
+        <mat-card-title>
+          {{ this.myName }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        score: {{ this.actualScore }}
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
 <button (click)="start()">start</button>
 <div *ngIf="this.playing">
-  <button (click)="up()">up</button>
-  <button (click)="down()">down</button>
-  <button (click)="repete()">repete</button>
+  <button class="up" mat-raised-button (click)="up()">up</button>
+  <button class="down" mat-raised-button (click)="down()">down</button>
+  <button mat-raised-button (click)="repete()">repete</button>
 </div>
 <button (click)="disconnect()">disconnect</button>
