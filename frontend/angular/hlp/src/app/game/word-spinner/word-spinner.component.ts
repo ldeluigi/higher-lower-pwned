@@ -106,6 +106,7 @@ export class WordSpinnerComponent {
   onAnimationListDone(event: AnimationEvent): void {
     if (event.toState === 'out') {
       this.element1.score  = this.element2.score;
+      this.element1.word = this.element2.word;
       this.element1.status = 'first';
       this.element2.status = 'second';
       Utils.rollWord(this.newElement.word, 600, w => this.element2.word = w);

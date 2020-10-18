@@ -1,0 +1,14 @@
+<dl *ngFor="let p of players; let i = index">
+  <dl>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          #{{i + 1}} {{ p.name }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          score: {{ p. score }}
+        </mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </dl>
+</dl>

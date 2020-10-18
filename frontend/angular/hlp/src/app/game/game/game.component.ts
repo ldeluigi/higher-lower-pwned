@@ -6,7 +6,7 @@ import { NextGuess } from '../_model/nextGuess';
 import { Observable, interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WordSpinnerComponent } from '../word-spinner/word-spinner.component';
-import { GameSetup, EndGame, NextCard } from '../_model/animation';
+import Utils from '../_utils/wordAnimation';
 
 @Component({
   selector: 'app-game',
@@ -100,7 +100,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private gameEnd(value2: number, score: number = -1): void {
-    this.rollNumber(value2, 800, n => this.card2.score = n);
+    Utils.rollNumber(value2, 800, n => this.card2.score = n);
     this.wordAnimation.end({oldScore: value2})
       .then(() => {
         this.log('The game is ended. ' + (score >= 0 ?  `Your score is ${score}` : 'With a server error.'));
@@ -132,29 +132,6 @@ export class GameComponent implements OnInit, OnDestroy {
     });
   }
 
-  private rollNumber(end: number, time: number, update: (n: number) => void): Promise<void> {
-    const frames = 100;
-    const delta = Math.floor(end / frames);
-    const deltaT = Math.floor(time / frames);
-
-    if (this.numberSubscription !== null) {
-      this.numberSubscription.unsubscribe();
-    }
-
-    const timer$ = interval(deltaT);
-    return new Promise<void>(resolve => {
-      this.numberSubscription = timer$.subscribe(tic => {
-        const newValue = delta * tic;
-        update(newValue);
-        if (newValue >= end) {
-          update(end);
-          this.numberSubscription?.unsubscribe();
-          resolve();
-        }
-      });
-    });
-  }
-
   private async setTimer(milliseconds: number): Promise<void> {
     const progressBarMax = 100;
     const frames = 200;
@@ -181,6 +158,5 @@ export class GameComponent implements OnInit, OnDestroy {
         }
       });
     });
-
   }
 }

@@ -18,7 +18,9 @@ const periods = {
 function subtractPeriodNTimesFromToday(period, times) {
   if (!Object.keys(periods).includes(period)) throw new Error("Invalid Period");
   if (times <= 0) throw new Error("Invalid times");
+  times--;
   let currentDate = new Date();
+  //console.log(currentDate.getDay());
   let p = {
     day: new Date(
       currentDate.getFullYear(),
@@ -28,18 +30,10 @@ function subtractPeriodNTimesFromToday(period, times) {
     week: new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      currentDate.getDate() - 7 * times
+      currentDate.getDate() - currentDate.getDay() - 7 * times
     ),
-    month: new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() - times,
-      currentDate.getDate()
-    ),
-    year: new Date(
-      currentDate.getFullYear() - times,
-      currentDate.getMonth(),
-      currentDate.getDate()
-    ),
+    month: new Date(currentDate.getFullYear(), currentDate.getMonth() - times),
+    year: new Date(currentDate.getFullYear() - times, 0),
   };
   // p.day.setDate(currentDate.getUTCDate() - 1 * times);
   // p.week.setDate(currentDate.getUTCDate() - 7 * times);

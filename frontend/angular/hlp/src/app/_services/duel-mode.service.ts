@@ -8,16 +8,28 @@ import { environment } from 'src/environments/environment';
 import { SocketDuel } from '../game/SocketDuel';
 import { GameEnd } from '../game/_model/gameEnd';
 import { DuelGuess, NextGuess } from '../game/_model/nextGuess';
+import { PlayerIdName, PlayerJoin } from '../game/_model/player-join';
 import { AccountService } from './account.service';
+
+export interface Response {
+  ids: string[];
+  data: DuelGuess[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class DuelModeService implements OnDestroy {
 
-  private gameSubject: Subject<DuelGuess>;
-  game: Observable<DuelGuess>;
+  private playerDataSubject: Subject<DuelGuess>;
+  private playersSubject: Subject<PlayerJoin | PlayerIdName>;
+  private gameDataSubject: Subject<Response>;
+  playerData: Observable<DuelGuess>;
+  gameData: Observable<Response>;
+  player: Observable<PlayerJoin | PlayerIdName>;
   connectionOpen = false;
+  myId = '';
+
 
   constructor(
     private socket: SocketDuel,
@@ -27,30 +39,40 @@ export class DuelModeService implements OnDestroy {
     const config: SocketIoConfig = { url: `${environment.apiUrl}/duel`, options: { autoConnect: false } };
     this.socket.ioSocket.io.config = config;
 
-    this.gameSubject = new Subject<DuelGuess>();
+    this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
+    this.playerDataSubject = new Subject<DuelGuess>();
+    this.gameDataSubject = new Subject<Response>();
+
     this.socket.removeAllListeners();
 
-    this.socket.on('guess', (nextGuess: DuelGuess) => {
-      console.log('>guess: ', nextGuess);
-      this.gameSubject.next(nextGuess);
+    this.socket.on('guess', (res: Response) => {
+      console.log('>guess: ', res);
+      this.playerDataSubject.next(this.extractMyData(res));
+      this.gameDataSubject.next(res);
     });
 
     this.socket.on('on-error', (err: Error) => {
       console.log('>on-error: ', err);
-      this.gameSubject.error(err);
+      this.gameDataSubject.error(err);
     });
 
-    this.socket.on('waiting-opponents', () => {
+    const opponents = (players: { opponents: PlayerIdName[]}) => {
       console.log('>waiting-opponents: ');
-      // this.gameSubject.next();
+      console.log(players);
+      players.opponents.forEach(p => this.playersSubject.next(p));
+    };
+
+    this.socket.on('waiting-opponents', opponents);
+    this.socket.on('opponents', opponents);
+
+    this.socket.on('player-join', (data: PlayerJoin) => {
+      console.log('>player-join: ', data);
+      this.playersSubject.next(data);
     });
 
-    this.socket.on('player-join', () => {
-      console.log('>player-join: ');
-      // this.gameSubject.next(gameEnd);
-    });
-
-    this.game = this.gameSubject.asObservable();
+    this.playerData = this.playerDataSubject.asObservable();
+    this.gameData = this.gameDataSubject.asObservable();
+    this.player = this.playersSubject.asObservable();
   }
 
   async startGame(): Promise<void> {
@@ -58,7 +80,7 @@ export class DuelModeService implements OnDestroy {
       this.setUpAndConnect()
         .then(_ => {
           this.socket.emit('start');
-          console.log(this.socket.ioSocket.io.engine.id);
+          this.myId = this.socket.ioSocket.io.engine.id;
         });
     } else { // connection already up
       // console.log('game alreay started');
@@ -84,17 +106,18 @@ export class DuelModeService implements OnDestroy {
     return;
   }
 
-  private extractMyData(data: {ids: number[], data: DuelGuess[]}): DuelGuess {
-    const myID: number = this.socket.ioSocket.io.engine.id;
-    const myIndex = data.ids.indexOf(myID);
-    if (myIndex > 0) {
+  private extractMyData(data: Response): DuelGuess {
+    const myID: string = this.socket.ioSocket.io.engine.id;
+    const myIndex = data.ids.indexOf('/duel#' + myID);
+    if (myIndex >= 0) {
       return data.data[myIndex];
     }
     return {} as DuelGuess;
   }
 
-  private haveILost(data: {ids: number[], data: DuelGuess[]}): boolean | undefined {
-    return this.extractMyData(data).lost;
+  private haveILost(data: Response): boolean {
+    const lost = this.extractMyData(data).lost;
+    return lost ? lost : false;
   }
 
   repeat(): void {

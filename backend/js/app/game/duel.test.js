@@ -49,19 +49,26 @@ describe("Duel module", function () {
 
   it("should return the current guess if available", async (done) => {
     const mock = jest.spyOn(duelSchema, 'findOne');
+    const mock2 = jest
+      .spyOn(global.Date, 'now')
+      .mockImplementationOnce(() =>
+        new Date('2020-05-02T11:01:58.135Z').valueOf()
+      );
     mock.mockImplementation((input) => Promise.resolve({
       games: [
         {
           gameID: "1",
           expiration: new Date("03-05-2020"),
           score: 8,
-          guesses: 2
+          guesses: 2,
+          lost: false
         },
         {
           gameID: "2",
           expiration: new Date("03-05-2020"),
           score: 9,
-          guesses: 3
+          guesses: 2,
+          lost: false
         }
       ],
       currentP1: "a",
@@ -80,8 +87,9 @@ describe("Duel module", function () {
     expect(res.data[0]).toHaveProperty("score", 8);
     expect(res.data[1]).toHaveProperty("score", 9);
     expect(res.data[0]).toHaveProperty("guesses", 2);
-    expect(res.data[1]).toHaveProperty("guesses", 3);
+    expect(res.data[1]).toHaveProperty("guesses", 2);
     mock.mockRestore();
+    mock2.mockRestore();
     done();
   });
 

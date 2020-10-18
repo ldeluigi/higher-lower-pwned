@@ -107,7 +107,7 @@ export class UserStatsComponent implements OnInit {
           end.year,
           this.actualPeriod
         );
-        let lastElement: HistoryItem = { maxScore: 0 } as HistoryItem;
+        let lastElement: HistoryItem = { avgPlaysPerDay: 0 } as HistoryItem;
         periods.forEach((e) => {
           // console.log(e);
           const periodN = e.period;
@@ -127,20 +127,19 @@ export class UserStatsComponent implements OnInit {
                 maxGuesses: 0,
                 maxDuration: 0,
               };
-          // console.log(lastElement, element);
-          if (lastElement.maxScore === 0 && element.maxScore === 0) {
-            const lastLabel = label.pop();
-            if (lastLabel) {
+          // console.log("out", lastElement, element);
+          if (lastElement.avgPlaysPerDay !== 0 && element.avgPlaysPerDay === 0) {
               if (periods[periods.length - 1] !== e) {
                 label.push(Const.GRAPH_EMPTY_PERIODS);
+                scores.push(element);
               } else {
                 scores.pop();
               }
-            }
-          } else {
+          // ignoring other void periods
+          } else if (!(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)) {
             scores.push(element);
 
-            console.log(element);
+            // console.log(element);
             const startDate = startDatePipe.transform(
               element,
               this.actualPeriod
@@ -183,7 +182,7 @@ export class UserStatsComponent implements OnInit {
       // console.log('scores:', scores, 'label:', label);
       let lastIndex = scores.length;
       for (let i = scores.length - 1; i > 0; i--) {
-        if (scores[i].maxScore > 0) {
+        if (scores[i].avgPlaysPerDay > 0) {
           break;
         }
         lastIndex = i;

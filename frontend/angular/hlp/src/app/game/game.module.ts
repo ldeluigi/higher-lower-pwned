@@ -16,9 +16,10 @@ import { WordSpinnerComponent } from './word-spinner/word-spinner.component';
 import { DuelComponent } from './duel/duel.component';
 import { SocketArcade } from './SocketArcade';
 import { SocketDuel } from './SocketDuel';
+import { PlayerListComponent } from './_components/player-list/player-list.component';
 
 @NgModule({
-  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent, DuelComponent],
+  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent, DuelComponent, PlayerListComponent],
   imports: [
     CommonModule,
     GameRoutingModule,
