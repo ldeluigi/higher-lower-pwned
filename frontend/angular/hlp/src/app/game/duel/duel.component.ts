@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { DuelModeService, GameData } from 'src/app/_services/duel-mode.service';
-import { WordSpinnerComponent } from '../word-spinner/word-spinner.component';
+import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
 import { Player } from '../_components/player-list/player-list.component';
 import { CardData } from '../_components/word/word.component';
 import { NextDuelGuess } from '../_model/nextGuess';

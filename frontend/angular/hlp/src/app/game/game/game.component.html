@@ -24,21 +24,7 @@
     mode="determinate"
     [value]="progressbarValue"
   ></mat-progress-bar>
-  <button
-    class="up"
-    mat-raised-button
-    [disabled]="loading"
-    (click)="response(2)"
-  >
-    Up
-  </button>
-  <br />
-  <button
-    class="down"
-    [disabled]="loading"
-    mat-raised-button
-    (click)="response(1)"
-  >
-    Down
-  </button>
+  <div class="btnContainer">
+    <app-button-up-down [state]="buttonState()"  (upEmitter)="response(2)" (downEmitter)="response(1)"></app-button-up-down>
+  </div>
 </ng-template>

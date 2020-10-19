@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CardData } from '../_components/word/word.component';
+import { CardData } from '../../_components/word/word.component';
 import { interval, Subscription } from 'rxjs';
 import { trigger, state, style, animate, transition, AnimationEvent, AnimationTriggerMetadata } from '@angular/animations';
 import { reduce } from 'rxjs/operators';
 import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
-import Utils from '../_utils/wordAnimation';
+import Utils from '../../_utils/wordAnimation';
 import { cardAnimation, vsAnimation, wordAnimation } from './animation';
-import { GameSetup, EndGame, NextCard } from '../_model/animation';
+import { GameSetup, EndGame, NextCard } from '../../_model/animation';
 
 export interface Card {
   word: string;

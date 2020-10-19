@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { CounterComponent } from './_components/counter/counter.component';
-import { WordSpinnerComponent } from './word-spinner/word-spinner.component';
+import { WordSpinnerComponent } from './_components/word-spinner/word-spinner.component';
 import { DuelComponent } from './duel/duel.component';
 import { SocketArcade } from './SocketArcade';
 import { SocketDuel } from './SocketDuel';
@@ -20,7 +20,15 @@ import { PlayerListComponent } from './_components/player-list/player-list.compo
 import { ButtonUpDownComponent } from './_components/button-up-down/button-up-down.component';
 
 @NgModule({
-  declarations: [LayoutComponent, WordComponent, GameComponent, CounterComponent, WordSpinnerComponent, DuelComponent, PlayerListComponent, ButtonUpDownComponent],
+  declarations: [
+    LayoutComponent,
+    WordComponent,
+    GameComponent,
+    CounterComponent,
+    WordSpinnerComponent,
+    DuelComponent,
+    PlayerListComponent,
+    ButtonUpDownComponent],
   imports: [
     CommonModule,
     GameRoutingModule,

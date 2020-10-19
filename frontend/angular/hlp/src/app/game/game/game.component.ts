@@ -5,7 +5,7 @@ import { GameEnd } from '../_model/gameEnd';
 import { NextGuess } from '../_model/nextGuess';
 import { Observable, interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { WordSpinnerComponent } from '../word-spinner/word-spinner.component';
+import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
 import Utils from '../_utils/wordAnimation';
 
 @Component({
@@ -87,6 +87,16 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     );
     this.start();
+  }
+
+  buttonState(): string {
+    if (!this.playing) {
+      return 'lost';
+    }
+    if (!this.loading) {
+      return '';
+    }
+    return 'waiting';
   }
 
   start(): void {
