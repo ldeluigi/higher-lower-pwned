@@ -1,12 +1,16 @@
 import { Component, OnInit, Type, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { GameSocketService } from '../../_services/game-socket.service';
-import { CardData } from '../_components/word/word.component';
 import { GameEnd } from '../_model/gameEnd';
 import { NextGuess } from '../_model/nextGuess';
 import { Observable, interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
-import Utils from '../_utils/wordAnimation';
+import { rollNumber } from '../_utils/wordAnimation';
+
+export interface CardData {
+  word: string;
+  score?: number;
+}
 
 @Component({
   selector: 'app-game',
@@ -73,15 +77,15 @@ export class GameComponent implements OnInit, OnDestroy {
           }
           this.actualScore = ng.score;
           this.setTimer(ng.timeout)
-            .then(_ => {
-              this.gameSocket.repeat();
-            });
+          .then(_ => {
+            this.gameSocket.repeat();
+          });
         } else if (ge.value2) {
           // console.log('game end');
           this.gameEnd(ge.value2, ge.score);
         }
       },
-      error => {
+      _ => {
         // console.log(error);
         this.gameEnd(-1);
       }
@@ -110,7 +114,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private gameEnd(value2: number, score: number = -1): void {
-    Utils.rollNumber(value2, 800, n => this.card2.score = n);
+    rollNumber(value2, 800, n => this.card2.score = n);
     this.wordAnimation.end({oldScore: value2})
       .then(() => {
         this.log('The game is ended. ' + (score >= 0 ?  `Your score is ${score}` : 'With a server error.'));

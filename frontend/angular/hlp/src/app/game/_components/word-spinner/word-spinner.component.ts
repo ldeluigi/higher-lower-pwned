@@ -1,10 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { CardData } from '../../_components/word/word.component';
 import { interval, Subscription } from 'rxjs';
 import { trigger, state, style, animate, transition, AnimationEvent, AnimationTriggerMetadata } from '@angular/animations';
 import { reduce } from 'rxjs/operators';
 import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
-import Utils from '../../_utils/wordAnimation';
+import { rollNumber, rollWord } from '../../_utils/wordAnimation';
 import { cardAnimation, vsAnimation, wordAnimation } from './animation';
 import { GameSetup, EndGame, NextCard } from '../../_model/animation';
 
@@ -19,9 +18,9 @@ export interface Card {
   templateUrl: './word-spinner.component.html',
   styleUrls: ['./word-spinner.component.scss'],
   animations: [
-    vsAnimation(),
-    wordAnimation(),
-    cardAnimation(),
+    vsAnimation,
+    wordAnimation,
+    cardAnimation,
   ]
 })
 export class WordSpinnerComponent {
@@ -73,7 +72,7 @@ export class WordSpinnerComponent {
   async next(next: NextCard): Promise<void> {
     return new Promise<void>(r => {
       this.nextPromise = r;
-      Utils.rollNumber(next.oldScore, 600, (n) => this.element2.score = n.toString())
+      rollNumber(next.oldScore, 600, (n) => this.element2.score = n.toString())
         .then(() => {
           this.rollVS();
           this.newElement = {
@@ -92,7 +91,7 @@ export class WordSpinnerComponent {
   async end(end: EndGame): Promise<void> {
     return new Promise<void>(r => {
       this.endPromise = r;
-      Utils.rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString())
+      rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString())
         .then(() => {
           if (this.endPromise) {
             this.endPromise();
@@ -109,7 +108,7 @@ export class WordSpinnerComponent {
       this.element1.word = this.element2.word;
       this.element1.status = 'first';
       this.element2.status = 'second';
-      Utils.rollWord(this.newElement.word, 600, w => this.element2.word = w);
+      rollWord(this.newElement.word, 600, w => this.element2.word = w);
       this.element2.score = this.emptyScore;
       if (this.nextPromise) {
         this.nextPromise();

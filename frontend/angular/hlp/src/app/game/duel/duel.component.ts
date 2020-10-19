@@ -5,11 +5,10 @@ import { first } from 'rxjs/operators';
 import { DuelModeService, GameData } from 'src/app/_services/duel-mode.service';
 import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
 import { Player } from '../_components/player-list/player-list.component';
-import { CardData } from '../_components/word/word.component';
 import { NextDuelGuess } from '../_model/nextGuess';
 import { currentGuessNumber, getDataFromId, evaluatePlayerId, haveLost, GameDataType, gameDataType, GameMode } from '../_utils/gameHelper';
 import { PlayerJoin } from '../_model/player-join';
-import Utils from '../_utils/wordAnimation';
+import { rollNumber, rollWord } from '../_utils/wordAnimation';
 
 @Component({
   selector: 'app-duel',
@@ -76,12 +75,15 @@ export class DuelComponent implements OnInit, OnDestroy {
   }
 
   up(): void {
-    this.gameSocket.answer(2);
-    this.imBehind = false;
+    this.answer(2);
   }
 
   down(): void {
-    this.gameSocket.answer(1);
+    this.answer(1);
+  }
+
+  private answer(value: number): void {
+    this.gameSocket.answer(value);
     this.imBehind = false;
   }
 
@@ -128,8 +130,8 @@ export class DuelComponent implements OnInit, OnDestroy {
     console.log('---> LOST!!!');
   }
 
-  private haveLost(guess: NextDuelGuess): boolean {
-    return this.alreadyLost || (guess.lost !== undefined ? guess.lost : false);
+  private haveGuessLost(guess: NextDuelGuess): boolean {
+    return this.alreadyLost || (haveLost(guess));
   }
 
   private analiseGuess(data: GameData): void {
@@ -158,9 +160,9 @@ export class DuelComponent implements OnInit, OnDestroy {
       if (!this.stillInGame && !this.alreadyLost) { /* start */
         this.gameStarted(myGuess);
         startMyTimeout();
-      } else if (this.stillInGame && this.haveLost(myGuess)) { /* have lost */
+      } else if (this.stillInGame && this.haveGuessLost(myGuess)) { /* have lost */
         this.endGame(myGuess);
-      } else if (!this.haveLost(myGuess)) { /* have not lost, go next */
+      } else if (!this.haveGuessLost(myGuess)) { /* have not lost, go next */
         this.nextGuess(myGuess);
         startMyTimeout();
       }
