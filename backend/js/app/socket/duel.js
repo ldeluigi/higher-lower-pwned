@@ -122,17 +122,10 @@ module.exports = function (sio) {
             })
           });
           if (opponents.length + 1 >= maxLobbySpace) {
-            try {
-              matchmaking.deleteRoom(myRoomName);
-            } catch (err) {
-              socket.emit("on-error", {
-                code: 103,
-                description: err.message
-              });
-            }
             await duel.newGame(socket.id, opponents[0][0], socket.userData.id, opponents[0][1].userID);
-            let curr = await duel.currentGuess(socket.id);
-            io.to(myRoomName).emit("guess", curr);
+            let cg = await duel.currentGuess(socket.id);
+            io.to(myRoomName).emit("guess", cg);
+            manageCurrentGuess(socket, myRoomName, cg);
           }
         } catch (err) {
           socket.emit("on-error", {
@@ -181,9 +174,9 @@ module.exports = function (sio) {
     socket.on("answer", async (answer) => {
       if (answer.higher === 1 || answer.higher === 2) {
         try {
-          let isCorrect = await duel.submitGuess(socket.id, answer.higher);
+          let submitted = await duel.submitGuess(socket.id, answer.higher);
           let myRoomName = Object.keys(socket.rooms).filter(s => s.startsWith(lobbyRoomPrefix))[0];
-          if (isCorrect) {
+          if (submitted) {
             try {
               let cg = await duel.currentGuess(socket.id);
               io.to(myRoomName).emit("guess", cg);
@@ -204,6 +197,8 @@ module.exports = function (sio) {
     });
     socket.on("quit", async (answer) => {
       try {
+        let myRoomName = Object.keys(socket.rooms).filter(s => s.startsWith(lobbyRoomPrefix))[0];
+        socket.leave(myRoomName);
         if (matchmaking.isInRoom(socket.id)) {
           matchmaking.roomsFor(socket.id).forEach(room => {
             matchmaking.leaveRoom(room, socket.id);
@@ -217,8 +212,11 @@ module.exports = function (sio) {
         });
       }
     });
-    socket.on("disconnect", async (reason) => {
+    socket.on("disconnecting", async (reason) => {
       try {
+        let myRoomName = Object.keys(socket.rooms).filter(s => s.startsWith(lobbyRoomPrefix))[0];
+        let nextGuess = await duel.currentGuess(socket.id);
+        socket.to(myRoomName).emit("guess", nextGuess);
         if (matchmaking.isInRoom(socket.id)) {
           matchmaking.roomsFor(socket.id).forEach(room => {
             matchmaking.leaveRoom(room, socket.id);
@@ -231,3 +229,21 @@ module.exports = function (sio) {
   console.log("Mounted socket.io duel module to " + namespace);
   return sio;
 };
+
+
+function manageCurrentGuess(socket, myRoomName, cg) {
+  if (cg.data.filter(e => !e.lost).length > 0) {
+    let nextTimeout = Math.min(...cg.data.filter(e => !e.lost).map(e => e.timeout));
+    if (nextTimeout > 0) {
+      setTimeout(async function () {
+        try {
+          let cg = await duel.currentGuess(socket.id);
+          io.to(myRoomName).emit("guess", cg);
+          if (cg.data.filter(e => !e.lost).length > 0) {
+            manageCurrentGuess(socket, myRoomName, cg);
+          }
+        } catch (err) { }
+      }, nextTimeout + 1);
+    }
+  }
+}
