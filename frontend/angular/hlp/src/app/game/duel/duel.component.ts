@@ -139,22 +139,22 @@ export class DuelComponent implements OnInit, OnDestroy {
     const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data);
     const minTimeout = Math.min(...data.data.filter(e => e.lost !== false).map(e => e.timeout || 0));
     if (myGuess.guesses > currentGuessNumber(data) && !this.alreadyLost) {
-      if (minTimeout > 0) {
-        if (this.timeoutValue) {
-          clearTimeout(this.timeoutValue);
-        }
-        this.timeoutValue = setTimeout(() => {
-          console.log(myGuess.timeout);
-          this.repete();
-          this.timeoutValue = undefined;
-        }, minTimeout + 100);
-      }
+      // if (minTimeout > 0) {
+      //   if (this.timeoutValue) {
+      //     clearTimeout(this.timeoutValue);
+      //   }
+      //   this.timeoutValue = setTimeout(() => {
+      //     console.log(myGuess.timeout);
+      //     this.repete();
+      //     this.timeoutValue = undefined;
+      //   }, minTimeout + 100);
+      // }
     }
     if (guessType === GameDataType.NextGuess) {
       const startMyTimeout: () => void = () => {
         if (myGuess.timeout) {
-          this.setTimer(myGuess.timeout)
-            .then(() => this.repete());
+          this.setTimer(myGuess.timeout);
+            // .then(() => this.repete());
         }
       };
       if (!this.stillInGame && !this.alreadyLost) { /* start */
