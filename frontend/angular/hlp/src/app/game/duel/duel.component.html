@@ -9,7 +9,7 @@
   </div>
   <div id="word">
     <span *ngIf="this.playing">
-      <app-word-spinner></app-word-spinner>
+      <app-word-spinner (answerEmitter)="answer($event)"></app-word-spinner>
       <div>time left: {{ timeLeft | date: "s:S" }} s</div>
       <mat-progress-bar
       mode="determinate"
@@ -34,14 +34,11 @@
 <button *ngIf="!this.playing" (click)="start()">start</button>
 <div class="gameBtnC" *ngIf="this.playing">
   <div class="dummyGBtn"></div>
-  <div class="gameBtn">
-    <app-button-up-down [state]="buttonState()" (upEmitter)="up()" (downEmitter)="down()"></app-button-up-down>
-  </div>
   <div class="dummyGBtn2"> </div>
 </div>
 <div> <!-- Remove this div -->
   <button (click)="quit()">quit</button>
   <button (click)="disconnect()">disconnect</button>
   <button (click)="repeat()">repeat</button>
-  Utils button for develope
+  Utils button for develop purpose
 </div>

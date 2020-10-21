@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { trigger, state, style, animate, transition, AnimationEvent, AnimationTriggerMetadata } from '@angular/animations';
 import { reduce } from 'rxjs/operators';
@@ -24,6 +24,8 @@ export interface Card {
   ]
 })
 export class WordSpinnerComponent {
+  @Output() answerEmitter = new EventEmitter<number>();
+
   emptyScore = '******';
   element1: Card = {
     word: 'w1',
@@ -50,6 +52,9 @@ export class WordSpinnerComponent {
   ) {
   }
 
+  answer(wn: number): void {
+    this.answerEmitter.emit(wn);
+  }
 
   private rollVS(): void {
     this.rotateVs = !this.rotateVs;
@@ -104,7 +109,7 @@ export class WordSpinnerComponent {
 
   onAnimationListDone(event: AnimationEvent): void {
     if (event.toState === 'out') {
-      this.element1.score  = this.element2.score;
+      this.element1.score = this.element2.score;
       this.element1.word = this.element2.word;
       this.element1.status = 'first';
       this.element2.status = 'second';

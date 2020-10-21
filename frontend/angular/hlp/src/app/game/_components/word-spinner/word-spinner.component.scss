@@ -10,12 +10,6 @@
   width: 95%;
 }
 
-@include desktop {
-  :host {
-    width: 100%;
-  }
-}
-
 mat-card-header {
   text-align: center;
 }
@@ -32,38 +26,41 @@ mat-card-content {
   }
 }
 
-.test {
+.words {
   align-self: center;
   height: 300px;
   width: 100%;
-  #top {
+  .top {
     height: 46%;
     background-color: red;
   }
-  #bot {
+  .bot {
     position: relative;
     height: 46%;
     top: -10%;
     background-color: lightblue;
   }
+
   div {
     margin: 1%;
     border-radius: 10px;
     h1 {
       font-size: 200%;
-      font-weight: 400;
+      font-weight: 500;
+      margin: 1% 4%;
+      text-align: center;
     }
     p {
       font-size: 150%;
       font-weight: 400;
       margin-top: 10px;
-    }
-    h1 {
-      margin: 1% 4%;
-      text-align: left;
+      margin-right: 10%;
+      text-align: right;
     }
   }
 }
+
+
 
 #dummy10p {
   height: 15%;
@@ -82,5 +79,28 @@ mat-card-content {
     display: inline-block;
     vertical-align: middle;
     line-height: normal;
+  }
+}
+
+@include desktop {
+  :host {
+    width: 60%;
+  }
+  .words {
+    .top {
+      background-color: lightblue;
+      transition: 1.1s;
+    }
+    .bot {
+      transition: 1.1s;
+    }
+    .top:hover {
+      cursor: pointer;
+      background-color: red;
+    }
+    .bot:hover {
+      cursor: pointer;
+      background-color: red;
+    }
   }
 }

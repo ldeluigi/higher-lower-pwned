@@ -86,15 +86,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.errorSub = undefined;
   }
 
-  up(): void {
-    this.answer(2);
-  }
-
-  down(): void {
-    this.answer(1);
-  }
-
-  private answer(value: number): void {
+  answer(value: number): void {
     this.gameSocket.answer(value);
     this.imBehind = false;
     this.subTimer?.unsubscribe();

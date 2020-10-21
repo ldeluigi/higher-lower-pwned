@@ -8,7 +8,7 @@
   <app-word [card]="card2"></app-word>
 </div> -->
 <div class="wrapper">
-  <app-word-spinner></app-word-spinner>
+  <app-word-spinner (answerEmitter)="response($event)"></app-word-spinner>
 </div>
 <div class="commands">
   <div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>
@@ -24,7 +24,7 @@
     mode="determinate"
     [value]="progressbarValue"
   ></mat-progress-bar>
-  <div class="btnContainer">
+  <!-- <div class="btnContainer">
     <app-button-up-down [state]="buttonState()"  (upEmitter)="response(2)" (downEmitter)="response(1)"></app-button-up-down>
-  </div>
+  </div> -->
 </ng-template>
