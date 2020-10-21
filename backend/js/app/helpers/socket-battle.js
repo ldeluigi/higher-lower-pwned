@@ -287,6 +287,7 @@ async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobby
         );
         sendOpponents(socket, opponents);
         if (opponents.length + 1 >= maxLobbySpace) {
+          matchmaking.closeRoom(myRoomName);
           let op = new PlayerCollection(opponents);
           await battle.newGame([socket.id, ...op.playerIDs],
             [socket.userData.id, ...op.userIDs]);
@@ -297,7 +298,8 @@ async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobby
       }, socket, code + 1);
     }
   } else {
-    let myRoomName = socketRoomPrefix + socket.id;
+    let myRoomName = matchmaking.createRoomName();
+    console.log("New room: " + myRoomName)
     if (matchmaking.createRoom(myRoomName) && joinRoom(socket, matchmaking, myRoomName, userObject)) {
       let opponents = matchmaking.getOpponents(myRoomName, socket.id);
       sendOpponents(socket, opponents, "waiting-opponents");
@@ -320,6 +322,11 @@ async function onRepeat(io, socket, code) {
 
 async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
   await tryOrEmitError(async () => {
+    if (matchmaking.isInRoom(socket.id)) {
+      matchmaking.roomsFor(socket.id).forEach(room => {
+        matchmaking.leaveRoom(room, socket.id);
+      });
+    }
     let isPlaying = await battle.isPlaying(socket.id);
     if (isPlaying) {
       let myRoomName = myRoom(socket, socketRoomPrefix);
@@ -327,11 +334,6 @@ async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
       emitGuess(socket.to(myRoomName), nextGuess);
       // TODO user return value of :
       await battle.quitGame(socket.id);
-    }
-    if (matchmaking.isInRoom(socket.id)) {
-      matchmaking.roomsFor(socket.id).forEach(room => {
-        matchmaking.leaveRoom(room, socket.id);
-      });
     }
   }, socket, code);
 }
@@ -355,7 +357,7 @@ async function onAnswer(io, socket, code, answer, socketRoomPrefix) {
 
 module.exports = {
   newSocket: function (namespace, lobbyRoomPrefix, maxLobbySpace) {
-    const matchmaking = matchmakingCreator.newMatchmaking();
+    const matchmaking = matchmakingCreator.newMatchmaking(lobbyRoomPrefix);
     return function (sio) {
       var io = sio.of(namespace);
       io.use(authenticationMiddleware)
