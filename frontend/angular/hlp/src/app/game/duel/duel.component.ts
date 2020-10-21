@@ -85,6 +85,8 @@ export class DuelComponent implements OnInit, OnDestroy {
   private answer(value: number): void {
     this.gameSocket.answer(value);
     this.imBehind = false;
+    this.subTimer?.unsubscribe();
+    this.subTimer = undefined;
   }
 
   start(): void {
@@ -108,6 +110,7 @@ export class DuelComponent implements OnInit, OnDestroy {
       this.subTimer?.unsubscribe();
       this.subTimer = undefined;
       this.stillInGame = false;
+      this.alreadyLost = true;
     }
   }
 
@@ -153,7 +156,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     if (guessType === GameDataType.NextGuess) {
       const startMyTimeout: () => void = () => {
         if (myGuess.timeout) {
-          this.setTimer(myGuess.timeout);
+          this.setProgressBarTimer(myGuess.timeout);
             // .then(() => this.repete());
         }
       };
@@ -232,7 +235,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.players = this.players.filter(p => !disconnectedPlayer.some(p2 => p.id === p2.id));
   }
 
-  private async setTimer(milliseconds: number): Promise<void> {
+  private async setProgressBarTimer(milliseconds: number): Promise<void> {
     const progressBarMax = 100;
     const frames = 200;
     const delta = progressBarMax / frames;
