@@ -17,16 +17,22 @@ body {
 
 body {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 500% 100%;
-  animation: gradient 30s ease infinite;
+  background-size: 500vw 100vh;
+  animation: gradient 60s ease infinite;
 }
 
 @keyframes gradient {
   0% {
     background-position: 0% 0%;
   }
+  10% {
+    background-position: 100% 0%;
+  }
   50% {
     background-position: 100% 0%;
+  }
+  60% {
+    background-position: 0% 0%;
   }
   100% {
     background-position: 0% 0%;
