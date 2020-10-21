@@ -24,6 +24,7 @@ export class DuelModeService implements OnDestroy {
 
   private playersSubject: Subject<PlayerJoin | PlayerIdName>;
   private gameDataSubject: Subject<GameData>;
+  private isInGame = false;
   players: Observable<PlayerJoin | PlayerIdName>;
   gameData: Observable<GameData>;
   connectionOpen = false;
@@ -70,15 +71,21 @@ export class DuelModeService implements OnDestroy {
     this.players = this.playersSubject.asObservable();
   }
 
+  async connect(): Promise<void> {
+    return this.setUpAndConnect();
+  }
+
   async startGame(): Promise<void> {
     if (!this.connectionOpen) {
       this.setUpAndConnect()
         .then(_ => {
           this.socket.emit('start');
           this.myId = this.socket.ioSocket.io.engine.id;
+          return;
         });
-    } else { // connection already up
-      // console.log('game alreay started');
+    } else if (!this.isInGame) {
+      this.socket.emit('start');
+      return;
     }
   }
 
@@ -91,10 +98,10 @@ export class DuelModeService implements OnDestroy {
       this.socket.ioSocket.io.opts.query = {};
     }
     this.socket.fromOneTimeEvent('disconnect')
-    .then(_ => {
-      // console.log('disconnected');
-      this.connectionOpen = false;
-    });
+      .then(_ => {
+        // console.log('disconnected');
+        this.connectionOpen = false;
+      });
     this.socket.connect();
     await this.socket.fromOneTimeEvent('connect');
     this.connectionOpen = true;
@@ -121,6 +128,11 @@ export class DuelModeService implements OnDestroy {
       this.socket.emit('answer', { higher: answer });
     }
   }
+
+  endGame(): void {
+    this.socket.emit('quit');
+  }
+
 
   disconnect(): void {
     if (this.connectionOpen) {

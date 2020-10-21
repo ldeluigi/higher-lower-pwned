@@ -68,6 +68,7 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.disconnect();
+    this.gameSocket.disconnect();
     this.gameDataSub?.unsubscribe();
     this.gameDataSub = undefined;
     this.playersSub?.unsubscribe();
@@ -114,6 +115,15 @@ export class DuelComponent implements OnInit, OnDestroy {
     }
   }
 
+  quit(): void {
+    this.onEnd();
+    this.myName = undefined;
+    this.stillInGame = false;
+    this.playing = false;
+    this.players = [];
+    this.gameSocket.endGame();
+  }
+
   disconnect(): void {
     this.onEnd();
     this.myName = undefined;
@@ -123,7 +133,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.gameSocket.disconnect();
   }
 
-  repete(): void {
+  repeat(): void {
     this.gameSocket.repeat();
   }
 
@@ -140,24 +150,10 @@ export class DuelComponent implements OnInit, OnDestroy {
   private analiseGuess(data: GameData): void {
     const guessType: GameDataType = gameDataType(data, this.word2);
     const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data);
-    const minTimeout = Math.min(...data.data.filter(e => e.lost !== false).map(e => e.timeout || 0));
-    if (myGuess.guesses > currentGuessNumber(data) && !this.alreadyLost) {
-      // if (minTimeout > 0) {
-      //   if (this.timeoutValue) {
-      //     clearTimeout(this.timeoutValue);
-      //   }
-      //   this.timeoutValue = setTimeout(() => {
-      //     console.log(myGuess.timeout);
-      //     this.repete();
-      //     this.timeoutValue = undefined;
-      //   }, minTimeout + 100);
-      // }
-    }
     if (guessType === GameDataType.NextGuess) {
       const startMyTimeout: () => void = () => {
         if (myGuess.timeout) {
           this.setProgressBarTimer(myGuess.timeout);
-            // .then(() => this.repete());
         }
       };
       if (!this.stillInGame && !this.alreadyLost) { /* start */
@@ -215,7 +211,7 @@ export class DuelComponent implements OnInit, OnDestroy {
         }
       }
     });
-    this.players.sort((p1, p2) => p1.score < p2.score ? 1 : -1);
+    this.players.sort((p1, p2) => p1.score <= p2.score ? 1 : -1);
   }
 
   private updateGuessNumber(data: GameData): void {
