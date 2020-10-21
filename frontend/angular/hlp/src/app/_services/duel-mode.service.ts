@@ -24,9 +24,11 @@ export class DuelModeService implements OnDestroy {
 
   private playersSubject: Subject<PlayerJoin | PlayerIdName>;
   private gameDataSubject: Subject<GameData>;
+  private errorSubject: Subject< {code: number, description: string}>;
   private isInGame = false;
   players: Observable<PlayerJoin | PlayerIdName>;
   gameData: Observable<GameData>;
+  errors: Observable< {code: number, description: string}>;
   connectionOpen = false;
   myId = '';
 
@@ -40,6 +42,7 @@ export class DuelModeService implements OnDestroy {
 
     this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
     this.gameDataSubject = new Subject<GameData>();
+    this.errorSubject = new Subject< {code: number, description: string}>();
 
     this.socket.removeAllListeners();
 
@@ -48,9 +51,9 @@ export class DuelModeService implements OnDestroy {
       this.gameDataSubject.next(res);
     });
 
-    this.socket.on('on-error', (err: Error) => {
+    this.socket.on('on-error', (err: {code: number, description: string}) => {
       console.log('>on-error: ', err);
-      this.gameDataSubject.error(err);
+      this.errorSubject.next(err);
     });
 
     const opponents = (players: { opponents: PlayerIdName[]}) => {
@@ -69,6 +72,7 @@ export class DuelModeService implements OnDestroy {
 
     this.gameData = this.gameDataSubject.asObservable();
     this.players = this.playersSubject.asObservable();
+    this.errors = this.errorSubject.asObservable();
   }
 
   async connect(): Promise<void> {
@@ -80,7 +84,6 @@ export class DuelModeService implements OnDestroy {
       this.setUpAndConnect()
         .then(_ => {
           this.socket.emit('start');
-          this.myId = this.socket.ioSocket.io.engine.id;
           return;
         });
     } else if (!this.isInGame) {
@@ -103,7 +106,10 @@ export class DuelModeService implements OnDestroy {
         this.connectionOpen = false;
       });
     this.socket.connect();
-    await this.socket.fromOneTimeEvent('connect');
+    await this.socket.fromOneTimeEvent('connect')
+      .then(() => {
+        this.myId = this.socket.ioSocket.io.engine.id;
+      });
     this.connectionOpen = true;
     return;
   }

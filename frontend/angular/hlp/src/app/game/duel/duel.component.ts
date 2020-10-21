@@ -9,6 +9,7 @@ import { NextDuelGuess } from '../_model/nextGuess';
 import { currentGuessNumber, getDataFromId, evaluatePlayerId, haveLost, GameDataType, gameDataType, GameMode } from '../_utils/gameHelper';
 import { PlayerJoin } from '../_model/player-join';
 import { rollNumber, rollWord } from '../_utils/wordAnimation';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-duel',
@@ -39,9 +40,11 @@ export class DuelComponent implements OnInit, OnDestroy {
   progressbarValue = 100;
   timeLeft = 0;
   private subTimer: Subscription | undefined;
+  private errorSub: Subscription | undefined;
 
   constructor(
     private gameSocket: DuelModeService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +67,12 @@ export class DuelComponent implements OnInit, OnDestroy {
     });
 
     this.gameDataSub = this.gameSocket.gameData.subscribe(data => this.analiseGuess(data));
+
+    this.errorSub = this.gameSocket.errors.subscribe(err => this.log(err.description));
+  }
+
+  private log(message: string, type: string = 'ok'): void {
+    this.snackBar.open(message, type, {duration: 5000});
   }
 
   ngOnDestroy(): void {
@@ -73,6 +82,8 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.gameDataSub = undefined;
     this.playersSub?.unsubscribe();
     this.playersSub = undefined;
+    this.errorSub?.unsubscribe();
+    this.errorSub = undefined;
   }
 
   up(): void {
