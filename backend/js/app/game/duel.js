@@ -13,5 +13,8 @@ module.exports = {
   },
   submitGuess: async function (gameID, guess) {
     return await battle.submitGuess(gameID, guess);
+  },
+  isPlaying: async function (gameID) {
+    return await battle.isPlaying(gameID);
   }
 }
