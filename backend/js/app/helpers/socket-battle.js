@@ -165,12 +165,12 @@ function emitError(socket, code, desc = "") {
  * @param {String} roomName
  * @param {UserObject} userObject
  */
-function joinRoom(socket, matchmaking, roomName, userObject) {
+function joinRoom(socket, matchmaking, roomName, socketRoomName, userObject) {
   if (!matchmaking.joinRoom(roomName, socket.id, userObject)) {
     socket.emitError(socket, 104, "Internal server error.");
     return false;
   }
-  socket.join(roomName);
+  socket.join(socketRoomName);
   return true;
 }
 
@@ -212,8 +212,8 @@ function emitGuess(socket, currentGuess) {
  * @param {*} socket
  * @param {String} roomPrefix
  */
-function myRoom(socket, roomPrefix) {
-  return Object.keys(socket.rooms).filter(s => s.startsWith(roomPrefix))[0];
+function myRooms(socket, roomPrefix) {
+  return Object.keys(socket.rooms).filter(s => s.startsWith(roomPrefix));
 }
 
 //--------------------------- Implementations ------------------------------
@@ -270,16 +270,20 @@ async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobby
     emitError(socket, code, "Already in a room.");
     return;
   }
-
+  if (await battle.isPlaying(playerID)) {
+    emitError(socket, code, "Already playing.");
+    return;
+  }
   let notFullRooms = matchmaking.openRooms();
   let userObject = await createUserObject(socket.userData.id);
 
   if (notFullRooms.length > 0) {
     let myRoomName = notFullRooms[0];
-    if (joinRoom(socket, matchmaking, myRoomName, userObject)) {
+    let socketRoomName = socketRoomPrefix + myRoomName;
+    if (joinRoom(socket, matchmaking, myRoomName, socketRoomName, userObject)) {
       await tryOrEmitError(async () => {
         let opponents = matchmaking.getOpponents(myRoomName, socket.id);
-        io.to(myRoomName).emit("player-join",
+        io.to(socketRoomName).emit("player-join",
           new SimplePlayer(
             socket.id,
             userObject.name
@@ -287,23 +291,24 @@ async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobby
         );
         sendOpponents(socket, opponents);
         if (opponents.length + 1 >= maxLobbySpace) {
-          matchmaking.closeRoom(myRoomName);
+          matchmaking.deleteRoom(myRoomName);
           let op = new PlayerCollection(opponents);
           await battle.newGame([socket.id, ...op.playerIDs],
             [socket.userData.id, ...op.userIDs]);
           let cg = await battle.currentGuess(socket.id);
-          emitGuess(io.to(myRoomName), cg);
-          timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, cg.data);
+          emitGuess(io.to(socketRoomName), cg);
+          timeoutForNextPlayerThatCouldLose(io, socket, socketRoomName, cg.data);
         }
       }, socket, code + 1);
     }
   } else {
-    let myRoomName = matchmaking.createRoomName();
+    let myRoomName = matchmaking.createRoom();
+    let socketRoomName = socketRoomPrefix + myRoomName;
     console.log("New room: " + myRoomName)
-    if (matchmaking.createRoom(myRoomName) && joinRoom(socket, matchmaking, myRoomName, userObject)) {
+    if (myRoomName !== null && joinRoom(socket, matchmaking, myRoomName, socketRoomName, userObject)) {
       let opponents = matchmaking.getOpponents(myRoomName, socket.id);
       sendOpponents(socket, opponents, "waiting-opponents");
-      io.to(myRoomName).emit("player-join", new SimplePlayer(
+      io.to(socketRoomName).emit("player-join", new SimplePlayer(
         socket.id,
         userObject.name
       ).joinDto(opponents.length + 1, maxLobbySpace));
@@ -329,12 +334,15 @@ async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
     }
     let isPlaying = await battle.isPlaying(socket.id);
     if (isPlaying) {
-      let myRoomName = myRoom(socket, socketRoomPrefix);
-      let nextGuess = await battle.currentGuess(socket.id);
-      emitGuess(socket.to(myRoomName), nextGuess);
-      // TODO user return value of :
-      await battle.quitGame(socket.id);
+      let myRoomName = myRooms(socket, socketRoomPrefix)[0];
+      let nextGuess = await battle.quitGame(socket.id);
+      if (nextGuess !== null) {
+        emitGuess(socket.to(myRoomName), nextGuess);
+      }
     }
+    myRooms(socket, socketRoomPrefix).forEach(room => {
+      socket.leave(room);
+    });
   }, socket, code);
 }
 
@@ -342,7 +350,7 @@ async function onAnswer(io, socket, code, answer, socketRoomPrefix) {
   if (answer.higher === 1 || answer.higher === 2) {
     await tryOrEmitError(async () => {
       let submitted = await battle.submitGuess(socket.id, answer.higher);
-      let myRoomName = myRoom(socket, socketRoomPrefix);
+      let myRoomName = myRooms(socket, socketRoomPrefix)[0];
       if (submitted) {
         tryOrEmitError(async () => {
           let cg = await battle.currentGuess(socket.id);
@@ -357,7 +365,7 @@ async function onAnswer(io, socket, code, answer, socketRoomPrefix) {
 
 module.exports = {
   newSocket: function (namespace, lobbyRoomPrefix, maxLobbySpace) {
-    const matchmaking = matchmakingCreator.newMatchmaking(lobbyRoomPrefix);
+    const matchmaking = matchmakingCreator.newMatchmaking();
     return function (sio) {
       var io = sio.of(namespace);
       io.use(authenticationMiddleware)

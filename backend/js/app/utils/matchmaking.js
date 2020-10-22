@@ -1,5 +1,5 @@
 module.exports = {
-  newMatchmaking: function (prefix) {
+  newMatchmaking: function () {
     return {
       lobbies: new Map(),
       isInRoom: function (userID) {
@@ -34,19 +34,14 @@ module.exports = {
         }
         return false;
       },
-      createRoom: function (roomName) {
-        if (!roomName.startsWith(prefix)) {
-          return false;
-        }
-        if (this.lobbies.has(roomName)) {
-          return false;
-        }
+      createRoom: function () {
+        let roomName = this.createRoomName();
         this.lobbies.set(roomName, {
           users: new Map(),
           name: roomName,
           open: true
         });
-        return true;
+        return roomName;
       },
       deleteRoom: function (roomName) {
         return this.lobbies.delete(roomName);
@@ -61,20 +56,19 @@ module.exports = {
         this.lobbies.get(roomName).open = false;
       },
       createRoomName() {
-        let keys = Array.from(this.lobbies.keys()).map(k => parseInt(k.substring(prefix.length)));
-        console.log("Keys" + keys)
-        if (keys.length <= 0) return "" + prefix + 0;
+        let keys = Array.from(this.lobbies.keys());
+        if (keys.length <= 0) return 0;
         keys.sort().reverse();
         if (keys[keys.length - 1] > 0) {
-          return "" + prefix + 0;
+          return 0;
         }
         while (keys.length > 1) {
           var last = keys.pop();
           if (keys[keys.length - 1] - last > 1) {
-            return "" + prefix + last + 1;
+            return last + 1;
           }
         }
-        return "" + prefix + (keys[0] + 1);
+        return (keys[0] + 1);
       }
     };
   }
