@@ -324,7 +324,7 @@ module.exports = {
         try {
           gameQuery.games.splice(index, 1);
           await gameQuery.save();
-          return true;
+          return await currentGuessWithGameQuery(gameQuery);
         } catch (err) {
           throw new Error(
             "Could not delete player from game data. (" + err.message + ")"
