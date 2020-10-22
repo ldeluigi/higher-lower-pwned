@@ -15,6 +15,7 @@ interface NextDuelGuess extends Guess {
   timeout?: number;
   score?: number;
   lost?: boolean;
+  value2?: number;
 }
 
 export {

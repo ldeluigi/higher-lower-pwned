@@ -68,7 +68,7 @@ export class DuelComponent implements OnInit, OnDestroy {
 
     this.gameDataSub = this.gameSocket.gameData.subscribe(data => this.analiseGuess(data));
 
-    this.errorSub = this.gameSocket.errors.subscribe(err => this.log(err.description));
+    this.errorSub = this.gameSocket.errors.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`));
   }
 
   private log(message: string, type: string = 'ok'): void {
@@ -140,9 +140,9 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.gameSocket.repeat();
   }
 
-  private endGame(data: NextDuelGuess): void {
+  private endGame(value2: number): void {
     this.onEnd();
-    this.wordAnimation.end({ oldScore: data.value1 });
+    this.wordAnimation.end({ oldScore: value2 });
     console.log('---> LOST!!!');
   }
 
@@ -163,14 +163,20 @@ export class DuelComponent implements OnInit, OnDestroy {
         this.gameStarted(myGuess);
         startMyTimeout();
       } else if (this.stillInGame && this.haveGuessLost(myGuess)) { /* have lost */
-        this.endGame(myGuess);
+        this.endGame(myGuess.value1);
       } else if (!this.haveGuessLost(myGuess)) { /* have not lost, go next */
         this.nextGuess(myGuess);
         startMyTimeout();
       }
       /* else if (this.alreadyLost) I've already lost */
+    } else if (guessType === GameDataType.EndGame && !this.alreadyLost) { /* value2 is present and the game is over */
+      if (myGuess.value2) {
+        this.endGame(myGuess.value2);
+      } else {
+        this.log('Error, the game is over but the secondo word score is not present');
+      }
     }
-    /* else if (this.guessType === GameDataType.Update) this.updateGuessNumber(data) */
+    /* else if (guessType === GameDataType.Update) this.updateGuessNumber(data) */
     this.updateGame(data);
     this.updateGuessNumber(data);
   }

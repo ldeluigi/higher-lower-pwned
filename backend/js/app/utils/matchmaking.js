@@ -1,5 +1,5 @@
 module.exports = {
-  newMatchmaking: function () {
+  newMatchmaking: function (prefix) {
     return {
       lobbies: new Map(),
       isInRoom: function (userID) {
@@ -12,7 +12,7 @@ module.exports = {
         return Array.from(this.lobbies.values()).filter(this.isOpen).map(x => x.name);
       },
       isOpen: function (room) {
-        return room != undefined ? room.users.size < 2 : false;
+        return room != undefined ? room.open : false;
       },
       joinRoom: function (roomName, userID, userObj) {
         let room = this.lobbies.get(roomName);
@@ -35,12 +35,16 @@ module.exports = {
         return false;
       },
       createRoom: function (roomName) {
+        if (!roomName.startsWith(prefix)) {
+          return false;
+        }
         if (this.lobbies.has(roomName)) {
           return false;
         }
         this.lobbies.set(roomName, {
           users: new Map(),
-          name: roomName
+          name: roomName,
+          open: true
         });
         return true;
       },
@@ -52,6 +56,25 @@ module.exports = {
       },
       foreachPlayerIn: function (roomName, callback) {
         Array.from(this.lobbies.get(roomName).users.entries()).foreach(t => callback(t[0], t[1]));
+      },
+      closeRoom: function (roomName) {
+        this.lobbies.get(roomName).open = false;
+      },
+      createRoomName() {
+        let keys = Array.from(this.lobbies.keys()).map(k => parseInt(k.substring(prefix.length)));
+        console.log("Keys" + keys)
+        if (keys.length <= 0) return "" + prefix + 0;
+        keys.sort().reverse();
+        if (keys[keys.length - 1] > 0) {
+          return "" + prefix + 0;
+        }
+        while (keys.length > 1) {
+          var last = keys.pop();
+          if (keys[keys.length - 1] - last > 1) {
+            return "" + prefix + last + 1;
+          }
+        }
+        return "" + prefix + (keys[0] + 1);
       }
     };
   }
