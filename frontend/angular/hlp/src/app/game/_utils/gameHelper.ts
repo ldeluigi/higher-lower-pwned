@@ -3,7 +3,8 @@ import { NextDuelGuess } from '../_model/nextGuess';
 
 enum GameType {
   NextGuess,
-  Update
+  Update,
+  EndGame
 }
 
 enum GameMode {
@@ -47,6 +48,9 @@ function gameIsEnd(data: GameData): boolean {
 }
 
 function gameDataType(data: GameData, currW2: string | undefined): GameType {
+  if (data.data[0].value2) {
+    return GameType.EndGame;
+  }
   if (currW2) {
     return data.data.some(p => p.lost !== undefined && p.password1 === currW2) ? GameType.NextGuess : GameType.Update;
   }
