@@ -130,6 +130,74 @@ async function getAndCheckDefaultGameQuery(gameID) {
   }
 }
 
+async function currentGuessWithGameQuery(gameQuery) {
+  let now = Date.now();
+  try {
+    if (isEveryoneExpired(gameQuery, getPlayingNumber(gameQuery), now)) {
+      gameQuery.games.forEach((e) => {
+        e.lost = true;
+      });
+      checkVictories(gameQuery);
+    } else {
+      let someoneUpdated = false;
+      let minGuesses = findMinGuesses(gameQuery);
+      gameQuery.games
+        .filter((e) => {
+          return (
+            !e.lost &&
+            e.guesses == minGuesses &&
+            getTimeout(e, minGuesses, now) <= 0
+          );
+        })
+        .forEach((e) => {
+          e.lost = true;
+          someoneUpdated = true;
+        });
+      let someoneIsBehind =
+        getLeftsBehind(gameQuery, findMinGuesses(gameQuery)) <
+        getPlayingNumber(gameQuery);
+      if (!someoneIsBehind && someoneUpdated) {
+        gameQuery.games
+          .filter((e) => !e.lost)
+          .forEach((g) => {
+            updateAndCheckExpiration(g, now);
+          });
+        await checkVictoriesAndGoNextPassword(gameQuery);
+      }
+    }
+    await gameQuery.save();
+  } catch (err) {
+    throw new Error(
+      "Could not update game after someone didn't answer (" + err.message + ")"
+    );
+  }
+  let minGuesses = findMinGuesses(gameQuery);
+  let playingNumber = getPlayingNumber(gameQuery);
+  let someoneIsBehind = getLeftsBehind(gameQuery, minGuesses) < playingNumber;
+  let playerObjs = gameQuery.games.map((game) => {
+    let res = {
+      password1: gameQuery.currentP1,
+      value1: gameQuery.valueP1,
+      password2: gameQuery.currentP2,
+      guesses: game.guesses,
+      duration: Date.now() - gameQuery.start.getTime(),
+    };
+    if (!someoneIsBehind) {
+      res.score = game.score;
+      res.timeout = getTimeout(game, minGuesses, now);
+      res.lost = game.lost;
+    }
+    if (playingNumber == 0) {
+      res.value2 = gameQuery.valueP2;
+    }
+    return res;
+  });
+  return {
+    ids: gameQuery.games.map((e) => e.gameID),
+    data: playerObjs,
+  };
+}
+
 module.exports = {
   newGame: async function (gameIDs, userIDs, modeName = "royale") {
     if (
@@ -215,75 +283,8 @@ module.exports = {
     console.log("currentGuess: " + gameID);
     try {
       let gameQuery = await getAndCheckDefaultGameQuery(gameID);
-      let now = Date.now();
       getIndexCheckingGameID(gameQuery, gameID);
-      try {
-        if (isEveryoneExpired(gameQuery, getPlayingNumber(gameQuery), now)) {
-          gameQuery.games.forEach((e) => {
-            e.lost = true;
-          });
-          checkVictories(gameQuery);
-        } else {
-          let someoneUpdated = false;
-          let minGuesses = findMinGuesses(gameQuery);
-          gameQuery.games
-            .filter((e) => {
-              return (
-                !e.lost &&
-                e.guesses == minGuesses &&
-                getTimeout(e, minGuesses, now) <= 0
-              );
-            })
-            .forEach((e) => {
-              e.lost = true;
-              someoneUpdated = true;
-            });
-          let someoneIsBehind =
-            getLeftsBehind(gameQuery, findMinGuesses(gameQuery)) <
-            getPlayingNumber(gameQuery);
-          if (!someoneIsBehind && someoneUpdated) {
-            gameQuery.games
-              .filter((e) => !e.lost)
-              .forEach((g) => {
-                updateAndCheckExpiration(g, now);
-              });
-            await checkVictoriesAndGoNextPassword(gameQuery);
-          }
-        }
-        await gameQuery.save();
-      } catch (err) {
-        throw new Error(
-          "Could not update game after someone didn't answer (" +
-            err.message +
-            ")"
-        );
-      }
-      let minGuesses = findMinGuesses(gameQuery);
-      let playingNumber = getPlayingNumber(gameQuery);
-      let someoneIsBehind =
-        getLeftsBehind(gameQuery, minGuesses) < playingNumber;
-      let playerObjs = gameQuery.games.map((game) => {
-        let res = {
-          password1: gameQuery.currentP1,
-          value1: gameQuery.valueP1,
-          password2: gameQuery.currentP2,
-          guesses: game.guesses,
-          duration: Date.now() - gameQuery.start.getTime(),
-        };
-        if (!someoneIsBehind) {
-          res.score = game.score;
-          res.timeout = getTimeout(game, minGuesses, now);
-          res.lost = game.lost;
-        }
-        if (playingNumber == 0) {
-          res.value2 = gameQuery.valueP2;
-        }
-        return res;
-      });
-      return {
-        ids: gameQuery.games.map((e) => e.gameID),
-        data: playerObjs,
-      };
+      return await currentGuessWithGameQuery(gameQuery);
     } catch (err) {
       throw new Error("Could not fetch game data. (" + err.message + ")");
     }
