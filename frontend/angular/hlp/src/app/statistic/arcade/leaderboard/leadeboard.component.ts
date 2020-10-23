@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { StatisticService } from '../../_services/statistic.service';
+import { StatisticService } from '../../../_services/statistic.service';
 import { from } from 'rxjs';
 import { LbItem } from 'src/app/_model/lbItem';
 import {MatPaginator} from '@angular/material/paginator';

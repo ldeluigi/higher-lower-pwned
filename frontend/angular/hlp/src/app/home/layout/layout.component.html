@@ -4,13 +4,7 @@
   <div @title3 id="right">Game</div>
 </div>
 <div class="left-column" @fadeIn>
-  <span *ngIf="this.userIsLogged(); then userLogged; else userNotLogged"></span>
-  <ng-template #userNotLogged>
-    <app-no-user-home class="user-home"></app-no-user-home>
-  </ng-template>
-  <ng-template #userLogged>
-    <app-user-home class="user-home"></app-user-home>
-  </ng-template>
+
 </div>
 <div class="center-column" @fadeIn>
   <p class="mat-body-2">Is your password been pwned?</p>
@@ -28,22 +22,7 @@
   >
 </div>
 <div class="right-column">
-  <mat-accordion>
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title> Stats </mat-panel-title>
-        <mat-panel-description> </mat-panel-description>
-      </mat-expansion-panel-header>
-      <app-stats class="app-stats"></app-stats>
-    </mat-expansion-panel>
-    <mat-expansion-panel [expanded]="false">
-      <mat-expansion-panel-header>
-        <mat-panel-title> Leaderboard </mat-panel-title>
-        <mat-panel-description> </mat-panel-description>
-      </mat-expansion-panel-header>
-      <app-leadeboard class="app-leadboard"></app-leadeboard>
-    </mat-expansion-panel>
-  </mat-accordion>
+
 </div>
 <footer>
   <app-links></app-links>

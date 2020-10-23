@@ -6,7 +6,7 @@ const routes: Routes = [
   { path: 'arcade', component: LayoutComponent, data: { mode: 'arcade'}, },
   { path: 'duel', component: LayoutComponent, data: { mode: 'duel'}, },
   { path: 'arcade', component: LayoutComponent, data: { mode: 'arcade'}, },
-  {  path: '**', redirectTo: 'arcade' }
+  { path: '**', redirectTo: 'arcade' }
 ];
 
 @NgModule({

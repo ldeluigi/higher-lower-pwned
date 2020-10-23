@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Stats } from '../../_model/stats';
-import { StatisticService } from '../../_services/statistic.service';
-import {timeConversion} from '../../_helper/timeConversion';
+import { Stats } from '../../../_model/stats';
+import { StatisticService } from '../../../_services/statistic.service';
+import { timeConversion } from '../../../_helper/timeConversion';
 
 export interface Stat {
   name: string;

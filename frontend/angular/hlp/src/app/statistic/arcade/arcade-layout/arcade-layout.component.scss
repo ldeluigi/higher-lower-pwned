@@ -1,0 +1,38 @@
+@import '../../../styles/mixins.scss';
+
+:host {
+  width: 95%;
+}
+
+.layout {
+  width: 95%;
+  margin: auto;
+}
+
+.selector {
+  width: 40%;
+  margin: auto;
+}
+
+a {
+  width: 50%;
+}
+
+.selected {
+  text-decoration: underline;
+}
+
+@include desktop {
+  a {
+    margin-top: 2%;
+    margin-bottom: 2%;
+  }
+  .layout {
+    width: 70%;
+    margin-top: 2%;
+  }
+
+  .selector {
+    width: 20%;
+  }
+}

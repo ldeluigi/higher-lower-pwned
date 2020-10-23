@@ -92,7 +92,6 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.subTimer?.unsubscribe();
     this.subTimer = undefined;
   }
-
   start(): void {
     this.imBehind = false;
     this.alreadyLost = false;
