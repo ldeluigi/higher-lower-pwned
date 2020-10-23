@@ -3,9 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 
 const routes: Routes = [
-  { path: 'arcade', component: LayoutComponent, data: { mode: 'arcade'}, },
-  { path: 'duel', component: LayoutComponent, data: { mode: 'duel'}, },
-  { path: 'arcade', component: LayoutComponent, data: { mode: 'arcade'}, },
+  { path: 'duel', component: LayoutComponent, data: { mode: 'duel' }, },
+  { path: 'arcade', component: LayoutComponent, data: { mode: 'arcade' }, },
   { path: '**', redirectTo: 'arcade' }
 ];
 

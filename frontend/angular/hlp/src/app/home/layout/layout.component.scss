@@ -116,13 +116,30 @@ $footer-high: 70px;
   padding: 2px;
 }
 
-.start-button {
+.center-column {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.start-button,
+.start-button-pvp,
+.start-button-royale {
   padding: 1%;
-  width: 30%;
+  min-width: 40%;
   height: 25%;
   color: aliceblue;
-  background: red;
   font-size: 150%;
+  margin-bottom: 1vh;
+}
+.start-button {
+  background: red;
+}
+.start-button-pvp {
+  background: blue;
+}
+.start-button-royale {
+  background: black;
 }
 
 h1 {
