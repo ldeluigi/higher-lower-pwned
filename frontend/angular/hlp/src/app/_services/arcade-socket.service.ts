@@ -10,7 +10,7 @@ import { SocketArcade } from '../game/SocketArcade';
 @Injectable({
   providedIn: 'root',
 })
-export class GameSocketService implements OnDestroy {
+export class ArcadeSocketService implements OnDestroy {
   public game: Observable<GameEnd | NextGuess>;
   private connectionOpen = false;
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { GameRoutingModule } from './game-routing.module';
 import { LayoutComponent } from './layout/layout.component';
-import { GameComponent } from './game/game.component';
+import { ArcadeComponent } from './arcade/arcade.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
@@ -21,7 +21,7 @@ import { ButtonUpDownComponent } from './_components/button-up-down/button-up-do
 @NgModule({
   declarations: [
     LayoutComponent,
-    GameComponent,
+    ArcadeComponent,
     CounterComponent,
     WordSpinnerComponent,
     DuelComponent,

@@ -1,5 +1,5 @@
 import { Component, OnInit, Type, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
-import { GameSocketService } from '../../_services/game-socket.service';
+import { ArcadeSocketService } from '../../_services/arcade-socket.service';
 import { GameEnd } from '../_model/gameEnd';
 import { NextGuess } from '../_model/nextGuess';
 import { Observable, interval, Subscription } from 'rxjs';
@@ -13,11 +13,11 @@ export interface CardData {
 }
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+  selector: 'app-arcade',
+  templateUrl: './arcade.component.html',
+  styleUrls: ['./arcade.component.scss']
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class ArcadeComponent implements OnInit, OnDestroy {
 
   @ViewChild(WordSpinnerComponent)
   private wordAnimation!: WordSpinnerComponent;
@@ -38,7 +38,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private subscription: Subscription | null = null;
 
   constructor(
-    private gameSocket: GameSocketService,
+    private gameSocket: ArcadeSocketService,
     private snackBar: MatSnackBar
   ) { }
 

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DuelComponent } from './duel/duel.component';
-import { GameComponent } from './game/game.component';
+import { ArcadeComponent } from './arcade/arcade.component';
 import { LayoutComponent } from './layout/layout.component';
 
 const routes: Routes = [
@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'arcade', component: GameComponent
+        path: 'arcade', component: ArcadeComponent
       },
       {
         path: 'duel', component: DuelComponent
