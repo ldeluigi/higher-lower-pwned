@@ -15,7 +15,7 @@ module.exports = {
     let passwordFiles = await fsPromises.readdir(__dirname);
     passwordFiles = passwordFiles.filter(fn => fn.endsWith(".csv"));
     if (passwordFiles.length <= 0) throw new Error("Password files missing.");
-    for (pfile of passwordFiles) {
+    for (let pfile of passwordFiles) {
       let filePath = path.join(directory, pfile);
       let lineCount = await countLines(filePath);
       if (maxLinesForPasswordFile < lineCount) {

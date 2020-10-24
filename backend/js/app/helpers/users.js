@@ -8,11 +8,15 @@ async function getRandomName() {
 }
 
 module.exports = {
-  getUsername: async function (userID) {
-    if (userID) {
-      let userQuery = await userSchema.findById(userID);
-      if (userQuery !== null) return userQuery.username;
+  getUsername:
+    /**
+     * @param {String} userID
+     */
+    async function (userID) {
+      if (userID) {
+        let userQuery = await userSchema.findById(userID);
+        if (userQuery !== null) return userQuery.username;
+      }
+      return "Anonymous " + await getRandomName();
     }
-    return "Anonymous " + await getRandomName();
-  }
 }

@@ -1,7 +1,7 @@
 const battle = require("../game/battle");
 const jwtTools = require('../utils/jwt');
 const userUtils = require("../helpers/users");
-const matchmakingCreator = require("../utils/matchmaking");
+const { MatchMaking, Room } = require("../utils/matchmaking");
 
 
 //--------------------------- Classes & DTOs ------------------------------
@@ -68,7 +68,7 @@ class Player extends SimplePlayer {
 
 class PlayerCollection {
   /**
-   * @param {Array<String, UserObject>} array of entries
+   * @param {Array<Array<any>>} array of entries
    */
   constructor(array) {
     this.opponents = array.map(x => {
@@ -113,14 +113,14 @@ class PlayerCollection {
 //--------------------------- Helper functions ------------------------------
 
 /**
- * @param {Object} element the element containing lost
+ * @param {{lost: Boolean}} element the element containing lost
  */
 function notLost(element) {
   return !element.lost;
 }
 
 /**
- * @param {Array} array the array of data containing lost
+ * @param {Array<{lost: Boolean}>} array the array of data containing lost
  */
 function someoneNotLost(array) {
   return array.filter(notLost).length > 0;
@@ -128,7 +128,7 @@ function someoneNotLost(array) {
 
 /**
  * Finds the lowest timeout between the given data
- * @param {Array} array the array of data containing lost and timeout
+ * @param {Array<{lost: Boolean, timeout: Number}>} array the array of data containing lost and timeout
  */
 function minTimeoutBetweenNotLost(array) {
   if (array.length <= 0) throw new Error("The array is empty.");
@@ -160,13 +160,13 @@ function emitError(socket, code, desc = "") {
 
 /**
  * Joins a matchmaking room and a socket room.
- * @param {*} socket
- * @param {*} matchmaking
- * @param {String} roomName
- * @param {UserObject} userObject
+ * @param {*} socket 
+ * @param {MatchMaking} matchmaking 
+ * @param {String} socketRoomName 
+ * @param {UserObject} userObject 
  */
-function joinRoom(socket, matchmaking, roomName, socketRoomName, userObject) {
-  if (!matchmaking.joinRoom(roomName, socket.id, userObject)) {
+function joinRoom(socket, matchmaking, socketRoomName, userObject) {
+  if (!matchmaking.joinRoom(socket.id, userObject)) {
     socket.emitError(socket, 104, "Internal server error.");
     return false;
   }
@@ -176,7 +176,7 @@ function joinRoom(socket, matchmaking, roomName, socketRoomName, userObject) {
 
 /**
  * Awaits the async function and if an error is thrown, it's emitted.
- * @param {Function} func an async function to run
+ * @param {() => void} func an async function to run
  * @param {*} socket
  * @param {Number} code error code
  */
@@ -194,7 +194,7 @@ async function tryOrEmitError(func, socket, code) {
  * @param {Array<Array>} opponents
  * @param {String} eventName
  */
-function sendOpponents(socket, opponents, eventName = "opponents") {
+function sendOpponents(socket, opponents, eventName = "waiting-opponents") {
   socket.emit(eventName, new PlayerCollection(opponents).dto);
 }
 
@@ -223,7 +223,7 @@ function myRooms(socket, roomPrefix) {
  * and restarts itself for each player if it finds one.}.
  * @param {*} io socket.io namespace
  * @param {*} socket socket.io current socket
- * @param {*} myRoomName current room name (taken from socket)
+ * @param {String} myRoomName current room name (taken from socket)
  * @param {*} currentGuessData data taken from current guess
  */
 function timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, currentGuessData) {
@@ -264,25 +264,33 @@ function authenticationMiddleware(socket, next) {
   return next();
 }
 
+/**
+ * 
+ * @param {*} io 
+ * @param {*} socket 
+ * @param {Number} code 
+ * @param {MatchMaking} matchmaking 
+ * @param {String} socketRoomPrefix 
+ * @param {Number} maxLobbySpace 
+ */
 async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobbySpace) {
   let playerID = socket.id;
   if (matchmaking.isInRoom(playerID)) {
-    emitError(socket, code, "Already in a room.");
+    emitError(socket, code, "Already in matchmaking.");
     return;
   }
   if (await battle.isPlaying(playerID)) {
     emitError(socket, code, "Already playing.");
     return;
   }
-  let notFullRooms = matchmaking.openRooms();
-  let userObject = await createUserObject(socket.userData.id);
 
-  if (notFullRooms.length > 0) {
-    let myRoomName = notFullRooms[0];
+  let myRoomName = matchmaking.roomName();
+  let userObject = await createUserObject(socket.userData.id);
+  if (matchmaking.isOpen()) {
     let socketRoomName = socketRoomPrefix + myRoomName;
-    if (joinRoom(socket, matchmaking, myRoomName, socketRoomName, userObject)) {
+    if (joinRoom(socket, matchmaking, socketRoomName, userObject)) {
       await tryOrEmitError(async () => {
-        let opponents = matchmaking.getOpponents(myRoomName, socket.id);
+        let opponents = matchmaking.getOpponents(socket.id);
         io.to(socketRoomName).emit("player-join",
           new SimplePlayer(
             socket.id,
@@ -291,7 +299,7 @@ async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobby
         );
         sendOpponents(socket, opponents);
         if (opponents.length + 1 >= maxLobbySpace) {
-          matchmaking.deleteRoom(myRoomName);
+          matchmaking.closeRoom();
           let op = new PlayerCollection(opponents);
           await battle.newGame([socket.id, ...op.playerIDs],
             [socket.userData.id, ...op.userIDs]);
@@ -302,12 +310,13 @@ async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobby
       }, socket, code + 1);
     }
   } else {
-    let myRoomName = matchmaking.createRoom();
+    matchmaking.resetRoom()
+    let myRoomName = matchmaking.roomName();
     let socketRoomName = socketRoomPrefix + myRoomName;
     console.log("New room: " + myRoomName)
-    if (myRoomName !== null && joinRoom(socket, matchmaking, myRoomName, socketRoomName, userObject)) {
-      let opponents = matchmaking.getOpponents(myRoomName, socket.id);
-      sendOpponents(socket, opponents, "waiting-opponents");
+    if (myRoomName !== null && joinRoom(socket, matchmaking, socketRoomName, userObject)) {
+      let opponents = matchmaking.getOpponents(socket.id);
+      sendOpponents(socket, opponents);
       io.to(socketRoomName).emit("player-join", new SimplePlayer(
         socket.id,
         userObject.name
@@ -318,6 +327,12 @@ async function onStart(io, socket, code, matchmaking, socketRoomPrefix, maxLobby
   }
 }
 
+/**
+ * 
+ * @param {*} io 
+ * @param {*} socket 
+ * @param {Number} code 
+ */
 async function onRepeat(io, socket, code) {
   await tryOrEmitError(async () => {
     let cg = await battle.currentGuess(socket.id);
@@ -325,12 +340,17 @@ async function onRepeat(io, socket, code) {
   }, socket, code);
 }
 
+/**
+ * @param {*} io
+ * @param {*} socket
+ * @param {number} code
+ * @param {MatchMaking} matchmaking
+ * @param {string} socketRoomPrefix
+ */
 async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
   await tryOrEmitError(async () => {
     if (matchmaking.isInRoom(socket.id)) {
-      matchmaking.roomsFor(socket.id).forEach(room => {
-        matchmaking.leaveRoom(room, socket.id);
-      });
+      matchmaking.leaveRoom(socket.id);
     }
     let isPlaying = await battle.isPlaying(socket.id);
     if (isPlaying) {
@@ -346,6 +366,14 @@ async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
   }, socket, code);
 }
 
+
+/**
+ * @param {*} io
+ * @param {*} socket
+ * @param {number} code
+ * @param {{ higher: number; }} answer
+ * @param {string} socketRoomPrefix
+ */
 async function onAnswer(io, socket, code, answer, socketRoomPrefix) {
   if (answer.higher === 1 || answer.higher === 2) {
     await tryOrEmitError(async () => {
@@ -364,30 +392,36 @@ async function onAnswer(io, socket, code, answer, socketRoomPrefix) {
 }
 
 module.exports = {
-  newSocket: function (namespace, lobbyRoomPrefix, maxLobbySpace) {
-    const matchmaking = matchmakingCreator.newMatchmaking();
-    return function (sio) {
-      var io = sio.of(namespace);
-      io.use(authenticationMiddleware)
-        .on("connection", function (socket) {
-          socket.on("start", async () => {
-            await onStart(io, socket, 100, matchmaking, lobbyRoomPrefix, maxLobbySpace);
+  newSocket:
+    /**
+     * @param {string} namespace
+     * @param {string} lobbyRoomPrefix
+     * @param {number} maxLobbySpace
+     */
+    function (namespace, lobbyRoomPrefix, maxLobbySpace) {
+      const matchmaking = new MatchMaking();
+      return function (sio) {
+        var io = sio.of(namespace);
+        io.use(authenticationMiddleware)
+          .on("connection", function (socket) {
+            socket.on("start", async () => {
+              await onStart(io, socket, 100, matchmaking, lobbyRoomPrefix, maxLobbySpace);
+            });
+            socket.on("repeat", async () => {
+              await onRepeat(io, socket, 200);
+            });
+            socket.on("answer", async (answer) => {
+              await onAnswer(io, socket, 300, answer, lobbyRoomPrefix);
+            });
+            socket.on("quit", async (_) => {
+              await onQuit(io, socket, 400, matchmaking, lobbyRoomPrefix);
+            });
+            socket.on("disconnecting", async (reason) => {
+              await onQuit(io, socket, 500, matchmaking, lobbyRoomPrefix);
+            });
           });
-          socket.on("repeat", async () => {
-            await onRepeat(io, socket, 200);
-          });
-          socket.on("answer", async (answer) => {
-            await onAnswer(io, socket, 300, answer, lobbyRoomPrefix);
-          });
-          socket.on("quit", async (_) => {
-            await onQuit(io, socket, 400, matchmaking, lobbyRoomPrefix);
-          });
-          socket.on("disconnecting", async (reason) => {
-            await onQuit(io, socket, 500, matchmaking, lobbyRoomPrefix);
-          });
-        });
-      console.log("Mounted socket.io " + namespace + " module to " + namespace);
-      return sio;
+        console.log("Mounted socket.io " + namespace + " module to " + namespace);
+        return sio;
+      }
     }
-  }
 }

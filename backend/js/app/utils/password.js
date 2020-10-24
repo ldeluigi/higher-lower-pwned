@@ -7,7 +7,7 @@ module.exports = {
       .slice(0, length);   /** return required number of characters */
   },
   sha512: function (password, salt) {
-    let hash = crypto.createHmac('sha512', salt); /** Hashing algorithm sha512 */
+    let hash = crypto.createHmac('sha512', salt); /* Hashing algorithm sha512 */
     hash.update(password);
     let value = hash.digest('hex');
     return value;

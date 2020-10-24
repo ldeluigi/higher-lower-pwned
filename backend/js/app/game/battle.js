@@ -33,7 +33,7 @@ module.exports = {
       mode: modeName
     };
     if (userIDs) {
-      for (i = 0; i < userIDs.length; i++) {
+      for (let i = 0; i < userIDs.length; i++) {
         if (userIDs[i]) {
           newGame.games[i].user = userIDs[i];
         }
@@ -204,11 +204,13 @@ module.exports = {
           guessHandler();
         }
         checkVictories(gameQuery);
-        gameQuery.currentP1 = gameQuery.currentP2;
-        gameQuery.valueP1 = gameQuery.valueP2;
-        let newP = await passwords.pickPasswordAndValue();
-        gameQuery.currentP2 = newP.password;
-        gameQuery.valueP2 = newP.value;
+        if (gameQuery.games.filter(g => !g.lost).length > 0) {
+          gameQuery.currentP1 = gameQuery.currentP2;
+          gameQuery.valueP1 = gameQuery.valueP2;
+          let newP = await passwords.pickPasswordAndValue();
+          gameQuery.currentP2 = newP.password;
+          gameQuery.valueP2 = newP.value;
+        }
       } else if (game.guesses == minGuesses) {
         guessHandler();
       } else {
