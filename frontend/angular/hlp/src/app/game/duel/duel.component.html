@@ -1,13 +1,11 @@
-
 <div class="wrapper-small">
   <app-counter [counter]="actualScore"></app-counter>
 </div>
 <div class="container">
-
-  <div id="leaderboard">
+  <div class="leaderboard">
     <app-player-list [players]="players"></app-player-list>
   </div>
-  <div id="word">
+  <div class="word">
     <span *ngIf="this.playing">
       <app-word-spinner (answerEmitter)="answer($event)"></app-word-spinner>
       <div>time left: {{ timeLeft | date: "s:S" }} s</div>
@@ -18,7 +16,7 @@
       ></mat-progress-bar>
     </span>
   </div>
-  <div id="dummy">
+  <div class="nameDiv">
     <mat-card *ngIf="myName !== undefined">
       <mat-card-header>
         <mat-card-title>

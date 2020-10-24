@@ -10,9 +10,8 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        guesses # {{ p.guesses }}
-        <br>
-        {{ p.haveLost }}
+        <p *ngIf="playerStatus(p)==='behind'">Player is behind</p>
+        <p *ngIf="playerStatus(p)==='lost'">Player have lost</p>
       </mat-card-content>
     </mat-card>
   </dl>

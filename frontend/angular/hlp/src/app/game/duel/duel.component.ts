@@ -219,7 +219,11 @@ export class DuelComponent implements OnInit, OnDestroy {
         }
       }
     });
-    this.players.sort((p1, p2) => p1.score <= p2.score ? 1 : -1);
+    this.players
+    .sort((p1, p2) =>
+      p1.score === p2.score ?
+      (p1.guesses < p2.guesses ? 1 : -1) :
+      (p1.score < p2.score ? 1 : -1));
   }
 
   private updateGuessNumber(data: GameData): void {
