@@ -1,11 +1,11 @@
-let duel = require("./duel");
+let duel = require("./battle");
 const duelSchema = require('../model/battle').schema;
 const scoreSchema = require("../model/score").schema;
 const passwordSetup = require("./passwords").setup;
 
 beforeEach(async (done) => {
   // reset global data
-  duel = require("./duel");
+  duel = require("./battle");
   await passwordSetup();
   done();
 });
@@ -22,7 +22,7 @@ describe("Duel module", function () {
       expect(input.games[0]).toHaveProperty('guesses', 0);
       return Promise.resolve();
     });
-    await duel.newGame("1", "2");
+    await duel.newGame(["1", "2"], [undefined, undefined]);
     mock2.mockRestore();
     mock.mockRestore();
     done();
@@ -144,7 +144,10 @@ describe("Duel module", function () {
     const mock3 = jest.spyOn(duelSchema, 'deleteOne');
     mock3.mockImplementation((input) => Promise.resolve());
     let res = await duel.quitGame("2");
-    expect(res).toBe(true);
+    expect(res).toHaveProperty("data");
+    expect(res.data.length).toBe(1);
+    expect(res).toHaveProperty("ids");
+    expect(res.ids.length).toBe(1);
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
