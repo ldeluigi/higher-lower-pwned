@@ -117,7 +117,7 @@ module.exports = {
       let score = (game => {
         let res = {
           score: game.score,
-          end: now,
+          end: gameQuery.end,
           guesses: game.guesses,
           start: gameQuery.start,
           mode: gameQuery.mode + "." + (game.victory ? "win" : "lost")
@@ -236,11 +236,12 @@ function hasDuplicates(array) {
 }
 
 function checkVictories(gameQuery) {
-  if (gameQuery.games.filter(e => e.victory).length > 0)
+  if (gameQuery.end !== null && gameQuery.end !== undefined)
     return;
-  let playingNumber = gameQuery.games.filter(e => !e.lost);
-  if (playingNumber.length == 1) {
-    playingNumber[0].victory = true;
+  let playingPlayers = gameQuery.games.filter(e => !e.lost);
+  if (playingPlayers.length == 1) {
+    playingPlayers[0].victory = true;
+    gameQuery.end = new Date();
   } else {
     let now = Date.now();
     let minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
@@ -249,12 +250,14 @@ function checkVictories(gameQuery) {
         Number.MAX_SAFE_INTEGER :
         e.expiration.getTime() - now;
       return timeout < 0 && !e.lost;
-    }).length == playingNumber;
-    if (playingNumber == 0) {
+    }).length == playingPlayers.length;
+    console.log("[INFO] ", playingPlayers.length, everyoneExpired)
+    if (playingPlayers.length == 0) {
       let maxScore = Math.max(...gameQuery.games.map(e => e.score));
       gameQuery.games.forEach(e => {
         if (e.score == maxScore) {
           e.victory = true;
+          gameQuery.end = new Date();
         }
       });
     } else if (everyoneExpired) {
@@ -264,6 +267,7 @@ function checkVictories(gameQuery) {
       gameQuery.games.forEach(e => {
         if (e.expiration.getTime() == maxExpiration) {
           e.victory = true;
+          gameQuery.end = new Date();
         }
       });
     }
@@ -302,7 +306,10 @@ async function currentGuessFromQuery(gameQuery) {
       let _leftBehind = gameQuery.games.filter(e => !e.lost && e.guesses == _minGuesses).length;
       let _playingNumber = gameQuery.games.filter(e => !e.lost).length;
       let _someoneIsBehind = _leftBehind < _playingNumber;
-      if (!_someoneIsBehind && magic) {
+      /* magic is when a player lost for timeout, and _minGuesses > minGuesses
+       checks if the lost player(s) was/were behind evryone else and now the
+       game should proceed to be even, or not. */
+      if (!_someoneIsBehind && magic && _minGuesses > minGuesses) {
         gameQuery.games.filter(e => !e.lost).forEach(g => {
           if (g.lastGuess && !g.lost) {
             g.expiration = new Date(g.expiration.getTime() + now - g.lastGuess.getTime());

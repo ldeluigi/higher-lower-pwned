@@ -62,6 +62,9 @@ let game = new Schema(
     mode: {
       type: String,
       required: true
+    },
+    end: {
+      type: Date
     }
   },
   { collection: "Battles" }
