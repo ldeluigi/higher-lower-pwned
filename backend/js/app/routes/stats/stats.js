@@ -27,7 +27,6 @@ router.get(
               $gte: statsBeginDate,
               $lte: new Date(),
             },
-            mode: "arcade",
           },
         },
         {
@@ -40,6 +39,7 @@ router.get(
             guesses: true,
             start: true,
             end: true,
+            mode: true
           },
         },
         {
@@ -47,7 +47,7 @@ router.get(
             allTime: [
               {
                 $group: {
-                  _id: null,
+                  _id: "$mode",
                   maxScore: { $max: "$score" },
                   avgScore: { $avg: "$score" },
                   maxGuesses: { $max: "$guesses" },
@@ -64,6 +64,7 @@ router.get(
               {
                 $group: {
                   _id: {
+                    mode: "$mode",
                     day: "$day",
                   },
                   plays: { $sum: 1 },
@@ -71,7 +72,7 @@ router.get(
               },
               {
                 $group: {
-                  _id: null,
+                  _id: "$_id.mode",
                   avgPlaysPerDay: { $avg: "$plays" },
                   maxPlaysPerDay: { $max: "$plays" },
                 },
@@ -81,26 +82,61 @@ router.get(
         },
         {
           $project: {
-            avgScore: { $first: "$allTime.avgScore" },
-            maxScore: { $first: "$allTime.maxScore" },
-            avgGuesses: { $first: "$allTime.avgGuesses" },
-            maxGuesses: { $first: "$allTime.maxGuesses" },
-            avgDuration: { $first: "$allTime.avgDuration" },
-            maxDuration: { $first: "$allTime.maxDuration" },
-            avgPlaysPerDay: {
-              $divide: [
-                {
-                  $first: "$allTime.plays"
-                },
-                totalDays
-              ]
-            },
-            maxPlaysPerDay: { $first: "$byDay.maxPlaysPerDay" },
-          },
+            everything: {
+              $setUnion: ["$allTime", "$byDay"]
+            }
+          }
         },
+        {
+          $unwind: "$everything"
+        },
+        {
+          $replaceRoot: {
+            newRoot: "$everything"
+          }
+        },
+        {
+          $group: {
+            _id: "$_id",
+            result: { $push: "$$ROOT" }
+          }
+        },
+        {
+          $replaceRoot: {
+            newRoot: {
+              $mergeObjects: "$result"
+            }
+          }
+        }
+
+        // {
+        //   $match: {
+        //     $expr: {
+        //       $eq: ["$allTime._id", "$byDay._id"]
+        //     }
+        //   }
+        // },
+        // {
+        //   $project: {
+        //     mode: "$allTime._id",
+        //     avgScore: "$allTime.avgScore",
+        //     maxScore: "$allTime.maxScore",
+        //     avgGuesses: "$allTime.avgGuesses",
+        //     maxGuesses: "$allTime.maxGuesses",
+        //     avgDuration: "$allTime.avgDuration",
+        //     maxDuration: "$allTime.maxDuration",
+        //     avgPlaysPerDay: {
+        //       $divide: [
+        //         "$allTime.plays",
+        //         totalDays
+        //       ]
+        //     },
+        //     maxPlaysPerDay: "$byDay.maxPlaysPerDay",
+        //   },
+        // }
       ]);
       res.json({
-        data: result[0],
+        data: result,
       });
     } catch (err) {
       res.status(400).json({ errors: [err.message] });
