@@ -36,18 +36,19 @@ export class StatisticService {
   }
 
   public refreshStats(period?: string): void {
-    const param = addParamsToHttp(new HttpParams(), [{name: 'period', param: period}]);
+    const param = addParamsToHttp(new HttpParams(), [{ name: 'period', param: period }]);
     const url = `${environment.apiUrl}/stats`;
-    this.http.get<Response<Stats>>(url, { params: param })
+    this.http.get<Response<[Stats]>>(url, { params: param })
       .subscribe(response => {
-        this.statsSubject.next(response.data);
+        // TODO should not pass data[0] but Stats should support multiple modes!
+        this.statsSubject.next(response.data[0]);
       });
   }
 
   public refreshLeaderboard(limit?: number, period?: string, mode: string = 'arcade'): void {
     const params = addParamsToHttp(new HttpParams(), [
-      {name: 'limit',  param: limit?.toString()},
-      {name: 'period', param: period}
+      { name: 'limit', param: limit?.toString() },
+      { name: 'period', param: period }
     ]);
     const url = `${environment.apiUrl}/leaderboards/${mode}`;
     this.http.get<Response<LbItem[]>>(url, { params })
