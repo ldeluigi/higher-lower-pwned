@@ -59,6 +59,11 @@ router.get(
                   plays: { $sum: 1 }
                 },
               },
+              {
+                $sort: {
+                  _id: 1
+                }
+              }
             ],
             byDay: [
               {
@@ -77,13 +82,20 @@ router.get(
                   maxPlaysPerDay: { $max: "$plays" },
                 },
               },
+              {
+                $sort: {
+                  _id: 1
+                }
+              },
             ],
           },
         },
         {
           $project: {
             everything: {
-              $setUnion: ["$allTime", "$byDay"]
+              $zip: {
+                inputs: ["$allTime", "$byDay"]
+              }
             }
           }
         },
@@ -92,48 +104,11 @@ router.get(
         },
         {
           $replaceRoot: {
-            newRoot: "$everything"
-          }
-        },
-        {
-          $group: {
-            _id: "$_id",
-            result: { $push: "$$ROOT" }
-          }
-        },
-        {
-          $replaceRoot: {
             newRoot: {
-              $mergeObjects: "$result"
+              $mergeObjects: "$everything"
             }
           }
         }
-
-        // {
-        //   $match: {
-        //     $expr: {
-        //       $eq: ["$allTime._id", "$byDay._id"]
-        //     }
-        //   }
-        // },
-        // {
-        //   $project: {
-        //     mode: "$allTime._id",
-        //     avgScore: "$allTime.avgScore",
-        //     maxScore: "$allTime.maxScore",
-        //     avgGuesses: "$allTime.avgGuesses",
-        //     maxGuesses: "$allTime.maxGuesses",
-        //     avgDuration: "$allTime.avgDuration",
-        //     maxDuration: "$allTime.maxDuration",
-        //     avgPlaysPerDay: {
-        //       $divide: [
-        //         "$allTime.plays",
-        //         totalDays
-        //       ]
-        //     },
-        //     maxPlaysPerDay: "$byDay.maxPlaysPerDay",
-        //   },
-        // }
       ]);
       res.json({
         data: result,
