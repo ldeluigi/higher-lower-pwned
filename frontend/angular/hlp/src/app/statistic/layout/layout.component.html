@@ -1,19 +1,21 @@
-<div>
-  <a mat-button routerLink="global">
+<div class="nav-bar">
+  <a mat-button [class]="isSelected('global') ? 'selected' : ''" routerLink="global">
     <mat-icon aria-hidden="true" aria-label="public">public</mat-icon>
     Global
   </a>
-  <a mat-button routerLink="arcade">
+  <a mat-button [class]="isSelected('arcade/leaderboard') ? 'selected' : ''" routerLink="arcade">
     <mat-icon aria-hidden="true" aria-label="person">person</mat-icon>
     Arcade
   </a>
-  <a mat-button routerLink="duel">
+  <a mat-button [class]="isSelected('duel/leaderboard') ? 'selected' : ''" routerLink="duel">
     <mat-icon aria-hidden="true" aria-label="people">people</mat-icon>
     Duel
   </a>
-  <a mat-button routerLink="battle">
+  <a mat-button [class]="isSelected('battle/leaderboard') ? 'selected' : ''" routerLink="battle">
     <mat-icon aria-hidden="true" aria-label="groups">groups</mat-icon>
     Battle
   </a>
 </div>
-<router-outlet></router-outlet>
+<div class="data">
+  <router-outlet></router-outlet>
+</div>

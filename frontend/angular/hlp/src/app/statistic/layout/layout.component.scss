@@ -4,7 +4,7 @@
   width: 95%;
 }
 
-div {
+.nav-bar {
   width: 70%;
   margin: auto;
   a {
@@ -13,12 +13,26 @@ div {
   }
 }
 
+.data {
+  width: 90%;
+  margin: auto;
+}
+
+.selected {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
 @include desktop {
-  div {
+  .nav-bar {
     width: 50%;
     a {
       margin-top: 2%;
       margin-bottom: 2%;
     }
+  }
+
+  .data {
+    width: 70%;
   }
 }

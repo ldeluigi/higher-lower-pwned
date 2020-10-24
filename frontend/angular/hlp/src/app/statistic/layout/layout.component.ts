@@ -8,5 +8,11 @@ import { Router } from '@angular/router';
 })
 export class LayoutComponent {
 
-  constructor( ) { }
+  constructor(
+    private router: Router
+  ) { }
+
+  isSelected(path: string): boolean {
+    return this.router.url.endsWith(path);
+  }
 }

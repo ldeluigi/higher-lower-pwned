@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { LeadeboardComponent } from './arcade/leaderboard/leadeboard.component';
+import { LeadeboardComponent } from './_component/leaderboard/leadeboard.component';
 import { StatsComponent } from './arcade/stats/stats.component';
 
 import { StatisticRoutingModule } from './statistic-routing.module';

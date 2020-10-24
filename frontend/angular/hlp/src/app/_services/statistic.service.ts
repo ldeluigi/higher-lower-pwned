@@ -44,12 +44,12 @@ export class StatisticService {
       });
   }
 
-  public refreshLeaderboard(limit?: number, period?: string): void {
+  public refreshLeaderboard(limit?: number, period?: string, mode: string = 'arcade'): void {
     const params = addParamsToHttp(new HttpParams(), [
       {name: 'limit',  param: limit?.toString()},
       {name: 'period', param: period}
     ]);
-    const url = `${environment.apiUrl}/leaderboards/arcade`;
+    const url = `${environment.apiUrl}/leaderboards/${mode}`;
     this.http.get<Response<LbItem[]>>(url, { params })
       .subscribe(response => {
         this.leaderboardSubject.next(response.data);
