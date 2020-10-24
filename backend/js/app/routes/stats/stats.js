@@ -108,6 +108,11 @@ router.get(
               $mergeObjects: "$everything"
             }
           }
+        },
+        {
+          $addFields: {
+            mode: "$_id"
+          }
         }
       ]);
       res.json({
