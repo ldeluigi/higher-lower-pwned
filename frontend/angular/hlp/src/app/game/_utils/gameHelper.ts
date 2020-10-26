@@ -10,7 +10,7 @@ enum GameType {
 enum GameMode {
   Arcade = 'arcade',
   Duel = 'duel',
-  BattleRoyale = 'battle-royale'
+  BattleRoyale = 'royale'
 }
 
 function currentGuess(data: GameData): number {
@@ -21,6 +21,8 @@ function getId(myId: string, mode: GameMode): string {
   switch (mode) {
     case GameMode.Duel:
       return '/duel#' + myId;
+    case GameMode.BattleRoyale:
+      return '/royale#' + myId;
     default:
       return myId;
   }

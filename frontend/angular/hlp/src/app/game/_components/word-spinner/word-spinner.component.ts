@@ -26,6 +26,8 @@ export interface Card {
 export class WordSpinnerComponent {
   @Output() answerEmitter = new EventEmitter<number>();
 
+  private loading = false;
+
   emptyScore = '******';
   element1: Card = {
     word: 'w1',
@@ -48,12 +50,14 @@ export class WordSpinnerComponent {
   nextPromise: undefined | ((value?: void | PromiseLike<void> | undefined) => void);
   endPromise: undefined | ((value?: void | PromiseLike<void> | undefined) => void);
 
-  constructor(
-  ) {
+  constructor( ) {
   }
 
   answer(wn: number): void {
-    this.answerEmitter.emit(wn);
+    if (!this.loading) {
+      this.loading = true;
+      this.answerEmitter.emit(wn);
+    }
   }
 
   private rollVS(): void {
@@ -113,7 +117,8 @@ export class WordSpinnerComponent {
       this.element1.word = this.element2.word;
       this.element1.status = 'first';
       this.element2.status = 'second';
-      rollWord(this.newElement.word, 600, w => this.element2.word = w);
+      rollWord(this.newElement.word, 600, w => this.element2.word = w)
+      .then(() => this.loading = false);
       this.element2.score = this.emptyScore;
       if (this.nextPromise) {
         this.nextPromise();

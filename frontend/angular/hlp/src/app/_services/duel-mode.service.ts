@@ -1,14 +1,10 @@
-import { isDataSource } from '@angular/cdk/collections';
 import { OnDestroy } from '@angular/core';
 import { Injectable } from '@angular/core';
-import * as io from 'ngx-socket-io';
-import { SocketIoConfig } from 'ngx-socket-io';
+import { Socket } from 'ngx-socket-io';
 import { Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 import { SocketDuel } from '../game/SocketDuel';
-import { GameEnd } from '../game/_model/gameEnd';
-import { NextDuelGuess, NextGuess } from '../game/_model/nextGuess';
+import { SocketRoyale } from '../game/SocketRoyale';
+import { NextDuelGuess } from '../game/_model/nextGuess';
 import { PlayerIdName, PlayerJoin } from '../game/_model/player-join';
 import { AccountService } from './account.service';
 
@@ -32,26 +28,39 @@ export class DuelModeService implements OnDestroy {
   connectionOpen = false;
   myId = '';
 
+  currentSocket: Socket | undefined;
+
   constructor(
-    private socket: SocketDuel,
+    //private socketDuel: SocketDuel,
     private accountService: AccountService
-  ) {
+    ) {
+      // setup subject
+      this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
+      this.gameDataSubject = new Subject<GameData>();
+      this.errorSubject = new Subject< {code: number, description: string}>();
 
-    const config: SocketIoConfig = { url: `${environment.apiUrl}/duel`, options: { autoConnect: false } };
-    this.socket.ioSocket.io.config = config;
+      // setup observable
+      this.gameData = this.gameDataSubject.asObservable();
+      this.players = this.playersSubject.asObservable();
+      this.errors = this.errorSubject.asObservable();
+  }
 
-    this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
-    this.gameDataSubject = new Subject<GameData>();
-    this.errorSubject = new Subject< {code: number, description: string}>();
+  private setupListener(newSocket?: Socket): void {
+    if (newSocket) {
+      this.currentSocket = newSocket;
+    } else {
+      if (this.currentSocket === undefined) {
+        this.currentSocket = new SocketDuel();
+      }
+    }
+    this.currentSocket.removeAllListeners();
 
-    this.socket.removeAllListeners();
-
-    this.socket.on('guess', (res: GameData) => {
+    this.currentSocket.on('guess', (res: GameData) => {
       console.log('>guess: ', res);
       this.gameDataSubject.next(res);
     });
 
-    this.socket.on('on-error', (err: {code: number, description: string}) => {
+    this.currentSocket.on('on-error', (err: {code: number, description: string}) => {
       console.log('>on-error: ', err);
       this.errorSubject.next(err);
     });
@@ -62,88 +71,80 @@ export class DuelModeService implements OnDestroy {
       players.opponents.forEach(p => this.playersSubject.next(p));
     };
 
-    this.socket.on('waiting-opponents', opponents);
-    this.socket.on('opponents', opponents);
+    this.currentSocket.on('waiting-opponents', opponents);
+    this.currentSocket.on('opponents', opponents);
 
-    this.socket.on('player-join', (data: PlayerJoin) => {
+    this.currentSocket.on('player-join', (data: PlayerJoin) => {
       console.log('>player-join: ', data);
       this.playersSubject.next(data);
     });
-
-    this.gameData = this.gameDataSubject.asObservable();
-    this.players = this.playersSubject.asObservable();
-    this.errors = this.errorSubject.asObservable();
   }
 
-  async connect(): Promise<void> {
+  async connect(socket: Socket): Promise<void> {
+    this.setupListener(socket);
     return this.setUpAndConnect();
   }
 
-  async startGame(): Promise<void> {
+  async startGame(socket?: Socket): Promise<void> {
+    this.setupListener(socket);
     if (!this.connectionOpen) {
       this.setUpAndConnect()
         .then(_ => {
-          this.socket.emit('start');
+          this.currentSocket?.emit('start');
           return;
         });
     } else if (!this.isInGame) {
-      this.socket.emit('start');
+      this.currentSocket?.emit('start');
       return;
     }
   }
 
   private async setUpAndConnect(): Promise<void> {
-    if (this.accountService.userValue !== null) {
-      // console.log('add token');
-      this.socket.ioSocket.io.opts.query = { token: this.accountService.userValue.token };
-    } else {
-      // console.log('remove toke');
-      this.socket.ioSocket.io.opts.query = {};
+    if (this.currentSocket) {
+      if (this.accountService.userValue !== null) {
+        // console.log('add token');
+        this.currentSocket.ioSocket.io.opts.query = { token: this.accountService.userValue.token };
+      } else {
+        // console.log('remove toke');
+        this.currentSocket.ioSocket.io.opts.query = {};
+      }
+      this.currentSocket.fromOneTimeEvent('disconnect')
+        .then(_ => {
+          // console.log('disconnected');
+          this.connectionOpen = false;
+        });
+      this.currentSocket.connect();
+      await this.currentSocket.fromOneTimeEvent('connect')
+        .then(() => {
+          this.myId = this.currentSocket?.ioSocket.io.engine.id;
+        });
+      this.connectionOpen = true;
+      return;
     }
-    this.socket.fromOneTimeEvent('disconnect')
-      .then(_ => {
-        // console.log('disconnected');
-        this.connectionOpen = false;
-      });
-    this.socket.connect();
-    await this.socket.fromOneTimeEvent('connect')
-      .then(() => {
-        this.myId = this.socket.ioSocket.io.engine.id;
-      });
-    this.connectionOpen = true;
-    return;
   }
 
-  private extractMyData(data: GameData): NextDuelGuess {
-    const myID: string = this.socket.ioSocket.io.engine.id;
-    const myIndex = data.ids.indexOf('/duel#' + myID);
-    if (myIndex >= 0) {
-      return data.data[myIndex];
-    }
-    return {} as NextDuelGuess;
-  }
 
   repeat(): void {
     if (this.connectionOpen) {
-      this.socket.emit('repeat');
+      this.currentSocket?.emit('repeat');
     }
   }
 
   answer(answer: number): void {
     if (this.connectionOpen) {
-      this.socket.emit('answer', { higher: answer });
+      this.currentSocket?.emit('answer', { higher: answer });
     }
   }
 
   endGame(): void {
-    this.socket.emit('quit');
+    this.currentSocket?.emit('quit');
   }
-
 
   disconnect(): void {
     if (this.connectionOpen) {
       // console.log('disconnect');
-      this.socket.disconnect();
+      this.currentSocket?.disconnect();
+      this.currentSocket = undefined;
     }
   }
 

@@ -15,6 +15,7 @@ import { WordSpinnerComponent } from './_components/word-spinner/word-spinner.co
 import { DuelComponent } from './duel/duel.component';
 import { SocketArcade } from './SocketArcade';
 import { SocketDuel } from './SocketDuel';
+import { SocketRoyale } from './SocketRoyale';
 import { PlayerListComponent } from './_components/player-list/player-list.component';
 import { ButtonUpDownComponent } from './_components/button-up-down/button-up-down.component';
 
@@ -35,6 +36,6 @@ import { ButtonUpDownComponent } from './_components/button-up-down/button-up-do
     SocketIoModule,
     MatProgressBarModule
   ],
-  providers: [SocketArcade, SocketDuel]
+  providers: [SocketArcade, SocketDuel, SocketRoyale]
 })
 export class GameModule { }
