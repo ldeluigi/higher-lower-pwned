@@ -5,7 +5,7 @@ const leaderboardHelper = require("../../helpers/leaderboards");
 router.get(
   "/duel",
   leaderboardHelper.guards,
-  leaderboardHelper.requestHandler(/^duel\.(win|lost)$/)
+  leaderboardHelper.requestHandler(/^duel\.(win|lose)$/)
 );
 
 module.exports = router;

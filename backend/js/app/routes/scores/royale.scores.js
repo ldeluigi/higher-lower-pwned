@@ -8,7 +8,7 @@ router.get(
   "/:userid/royale",
   scoresHelper.guards,
   jwtTools.authentication(),
-  scoresHelper.requestHandler(/^royale\.(win|lost)$/)
+  scoresHelper.requestHandler(/^royale\.(win|lose)$/)
 );
 
 module.exports = router;

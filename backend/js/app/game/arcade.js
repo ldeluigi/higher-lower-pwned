@@ -3,8 +3,8 @@ const gameSchema = require('../model/game.model').schema;
 const scoreSchema = require('../model/score.model').schema;
 
 
-const startTimeMillis = 1000 * 10;
-const correctGuessMillis = 1000 * 5;
+const startTimeMillis = 1000 * 12;
+const correctGuessMillis = 1000 * 7;
 const correctGuessScore = 100;
 
 module.exports = {

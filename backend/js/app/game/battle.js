@@ -10,6 +10,9 @@ const correctGuessScore = 100;
 
 module.exports = {
   newGame: async function (gameIDs, userIDs, modeName = "royale") {
+    if (gameIDs.length != userIDs.length) {
+      throw new Error("Invalid argument. Game IDs should be as many as user IDs.");
+    }
     if (hasDuplicates(gameIDs) || hasDuplicates(userIDs.filter(e => e !== undefined && e !== null))) {
       throw new Error("Someone is trying to play with themselves.");
     }
@@ -86,13 +89,7 @@ module.exports = {
   // -----------------------------------------------------------------------------------------------------------
   currentGuess: async function (gameID) {
     try {
-      let gameQuery = await battleSchema.findOne({
-        games: {
-          $elemMatch: {
-            gameID: gameID
-          }
-        }
-      });
+      let gameQuery = await findGame(gameID);
       return await currentGuessFromQuery(gameQuery);
     } catch (err) {
       throw new Error("Could not fetch game data. (" + err.message + ")");
@@ -101,17 +98,10 @@ module.exports = {
   // -----------------------------------------------------------------------------------------------------------
   quitGame: async function (gameID) {
     try {
-      let gameQuery = await battleSchema.findOne({
-        games: {
-          $elemMatch: {
-            gameID: gameID
-          }
-        }
-      });
+      let gameQuery = await findGame(gameID);
       if (gameQuery === null) throw new Error("Game not found.");
       let now = Date.now();
-      let index = gameQuery.games.findIndex(e => e.gameID == gameID);
-      if (index < 0) throw new Error("ID not found");
+      let index = findGameIndex(gameQuery, gameID);
       let lastOne = gameQuery.games.length == 1;
       checkVictories(gameQuery);
       let score = (game => {
@@ -120,7 +110,7 @@ module.exports = {
           end: gameQuery.end,
           guesses: game.guesses,
           start: gameQuery.start,
-          mode: gameQuery.mode + "." + (game.victory ? "win" : "lost")
+          mode: gameQuery.mode + "." + (game.victory ? "win" : "lose")
         };
         if (game.user) {
           res.user = game.user;
@@ -156,21 +146,14 @@ module.exports = {
       throw new Error("Guess must be 1 or 2");
     }
     try {
-      let gameQuery = await battleSchema.findOne({
-        games: {
-          $elemMatch: {
-            gameID: gameID
-          }
-        }
-      });
+      let gameQuery = await findGame(gameID);
       if (gameQuery === null) throw new Error("Game not found.");
-      let index = gameQuery.games.findIndex(e => e.gameID == gameID);
+      let index = findGameIndex(gameQuery, gameID);
       let now = new Date();
-      if (index < 0) throw new Error("ID not found");
 
       let game = gameQuery.games[index];
-      let minGuesses = Math.min(...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
-      let leftBehind = gameQuery.games.filter(e => !e.lost && e.guesses == minGuesses).length;
+      let minGuesses = computeMinGuesses(gameQuery);
+      let leftBehind = computeLeftBehind(gameQuery);
 
       if (game.lost) {
         return false;
@@ -231,6 +214,35 @@ module.exports = {
 // -----------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------
 
+function computeLeftBehind(gameQuery) {
+  const minGuesses = computeMinGuesses(gameQuery, true);
+  return gameQuery.games.filter(e => !e.lost && e.guesses == minGuesses).length;
+}
+
+function computeMinGuesses(gameQuery, defaultToMaxNumber = false) {
+  let v = gameQuery.games.filter(e => !e.lost).map(e => e.guesses);
+  if (defaultToMaxNumber) {
+    v.push(Number.MAX_SAFE_INTEGER);
+  }
+  return Math.min(...v);
+}
+
+async function findGame(gameID) {
+  return await battleSchema.findOne({
+    games: {
+      $elemMatch: {
+        gameID: gameID
+      }
+    }
+  });
+}
+
+function findGameIndex(gameQuery, gameID) {
+  const index = gameQuery.games.findIndex(e => e.gameID == gameID);
+  if (index < 0) throw new Error("ID not found");
+  return index;
+}
+
 function hasDuplicates(array) {
   return (new Set(array)).size !== array.length;
 }
@@ -244,7 +256,7 @@ function checkVictories(gameQuery) {
     gameQuery.end = new Date();
   } else {
     let now = Date.now();
-    let minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
+    let minGuesses = computeMinGuesses(gameQuery, true);
     let everyoneExpired = gameQuery.games.filter(e => {
       let timeout = e.guesses > minGuesses ?
         Number.MAX_SAFE_INTEGER :
@@ -277,7 +289,7 @@ function checkVictories(gameQuery) {
 async function currentGuessFromQuery(gameQuery) {
   if (gameQuery === null) throw new Error("Game not found.");
   let now = Date.now();
-  let minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
+  let minGuesses = computeMinGuesses(gameQuery, true);
   let playingNumber = gameQuery.games.filter(e => !e.lost).length;
   let everyoneExpired = gameQuery.games.filter(e => {
     let timeout = e.guesses > minGuesses ?
@@ -302,8 +314,8 @@ async function currentGuessFromQuery(gameQuery) {
         e.lost = true;
         magic = true;
       });
-      let _minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
-      let _leftBehind = gameQuery.games.filter(e => !e.lost && e.guesses == _minGuesses).length;
+      let _minGuesses = computeMinGuesses(gameQuery, true);
+      let _leftBehind = computeLeftBehind(gameQuery);
       let _playingNumber = gameQuery.games.filter(e => !e.lost).length;
       let _someoneIsBehind = _leftBehind < _playingNumber;
       /* magic is when a player lost for timeout, and _minGuesses > minGuesses
@@ -330,8 +342,8 @@ async function currentGuessFromQuery(gameQuery) {
   } catch (err) {
     throw new Error("Could not update game after someone didn't answer (" + err.message + ")");
   }
-  minGuesses = Math.min(Number.MAX_SAFE_INTEGER, ...gameQuery.games.filter(e => !e.lost).map(e => e.guesses));
-  let leftBehind = gameQuery.games.filter(e => !e.lost && e.guesses == minGuesses).length;
+  minGuesses = computeMinGuesses(gameQuery, true);
+  let leftBehind = computeLeftBehind(gameQuery);
   playingNumber = gameQuery.games.filter(e => !e.lost).length;
   let someoneIsBehind = leftBehind < playingNumber;
   let playerObjs = gameQuery.games.map(game => {
