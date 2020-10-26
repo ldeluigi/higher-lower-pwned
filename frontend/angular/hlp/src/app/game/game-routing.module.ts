@@ -12,7 +12,10 @@ const routes: Routes = [
         path: 'arcade', component: ArcadeComponent
       },
       {
-        path: 'duel', component: DuelComponent
+        path: 'duel', component: DuelComponent, data: { mode: 'duel' }
+      },
+      {
+        path: 'royale', component: DuelComponent, data: { mode: 'royale' }
       },
       {
         path: '**', redirectTo: '/game/arcade', pathMatch: 'full'

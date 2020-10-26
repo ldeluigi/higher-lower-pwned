@@ -10,6 +10,10 @@ import { currentGuessNumber, getDataFromId, evaluatePlayerId, haveLost, GameData
 import { PlayerJoin } from '../_model/player-join';
 import { rollNumber, rollWord } from '../_utils/wordAnimation';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+import { Socket } from 'ngx-socket-io';
+import { SocketDuel } from '../SocketDuel';
+import { SocketRoyale } from '../SocketRoyale';
 
 @Component({
   selector: 'app-duel',
@@ -20,6 +24,9 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   @ViewChild(WordSpinnerComponent)
   private wordAnimation!: WordSpinnerComponent;
+  private modeSub: Subscription;
+  mode = 'duel';
+  gameMode: GameMode = GameMode.Duel;
 
   playersSub: Subscription | undefined;
   gameDataSub: Subscription | undefined;
@@ -44,12 +51,28 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   constructor(
     private gameSocket: DuelModeService,
-    private snackBar: MatSnackBar
-  ) { }
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute
+  ) {
+    this.modeSub = route.data.subscribe(elem => {
+      this.mode = elem.mode;
+      this.gameMode = elem.mode === 'duel' ? GameMode.Duel : GameMode.BattleRoyale;
+    });
+  }
+
+  private socket(mode: string): Socket {
+    if (mode === 'duel') {
+      return new SocketDuel();
+    } else if (mode === 'royale') {
+      return new SocketRoyale();
+    }
+    throw new Error('Invalid mode');
+  }
 
   ngOnInit(): void {
     this.playersSub = this.gameSocket.players.subscribe(pj => {
-      if (pj.id === evaluatePlayerId(this.gameSocket.myId, GameMode.Duel)) {
+      console.log('duelcomp-playerSub', pj);
+      if (pj.id === evaluatePlayerId(this.gameSocket.myId, this.gameMode)) {
         this.myName = pj.name;
       }
       if (this.players.find(p => p.id === pj.id) === undefined) {
@@ -66,7 +89,11 @@ export class DuelComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.gameDataSub = this.gameSocket.gameData.subscribe(data => this.analiseGuess(data));
+    this.gameDataSub = this.gameSocket.gameData.subscribe(data => {
+      this.analiseGuess(data);
+
+      console.log('duelcomp-data', data);
+    });
 
     this.errorSub = this.gameSocket.errors.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`));
   }
@@ -84,6 +111,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.playersSub = undefined;
     this.errorSub?.unsubscribe();
     this.errorSub = undefined;
+    this.modeSub.unsubscribe();
   }
 
   answer(value: number): void {
@@ -92,12 +120,13 @@ export class DuelComponent implements OnInit, OnDestroy {
     this.subTimer?.unsubscribe();
     this.subTimer = undefined;
   }
+
   start(): void {
     this.imBehind = false;
     this.alreadyLost = false;
     this.stillInGame = false;
     this.players = [];
-    this.gameSocket.startGame()
+    this.gameSocket.startGame(this.socket(this.mode))
       .then(() => {
         this.playing = true;
         this.word2 = undefined;
@@ -151,7 +180,8 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   private analiseGuess(data: GameData): void {
     const guessType: GameDataType = gameDataType(data, this.word2);
-    const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data);
+    const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data, this.gameMode);
+    console.log(guessType, myGuess);
     if (guessType === GameDataType.NextGuess) {
       const startMyTimeout: () => void = () => {
         if (myGuess.timeout) {
