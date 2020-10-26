@@ -1,0 +1,43 @@
+@import "../../../styles/colors.scss";
+
+button {
+  margin: 10px auto;
+  font-size: xx-large;
+  max-height: 30%;
+  width: 48%;
+}
+
+button.up {
+  background: $default-higher-color;
+  color: $default-text-color;
+}
+
+button.down {
+  background: $default-lower-color;
+  color: $default-text-color;
+  transform: translate(-15%, 60%);
+}
+
+button.down:hover {
+  background-color: dark $default-lower-color;
+}
+
+button.up:hover {
+  background-color: dark $default-higher-color;
+}
+
+button.up#waiting {
+  background-color: light $default-higher-color;
+}
+
+button.down#waiting {
+  background-color: light $default-lower-color;
+}
+
+button.up#lost {
+  background-color: $black-bg;
+}
+
+button.down#lost {
+  background-color: $black-bg;
+}

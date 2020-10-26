@@ -1,28 +1,32 @@
 @media screen and (min-width: 995px) and (orientation: landscape) {
-  .left-col {
+  @mixin height-col {
     margin: 0 1%;
     height: 100%;
     float: left;
+  }
+
+  .left-col {
+    @include height-col();
     width: 28%;
   }
 
   .right-col {
-    margin: 0 1%;
-    height: 100%;
-    float: left;
+    @include height-col();
     width: 68%;
   }
 }
 
 @media (orientation: portrait), screen and (max-width: 995px) {
-
-  .left-col {
+  @mixin wide-col {
     margin: 0 1%;
     width: 98%;
   }
 
+  .left-col {
+    @include wide-col();
+  }
+
   .right-col {
-    margin: 0 1%;
-    width: 98%;
+    @include wide-col();
   }
 }

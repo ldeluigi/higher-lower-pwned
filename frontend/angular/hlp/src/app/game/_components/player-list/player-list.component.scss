@@ -1,3 +1,5 @@
+@import "../../../styles/colors.scss";
+
 mat-card {
   width: calc(100% - 32px);
 }
@@ -13,10 +15,9 @@ mat-card-subtitle {
 
 #lost {
   background-color: darkslategrey;
-  color: white;
+  color: $default-text-color;
 
   mat-card-subtitle {
-    color: white;
+    color: $default-text-color;
   }
-
 }
