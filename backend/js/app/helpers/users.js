@@ -1,4 +1,4 @@
-const userSchema = require("../model/user").schema;
+const userSchema = require("../model/user.model").schema;
 const names = require("./animals.json");
 
 async function getRandomName() {

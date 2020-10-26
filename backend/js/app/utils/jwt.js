@@ -2,7 +2,7 @@ const config = require("../../config/config");
 const pwd = require("../utils/password");
 const jwt = require("jsonwebtoken");
 const jwtValidator = require('express-jwt');
-const tokenSchema = require("../model/token").schema;
+const tokenSchema = require("../model/token.model").schema;
 
 module.exports = {
   createJWT: async function (userID, username) {

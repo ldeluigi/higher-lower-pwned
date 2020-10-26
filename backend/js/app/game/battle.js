@@ -1,7 +1,7 @@
 const e = require("express");
 const passwords = require("./passwords");
-const battleSchema = require('../model/battle').schema;
-const scoreSchema = require('../model/score').schema;
+const battleSchema = require('../model/battle.model').schema;
+const scoreSchema = require('../model/score.model').schema;
 
 
 const startTimeMillis = 1000 * 15;

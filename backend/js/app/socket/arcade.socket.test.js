@@ -4,12 +4,12 @@ const request = supertest(app);
 const cio = require("socket.io-client");
 const http = require("http");
 const sio = require("socket.io");
-const ioBack = require("./arcade");
+const ioBack = require("./arcade.io");
 const arcade = require("../game/arcade");
 const passwordsSetup = require("../game/passwords").setup;
 
-const gameSchema = require("../model/game").schema;
-const scoreSchema = require("../model/score").schema;
+const gameSchema = require("../model/game.model").schema;
+const scoreSchema = require("../model/score.model").schema;
 
 var serverListen;
 var serverAddress;

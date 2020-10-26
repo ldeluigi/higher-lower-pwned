@@ -1,9 +1,9 @@
 const app = require("../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const user = require("../../model/user");
-const score = require("../../model/score");
-const token = require("../../model/token");
+const user = require("../../model/user.model");
+const score = require("../../model/score.model");
+const token = require("../../model/token.model");
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
 
@@ -57,7 +57,7 @@ describe("scores arcade API", function () {
         });
 
         const payload = { limit: 30, period: 'year' }
-        response = await request.get("/scores/testid/royale", params = payload).set("Authorization", "Bearer " + result.token);
+        response = await request.get("/scores/testid/duel", params = payload).set("Authorization", "Bearer " + result.token);
         expect(response.body.data).toEqual(fakeScores);
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");

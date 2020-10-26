@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { query, validationResult, param } = require("express-validator");
 const periodTools = require("../../helpers/period");
-const score = require("../../model/score").schema;
+const score = require("../../model/score.model").schema;
 const jwtTools = require("../../utils/jwt");
 const ObjectId = require("mongoose").Types.ObjectId;
 

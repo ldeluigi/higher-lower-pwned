@@ -1,6 +1,6 @@
 let arcade = require("./arcade");
-const gameSchema = require("../model/game").schema;
-const scoreSchema = require("../model/score").schema;
+const gameSchema = require("../model/game.model").schema;
+const scoreSchema = require("../model/score.model").schema;
 const passwordSetup = require("./passwords").setup;
 
 beforeEach(async (done) => {

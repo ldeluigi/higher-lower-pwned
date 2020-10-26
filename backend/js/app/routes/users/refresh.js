@@ -3,9 +3,9 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const pwd = require("../../utils/password");
 const config = require("../../../config/config");
-const tokenSchema = require("../../model/token").schema;
+const tokenSchema = require("../../model/token.model").schema;
 const jwtTools = require("../../utils/jwt");
-const userSchema = require("../../model/user").schema;
+const userSchema = require("../../model/user.model").schema;
 
 router.post(
     "/refresh",

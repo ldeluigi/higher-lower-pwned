@@ -1,8 +1,8 @@
 const app = require("../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const user = require("../../model/user");
-const token = require("../../model/token");
+const user = require("../../model/user.model");
+const token = require("../../model/token.model");
 const pwd = require("../../utils/password");
 
 

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { body, validationResult, param } = require("express-validator");
-const userSchema = require("../../model/user").schema;
-const userToDto = require("../../model/user").toDto;
+const userSchema = require("../../model/user.model").schema;
+const userToDto = require("../../model/user.model").toDto;
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
 

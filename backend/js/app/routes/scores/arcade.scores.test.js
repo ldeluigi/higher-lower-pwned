@@ -1,21 +1,20 @@
 const app = require("../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const user = require("../../model/user");
-const score = require("../../model/score");
-const token = require("../../model/token");
+const user = require("../../model/user.model");
+const score = require("../../model/score.model");
+const token = require("../../model/token.model");
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
-const { mongoose } = require("../../../config/config");
 
 
 
-describe("user stats API", function () {
-    it("should GET user stats after login", async (done) => {
+describe("scores arcade API", function () {
+    it("should GET arcade user score after login", async (done) => {
         const mock = jest.spyOn(user.schema, 'findOne');
         const userMock = {
             username: "testusername",
-            _id: "abcabcabcabcabcabcabcabc",
+            _id: "testid",
             password: pwd.sha512("testpassword", "testpasswordsalt"),
             email: "testemail@email.com",
             salt: "testpasswordsalt",
@@ -24,17 +23,14 @@ describe("user stats API", function () {
             save: async function () { }
         };
 
-        const userStatsMock = [
+        const fakeScores = [
             {
-                maxScore: 1000,
-                avgScore: 1000,
-                maxGuesses: 100,
-                avgGuesses: 100,
-                maxDuration: 14400000,
-                avgDuration: 14400000,
-                avgPlaysPerDay: 0.14,
-                periodNumber: 28,
-                year: 2020
+                _id: userMock._id,
+                score: 1000,
+                end: new Date("2020-08-26T20:26:20.202Z").toString(),
+                guesses: 100,
+                start: new Date("2020-08-26T20:26:20.202Z").toString(),
+                user: userMock._id
             }
         ];
 
@@ -50,14 +46,22 @@ describe("user stats API", function () {
         });
         let result = response.body.data;
 
-        const mock3 = jest.spyOn(score.schema, 'aggregate');
-        mock3.mockImplementation((input) => Promise.resolve(userStatsMock));
+        const mock3 = jest.spyOn(score.schema, 'find');
+        mock3.mockImplementation((input) => {
+            var x = {
+                skip: (_) => x,
+                limit: (_) => x,
+                sort: (_) => Promise.resolve(fakeScores)
+            };
+            return x;
+        });
 
-        const payload = { limit: 30, period: 'week' }
-        response = await request.get("/users/abcabcabcabcabcabcabcabc/stats", params = payload).set("Authorization", "Bearer " + result.token);
+        const payload = { limit: 30, period: 'year' }
+        response = await request.get("/scores/testid/arcade", params = payload).set("Authorization", "Bearer " + result.token);
+        expect(response.body.data).toEqual(fakeScores);
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
-        expect(response.body.data).toEqual({ id: "abcabcabcabcabcabcabcabc", history: userStatsMock });
+
         mock.mockRestore();
         mock2.mockRestore();
         mock3.mockRestore();

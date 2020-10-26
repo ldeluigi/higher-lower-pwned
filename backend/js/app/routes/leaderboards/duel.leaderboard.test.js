@@ -1,7 +1,7 @@
 const app = require("../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const score = require("../../model/score");
+const score = require("../../model/score.model");
 const pwd = require("../../utils/password");
 
 beforeAll(() => {
@@ -15,7 +15,7 @@ afterAll(() => {
 })
 
 describe("leaderboards API", function () {
-    it("should GET /arcade scores for last week", async (done) => {
+    it("should GET /duel scores for last week", async (done) => {
         const mock = jest.spyOn(score.schema, 'find');
         const fakeScores = [
             {
@@ -28,7 +28,7 @@ describe("leaderboards API", function () {
                     _id: "testid",
                     username: "testusername"
                 },
-                mode: "royale.win"
+                mode: "duel.win"
             },
             {
                 _id: "5f483db2859d884db1428861",
@@ -36,7 +36,7 @@ describe("leaderboards API", function () {
                 end: new Date("2020-08-27T20:26:20.202Z"),
                 guesses: 5,
                 start: new Date("2020-08-27T20:22:20.202Z"),
-                mode: "royale.lose"
+                mode: "duel.lose"
             }
         ];
         mock.mockImplementation((input) => {
@@ -47,7 +47,7 @@ describe("leaderboards API", function () {
             };
             return x;
         });
-        let response = await request.get("/leaderboards/royale");
+        let response = await request.get("/leaderboards/duel");
         expect(response.status).toBe(200);
         expect(response.body)
             .toEqual({

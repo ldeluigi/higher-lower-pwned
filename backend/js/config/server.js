@@ -4,9 +4,9 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 const server = require("http").Server(app);
-const socketArcadeApi = require("../app/socket/arcade");
-const socketDuelApi = require("../app/socket/duel");
-const socketRoyaleApi = require("../app/socket/royale");
+const socketArcadeApi = require("../app/socket/arcade.io");
+const socketDuelApi = require("../app/socket/duel.io");
+const socketRoyaleApi = require("../app/socket/royale.io");
 const io = socketRoyaleApi(socketDuelApi(socketArcadeApi(socket(server))));
 
 const route = require("../app/routes");

@@ -1,6 +1,6 @@
 const jwtTools = require("./jwt");
 const jwt = require("jsonwebtoken");
-const tokenSchema = require("../model/token").schema;
+const tokenSchema = require("../model/token.model").schema;
 const config = require("../../config/config");
 
 describe("createJWT", function () {

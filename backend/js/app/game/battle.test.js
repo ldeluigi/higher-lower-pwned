@@ -1,6 +1,6 @@
 let duel = require("./battle");
-const duelSchema = require('../model/battle').schema;
-const scoreSchema = require("../model/score").schema;
+const duelSchema = require('../model/battle.model').schema;
+const scoreSchema = require("../model/score.model").schema;
 const passwordSetup = require("./passwords").setup;
 
 beforeEach(async (done) => {

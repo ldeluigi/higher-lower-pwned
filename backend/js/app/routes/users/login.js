@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
-const user = require("../../model/user").schema;
+const user = require("../../model/user.model").schema;
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
 

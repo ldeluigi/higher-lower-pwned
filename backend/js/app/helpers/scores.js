@@ -1,5 +1,5 @@
 const { query, param, validationResult } = require("express-validator");
-const score = require("../model/score").schema;
+const score = require("../model/score.model").schema;
 const periodTools = require("./period");
 const limitTools = require("./limit");
 

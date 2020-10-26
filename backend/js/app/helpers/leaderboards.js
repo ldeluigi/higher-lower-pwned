@@ -1,6 +1,6 @@
 const { validationResult, query } = require("express-validator");
-const score = require("../model/score").schema;
-const scoreToDto = require("../model/score").toDto;
+const score = require("../model/score.model").schema;
+const scoreToDto = require("../model/score.model").toDto;
 const periodTools = require("./period");
 const limitTools = require("./limit");
 

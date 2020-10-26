@@ -1,7 +1,7 @@
 const app = require("../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const score = require("../../model/score");
+const score = require("../../model/score.model");
 const pwd = require("../../utils/password");
 
 beforeAll(() => {
