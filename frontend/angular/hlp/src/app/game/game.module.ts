@@ -17,7 +17,6 @@ import { SocketArcade } from './SocketArcade';
 import { SocketDuel } from './SocketDuel';
 import { SocketRoyale } from './SocketRoyale';
 import { PlayerListComponent } from './_components/player-list/player-list.component';
-import { ButtonUpDownComponent } from './_components/button-up-down/button-up-down.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +26,7 @@ import { ButtonUpDownComponent } from './_components/button-up-down/button-up-do
     WordSpinnerComponent,
     DuelComponent,
     PlayerListComponent,
-    ButtonUpDownComponent],
+  ],
   imports: [
     CommonModule,
     GameRoutingModule,
