@@ -27,7 +27,7 @@ module.exports = {
                                 $gte: statsBeginDate,
                                 $lte: new Date(),
                             },
-                            mode: modeInDatabase,
+                            mode: modeInDatabase || /[\s\S]*/,
                         },
                     },
                     {
