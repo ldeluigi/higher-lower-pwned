@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Stats } from '../../../_model/stats';
 import { StatisticService } from '../../../_services/statistic.service';
 import { timeConversion } from '../../../_helper/timeConversion';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 export interface Stat {
   name: string;
@@ -14,23 +16,31 @@ export interface Stat {
   templateUrl: './stats.component.html',
   styleUrls: ['./stats.component.scss']
 })
-export class StatsComponent implements OnInit {
-
+export class StatsComponent implements OnInit, OnDestroy {
+  private modeSub: Subscription;
+  mode = 'arcade';
   displayedColumns: string[] = ['name', 'avg', 'max'];
   myStats: Stat[] = [];
 
   constructor(
     private statsService: StatisticService,
-  ) { }
+    private route: ActivatedRoute
+  ) {
+    this.modeSub = route.data.subscribe(elem => this.mode = elem.mode);
+  }
+
+  ngOnDestroy(): void {
+    this.modeSub.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.statsService.observableStats
       .subscribe(s => this.udpateStats(s));
-    this.statsService.refreshStats();
+    this.statsService.refreshStats(undefined, this.mode);
   }
 
   getStats(p?: string): void {
-    this.statsService.refreshStats(p);
+    this.statsService.refreshStats(p, this.mode);
   }
 
   private udpateStats(stats: Stats): void {

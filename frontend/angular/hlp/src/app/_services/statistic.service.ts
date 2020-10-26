@@ -35,13 +35,13 @@ export class StatisticService {
     return this.statsObs;
   }
 
-  public refreshStats(period?: string): void {
+  public refreshStats(period?: string, mode: string = ''): void {
     const param = addParamsToHttp(new HttpParams(), [{ name: 'period', param: period }]);
-    const url = `${environment.apiUrl}/stats`;
-    this.http.get<Response<[Stats]>>(url, { params: param })
+    const urlMode = mode.length > 0 ? `/${mode}` : '';
+    const url = `${environment.apiUrl}/stats${urlMode}`;
+    this.http.get<Response<Stats>>(url, { params: param })
       .subscribe(response => {
-        // TODO should not pass data[0] but Stats should support multiple modes!
-        this.statsSubject.next(response.data[0]);
+        this.statsSubject.next(response.data);
       });
   }
 

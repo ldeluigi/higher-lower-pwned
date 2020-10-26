@@ -2,14 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LeadeboardComponent } from './_component/leaderboard/leadeboard.component';
-import { StatsComponent } from './arcade/stats/stats.component';
+import { StatsComponent } from './_component/stats/stats.component';
 
 import { StatisticRoutingModule } from './statistic-routing.module';
 
 import { SharedModule } from '../shared/shared.module';
 import { LayoutComponent } from './layout/layout.component';
-import { ArcadeLayoutComponent } from './arcade/arcade-layout/arcade-layout.component';
-import { GlobalStatisticComponent } from './global-statistic/global-statistic.component';
+import { ModeLayoutComponent } from './_component/mode-layout/mode-layout.component';
 
 
 @NgModule({
@@ -17,8 +16,7 @@ import { GlobalStatisticComponent } from './global-statistic/global-statistic.co
     LeadeboardComponent,
     StatsComponent,
     LayoutComponent,
-    ArcadeLayoutComponent,
-    GlobalStatisticComponent
+    ModeLayoutComponent
   ],
   imports: [
     CommonModule,

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-arcade-layout',
-  templateUrl: './arcade-layout.component.html',
-  styleUrls: ['./arcade-layout.component.scss']
+  selector: 'app-mode-layout',
+  templateUrl: './mode-layout.component.html',
+  styleUrls: ['./mode-layout.component.scss']
 })
-export class ArcadeLayoutComponent {
+export class ModeLayoutComponent {
 
   constructor(
     private router: Router

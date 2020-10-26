@@ -18,11 +18,6 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
   private leadSub: Subscription;
   mode = 'arcade';
 
-  @Input('mode')
-  set onCardChange(mode: string) {
-    this.mode = mode;
-  }
-
   limit = new FormControl('', [
     Validators.required,
     Validators.pattern('^[0-9]*$'),
@@ -56,7 +51,6 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
   }
 
   updateLeaderboard(limit?: number, period?: string): void {
-    console.log(this.mode);
     if (period !== undefined) {
       this.period = period;
     }

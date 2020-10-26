@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ArcadeLayoutComponent } from './arcade-layout.component';
+import { ModeLayoutComponent } from './mode-layout.component';
 
-describe('ArcadeLayoutComponent', () => {
-  let component: ArcadeLayoutComponent;
-  let fixture: ComponentFixture<ArcadeLayoutComponent>;
+describe('ModeLayoutComponent', () => {
+  let component: ModeLayoutComponent;
+  let fixture: ComponentFixture<ModeLayoutComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ArcadeLayoutComponent ]
+      declarations: [ ModeLayoutComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ArcadeLayoutComponent);
+    fixture = TestBed.createComponent(ModeLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

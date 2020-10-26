@@ -12,7 +12,29 @@ export class LayoutComponent {
     private router: Router
   ) { }
 
-  isSelected(path: string): boolean {
-    return this.router.url.endsWith(path);
+  isSelected(mode: string): boolean {
+    switch (mode) {
+      case 'arcade':
+        return new RegExp('\/arcade\/').test(this.router.url);
+      case 'duel':
+        return new RegExp('\/duel\/').test(this.router.url);
+      case 'battle':
+        return new RegExp('\/battle\/').test(this.router.url);
+      default:
+        return new RegExp('\/global').test(this.router.url);
+    }
+  }
+
+  getRouterLink(mode: string): string {
+    if (mode === 'global') {
+      return mode;
+    }
+    const url = this.router.url;
+    if (url.endsWith('statistic')) {
+      return `${mode}/statistic`;
+    } else if (url.endsWith('leaderboard')) {
+      return `${mode}/leaderboard`;
+    }
+    return mode;
   }
 }
