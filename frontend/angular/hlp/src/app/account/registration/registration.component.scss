@@ -1,3 +1,5 @@
+@import "../../styles/colors.scss";
+
 :host {
   display: flex;
   justify-content: center;
@@ -27,8 +29,8 @@ mat-card-content {
 .error {
   text-align: center;
   padding: 3%;
-  color: white;
-  background-color: red;
+  color: $default-text-color;
+  background-color: $default-error-color;
 }
 
 .button {

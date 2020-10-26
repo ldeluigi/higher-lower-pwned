@@ -1,14 +1,16 @@
+@import "../../styles/colors.scss";
+
 table {
   width: 100%;
 }
 
 canvas {
-  background: white;
+  background: $white-bg;
 }
 
 div.inputs {
   margin-bottom: 1%;
-  background: white;
+  background: $white-bg;
 }
 
 .input {

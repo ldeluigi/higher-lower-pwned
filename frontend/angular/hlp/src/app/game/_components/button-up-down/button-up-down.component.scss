@@ -1,3 +1,5 @@
+@import "../../../styles/colors.scss";
+
 button {
   margin: 10px auto;
   font-size: xx-large;
@@ -6,37 +8,36 @@ button {
 }
 
 button.up {
-  background: red;
-  color: white;
+  background: $default-higher-color;
+  color: $default-text-color;
 }
 
 button.down {
-  background: blue;
-  color: white;
+  background: $default-lower-color;
+  color: $default-text-color;
   transform: translate(-15%, 60%);
-
 }
 
 button.down:hover {
-  background-color: darkblue;
+  background-color: dark $default-lower-color;
 }
 
 button.up:hover {
-  background-color: darkred;
+  background-color: dark $default-higher-color;
 }
 
 button.up#waiting {
-  background-color: lightcoral;
+  background-color: light $default-higher-color;
 }
 
 button.down#waiting {
-  background-color: lightblue;
+  background-color: light $default-lower-color;
 }
 
 button.up#lost {
-  background-color: black;
+  background-color: $black-bg;
 }
 
 button.down#lost {
-  background-color: black;
+  background-color: $black-bg;
 }
