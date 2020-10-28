@@ -1,3 +1,22 @@
+
+function emailTransport() {
+  if (process.env.GMAIL_EMAIL && process.env.GMAIL_PASSWORD) {
+    return {
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_EMAIL,
+        pass: process.env.GMAIL_PASSWORD
+      }
+    };
+  } else if (process.env.EMAIL_DEBUG === "true") {
+    return null;
+  } else {
+    console.log(process.env.EMAIL_DEBUG)
+    throw new Error("Service not configured error. Write your own code to manage your email account with nodemailer");
+  }
+}
+
+
 module.exports = {
   port: process.env.BACKEND_PORT || 8080,
   jwtSecret: process.env.JWT_SECRET || "DEFAULT",
@@ -11,4 +30,5 @@ module.exports = {
       pass: process.env.MONGO_DB_PASSWORD || "",
     },
   },
+  mailsenderTransport: emailTransport(),
 };

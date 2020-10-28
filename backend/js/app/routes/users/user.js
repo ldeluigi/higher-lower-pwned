@@ -5,6 +5,7 @@ const userSchema = require("../../model/user.model").schema;
 const userToDto = require("../../model/user.model").toDto;
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
+const mailService = require("../../utils/mail-service");
 
 router.post("/",
   [
@@ -29,6 +30,7 @@ router.post("/",
     let salt = pwd.genRandomString(16);
     let output = pwd.sha512(body.password, salt);
     try {
+      await mailService.sendSubscriptionEmail(body.email, body.username);
       let result = await userSchema.create({
         username: body.username,
         email: body.email,
