@@ -9,6 +9,7 @@ import { StatisticRoutingModule } from './statistic-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { LayoutComponent } from './layout/layout.component';
 import { ModeLayoutComponent } from './_component/mode-layout/mode-layout.component';
+import { ModeSelectorComponent } from './_component/mode-selector/mode-selector.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { ModeLayoutComponent } from './_component/mode-layout/mode-layout.compon
     LeadeboardComponent,
     StatsComponent,
     LayoutComponent,
-    ModeLayoutComponent
+    ModeLayoutComponent,
+    ModeSelectorComponent
   ],
   imports: [
     CommonModule,
