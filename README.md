@@ -40,13 +40,19 @@ MONGO_DB_NAME=hlp-db
 MONGO_DB_USERNAME=hlp
 MONGO_DB_PASSWORD=hotdog
 MONGO_DB_ROOT_PASSWORD=hotdogwithsauce
+EMAIL_DEBUG=true
 ```
 
-This would mean that:
+#### Explanation
 
 - The production server will be available at the port `HOST_PORT`, which is managed by [Nginx](https://www.nginx.com/). Nginx will serve static files and forward API/socket requests to the backend container
 - Database admin access is granted to user `root` (fixed) with password `MONGO_DB_ROOT_PASSWORD`, in the authentication db `admin` (fixed). Another user, `MONGO_DB_USERNAME`, will be used by the backend server to authenticate to the mongo container in order to have access to the db `MONGO_DB_NAME`, using password `MONGO_DB_PASSWORD`.
 - `JWT_SECRET` will be used to sign Json Web Tokens.
+- `EMAIL_DEBUG`, if set to `true`, will enable email debug mode, meaning that emails will be printed on console if a better way of sending them is not available.
+
+#### Optional environment variables:
+
+- `GMAIL_EMAIL` and `GMAIL_PASSWORD` are the credentials to use a Gmail account to send emails. If **both** have values, _nodemailer_ will use them to send emails ([More info](https://nodemailer.com/usage/using-gmail/)).
 
 ### Development mode
 
