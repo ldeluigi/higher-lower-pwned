@@ -8,7 +8,7 @@ import { StatisticRoutingModule } from './statistic-routing.module';
 
 import { SharedModule } from '../shared/shared.module';
 import { LayoutComponent } from './layout/layout.component';
-import { ModeLayoutComponent } from './_component/mode-layout/mode-layout.component';
+import { ViewSelectorComponent } from './_component/mode-layout/view-selector.component';
 import { ModeSelectorComponent } from './_component/mode-selector/mode-selector.component';
 
 
@@ -17,7 +17,7 @@ import { ModeSelectorComponent } from './_component/mode-selector/mode-selector.
     LeadeboardComponent,
     StatsComponent,
     LayoutComponent,
-    ModeLayoutComponent,
+    ViewSelectorComponent,
     ModeSelectorComponent
   ],
   imports: [

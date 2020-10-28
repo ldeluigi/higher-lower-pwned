@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from '../statistic/layout/layout.component';
 import { LeadeboardComponent } from './_component/leaderboard/leadeboard.component';
 import { StatsComponent } from './_component/stats/stats.component';
-import { ModeLayoutComponent } from './_component/mode-layout/mode-layout.component';
+import { ViewSelectorComponent } from './_component/mode-layout/view-selector.component';
 
 const routes: Routes = [
   {
@@ -13,7 +13,7 @@ const routes: Routes = [
         path: 'global', component: StatsComponent, data: { mode: '' }
       },
       {
-        path: 'arcade', component: ModeLayoutComponent,
+        path: 'arcade', component: ViewSelectorComponent,
         children: [
           { path: 'leaderboard', component: LeadeboardComponent, data: { mode: 'arcade' } },
           { path: 'statistic', component: StatsComponent, data: {mode: 'arcade'} },
@@ -21,7 +21,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'duel', component: ModeLayoutComponent,
+        path: 'duel', component: ViewSelectorComponent,
         children: [
           { path: 'leaderboard', component: LeadeboardComponent, data: { mode: 'duel' } },
           { path: 'statistic', component: StatsComponent, data: {mode: 'duel'} },
@@ -29,7 +29,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'battle', component: ModeLayoutComponent,
+        path: 'battle', component: ViewSelectorComponent,
         children: [
           { path: 'leaderboard', component: LeadeboardComponent, data: { mode: 'royale' } },
           { path: 'statistic', component: StatsComponent, data: {mode: 'royale'} },

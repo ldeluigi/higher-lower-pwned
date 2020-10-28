@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-mode-layout',
-  templateUrl: './mode-layout.component.html',
-  styleUrls: ['./mode-layout.component.scss']
+  selector: 'app-view-selector',
+  templateUrl: './view-selector.component.html',
+  styleUrls: ['./view-selector.component.scss']
 })
-export class ModeLayoutComponent {
+export class ViewSelectorComponent {
 
   constructor(
     private router: Router
