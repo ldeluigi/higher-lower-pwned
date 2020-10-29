@@ -107,7 +107,7 @@ module.exports = {
       let score = (game => {
         let res = {
           score: game.score,
-          end: gameQuery.end,
+          end: gameQuery.end || now,
           guesses: game.guesses,
           start: gameQuery.start,
           mode: gameQuery.mode + "." + (game.victory ? "win" : "lose")
