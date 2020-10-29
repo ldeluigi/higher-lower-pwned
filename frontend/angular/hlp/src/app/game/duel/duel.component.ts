@@ -99,7 +99,7 @@ export class DuelComponent implements OnInit, OnDestroy {
     });
 
     this.game.timerObservable.subscribe(timer => {
-      if (this.isInGame() || this.gameStatus === GameStatus.WAITING_N_GUESS) {
+      if (this.isInGame() || this.gameStatus === GameStatus.WAITING_START) {
         this.setProgressBarTimer(timer);
       }
     });

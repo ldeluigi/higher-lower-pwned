@@ -38,7 +38,6 @@
     <button mat-raised-button (click)="disconnect()">Quit</button>
   </div>
   <div *ngIf="this.isInGame() ||  this.gameStatus === status.WAITING_START">
-    <button mat-raised-button (click)="quit()">Surrend</button>
-    <button mat-raised-button (click)="disconnect()">Quit</button>
+    <button mat-raised-button (click)="disconnect()">{{ this.gameStatus === status.WAITING_N_GUESS ? 'surrend' : 'quit'}}</button>
   </div>
 </div>
