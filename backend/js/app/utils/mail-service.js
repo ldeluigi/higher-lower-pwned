@@ -1,10 +1,6 @@
 const transport = require("../../config/config").mailsenderTransport;
 const nodemailer = require('nodemailer');
 
-const mailOptions = {
-  from: transport?.auth?.user || "debug.email@hlp.com",
-};
-
 let lazyTransporter;
 
 function getLazyTransporter() {
@@ -32,7 +28,7 @@ module.exports = {
   sendSubscriptionEmail: function (address, username) {
     return new Promise((resolve, reject) => {
       let mailOpt = {};
-      Object.assign(mailOpt, mailOptions);
+      mailOpt.from = transport ? transport.auth.user : "debug.email@hlp.com";
       mailOpt.to = address;
       mailOpt.subject = 'Account subscription';
       mailOpt.text = username + ', your subscription to The Pwned Game was successful.\n\nThe Pwned Game Team'

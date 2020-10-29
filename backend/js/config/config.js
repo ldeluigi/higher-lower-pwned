@@ -8,7 +8,7 @@ function emailTransport() {
         pass: process.env.GMAIL_PASSWORD
       }
     };
-  } else if (process.env.EMAIL_DEBUG === "true") {
+  } else if (process.env.EMAIL_DEBUG === "true" || process.env.NODE_ENV === "test") {
     return null;
   } else {
     console.log(process.env.EMAIL_DEBUG)
