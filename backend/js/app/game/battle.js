@@ -251,6 +251,17 @@ function gamesNotLost(gameQuery) {
   return gameQuery.games.filter(e => !e.lost);
 }
 
+function hasEverybodyExpired(gameQuery, now) {
+  let minGuesses = computeMinGuesses(gameQuery, true);
+  let playingPlayers = gamesNotLost(gameQuery);
+  return gameQuery.games.filter(e => {
+    let timeout = e.guesses > minGuesses ?
+      Number.MAX_SAFE_INTEGER :
+      e.expiration.getTime() - now;
+    return timeout < 0 && !e.lost;
+  }).length == playingPlayers.length;
+}
+
 function checkVictories(gameQuery) {
   if (gameQuery.end !== null && gameQuery.end !== undefined)
     return;
@@ -260,14 +271,7 @@ function checkVictories(gameQuery) {
     gameQuery.end = new Date();
   } else {
     let now = Date.now();
-    let minGuesses = computeMinGuesses(gameQuery, true);
-    let everyoneExpired = gameQuery.games.filter(e => {
-      let timeout = e.guesses > minGuesses ?
-        Number.MAX_SAFE_INTEGER :
-        e.expiration.getTime() - now;
-      return timeout < 0 && !e.lost;
-    }).length == playingPlayers.length;
-    console.log("[INFO] ", playingPlayers.length, everyoneExpired)
+    let everyoneExpired = hasEverybodyExpired(gameQuery, now);
     if (playingPlayers.length == 0) {
       let maxScore = Math.max(...gameQuery.games.map(e => e.score));
       gameQuery.games.forEach(e => {
@@ -294,13 +298,8 @@ async function currentGuessFromQuery(gameQuery) {
   if (gameQuery === null) throw new Error("Game not found.");
   let now = Date.now();
   let minGuesses = computeMinGuesses(gameQuery, true);
-  let playingNumber = gameQuery.games.filter(e => !e.lost).length;
-  let everyoneExpired = gameQuery.games.filter(e => {
-    let timeout = e.guesses > minGuesses ?
-      Number.MAX_SAFE_INTEGER :
-      e.expiration.getTime() - now;
-    return timeout < 0 && !e.lost;
-  }).length == playingNumber;
+  let playingNumber = gamesNotLost(gameQuery).length;
+  let everyoneExpired = hasEverybodyExpired(gameQuery, now);
   try {
     if (everyoneExpired) {
       gameQuery.games.forEach(e => {
@@ -308,7 +307,7 @@ async function currentGuessFromQuery(gameQuery) {
       });
       checkVictories(gameQuery);
     } else {
-      let magic = false;
+      let someoneJustLost = false;
       gameQuery.games.filter(e => {
         let timeout = e.guesses > minGuesses ?
           Number.MAX_SAFE_INTEGER :
@@ -316,16 +315,16 @@ async function currentGuessFromQuery(gameQuery) {
         return !e.lost && e.guesses == minGuesses && timeout <= 0
       }).forEach(e => {
         e.lost = true;
-        magic = true;
+        someoneJustLost = true;
       });
       let _minGuesses = computeMinGuesses(gameQuery, true);
       let _leftBehind = computeLeftBehind(gameQuery);
-      let _playingNumber = gameQuery.games.filter(e => !e.lost).length;
+      let _playingNumber = gamesNotLost(gameQuery).length;
       let _someoneIsBehind = _leftBehind < _playingNumber;
-      /* magic is when a player lost for timeout, and _minGuesses > minGuesses
+      /* someoneJustLost is when a player lost for timeout, and _minGuesses > minGuesses
        checks if the lost player(s) was/were behind evryone else and now the
        game should proceed to be even, or not. */
-      if (!_someoneIsBehind && magic && _minGuesses > minGuesses) {
+      if (!_someoneIsBehind && someoneJustLost && _minGuesses > minGuesses) {
         gameQuery.games.filter(e => !e.lost).forEach(g => {
           if (g.lastGuess && !g.lost) {
             g.expiration = new Date(g.expiration.getTime() + now - g.lastGuess.getTime());
@@ -348,7 +347,7 @@ async function currentGuessFromQuery(gameQuery) {
   }
   minGuesses = computeMinGuesses(gameQuery, true);
   let leftBehind = computeLeftBehind(gameQuery);
-  playingNumber = gameQuery.games.filter(e => !e.lost).length;
+  playingNumber = gamesNotLost(gameQuery).length;
   let someoneIsBehind = leftBehind < playingNumber;
   let playerObjs = gameQuery.games.map(game => {
     let res = {
