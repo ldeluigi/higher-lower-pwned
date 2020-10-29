@@ -1,7 +1,7 @@
 import { Component, OnInit, Type, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { ArcadeSocketService } from '../../_services/arcade-socket.service';
 import { GameEnd } from '../_model/gameEnd';
-import { NextGuess } from '../_model/nextGuess';
+import { NextGuess } from '../_model/nextguess';
 import { Observable, interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
@@ -52,7 +52,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   }
 
   private log(message: string): void {
-    this.snackBar.open(message, 'ok', {duration: 3000});
+    this.snackBar.open(message, 'ok', { duration: 3000 });
   }
 
   ngOnInit(): void {
@@ -71,15 +71,15 @@ export class ArcadeComponent implements OnInit, OnDestroy {
             this.card2 = {
               word: ng.password2
             };
-            this.wordAnimation.gameSetup({ word1: ng.password1, word2: ng.password2, score1: ng.value1});
+            this.wordAnimation.gameSetup({ word1: ng.password1, word2: ng.password2, score1: ng.value1 });
           } else {
             this.next(ng.password2, ng.value1);
           }
           this.actualScore = ng.score;
           this.setTimer(ng.timeout)
-          .then(_ => {
-            this.gameSocket.repeat();
-          });
+            .then(_ => {
+              this.gameSocket.repeat();
+            });
         } else if (ge.value2) {
           // console.log('game end');
           this.gameEnd(ge.value2, ge.score);
@@ -115,9 +115,9 @@ export class ArcadeComponent implements OnInit, OnDestroy {
 
   private gameEnd(value2: number, score: number = -1): void {
     rollNumber(value2, 800, n => this.card2.score = n);
-    this.wordAnimation.end({oldScore: value2})
+    this.wordAnimation.end({ oldScore: value2 })
       .then(() => {
-        this.log('The game is ended. ' + (score >= 0 ?  `Your score is ${score}` : 'With a server error.'));
+        this.log('The game is ended. ' + (score >= 0 ? `Your score is ${score}` : 'With a server error.'));
         this.gameSocket.disconnect();
         this.sub?.unsubscribe();
         this.sub = null;
@@ -132,7 +132,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   }
 
   private next(newWord: string, oldScore: number): void {
-    this.wordAnimation.next({oldScore, newWord})
+    this.wordAnimation.next({ oldScore, newWord })
       .then(() => {
         setTimeout(() => {
           // console.log('Timeout ended');
@@ -142,8 +142,8 @@ export class ArcadeComponent implements OnInit, OnDestroy {
             word: newWord
           };
           this.loading = false;
-      }, 200);
-    });
+        }, 200);
+      });
   }
 
   private async setTimer(milliseconds: number): Promise<void> {

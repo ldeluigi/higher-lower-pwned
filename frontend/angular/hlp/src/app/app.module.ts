@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { ErrorInterceptor } from './_helper/error.interceptor';
-import { JWTInterceptor } from './_helper/JWT.interceptor';
+import { JWTInterceptor } from './_helper/jwt.interceptor';
 import { AccountModule } from './account/account.module';
 import { UsersModule } from './users/users.module';
 import { GameModule } from './game/game.module';
