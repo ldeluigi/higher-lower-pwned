@@ -1,8 +1,8 @@
 <span *ngIf="this.userLogged; then userIsLogged else userNotLogged"></span>
 <ng-template #userNotLogged>
-  <a mat-button routerLink="/account/login" routerLinkActive="active"> Login </a>
+  <a mat-stroked-button routerLink="/account/login" routerLinkActive="active"> Login </a>
 </ng-template>
 <ng-template #userIsLogged>
-  <a mat-button routerLink="/users" routerLinkActive="active">User</a>
-  <a mat-button routerLink="/home" routerLinkActive="active" (click)="this.logout()">LogOut</a>
+  <a mat-stroked-button routerLink="/users" routerLinkActive="active">User</a>
+  <a mat-stroked-button routerLink="/home" routerLinkActive="active" (click)="this.logout()">LogOut</a>
 </ng-template>
