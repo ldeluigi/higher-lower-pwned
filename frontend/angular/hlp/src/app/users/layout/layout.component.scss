@@ -1,10 +1,25 @@
-@media screen and (min-width: 995px) and (orientation: landscape) {
-  @mixin height-col {
-    margin: 0 1%;
-    height: 100%;
-    float: left;
-  }
+@import "../../styles/mixins.scss";
 
+@mixin height-col {
+  margin: 0 1%;
+  height: 100%;
+  float: left;
+}
+
+@mixin wide-col {
+  margin: 0 1%;
+  width: 98%;
+}
+
+.left-col {
+  @include wide-col();
+}
+
+.right-col {
+  @include wide-col();
+}
+
+@include desktop {
   .left-col {
     @include height-col();
     width: 28%;
@@ -13,20 +28,5 @@
   .right-col {
     @include height-col();
     width: 68%;
-  }
-}
-
-@media (orientation: portrait), screen and (max-width: 995px) {
-  @mixin wide-col {
-    margin: 0 1%;
-    width: 98%;
-  }
-
-  .left-col {
-    @include wide-col();
-  }
-
-  .right-col {
-    @include wide-col();
   }
 }
