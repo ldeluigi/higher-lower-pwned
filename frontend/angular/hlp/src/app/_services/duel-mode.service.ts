@@ -4,7 +4,7 @@ import { Socket } from 'ngx-socket-io';
 import { Observable, Subject } from 'rxjs';
 import { SocketDuel } from '../game/SocketDuel';
 import { SocketRoyale } from '../game/SocketRoyale';
-import { NextDuelGuess } from '../game/_model/nextGuess';
+import { NextDuelGuess } from '../game/_model/nextguess';
 import { PlayerIdName, PlayerJoin } from '../game/_model/player-join';
 import { AccountService } from './account.service';
 
@@ -20,29 +20,29 @@ export class DuelModeService implements OnDestroy {
 
   private playersSubject: Subject<PlayerJoin | PlayerIdName>;
   private gameDataSubject: Subject<GameData>;
-  private errorSubject: Subject< {code: number, description: string}>;
+  private errorSubject: Subject<{ code: number, description: string }>;
   private isInGame = false;
   players: Observable<PlayerJoin | PlayerIdName>;
   gameData: Observable<GameData>;
-  errors: Observable< {code: number, description: string}>;
+  errors: Observable<{ code: number, description: string }>;
   connectionOpen = false;
   myId = '';
 
   currentSocket: Socket | undefined;
 
   constructor(
-    //private socketDuel: SocketDuel,
+    // private socketDuel: SocketDuel,
     private accountService: AccountService
-    ) {
-      // setup subject
-      this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
-      this.gameDataSubject = new Subject<GameData>();
-      this.errorSubject = new Subject< {code: number, description: string}>();
+  ) {
+    // setup subject
+    this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
+    this.gameDataSubject = new Subject<GameData>();
+    this.errorSubject = new Subject<{ code: number, description: string }>();
 
-      // setup observable
-      this.gameData = this.gameDataSubject.asObservable();
-      this.players = this.playersSubject.asObservable();
-      this.errors = this.errorSubject.asObservable();
+    // setup observable
+    this.gameData = this.gameDataSubject.asObservable();
+    this.players = this.playersSubject.asObservable();
+    this.errors = this.errorSubject.asObservable();
   }
 
   private setupListener(newSocket?: Socket): void {
@@ -60,12 +60,12 @@ export class DuelModeService implements OnDestroy {
       this.gameDataSubject.next(res);
     });
 
-    this.currentSocket.on('on-error', (err: {code: number, description: string}) => {
+    this.currentSocket.on('on-error', (err: { code: number, description: string }) => {
       console.log('>on-error: ', err);
       this.errorSubject.next(err);
     });
 
-    const opponents = (players: { opponents: PlayerIdName[]}) => {
+    const opponents = (players: { opponents: PlayerIdName[] }) => {
       console.log('>waiting-opponents: ');
       console.log(players);
       players.opponents.forEach(p => this.playersSubject.next(p));

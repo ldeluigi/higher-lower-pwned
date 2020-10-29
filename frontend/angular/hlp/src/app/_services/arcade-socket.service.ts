@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 // import * as io from 'ngx-socket-io';
 import { Error } from '../game/_model/error';
 import { GameEnd } from '../game/_model/gameEnd';
-import { NextGuess } from '../game/_model/nextGuess';
+import { NextGuess } from '../game/_model/nextguess';
 import { Observable } from 'rxjs';
 import { AccountService } from './account.service';
 import { SocketArcade } from '../game/SocketArcade';
@@ -40,9 +40,9 @@ export class ArcadeSocketService implements OnDestroy {
             this.accountService.refreshToken().subscribe(t => {
               this.startGame();
             },
-            error => {
-              this.accountService.logout('Can\'t connet to the service, login again and retry');
-            }
+              error => {
+                this.accountService.logout('Can\'t connet to the service, login again and retry');
+              }
             );
           } else {
             s.error('Connection lost');
@@ -72,10 +72,10 @@ export class ArcadeSocketService implements OnDestroy {
       this.socket.ioSocket.io.opts.query = {};
     }
     this.socket.fromOneTimeEvent('disconnect')
-    .then(_ => {
-      // console.log('disconnected');
-      this.connectionOpen = false;
-    });
+      .then(_ => {
+        // console.log('disconnected');
+        this.connectionOpen = false;
+      });
     this.socket.connect();
     await this.socket.fromOneTimeEvent('connect');
     this.connectionOpen = true;

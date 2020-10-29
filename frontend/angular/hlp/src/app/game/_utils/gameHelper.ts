@@ -1,7 +1,7 @@
 import { Observable, Subject } from 'rxjs';
 import { GameData } from '../../_services/duel-mode.service';
 import { GameStatus } from './GameStatus';
-import { NextDuelGuess, NextGuess } from '../_model/nextGuess';
+import { NextDuelGuess, NextGuess } from '../_model/nextguess';
 
 enum GameType {
   NextGuess,  // next guess, with word update
@@ -157,7 +157,7 @@ class Game {
 
   private appendNewCard(newCard: Card): void {
     if (this.lastCard && this.lastCard.word2 !== newCard.word1) {
-      throw new Error(`Words are not aligned ${this.lastCard.word2} it's not equal to ${newCard.word1}` );
+      throw new Error(`Words are not aligned ${this.lastCard.word2} it's not equal to ${newCard.word1}`);
     }
     this.history.push(newCard);
   }

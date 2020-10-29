@@ -4,7 +4,7 @@ import { interval, Subscription } from 'rxjs';
 import { DuelModeService, GameData } from 'src/app/_services/duel-mode.service';
 import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
 import { Player } from '../_components/player-list/player-list.component';
-import { NextDuelGuess } from '../_model/nextGuess';
+import { NextDuelGuess } from '../_model/nextguess';
 import { getDataFromId, evaluatePlayerId, haveLost, GameDataType, gameDataType, GameMode, Game, gameIsEnd } from '../_utils/gameHelper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
@@ -128,7 +128,7 @@ export class DuelComponent implements OnInit, OnDestroy {
   }
 
   log(message: string, type: string = 'ok'): void {
-    this.snackBar.open(message, type, {duration: 5000});
+    this.snackBar.open(message, type, { duration: 5000 });
   }
 
   ngOnDestroy(): void {
@@ -246,6 +246,7 @@ export class DuelComponent implements OnInit, OnDestroy {
         }
       }
     });
+<<<<<<< HEAD
     this.players.sort((p1, p2) => {
         if (p1.score === p2.score) {
           if (p1.guesses === p2.guesses) {
@@ -261,6 +262,13 @@ export class DuelComponent implements OnInit, OnDestroy {
           return p2.score - p1.score;
         }
       });
+=======
+    this.players
+      .sort((p1, p2) =>
+        p1.score === p2.score ?
+          (p1.guesses < p2.guesses ? 1 : -1) :
+          (p1.score < p2.score ? 1 : -1));
+>>>>>>> 4471f3ef75f7783bd5fc171c0fc68eb094c4b8c9
   }
 
   private updateGuessNumber(data: GameData): void {

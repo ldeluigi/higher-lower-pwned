@@ -54,6 +54,8 @@ EMAIL_DEBUG=true
 
 - `GMAIL_EMAIL` and `GMAIL_PASSWORD` are the credentials to use a Gmail account to send emails. If **both** have values, _nodemailer_ will use them to send emails ([More info](https://nodemailer.com/usage/using-gmail/)).
 
+**Note**: You can prevent uploading sensitive data inside the `.env` file with: `git update-index --assume-unchanged .env`
+
 ### Development mode
 
 First you need to install server dependencies with `npm install`, run inside the server folder `backend/js`.  
