@@ -1,4 +1,4 @@
-@import '../../styles/mixins.scss';
+@import "../../styles/mixins.scss";
 
 :host {
   display: block;
@@ -20,7 +20,19 @@
 
 .nameDiv {
   display: none;
+}
 
+.divStart {
+  div {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    align-self: center;
+    button {
+      width: 40%;
+      margin: auto;
+    }
+  }
 }
 
 app-word {

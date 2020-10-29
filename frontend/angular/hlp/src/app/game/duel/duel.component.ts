@@ -1,19 +1,18 @@
 import { ViewChild } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
 import { DuelModeService, GameData } from 'src/app/_services/duel-mode.service';
 import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
 import { Player } from '../_components/player-list/player-list.component';
 import { NextDuelGuess } from '../_model/nextGuess';
-import { currentGuessNumber, getDataFromId, evaluatePlayerId, haveLost, GameDataType, gameDataType, GameMode } from '../_utils/gameHelper';
-import { PlayerJoin } from '../_model/player-join';
-import { rollNumber, rollWord } from '../_utils/wordAnimation';
+import { getDataFromId, evaluatePlayerId, haveLost, GameDataType, gameDataType, GameMode, Game, gameIsEnd } from '../_utils/gameHelper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import { SocketDuel } from '../SocketDuel';
 import { SocketRoyale } from '../SocketRoyale';
+import { GameStatus } from '../_utils/GameStatus';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-duel',
@@ -25,6 +24,9 @@ export class DuelComponent implements OnInit, OnDestroy {
   @ViewChild(WordSpinnerComponent)
   private wordAnimation!: WordSpinnerComponent;
   private modeSub: Subscription;
+
+  private game: Game = new Game();
+
   mode = 'duel';
   gameMode: GameMode = GameMode.Duel;
 
@@ -34,15 +36,12 @@ export class DuelComponent implements OnInit, OnDestroy {
   players: Player[] = [];
 
   actualScore = 0;
-  playing = false;
-  alreadyLost = false;
-  stillInGame = false;
-  imBehind = false;
+  gameStatus = GameStatus.IDLE;
+  status = GameStatus;
 
   myName: string | undefined;
 
   private timeoutValue: number | undefined;
-  private word2: string | undefined = undefined;
 
   progressbarValue = 100;
   timeLeft = 0;
@@ -52,7 +51,7 @@ export class DuelComponent implements OnInit, OnDestroy {
   constructor(
     private gameSocket: DuelModeService,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute
+    route: ActivatedRoute
   ) {
     this.modeSub = route.data.subscribe(elem => {
       this.mode = elem.mode;
@@ -70,8 +69,42 @@ export class DuelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.game = new Game();
+    this.game.nextGuessObservable.subscribe(card => {
+      if (this.gameStatus === GameStatus.WAITING_START) { // game start
+        this.wordAnimation.gameSetup(card)
+          .then(() => {
+            this.gameStatus = GameStatus.PLAYING;
+          });
+      } else if (this.isInGame() && this.game.status === GameStatus.PLAYING) { // in game
+        this.wordAnimation.next({ oldScore: card.score1, newWord: card.word2 })
+          .then(() => {
+            this.gameStatus = GameStatus.PLAYING;
+          });
+      } else if (this.isInGame() && this.game.status === GameStatus.SPECTATORE) { // have lost now
+        this.gameStatus = GameStatus.LOST;
+        this.log('You have lost');
+        this.endGame(card.score1);  // take the old value
+      } else if (this.game.status === GameStatus.SPECTATORE && this.gameStatus === GameStatus.SPECTATORE) { // spectatore mode
+        this.wordAnimation.next({ oldScore: card.score1, newWord: card.word2 });
+      } else if (this.game.status === GameStatus.END) {
+        if (this.isInGame() || this.gameStatus === GameStatus.SPECTATORE) {
+          this.endGame(this.game.myLastGuess?.score2 || 0);
+        }
+        if (this.gameStatus !== GameStatus.END) {
+          this.log('This game is ended');
+        }
+        this.gameStatus = GameStatus.END;
+      }
+    });
+
+    this.game.timerObservable.subscribe(timer => {
+      if (this.isInGame() || this.gameStatus === GameStatus.WAITING_N_GUESS) {
+        this.setProgressBarTimer(timer);
+      }
+    });
+
     this.playersSub = this.gameSocket.players.subscribe(pj => {
-      console.log('duelcomp-playerSub', pj);
       if (pj.id === evaluatePlayerId(this.gameSocket.myId, this.gameMode)) {
         this.myName = pj.name;
       }
@@ -84,21 +117,17 @@ export class DuelComponent implements OnInit, OnDestroy {
           timeout: 0,
           guesses: 0
         });
-      } else {
-        console.log('player already present', pj);
       }
     });
 
     this.gameDataSub = this.gameSocket.gameData.subscribe(data => {
       this.analiseGuess(data);
-
-      console.log('duelcomp-data', data);
     });
 
     this.errorSub = this.gameSocket.errors.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`));
   }
 
-  private log(message: string, type: string = 'ok'): void {
+  log(message: string, type: string = 'ok'): void {
     this.snackBar.open(message, type, {duration: 5000});
   }
 
@@ -116,52 +145,63 @@ export class DuelComponent implements OnInit, OnDestroy {
 
   answer(value: number): void {
     this.gameSocket.answer(value);
-    this.imBehind = false;
     this.subTimer?.unsubscribe();
     this.subTimer = undefined;
+    this.gameStatus = GameStatus.WAITING_N_GUESS;
   }
 
   start(): void {
-    this.imBehind = false;
-    this.alreadyLost = false;
-    this.stillInGame = false;
+    this.game.reset();
     this.players = [];
+    this.actualScore = 0;
     this.gameSocket.startGame(this.socket(this.mode))
       .then(() => {
-        this.playing = true;
-        this.word2 = undefined;
+        this.gameStatus = GameStatus.WAITING_START;
       })
-      .catch(e => this.playing = false);
+      .catch(() => {
+        this.log('Impossible start a new game');
+        this.gameStatus = GameStatus.IDLE;
+      });
   }
 
   private onEnd(): void {
-    if (!this.alreadyLost) {
+    if (this.gameStatus === GameStatus.PLAYING || this.gameStatus === GameStatus.WAITING_N_GUESS) {
+      this.gameStatus = GameStatus.LOST;
       if (this.timeoutValue) {
         clearTimeout(this.timeoutValue);
       }
       this.subTimer?.unsubscribe();
       this.subTimer = undefined;
-      this.stillInGame = false;
-      this.alreadyLost = true;
     }
   }
 
   quit(): void {
     this.onEnd();
-    this.myName = undefined;
-    this.stillInGame = false;
-    this.playing = false;
-    this.players = [];
     this.gameSocket.endGame();
   }
 
   disconnect(): void {
     this.onEnd();
+    this.gameStatus = GameStatus.IDLE;
     this.myName = undefined;
-    this.stillInGame = false;
-    this.playing = false;
     this.players = [];
     this.gameSocket.disconnect();
+  }
+
+  spectatoreMode(): void {
+    if (this.gameStatus === GameStatus.LOST) {
+      this.gameStatus = GameStatus.SPECTATORE;
+      const lastCard = this.game.currentGuess;
+      if (lastCard) {
+        if (this.wordAnimation.element1.word === lastCard?.word1) {
+          /** nothing */
+        } else if (this.wordAnimation.element2.word === lastCard?.word1) {
+          this.wordAnimation.next({ oldScore: lastCard.score1, newWord: lastCard.word2 });
+        } else {
+          this.wordAnimation.gameSetup(lastCard);
+        }
+      }
+    }
   }
 
   repeat(): void {
@@ -171,69 +211,26 @@ export class DuelComponent implements OnInit, OnDestroy {
   private endGame(value2: number): void {
     this.onEnd();
     this.wordAnimation.end({ oldScore: value2 });
-    console.log('---> LOST!!!');
   }
 
-  private haveGuessLost(guess: NextDuelGuess): boolean {
-    return this.alreadyLost || (haveLost(guess));
+  isInGame(): boolean {
+    return this.gameStatus === GameStatus.PLAYING || this.gameStatus === GameStatus.WAITING_N_GUESS;
   }
 
   private analiseGuess(data: GameData): void {
-    const guessType: GameDataType = gameDataType(data, this.word2);
     const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data, this.gameMode);
-    console.log(guessType, myGuess);
-    if (guessType === GameDataType.NextGuess) {
-      const startMyTimeout: () => void = () => {
-        if (myGuess.timeout) {
-          this.setProgressBarTimer(myGuess.timeout);
-        }
-      };
-      if (!this.stillInGame && !this.alreadyLost) { /* start */
-        this.gameStarted(myGuess);
-        startMyTimeout();
-      } else if (this.stillInGame && this.haveGuessLost(myGuess)) { /* have lost */
-        this.endGame(myGuess.value1);
-      } else if (!this.haveGuessLost(myGuess)) { /* have not lost, go next */
-        this.nextGuess(myGuess);
-        startMyTimeout();
-      }
-      /* else if (this.alreadyLost) I've already lost */
-    } else if (guessType === GameDataType.EndGame && !this.alreadyLost) { /* value2 is present and the game is over */
-      if (myGuess.value2) {
-        this.endGame(myGuess.value2);
-      } else {
-        this.log('Error, the game is over but the secondo word score is not present');
-      }
-    }
-    /* else if (guessType === GameDataType.Update) this.updateGuessNumber(data) */
+    const gameType: GameDataType = gameDataType(data, this.game.currentGuess?.word2);
+    this.game.next(myGuess, gameType);
+
     this.updateGame(data);
     this.updateGuessNumber(data);
-  }
 
-  private gameStarted(guess: NextDuelGuess): void {
-    this.word2 = guess.password2;
-    this.wordAnimation.gameSetup({
-      word1: guess.password1,
-      word2: guess.password2,
-      score1: guess.value1
-    }).then(() => this.imBehind = true);
-    this.playing = true;
-    this.stillInGame = true;
-    this.alreadyLost = false;
-    this.actualScore = guess.score ? guess.score : 0;
-  }
-
-  private nextGuess(guess: NextDuelGuess): void {
-    this.word2 = guess.password2;
-    this.wordAnimation.next({
-      newWord: guess.password2,
-      oldScore: guess.value1
-    }).then(() => this.imBehind = true);
-    this.actualScore = guess.score ? guess.score : 0;
+    if (gameIsEnd(data)) { /** everybody have lost */
+      this.gameStatus = GameStatus.END;
+    }
   }
 
   private updateGame(data: GameData): void {
-    console.log('update');
     data.ids.forEach((id: string, index) => {
       const player = this.players.find(e => e.id === id);
       if (player) {
@@ -299,15 +296,5 @@ export class DuelComponent implements OnInit, OnDestroy {
         }
       });
     });
-  }
-
-  buttonState(): string {
-    if (this.alreadyLost) {
-      return 'lost';
-    }
-    if (this.imBehind) {
-      return '';
-    }
-    return 'waiting';
   }
 }

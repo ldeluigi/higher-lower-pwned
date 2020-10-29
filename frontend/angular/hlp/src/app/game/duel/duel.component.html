@@ -6,13 +6,13 @@
     <app-player-list [players]="players"></app-player-list>
   </div>
   <div class="word">
-    <span *ngIf="this.playing">
-      <app-word-spinner (answerEmitter)="answer($event)"></app-word-spinner>
-      <div>time left: {{ timeLeft | date: "s:S" }} s</div>
+    <span *ngIf="this.gameStatus !== status.IDLE">
+      <app-word-spinner [buttonEnable]="this.gameStatus === status.PLAYING" (answerEmitter)="answer($event)"></app-word-spinner>
+      <div *ngIf="this.gameStatus === status.PLAYING">time left: {{ timeLeft | date: "s:S" }} s</div>
       <mat-progress-bar
+      *ngIf="this.gameStatus === status.PLAYING"
       mode="determinate"
       [value]="progressbarValue"
-      *ngIf="this.stillInGame"
       ></mat-progress-bar>
     </span>
   </div>
@@ -29,14 +29,16 @@
     </mat-card>
   </div>
 </div>
-<button *ngIf="!this.playing" (click)="start()">start</button>
-<div class="gameBtnC" *ngIf="this.playing">
-  <div class="dummyGBtn"></div>
-  <div class="dummyGBtn2"> </div>
-</div>
-<div> <!-- Remove this div -->
-  <button (click)="quit()">quit</button>
-  <button (click)="disconnect()">disconnect</button>
-  <button (click)="repeat()">repeat</button>
-  Utils button for develop purpose
+<div class="divStart" >
+  <div *ngIf="this.gameStatus === status.IDLE">
+    <button class="start" mat-raised-button (click)="start()">start</button>
+  </div>
+  <div *ngIf="this.gameStatus === status.END || this.gameStatus === status.LOST || this.gameStatus === status.SPECTATORE">
+    <button mat-raised-button *ngIf="this.gameStatus === status.LOST" (click)="spectatoreMode()">Spectatore mode</button>
+    <button mat-raised-button (click)="disconnect()">Quit</button>
+  </div>
+  <div *ngIf="this.isInGame() ||  this.gameStatus === status.WAITING_START">
+    <button mat-raised-button (click)="quit()">Surrend</button>
+    <button mat-raised-button (click)="disconnect()">Quit</button>
+  </div>
 </div>

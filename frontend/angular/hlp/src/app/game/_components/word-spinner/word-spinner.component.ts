@@ -1,8 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
-import { trigger, state, style, animate, transition, AnimationEvent, AnimationTriggerMetadata } from '@angular/animations';
-import { reduce } from 'rxjs/operators';
-import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AnimationEvent } from '@angular/animations';
 import { rollNumber, rollWord } from '../../_utils/wordAnimation';
 import { cardAnimation, vsAnimation, wordAnimation } from './animation';
 import { GameSetup, EndGame, NextCard } from '../../_model/animation';
@@ -25,6 +22,7 @@ export interface Card {
 })
 export class WordSpinnerComponent {
   @Output() answerEmitter = new EventEmitter<number>();
+  @Input() buttonEnable = true;
 
   private loading = false;
 
@@ -54,7 +52,7 @@ export class WordSpinnerComponent {
   }
 
   answer(wn: number): void {
-    if (!this.loading) {
+    if (!this.loading && this.buttonEnable) {
       this.loading = true;
       this.answerEmitter.emit(wn);
     }
