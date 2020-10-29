@@ -5,7 +5,7 @@ const scoreSchema = require('../model/score.model').schema;
 
 
 const startTimeMillis = 1000 * 15;
-const correctGuessMillis = 1000 * 5;
+const correctGuessMillis = 1000 * 6;
 const correctGuessScore = 100;
 
 module.exports = {
@@ -247,10 +247,14 @@ function hasDuplicates(array) {
   return (new Set(array)).size !== array.length;
 }
 
+function gamesNotLost(gameQuery) {
+  return gameQuery.games.filter(e => !e.lost);
+}
+
 function checkVictories(gameQuery) {
   if (gameQuery.end !== null && gameQuery.end !== undefined)
     return;
-  let playingPlayers = gameQuery.games.filter(e => !e.lost);
+  let playingPlayers = gamesNotLost(gameQuery);
   if (playingPlayers.length == 1) {
     playingPlayers[0].victory = true;
     gameQuery.end = new Date();

@@ -4,7 +4,7 @@ const scoreSchema = require('../model/score.model').schema;
 
 
 const startTimeMillis = 1000 * 12;
-const correctGuessMillis = 1000 * 7;
+const correctGuessMillis = 1000 * 6;
 const correctGuessScore = 100;
 
 module.exports = {
