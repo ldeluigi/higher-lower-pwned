@@ -11,7 +11,7 @@ RUN npm install
 COPY frontend/angular/hlp/ .
 
 # Angular compilation for production
-RUN npm run build
+RUN npm run build-prod
 
 # Production image
 FROM nginx:1.19-alpine
