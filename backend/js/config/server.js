@@ -19,6 +19,16 @@ app.use((req, res, next) => {
   next();
 });
 app.use(express.json());
+
+app.use(function (req, res, next) {
+  if (req.url.slice(-1) === '/') {
+    req.url = req.url.slice(0, -1);
+  }
+  if (req.url.startsWith("/api")) {
+    req.url = req.url.substring(4);
+  }
+  next();
+});
 app.use(route);
 
 app.use(function (err, req, res, next) {
@@ -28,6 +38,12 @@ app.use(function (err, req, res, next) {
     });
   }
 });
+
+app.use(function (req, res, next) {
+  res.status(404).json({
+    errors: ["Not found. :-/"]
+  });
+})
 
 module.exports = {
   express: app,
