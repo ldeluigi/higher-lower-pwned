@@ -246,7 +246,6 @@ export class DuelComponent implements OnInit, OnDestroy {
         }
       }
     });
-<<<<<<< HEAD
     this.players.sort((p1, p2) => {
         if (p1.score === p2.score) {
           if (p1.guesses === p2.guesses) {
@@ -262,13 +261,6 @@ export class DuelComponent implements OnInit, OnDestroy {
           return p2.score - p1.score;
         }
       });
-=======
-    this.players
-      .sort((p1, p2) =>
-        p1.score === p2.score ?
-          (p1.guesses < p2.guesses ? 1 : -1) :
-          (p1.score < p2.score ? 1 : -1));
->>>>>>> 4471f3ef75f7783bd5fc171c0fc68eb094c4b8c9
   }
 
   private updateGuessNumber(data: GameData): void {
