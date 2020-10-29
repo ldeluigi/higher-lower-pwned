@@ -246,21 +246,11 @@ export class DuelComponent implements OnInit, OnDestroy {
         }
       }
     });
-    this.players.sort((p1, p2) => {
-        if (p1.score === p2.score) {
-          if (p1.guesses === p2.guesses) {
-            if (p1.timeout === p2.timeout) {
-              return p1.id > p2.id ? 1 : -1;
-            } else {
-              return p1.timeout - p2.timeout;
-            }
-          } else {
-            return p2.guesses - p1.guesses;
-          }
-        } else {
-          return p2.score - p1.score;
-        }
-      });
+    this.players
+      .sort((p1, p2) =>
+        p1.score === p2.score ?
+          (p1.guesses < p2.guesses ? 1 : -1) :
+          (p1.score < p2.score ? 1 : -1));
   }
 
   private updateGuessNumber(data: GameData): void {
