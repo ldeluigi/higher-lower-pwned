@@ -3,7 +3,7 @@
     <app-counter [counter]="actualScore"></app-counter>
   </div>
   <div class="wrapper">
-    <app-word-spinner (answerEmitter)="response($event)"></app-word-spinner>
+    <app-word-spinner [buttonEnable]="!this.loading" (answerEmitter)="response($event)"></app-word-spinner>
   </div>
   <div class="commands">
     <div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>

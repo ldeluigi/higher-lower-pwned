@@ -63,6 +63,7 @@ export class WordSpinnerComponent {
   }
 
   async gameSetup(setup: GameSetup): Promise<void> {
+    this.loading = false;
     this.element1 = {
       word: setup.word1,
       score: setup.score1.toString(),
@@ -77,6 +78,7 @@ export class WordSpinnerComponent {
   }
 
   async next(next: NextCard): Promise<void> {
+    this.loading = false;
     return new Promise<void>(r => {
       this.nextPromise = r;
       rollNumber(next.oldScore, 600, (n) => this.element2.score = n.toString())
@@ -116,7 +118,7 @@ export class WordSpinnerComponent {
       this.element1.status = 'first';
       this.element2.status = 'second';
       rollWord(this.newElement.word, 600, w => this.element2.word = w)
-      .then(() => this.loading = false);
+        .then(() => this.loading = false);
       this.element2.score = this.emptyScore;
       if (this.nextPromise) {
         this.nextPromise();

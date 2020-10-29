@@ -20,7 +20,6 @@ export class PlayerListComponent {
 
   constructor() { }
 
-
   playerStatus(player: Player): string {
     if (player.haveLost) {
       return 'lost';

@@ -1,18 +1,13 @@
 <dl *ngFor="let p of players; let i = index">
   <dl>
-    <mat-card [attr.id]="playerStatus(p)">
-      <mat-card-header>
+    <mat-card>
         <mat-card-title>
-          #{{i + 1}} {{ p.name }}
+          <p class="rank">#{{i + 1}} </p>
+          <span class="name" [attr.id]="playerStatus(p)">{{ p.name }} </span>
         </mat-card-title>
         <mat-card-subtitle>
-          score: {{ p. score }}
+          <span class="score">score: {{ p.score }}</span>
         </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p *ngIf="playerStatus(p)==='behind'">Player is behind</p>
-        <p *ngIf="playerStatus(p)==='lost'">Player have lost</p>
-      </mat-card-content>
     </mat-card>
   </dl>
 </dl>

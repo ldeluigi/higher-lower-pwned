@@ -28,8 +28,8 @@ export class ArcadeComponent implements OnInit, OnDestroy {
 
   progressbarValue = 100;
   timeLeft = 0;
-  private sub: Subscription | null = null;
-  private numberSubscription: Subscription | null = null;
+  private sub: Subscription | undefined;
+  private numberSubscription: Subscription | undefined;
 
   loading = true;
   playing = false;
@@ -45,9 +45,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // console.log('OnDestry', this.subscription);
     this.playing = false;
-    if (this.subscription !== null) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription?.unsubscribe();
     this.gameSocket.disconnect();
   }
 
@@ -120,7 +118,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
         this.log('The game is ended. ' + (score >= 0 ?  `Your score is ${score}` : 'With a server error.'));
         this.gameSocket.disconnect();
         this.sub?.unsubscribe();
-        this.sub = null;
+        this.sub = undefined;
         this.playing = false;
         this.loading = false;
       });
@@ -153,9 +151,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     const deltaT = Math.floor(milliseconds / frames);
     const timer$ = interval(deltaT);
 
-    if (this.sub !== null) {
-      this.sub.unsubscribe();
-    }
+    this.sub?.unsubscribe();
 
     return new Promise<void>(resolve => {
       this.sub = timer$.subscribe((d) => {
@@ -164,8 +160,8 @@ export class ArcadeComponent implements OnInit, OnDestroy {
         this.timeLeft = milliseconds - currentMillis;
         this.progressbarValue = progressBarMax - currentValue;
         if (this.timeLeft <= 0 && this.sub !== null) {
-          this.sub.unsubscribe();
-          this.sub = null;
+          this.sub?.unsubscribe();
+          this.sub = undefined;
           this.progressbarValue = 0;
           this.timeLeft = 0;
           resolve();
