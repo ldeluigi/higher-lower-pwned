@@ -8,11 +8,12 @@ import {
 import { Observable } from 'rxjs';
 import { AccountService } from '../../_services/account.service';
 import { environment } from 'src/environments/environment';
+import { ApiURLService } from 'src/app/_services/api-url.service';
 
 @Injectable()
 export class JWTInterceptor implements HttpInterceptor {
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private apiURL: ApiURLService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // add auth header with jwt if user is logged in and request is to the api url
@@ -21,7 +22,7 @@ export class JWTInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
     const isLoggedIn = user && user.token;
-    const isApiUrl = request.url.startsWith(environment.apiUrl);
+    const isApiUrl = request.url.startsWith(this.apiURL.restApiUrl);
     if (isLoggedIn && isApiUrl) {
       request = request.clone({
         setHeaders: {

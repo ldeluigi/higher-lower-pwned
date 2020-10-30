@@ -13,9 +13,6 @@ import { SocketIoModule } from 'ngx-socket-io';
 import { CounterComponent } from './_components/counter/counter.component';
 import { WordSpinnerComponent } from './_components/word-spinner/word-spinner.component';
 import { BattleComponent } from './battle/battle.component';
-import { SocketArcade } from './SocketArcade';
-import { SocketDuel } from './SocketDuel';
-import { SocketRoyale } from './SocketRoyale';
 import { PlayerListComponent } from './_components/player-list/player-list.component';
 
 @NgModule({
@@ -35,6 +32,6 @@ import { PlayerListComponent } from './_components/player-list/player-list.compo
     SocketIoModule,
     MatProgressBarModule
   ],
-  providers: [SocketArcade, SocketDuel, SocketRoyale]
+  providers: []
 })
 export class GameModule { }

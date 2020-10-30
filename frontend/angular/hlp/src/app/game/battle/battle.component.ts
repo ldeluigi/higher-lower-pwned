@@ -12,6 +12,7 @@ import { Socket } from 'ngx-socket-io';
 import { SocketDuel } from '../SocketDuel';
 import { SocketRoyale } from '../SocketRoyale';
 import { GameStatus } from '../_utils/GameStatus';
+import { ApiURLService } from 'src/app/_services/api-url.service';
 
 @Component({
   selector: 'app-battle',
@@ -50,7 +51,8 @@ export class BattleComponent implements OnInit, OnDestroy {
   constructor(
     private gameSocket: BattleModelService,
     private snackBar: MatSnackBar,
-    route: ActivatedRoute
+    route: ActivatedRoute,
+    private apiURL: ApiURLService
   ) {
     this.modeSub = route.data.subscribe(elem => {
       this.mode = elem.mode;
@@ -60,9 +62,9 @@ export class BattleComponent implements OnInit, OnDestroy {
 
   private socket(mode: string): Socket {
     if (mode === 'duel') {
-      return new SocketDuel();
+      return new SocketDuel(this.apiURL.socketApiUrl);
     } else if (mode === 'royale') {
-      return new SocketRoyale();
+      return new SocketRoyale(this.apiURL.socketApiUrl);
     }
     throw new Error('Invalid mode');
   }
@@ -246,20 +248,20 @@ export class BattleComponent implements OnInit, OnDestroy {
       }
     });
     this.players.sort((p1, p2) => {
-        if (p1.score === p2.score) {
-          if (p1.guesses === p2.guesses) {
-            if (p1.timeout === p2.timeout) {
-              return p1.id > p2.id ? 1 : -1;
-            } else {
-              return p1.timeout - p2.timeout;
-            }
+      if (p1.score === p2.score) {
+        if (p1.guesses === p2.guesses) {
+          if (p1.timeout === p2.timeout) {
+            return p1.id > p2.id ? 1 : -1;
           } else {
-            return p2.guesses - p1.guesses;
+            return p1.timeout - p2.timeout;
           }
         } else {
-          return p2.score - p1.score;
+          return p2.guesses - p1.guesses;
         }
-      });
+      } else {
+        return p2.score - p1.score;
+      }
+    });
   }
 
   private updateGuessNumber(data: GameData): void {

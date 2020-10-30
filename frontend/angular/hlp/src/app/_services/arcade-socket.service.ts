@@ -6,6 +6,7 @@ import { NextGuess } from '../game/_model/nextguess';
 import { Observable } from 'rxjs';
 import { AccountService } from './account.service';
 import { SocketArcade } from '../game/SocketArcade';
+import { ApiURLService } from './api-url.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +14,14 @@ import { SocketArcade } from '../game/SocketArcade';
 export class ArcadeSocketService implements OnDestroy {
   public game: Observable<GameEnd | NextGuess>;
   private connectionOpen = false;
+  private socket: SocketArcade;
 
   constructor(
-    private socket: SocketArcade,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private apiURL: ApiURLService
   ) {
-    console.log(socket);
+    this.socket = new SocketArcade(apiURL.socketApiUrl);
+    console.log(this.socket);
     this.game = new Observable<GameEnd | NextGuess>((s) => {
       this.socket.removeAllListeners();
       this.socket.on('guess', (nextGuess: NextGuess) => {
