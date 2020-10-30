@@ -1,26 +1,25 @@
 @import "../../../styles/colors.scss";
 
 mat-card {
-  width: calc(100% - 32px);
+  width: 99.5%;
 }
 
 mat-card-subtitle {
-  color: black;
+  color: $dark-text-color;
   text-align: right;
 }
 
 .player {
-  background-color: aliceblue;
-  color: black;
-  
+  background-color: $white-bg;
+  color: $dark-text-color;
 }
 
 #behind {
-  background-color: lightcoral;
+  background-color: $behind-player-color;
 }
 
 #lost {
-  background-color: darkslategrey;
+  background-color: $losing-player-color;
   color: $default-text-color;
 
   mat-card-subtitle {

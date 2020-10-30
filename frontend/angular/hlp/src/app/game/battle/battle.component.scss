@@ -36,7 +36,7 @@
 }
 
 app-word {
-  margin: 0px auto;
+  margin: 0% auto;
   text-align: center;
 }
 
@@ -62,7 +62,7 @@ app-word {
   display: flex;
   .dummyGBtn {
     width: 32%;
-    padding: 32px;
+    padding: 0.5%;
   }
 
   .gameBtn {
@@ -83,6 +83,6 @@ app-word {
   }
 
   .word {
-    width: 44;
+    width: 0.6%;
   }
 }

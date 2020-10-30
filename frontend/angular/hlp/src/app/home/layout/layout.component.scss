@@ -1,6 +1,6 @@
 @import "../../styles/colors.scss";
 
-$footer-high: 70px;
+$footer-high: 1%;
 
 @mixin margin-padding {
   margin: 1%;
@@ -111,11 +111,9 @@ $footer-high: 70px;
   }
 }
 
-.app-leadboard {
-  padding: 2px;
-}
+.app-leadboard,
 .app-stats {
-  padding: 2px;
+  padding: 1%;
 }
 
 .center-column {
