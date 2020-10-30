@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Response } from '../_model/serverResponse';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiURLService } from './api-url.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +22,8 @@ export class AccountService implements OnDestroy {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private apiURL: ApiURLService
   ) {
     this.userSubject = new BehaviorSubject<User | null>(this.extractUser());
     this.user = this.userSubject.asObservable();
@@ -33,7 +35,7 @@ export class AccountService implements OnDestroy {
   }
 
   private log(message: string): void {
-    this.snackBar.open(message, 'ok', {duration: 3000});
+    this.snackBar.open(message, 'ok', { duration: 3000 });
   }
 
   public get userValue(): User | null {
@@ -49,7 +51,7 @@ export class AccountService implements OnDestroy {
   }
 
   login(username: string, password: string): Observable<User | null> {
-    return this.http.post<Response<User | null>>(`${environment.apiUrl}/users/login`, { username, password })
+    return this.http.post<Response<User | null>>(`${this.apiURL.restApiUrl}/users/login`, { username, password })
       .pipe(map(u => {
         localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
         this.userSubject.next(u.data);
@@ -68,7 +70,7 @@ export class AccountService implements OnDestroy {
   }
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {
-    return this.http.post<Response<UserRegistrationResponse>>(`${environment.apiUrl}/users`, user)
+    return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.restApiUrl}/users`, user)
       .pipe(map(u => u.data));
   }
 
@@ -85,7 +87,7 @@ export class AccountService implements OnDestroy {
       this.log('Can\'t update your data');
       return of(false);
     } else {
-      return this.http.put(`${environment.apiUrl}/users/${user.id}`, params)
+      return this.http.put(`${this.apiURL.restApiUrl}/users/${user.id}`, params)
         .pipe(map(x => {
           this.log('Data update correctly');
           return true;
@@ -99,7 +101,7 @@ export class AccountService implements OnDestroy {
       return throwError('No user logged');
     }
     // console.log(`${environment.apiUrl}/users/refresh`, user);
-    return this.http.post<Response<TokenRefresh>>(`${environment.apiUrl}/users/refresh`, { token: user.token, refresh: user.refresh })
+    return this.http.post<Response<TokenRefresh>>(`${this.apiURL.restApiUrl}/users/refresh`, { token: user.token, refresh: user.refresh })
       .pipe(map(a => {
         user.token = a.data.token;
         user.refresh = a.data.refresh;

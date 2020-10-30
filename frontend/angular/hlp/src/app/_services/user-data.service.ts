@@ -8,6 +8,7 @@ import { AccountService } from './account.service';
 import { Response } from '../_model/serverResponse';
 import { map } from 'rxjs/operators';
 import { addParamsToHttp } from '../_helper/httpUtils';
+import { ApiURLService } from './api-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class UserDataService {
 
   constructor(
     private http: HttpClient,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private apiURL: ApiURLService
   ) {
     this.dataSubject = new BehaviorSubject<UserStats>({} as UserStats);
     this.data = this.dataSubject.asObservable();
@@ -35,10 +37,10 @@ export class UserDataService {
       return of({} as UserStats);
     }
     const params: HttpParams = addParamsToHttp(new HttpParams(), [
-      {name: 'period', param: period},
-      {name: 'limit',  param: limit?.toString()}
+      { name: 'period', param: period },
+      { name: 'limit', param: limit?.toString() }
     ]);
-    return this.http.get<Response<UserStats>>(`${environment.apiUrl}/users/${user.id}/stats`, {params})
+    return this.http.get<Response<UserStats>>(`${this.apiURL.restApiUrl}/users/${user.id}/stats`, { params })
       .pipe(map(data => {
         this.dataSubject.next(data.data);
         return data.data;
@@ -50,7 +52,7 @@ export class UserDataService {
     if (user === null) {
       return of({} as UserInfo);
     }
-    return this.http.get<Response<UserInfo>>(`${environment.apiUrl}/users/${user.id}`)
+    return this.http.get<Response<UserInfo>>(`${this.apiURL.restApiUrl}/users/${user.id}`)
       .pipe(map(response => {
         this.userInfoSubject.next(response.data);
         return response.data;

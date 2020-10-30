@@ -7,6 +7,7 @@ import { SocketRoyale } from '../game/SocketRoyale';
 import { NextDuelGuess } from '../game/_model/nextguess';
 import { PlayerIdName, PlayerJoin } from '../game/_model/player-join';
 import { AccountService } from './account.service';
+import { ApiURLService } from './api-url.service';
 
 export interface GameData {
   ids: string[];
@@ -32,7 +33,8 @@ export class BattleModelService implements OnDestroy {
 
   constructor(
     // private socketDuel: SocketDuel,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private apiURL: ApiURLService
   ) {
     // setup subject
     this.playersSubject = new Subject<PlayerJoin | PlayerIdName>();
@@ -50,7 +52,7 @@ export class BattleModelService implements OnDestroy {
       this.currentSocket = newSocket;
     } else {
       if (this.currentSocket === undefined) {
-        this.currentSocket = new SocketDuel();
+        this.currentSocket = new SocketDuel(this.apiURL.socketApiUrl);
       }
     }
     this.currentSocket.removeAllListeners();
