@@ -1,10 +1,10 @@
 const jwtTools = require('../utils/jwt');
 const arcade = require("../game/arcade");
 
-const namespace = "/arcade";
+const namespace = "/socket/arcade";
 
 module.exports = function (sio) {
-  io = sio.of(namespace);
+  let io = sio.of(namespace);
   io.use(function (socket, next) {
     socket.userData = {
       id: null
@@ -101,6 +101,6 @@ module.exports = function (sio) {
       } catch (err) { }
     })
   });
-  console.log("Mounted socket.io arcade module to " + namespace);
+  console.log("Mounted socket.io " + namespace + " module to " + namespace);
   return sio;
 };

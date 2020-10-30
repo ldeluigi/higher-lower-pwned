@@ -399,7 +399,7 @@ module.exports = {
      * @param {number} maxLobbySpace
      */
     function (modeName, maxLobbySpace) {
-      const namespace = "/" + modeName;
+      const namespace = "/socket" + modeName;
       const lobbyRoomPrefix = modeName + "lobby@";
       const matchmaking = new MatchMaking();
       return function (sio) {
