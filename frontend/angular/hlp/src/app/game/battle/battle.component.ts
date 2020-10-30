@@ -62,9 +62,9 @@ export class BattleComponent implements OnInit, OnDestroy {
 
   private socket(mode: string): Socket {
     if (mode === 'duel') {
-      return new SocketDuel(this.apiURL.socketApiUrl);
+      return new SocketDuel(this.apiURL.socketApiUrl());
     } else if (mode === 'royale') {
-      return new SocketRoyale(this.apiURL.socketApiUrl);
+      return new SocketRoyale(this.apiURL.socketApiUrl());
     }
     throw new Error('Invalid mode');
   }

@@ -20,7 +20,7 @@ export class ArcadeSocketService implements OnDestroy {
     private accountService: AccountService,
     private apiURL: ApiURLService
   ) {
-    this.socket = new SocketArcade(apiURL.socketApiUrl);
+    this.socket = new SocketArcade(apiURL.socketApiUrl());
     console.log(this.socket);
     this.game = new Observable<GameEnd | NextGuess>((s) => {
       this.socket.removeAllListeners();

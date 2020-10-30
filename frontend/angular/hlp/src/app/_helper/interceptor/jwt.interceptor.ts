@@ -7,7 +7,6 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AccountService } from '../../_services/account.service';
-import { environment } from 'src/environments/environment';
 import { ApiURLService } from 'src/app/_services/api-url.service';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class JWTInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
     const isLoggedIn = user && user.token;
-    const isApiUrl = request.url.startsWith(this.apiURL.restApiUrl);
+    const isApiUrl = request.url.startsWith(this.apiURL.baseApiUrl());
     if (isLoggedIn && isApiUrl) {
       request = request.clone({
         setHeaders: {

@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { LbItem } from '../_model/lbItem';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { map, first } from 'rxjs/operators';
 import { Response } from '../_model/serverResponse';
 import { Stats } from '../_model/stats';
 import { addParamsToHttp } from '../_helper/httpUtils';
@@ -40,7 +38,8 @@ export class GameStatsService {
   public refreshStats(period?: string, mode: string = ''): void {
     const param = addParamsToHttp(new HttpParams(), [{ name: 'period', param: period }]);
     const urlMode = mode.length > 0 ? `/${mode}` : '';
-    const url = `${this.apiURL.restApiUrl}/stats${urlMode}`;
+    const apiUrl = this.apiURL.restApiUrl();
+    const url = apiUrl + '/stats' + urlMode; // `${this.apiURL.restApiUrl}/stats${urlMode}`;
     this.http.get<Response<Stats>>(url, { params: param })
       .subscribe(response => {
         this.statsSubject.next(response.data);
@@ -52,7 +51,8 @@ export class GameStatsService {
       { name: 'limit', param: limit?.toString() },
       { name: 'period', param: period }
     ]);
-    const url = `${this.apiURL.restApiUrl}/leaderboards/${mode}`;
+    const apiUrl = this.apiURL.restApiUrl();
+    const url = apiUrl + '/leaderboards/' + mode; // `${this.apiURL.restApiUrl}/leaderboards/${mode}`;
     this.http.get<Response<LbItem[]>>(url, { params })
       .subscribe(response => {
         this.leaderboardSubject.next(response.data);

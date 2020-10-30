@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { UserStats } from '../_model/userStats';
 import { UserInfo } from '../_model/userInfo';
-import { environment } from 'src/environments/environment';
 import { AccountService } from './account.service';
 import { Response } from '../_model/serverResponse';
 import { map } from 'rxjs/operators';
@@ -40,7 +39,7 @@ export class UserDataService {
       { name: 'period', param: period },
       { name: 'limit', param: limit?.toString() }
     ]);
-    return this.http.get<Response<UserStats>>(`${this.apiURL.restApiUrl}/users/${user.id}/stats`, { params })
+    return this.http.get<Response<UserStats>>(`${this.apiURL.restApiUrl()}/users/${user.id}/stats`, { params })
       .pipe(map(data => {
         this.dataSubject.next(data.data);
         return data.data;
@@ -52,7 +51,7 @@ export class UserDataService {
     if (user === null) {
       return of({} as UserInfo);
     }
-    return this.http.get<Response<UserInfo>>(`${this.apiURL.restApiUrl}/users/${user.id}`)
+    return this.http.get<Response<UserInfo>>(`${this.apiURL.restApiUrl()}/users/${user.id}`)
       .pipe(map(response => {
         this.userInfoSubject.next(response.data);
         return response.data;

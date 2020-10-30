@@ -52,7 +52,7 @@ export class BattleModelService implements OnDestroy {
       this.currentSocket = newSocket;
     } else {
       if (this.currentSocket === undefined) {
-        this.currentSocket = new SocketDuel(this.apiURL.socketApiUrl);
+        this.currentSocket = new SocketDuel(this.apiURL.socketApiUrl());
       }
     }
     this.currentSocket.removeAllListeners();

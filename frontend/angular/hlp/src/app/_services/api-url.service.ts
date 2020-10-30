@@ -10,12 +10,16 @@ export class ApiURLService {
 
   constructor() { }
 
-  get restApiUrl(): string {
-    return `${this.loadApiUrl}/api`;
+  baseApiUrl(): string {
+    return this.loadApiUrl();
   }
 
-  get socketApiUrl(): string {
-    return `${this.loadApiUrl()}/socket`;
+  restApiUrl(): string {
+    return this.loadApiUrl() + '/api';
+  }
+
+  socketApiUrl(): string {
+    return this.loadApiUrl() + '/socket';
   }
 
   private loadApiUrl(): string {
@@ -26,7 +30,7 @@ export class ApiURLService {
       const baseUrl = window.location.origin;
       this.apiURL = baseUrl;
     } else {
-      this.apiURL = 'http://192.168.99.100:8080';
+      this.apiURL = 'http://localhost:8080';
     }
     return this.apiURL;
   }
