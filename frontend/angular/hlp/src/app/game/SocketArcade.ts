@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { environment } from 'src/environments/environment';
+import { ApiURLService } from '../_services/api-url.service';
 
 @Injectable()
 export class SocketArcade extends Socket {
-  constructor() {
-    super({ url: `${environment.apiUrl}/arcade`, options: { autoConnect: false } });
+  constructor(
+    private url: ApiURLService
+  ) {
+    super({ url: `${url.socketApiUrl}/arcade`, options: { autoConnect: false } });
   }
 }
