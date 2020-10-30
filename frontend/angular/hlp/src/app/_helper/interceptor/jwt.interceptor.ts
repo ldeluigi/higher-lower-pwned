@@ -21,7 +21,7 @@ export class JWTInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
     const isLoggedIn = user && user.token;
-    const isApiUrl = request.url.startsWith(this.apiURL.baseApiUrl());
+    const isApiUrl = request.url.startsWith(this.apiURL.baseApiUrl);
     if (isLoggedIn && isApiUrl) {
       request = request.clone({
         setHeaders: {

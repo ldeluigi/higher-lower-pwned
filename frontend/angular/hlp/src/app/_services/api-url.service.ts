@@ -10,16 +10,16 @@ export class ApiURLService {
 
   constructor() { }
 
-  baseApiUrl(): string {
+  get baseApiUrl(): string {
     return this.loadApiUrl();
   }
 
-  restApiUrl(): string {
-    return this.loadApiUrl() + '/api';
+  get restApiUrl(): string {
+    return `${this.loadApiUrl()}/api`;
   }
 
-  socketApiUrl(): string {
-    return this.loadApiUrl() + '/socket';
+  get socketApiUrl(): string {
+    return `${this.loadApiUrl()}/socket`;
   }
 
   private loadApiUrl(): string {

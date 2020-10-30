@@ -5,7 +5,7 @@ import { BattleModelService, GameData } from 'src/app/_services/battle-model.ser
 import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
 import { Player } from '../_components/player-list/player-list.component';
 import { NextDuelGuess } from '../_model/nextguess';
-import { getDataFromId, evaluatePlayerId, GameDataType, gameDataType, GameMode, Game, gameIsEnd } from '../_utils/gameHelper';
+import { getDataFromId, GameDataType, gameDataType, GameMode, Game, gameIsEnd } from '../_utils/gameHelper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
@@ -62,9 +62,9 @@ export class BattleComponent implements OnInit, OnDestroy {
 
   private socket(mode: string): Socket {
     if (mode === 'duel') {
-      return new SocketDuel(this.apiURL.socketApiUrl());
+      return new SocketDuel(this.apiURL.socketApiUrl);
     } else if (mode === 'royale') {
-      return new SocketRoyale(this.apiURL.socketApiUrl());
+      return new SocketRoyale(this.apiURL.socketApiUrl);
     }
     throw new Error('Invalid mode');
   }
@@ -106,7 +106,7 @@ export class BattleComponent implements OnInit, OnDestroy {
     });
 
     this.playersSub = this.gameSocket.players.subscribe(pj => {
-      if (pj.id === evaluatePlayerId(this.gameSocket.myId, this.gameMode)) {
+      if (pj.id.includes(this.gameSocket.myId)) {
         this.myName = pj.name;
       }
       if (this.players.find(p => p.id === pj.id) === undefined) {
@@ -219,7 +219,7 @@ export class BattleComponent implements OnInit, OnDestroy {
   }
 
   private analiseGuess(data: GameData): void {
-    const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data, this.gameMode);
+    const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data);
     const gameType: GameDataType = gameDataType(data, this.game.currentGuess?.word2);
     this.game.next(myGuess, gameType);
 

@@ -19,27 +19,20 @@ function currentGuess(data: GameData): number {
   return Math.min(...data.data.filter(e => e.lost && !e.lost).map(e => e.guesses)) || Math.max(...data.data.map(e => e.guesses));
 }
 
-function getId(myId: string, mode: GameMode): string {
-  switch (mode) {
-    case GameMode.Duel:
-      return '/duel#' + myId;
-    case GameMode.BattleRoyale:
-      return '/royale#' + myId;
-    default:
-      return myId;
-  }
+function extractId(ids: string[], myId: string): string | undefined {
+  return ids.find(e => e.includes(myId));
 }
 
-function getDataFromId(myId: string, data: GameData, mode: GameMode = GameMode.Duel): NextDuelGuess {
-  const myIndex = data.ids.indexOf(getId(myId, mode));
+function getDataFromId(myId: string, data: GameData): NextDuelGuess {
+  const myIndex = data.ids.indexOf(extractId(data.ids, myId) || '');
   if (myIndex >= 0) {
     return data.data[myIndex];
   }
   return {} as NextDuelGuess;
 }
 
-function havePlayerLost(playerId: string, data: GameData, mode: GameMode = GameMode.Duel): boolean {
-  const player = getDataFromId(playerId, data, mode);
+function havePlayerLost(playerId: string, data: GameData): boolean {
+  const player = getDataFromId(playerId, data);
   return player.lost !== undefined && player.lost;
 }
 
@@ -167,7 +160,7 @@ class Game {
       if (this.currentStatus === GameStatus.WAITING_START) { /* start */
         this.startGame(myGuess);
         this.currentStatus = GameStatus.PLAYING;
-      } else if (this.currentStatus === GameStatus.PLAYING && haveLost(myGuess)) { /* lost */
+      } else if (this.isInGame() && haveLost(myGuess)) { /* lost */
         this.currentStatus = GameStatus.SPECTATORE;
         this.endGame(myGuess);
       } else {
@@ -199,7 +192,6 @@ class Game {
       score2: guess.value2
     } as Card;
   }
-
 }
 
 export {
@@ -212,6 +204,6 @@ export {
   playerInGame,
   GameType as GameDataType,
   GameMode,
-  getId as evaluatePlayerId,
+  extractId,
   Game
 };

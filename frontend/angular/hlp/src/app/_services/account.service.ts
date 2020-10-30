@@ -6,7 +6,6 @@ import { Route, Router } from '@angular/router';
 import { HttpClient, JsonpInterceptor } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
 import { Response } from '../_model/serverResponse';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiURLService } from './api-url.service';
@@ -51,7 +50,7 @@ export class AccountService implements OnDestroy {
   }
 
   login(username: string, password: string): Observable<User | null> {
-    return this.http.post<Response<User | null>>(`${this.apiURL.restApiUrl()}/users/login`, { username, password })
+    return this.http.post<Response<User | null>>(`${this.apiURL.restApiUrl}/users/login`, { username, password })
       .pipe(map(u => {
         localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
         this.userSubject.next(u.data);
@@ -70,7 +69,7 @@ export class AccountService implements OnDestroy {
   }
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {
-    return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.restApiUrl()}/users`, user)
+    return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.restApiUrl}/users`, user)
       .pipe(map(u => u.data));
   }
 
@@ -87,7 +86,7 @@ export class AccountService implements OnDestroy {
       this.log('Can\'t update your data');
       return of(false);
     } else {
-      return this.http.put(`${this.apiURL.restApiUrl()}/users/${user.id}`, params)
+      return this.http.put(`${this.apiURL.restApiUrl}/users/${user.id}`, params)
         .pipe(map(x => {
           this.log('Data update correctly');
           return true;
@@ -101,7 +100,7 @@ export class AccountService implements OnDestroy {
       return throwError('No user logged');
     }
     // console.log(`${environment.apiUrl}/users/refresh`, user);
-    return this.http.post<Response<TokenRefresh>>(`${this.apiURL.restApiUrl()}/users/refresh`, { token: user.token, refresh: user.refresh })
+    return this.http.post<Response<TokenRefresh>>(`${this.apiURL.restApiUrl}/users/refresh`, { token: user.token, refresh: user.refresh })
       .pipe(map(a => {
         user.token = a.data.token;
         user.refresh = a.data.refresh;

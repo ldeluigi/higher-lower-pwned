@@ -20,24 +20,24 @@ export class ArcadeSocketService implements OnDestroy {
     private accountService: AccountService,
     private apiURL: ApiURLService
   ) {
-    this.socket = new SocketArcade(apiURL.socketApiUrl());
+    this.socket = new SocketArcade(apiURL.socketApiUrl);
     console.log(this.socket);
     this.game = new Observable<GameEnd | NextGuess>((s) => {
       this.socket.removeAllListeners();
       this.socket.on('guess', (nextGuess: NextGuess) => {
-        // console.log('>guess: ', nextGuess);
+        console.log('>guess: ', nextGuess);
         s.next(nextGuess);
       });
       this.socket.on('on-error', (err: Error) => {
-        // console.log('>on-error: ', err);
+        console.log('>on-error: ', err);
         s.error(err);
       });
       this.socket.on('gameEnd', (gameEnd: GameEnd) => {
-        // console.log('>gameEnd: ', gameEnd);
+        console.log('>gameEnd: ', gameEnd);
         s.next(gameEnd);
       });
       this.socket.on('error', (e: string) => {
-        // console.log('>error: ', e);
+        console.log('>error: ', e);
         if (e === 'error-connection') {
           if (this.accountService.userValue !== null) {
             this.accountService.refreshToken().subscribe(t => {
@@ -69,7 +69,9 @@ export class ArcadeSocketService implements OnDestroy {
   private async setUpAndConnect(): Promise<void> {
     if (this.accountService.userValue !== null) {
       // console.log('add token');
-      this.socket.ioSocket.io.opts.query = { token: this.accountService.userValue.token };
+      this.socket.ioSocket.io.opts.query = {
+        token: this.accountService.userValue.token
+      };
     } else {
       // console.log('remove toke');
       this.socket.ioSocket.io.opts.query = {};

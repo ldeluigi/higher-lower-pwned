@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable, Subject } from 'rxjs';
 import { SocketDuel } from '../game/SocketDuel';
-import { SocketRoyale } from '../game/SocketRoyale';
 import { NextDuelGuess } from '../game/_model/nextguess';
 import { PlayerIdName, PlayerJoin } from '../game/_model/player-join';
 import { AccountService } from './account.service';
@@ -32,7 +31,6 @@ export class BattleModelService implements OnDestroy {
   currentSocket: Socket | undefined;
 
   constructor(
-    // private socketDuel: SocketDuel,
     private accountService: AccountService,
     private apiURL: ApiURLService
   ) {
@@ -52,13 +50,13 @@ export class BattleModelService implements OnDestroy {
       this.currentSocket = newSocket;
     } else {
       if (this.currentSocket === undefined) {
-        this.currentSocket = new SocketDuel(this.apiURL.socketApiUrl());
+        throw new Error('Missing socket!');
       }
     }
     this.currentSocket.removeAllListeners();
 
     this.currentSocket.on('guess', (res: GameData) => {
-      console.log('>guess: ', res);
+      // console.log('>guess: ', res);
       this.gameDataSubject.next(res);
     });
 
@@ -68,8 +66,8 @@ export class BattleModelService implements OnDestroy {
     });
 
     const opponents = (players: { opponents: PlayerIdName[] }) => {
-      console.log('>waiting-opponents: ');
-      console.log(players);
+      // console.log('>waiting-opponents: ');
+      // console.log(players);
       players.opponents.forEach(p => this.playersSubject.next(p));
     };
 
@@ -77,7 +75,7 @@ export class BattleModelService implements OnDestroy {
     this.currentSocket.on('opponents', opponents);
 
     this.currentSocket.on('player-join', (data: PlayerJoin) => {
-      console.log('>player-join: ', data);
+      // console.log('>player-join: ', data, 'myId', this.myId);
       this.playersSubject.next(data);
     });
   }
