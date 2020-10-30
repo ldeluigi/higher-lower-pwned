@@ -1,15 +1,5 @@
 @import "../../styles/mixins.scss";
-
-@mixin height-col {
-  margin: 0 1%;
-  height: 100%;
-  float: left;
-}
-
-@mixin wide-col {
-  margin: 0 1%;
-  width: 98%;
-}
+@import "../../styles/dimensions.scss";
 
 .left-col {
   @include wide-col();
@@ -22,11 +12,13 @@
 @include desktop {
   .left-col {
     @include height-col();
+    float: left;
     width: 28%;
   }
 
   .right-col {
     @include height-col();
+    float: left;
     width: 68%;
   }
 }

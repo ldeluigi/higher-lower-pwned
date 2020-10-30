@@ -2,6 +2,7 @@
 @import "~@angular/material/theming";
 @include mat-core();
 @import "./app/styles/roboto.scss";
+@import "./app/styles/dimensions.scss";
 
 * {
   @include angular-material-typography($roboto-custom-typography);
@@ -40,6 +41,6 @@ body {
 }
 
 div.mat-expansion-panel-body {
-  padding: 5px;
+  padding: $default-padding;
   max-width: 100%;
 }

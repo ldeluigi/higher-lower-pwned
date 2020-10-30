@@ -1,4 +1,5 @@
-@import '../../../styles/mixins.scss';
+@import "../../../styles/mixins.scss";
+@import "../../../styles/dimensions.scss";
 
 :host {
   width: 95%;
@@ -24,12 +25,11 @@ a {
 
 @include desktop {
   a {
-    margin-top: 2%;
-    margin-bottom: 2%;
+    margin: $default-Y-margin-desktop;
   }
   .layout {
     width: 70%;
-    margin-top: 2%;
+    margin: $default-Y-margin-desktop;
   }
 
   .selector {

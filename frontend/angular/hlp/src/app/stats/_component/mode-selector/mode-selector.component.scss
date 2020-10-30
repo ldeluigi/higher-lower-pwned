@@ -1,4 +1,5 @@
 @import "../../../styles/mixins.scss";
+@import "../../../styles/dimensions.scss";
 
 .nav-bar {
   width: 70%;
@@ -18,8 +19,7 @@
   .nav-bar {
     width: 50%;
     a {
-      margin-top: 2%;
-      margin-bottom: 2%;
+      margin: $default-Y-margin-desktop;
     }
   }
 }

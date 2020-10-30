@@ -1,4 +1,5 @@
 @import "../../styles/colors.scss";
+@import "../../styles/dimensions.scss";
 
 table {
   width: 100%;
@@ -9,10 +10,10 @@ canvas {
 }
 
 div.inputs {
-  margin-bottom: 1%;
+  margin-bottom: $default-margin;
   background: $white-bg;
 }
 
 .input {
-  margin: 1%;
+  margin: $default-margin;
 }

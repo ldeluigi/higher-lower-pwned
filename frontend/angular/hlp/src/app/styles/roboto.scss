@@ -4,19 +4,29 @@ $high-font-weight: 500;
 $roboto-custom-typography: mat-typography-config(
   $font-family: "Roboto, sans-serif",
   $display-4:
-    mat-typography-level(1.5%, 1.5%, $low-font-weight, $letter-spacing: -0.05em),
+    mat-typography-level(10vw, 10vw, $low-font-weight, $letter-spacing: -0.05em),
   $display-3:
-    mat-typography-level(0.7%, 0.7%, $low-font-weight, $letter-spacing: -0.02em),
+    mat-typography-level(
+      4.2vw,
+      4.2vw,
+      $low-font-weight,
+      $letter-spacing: -0.02em
+    ),
   $display-2:
-    mat-typography-level(0.6%, 0.6%, $low-font-weight, $letter-spacing: -0.01em),
-  $display-1: mat-typography-level(0.55%, 0.55%, $low-font-weight),
-  $headline: mat-typography-level(0.35%, 0.5%, $low-font-weight),
-  $title: mat-typography-level(0.3%, 0.5%, $high-font-weight),
-  $subheading-2: mat-typography-level(0.27%, 0.4%, $low-font-weight),
-  $subheading-1: mat-typography-level(0.26%, 0.35%, $low-font-weight),
-  $body-2: mat-typography-level(0.25%, 0.35%, $high-font-weight),
-  $body-1: mat-typography-level(0.25%, 0.3%, $low-font-weight),
-  $caption: mat-typography-level(0.24%, 0.3%, $low-font-weight),
-  $button: mat-typography-level(0.25%, 0.25%, $high-font-weight),
+    mat-typography-level(
+      3.6vw,
+      3.6vw,
+      $low-font-weight,
+      $letter-spacing: -0.01em
+    ),
+  $display-1: mat-typography-level(3.3vw, 3.3vw, $low-font-weight),
+  $headline: mat-typography-level(2.3vw, 3vw, $low-font-weight),
+  $title: mat-typography-level(1.8vw, 3vw, $high-font-weight),
+  $subheading-2: mat-typography-level(1.7vw, 2.4vw, $low-font-weight),
+  $subheading-1: mat-typography-level(1.6vw, 2.1vw, $low-font-weight),
+  $body-2: mat-typography-level(1.5vw, 2.1vw, $high-font-weight),
+  $body-1: mat-typography-level(1.5vw, 1.8vw, $low-font-weight),
+  $caption: mat-typography-level(1.5vw, 1.8vw, $low-font-weight),
+  $button: mat-typography-level(1.5vw, 1.5vw, $high-font-weight),
   $input: mat-typography-level(inherit, 1.125, $low-font-weight),
 );

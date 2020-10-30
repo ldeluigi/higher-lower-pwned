@@ -1,10 +1,12 @@
+@import "./styles/dimensions.scss";
+
 .nav-home {
   display: flex;
   align-items: right;
   justify-content: flex-end;
-  padding: 1%;
+  padding: $default-padding;
 }
 
 .nav-home * {
-  margin-left: 1%;
+  margin-left: $default-margin;
 }

@@ -1,7 +1,8 @@
 @import "../../../styles/colors.scss";
+@import "../../../styles/dimensions.scss";
 
 mat-card {
-  width: 99.5%;
+  @include wide-col();
 }
 
 mat-card-subtitle {
