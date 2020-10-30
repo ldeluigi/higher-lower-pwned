@@ -1,4 +1,4 @@
-import { interval, Subscription } from 'rxjs';
+import { interval } from 'rxjs';
 function rollNumber(end: number, time: number, update: (n: number) => void, frames: number = 100): Promise<void> {
   const delta = Math.floor(end / frames);
   const deltaT = Math.floor(time / frames);
@@ -25,7 +25,7 @@ function charRoll(char: string, step: number, maxStep: number, position: number 
     : { s: String.fromCharCode(step * (val - variation) / maxStep + variation), n: step * (val - variation) / maxStep + variation };
 }
 
-function rollWord(word: string, time: number, update: (s: string) => void, frames: number = 100): Promise<void> {
+function rollWord(word: string, time: number, update: (s: string) => void): Promise<void> {
   const frame = 50;
   const deltaT = Math.floor(time / frame);
 

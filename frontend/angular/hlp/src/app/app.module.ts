@@ -6,8 +6,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { ErrorInterceptor } from './_helper/error.interceptor';
-import { JWTInterceptor } from './_helper/jwt.interceptor';
+import { ErrorInterceptor } from './_helper/interceptor/error.interceptor';
+import { JWTInterceptor } from './_helper/interceptor/jwt.interceptor';
 import { AccountModule } from './account/account.module';
 import { UsersModule } from './users/users.module';
 import { GameModule } from './game/game.module';
@@ -20,10 +20,8 @@ import { InputDialogComponent } from './_components/input-dialog/input-dialog.co
 
 import { LinksComponent } from './home/links/links.component';
 import { SharedModule } from './shared/shared.module';
-import { StatisticModule } from './statistic/statistic.module';
+import { StatsModule } from './stats/stats.module';
 
-import { UserHomeComponent } from './home/user-home/user-home.component';
-import { NoUserHomeComponent } from './home/no-user-home/no-user-home.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +30,6 @@ import { NoUserHomeComponent } from './home/no-user-home/no-user-home.component'
     LayoutComponent,
     InputDialogComponent,
     LinksComponent,
-    UserHomeComponent,
-    NoUserHomeComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -44,7 +40,7 @@ import { NoUserHomeComponent } from './home/no-user-home/no-user-home.component'
     UsersModule,
     SharedModule,
     GameModule,
-    StatisticModule
+    StatsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

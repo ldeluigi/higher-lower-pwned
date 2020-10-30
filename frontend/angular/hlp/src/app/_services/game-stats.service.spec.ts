@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DuelModeService } from './duel-mode.service';
+import { GameStatsService } from './game-stats.service';
 
-describe('DuelModeService', () => {
-  let service: DuelModeService;
+describe('StatisticService', () => {
+  let service: GameStatsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DuelModeService);
+    service = TestBed.inject(GameStatsService);
   });
 
   it('should be created', () => {

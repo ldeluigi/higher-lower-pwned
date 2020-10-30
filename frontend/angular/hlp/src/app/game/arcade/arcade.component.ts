@@ -1,8 +1,8 @@
-import { Component, OnInit, Type, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ArcadeSocketService } from '../../_services/arcade-socket.service';
 import { GameEnd } from '../_model/gameEnd';
 import { NextGuess } from '../_model/nextguess';
-import { Observable, interval, Subscription } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
 import { rollNumber } from '../_utils/wordAnimation';
@@ -29,7 +29,6 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   progressbarValue = 100;
   timeLeft = 0;
   private sub: Subscription | undefined;
-  private numberSubscription: Subscription | undefined;
 
   loading = true;
   playing = false;

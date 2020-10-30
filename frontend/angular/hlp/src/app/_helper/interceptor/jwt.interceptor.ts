@@ -6,7 +6,7 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AccountService } from '../_services/account.service';
+import { AccountService } from '../../_services/account.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable()

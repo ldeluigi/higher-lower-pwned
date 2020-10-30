@@ -9,10 +9,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { MatButtonModule } from '@angular/material/button';
 
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SocketIoModule } from 'ngx-socket-io';
 import { CounterComponent } from './_components/counter/counter.component';
 import { WordSpinnerComponent } from './_components/word-spinner/word-spinner.component';
-import { DuelComponent } from './duel/duel.component';
+import { BattleComponent } from './battle/battle.component';
 import { SocketArcade } from './SocketArcade';
 import { SocketDuel } from './SocketDuel';
 import { SocketRoyale } from './SocketRoyale';
@@ -24,7 +24,7 @@ import { PlayerListComponent } from './_components/player-list/player-list.compo
     ArcadeComponent,
     CounterComponent,
     WordSpinnerComponent,
-    DuelComponent,
+    BattleComponent,
     PlayerListComponent,
   ],
   imports: [

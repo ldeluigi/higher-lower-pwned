@@ -1,4 +1,4 @@
-import { AnimationTriggerMetadata, trigger, transition, style, AnimationEvent, animate } from '@angular/animations';
+import { AnimationTriggerMetadata, trigger, transition, style, animate } from '@angular/animations';
 
 export function animationTitle1(): AnimationTriggerMetadata {
   return trigger('title1', [
@@ -54,5 +54,5 @@ export function fadeInFast(): AnimationTriggerMetadata {
         opacity: 1,
       }))
     ])
-  ])
+  ]);
 }

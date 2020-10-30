@@ -11,7 +11,7 @@ import { addParamsToHttp } from '../_helper/httpUtils';
 @Injectable({
   providedIn: 'root'
 })
-export class StatisticService {
+export class GameStatsService {
 
   private leaderboardSubject: BehaviorSubject<LbItem[]>;
   private statsSubject: BehaviorSubject<Stats>;

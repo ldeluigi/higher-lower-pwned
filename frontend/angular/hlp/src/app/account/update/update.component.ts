@@ -3,8 +3,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../_services/account.service';
 import { first } from 'rxjs/operators';
-import { User } from 'src/app/_model/user';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-update',
@@ -60,10 +58,10 @@ export class UpdateComponent implements OnInit {
     this.accountService.update(undefined, this.formEmail.controls.email.value)
       .pipe(first())
       .subscribe(
-        data => {
+        () => {
           this.router.navigate([this.returnUrl]);
         },
-        error => {
+        () => {
           // this.alertService.error(error); TODO do an allertService
           this.loadingEmail = false;
         });
@@ -84,10 +82,10 @@ export class UpdateComponent implements OnInit {
     this.accountService.update(this.formPwd.controls.password.value, undefined)
       .pipe(first())
       .subscribe(
-        data => {
+        () => {
           this.router.navigate([this.returnUrl]);
         },
-        error => {
+        () => {
           // this.alertService.error(error); TODO do an allertService
           this.loadingPwd = false;
         });

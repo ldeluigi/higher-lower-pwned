@@ -10,8 +10,8 @@ import {
   daysOfTheYear,
 } from '../../_helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
-import { HistoryItemToEndDatePipe } from 'src/app/_helper/history-item-to-end-date.pipe';
-import { HistoryItemToStartDatePipe } from 'src/app/_helper/history-item-to-start-date.pipe';
+import { HistoryItemToEndDatePipe } from 'src/app/_helper/pipe/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from 'src/app/_helper/pipe/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
 import * as Const from './user-stats.constant';
 
@@ -97,8 +97,8 @@ export class UserStatsComponent implements OnInit {
       const array = data?.history || [];
       // console.log('array', array);
       this.dataSource.data = array;
-      let scores: HistoryItem[] = [];
-      let label: Array<string> = [];
+      const scores: HistoryItem[] = [];
+      const label: Array<string> = [];
       if (array.length > 0) {
         const end = this.periodBegin();
         const periods = periodIterator(
@@ -128,15 +128,20 @@ export class UserStatsComponent implements OnInit {
                 maxDuration: 0,
               };
           // console.log("out", lastElement, element);
-          if (lastElement.avgPlaysPerDay !== 0 && element.avgPlaysPerDay === 0) {
-              if (periods[periods.length - 1] !== e) {
-                label.push(Const.GRAPH_EMPTY_PERIODS);
-                scores.push(element);
-              } else {
-                scores.pop();
-              }
-          // ignoring other void periods
-          } else if (!(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)) {
+          if (
+            lastElement.avgPlaysPerDay !== 0 &&
+            element.avgPlaysPerDay === 0
+          ) {
+            if (periods[periods.length - 1] !== e) {
+              label.push(Const.GRAPH_EMPTY_PERIODS);
+              scores.push(element);
+            } else {
+              scores.pop();
+            }
+            // ignoring other void periods
+          } else if (
+            !(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)
+          ) {
             scores.push(element);
 
             // console.log(element);
@@ -191,7 +196,7 @@ export class UserStatsComponent implements OnInit {
         scores.splice(lastIndex);
         label.splice(lastIndex);
       }
-      this.expanded = scores.length != 0;
+      this.expanded = scores.length !== 0;
 
       this.chartLabels = label;
       this.lineChartData = [

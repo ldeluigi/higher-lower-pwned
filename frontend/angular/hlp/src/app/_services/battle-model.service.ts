@@ -16,7 +16,7 @@ export interface GameData {
 @Injectable({
   providedIn: 'root'
 })
-export class DuelModeService implements OnDestroy {
+export class BattleModelService implements OnDestroy {
 
   private playersSubject: Subject<PlayerJoin | PlayerIdName>;
   private gameDataSubject: Subject<GameData>;

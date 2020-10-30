@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { PeriodButtonsComponent } from '../_components/period-buttons/period-buttons.component';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { PeriodButtonsComponent } from './_components/period-buttons/period-buttons.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { MatButtonModule } from '@angular/material/button';
 
-import { HistoryItemToEndDatePipe } from '../_helper/history-item-to-end-date.pipe';
-import { HistoryItemToStartDatePipe } from '../_helper/history-item-to-start-date.pipe';
+import { HistoryItemToEndDatePipe } from '../_helper/pipe/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from '../_helper/pipe/history-item-to-start-date.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';

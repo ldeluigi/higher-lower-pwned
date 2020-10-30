@@ -1,5 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { UserDataService } from '../../_services/user-data.service';
 import { UserInfo } from 'src/app/_model/userInfo';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +15,6 @@ export class UserInfoComponent implements OnInit {
   userInfo: UserInfo = {} as UserInfo;
 
   constructor(
-    private router: Router,
     private usersTools: UserDataService,
     public dialog: MatDialog,
     private accountService: AccountService,
@@ -29,7 +27,7 @@ export class UserInfoComponent implements OnInit {
     this.snackBar.open(message, 'ok', { duration: 3000 });
   }
 
-  private logUpdated(bool: Boolean): void {
+  private logUpdated(bool: boolean): void {
     if (bool) {
       this.log('successfully updated');
       this.updateUserInfo();

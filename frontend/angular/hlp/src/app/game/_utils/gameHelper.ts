@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { GameData } from '../../_services/duel-mode.service';
+import { GameData } from '../../_services/battle-model.service';
 import { GameStatus } from './GameStatus';
 import { NextDuelGuess, NextGuess } from '../_model/nextguess';
 

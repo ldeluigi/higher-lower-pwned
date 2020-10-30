@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Stats } from '../../../_model/stats';
-import { StatisticService } from '../../../_services/statistic.service';
+import { GameStatsService } from '../../../_services/game-stats.service';
 import { timeConversion } from '../../../_helper/timeConversion';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -23,7 +23,7 @@ export class StatsComponent implements OnInit, OnDestroy {
   myStats: Stat[] = [];
 
   constructor(
-    private statsService: StatisticService,
+    private statsService: GameStatsService,
     private route: ActivatedRoute
   ) {
     this.modeSub = route.data.subscribe(elem => this.mode = elem.mode);

@@ -1,0 +1,25 @@
+@import "../../../styles/mixins.scss";
+
+.nav-bar {
+  width: 70%;
+  margin: auto;
+  a {
+    width: 25%;
+    margin: auto;
+  }
+}
+
+.selected {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+@include desktop {
+  .nav-bar {
+    width: 50%;
+    a {
+      margin-top: 2%;
+      margin-bottom: 2%;
+    }
+  }
+}
