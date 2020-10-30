@@ -1,10 +1,9 @@
 @import "../../styles/colors.scss";
-
-$footer-high: 1%;
+@import "../../styles/dimensions.scss";
 
 @mixin margin-padding {
-  margin: 1%;
-  padding: 1%;
+  margin: $default-margin;
+  padding: $default-padding;
 }
 
 @media screen and (min-width: 995px) and (orientation: landscape) {
@@ -16,7 +15,7 @@ $footer-high: 1%;
   }
 
   .mat-display-4 div {
-    padding: 1%;
+    padding: $default-padding;
     max-width: 30%;
   }
 
@@ -47,7 +46,7 @@ $footer-high: 1%;
     text-align: center;
     align-items: center;
     min-height: 50%;
-    margin-bottom: $footer-high;
+    margin-bottom: $default-footer-high;
   }
 
   .right-column {
@@ -64,7 +63,7 @@ $footer-high: 1%;
     position: fixed;
     left: 0;
     bottom: 0;
-    height: $footer-high;
+    height: $default-footer-high;
     width: 100%;
     text-align: center;
     z-index: 1;
@@ -105,7 +104,7 @@ $footer-high: 1%;
     position: static;
     left: 0;
     bottom: 0;
-    height: $footer-high;
+    height: $default-footer-high;
     width: 100%;
     text-align: center;
   }

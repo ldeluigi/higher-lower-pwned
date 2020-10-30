@@ -1,4 +1,5 @@
 @import "../../styles/mixins.scss";
+@import "../../styles/dimensions.scss";
 
 :host {
   display: block;
@@ -10,12 +11,12 @@
 
 .leaderboard {
   width: 30%;
-  margin: 1%;
+  margin: $default-margin;
 }
 
 .word {
   width: 64%;
-  margin: 1%;
+  margin: $default-margin;
 }
 
 .nameDiv {
@@ -48,21 +49,21 @@ app-word {
 
 .commands {
   position: relative;
-  margin: 1%;
+  margin: $default-margin;
 }
 
 .wrapper-small {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 3% 0%;
+  margin: $default-margin 0;
 }
 
 .gameBtnC {
   display: flex;
   .dummyGBtn {
     width: 32%;
-    padding: 0.5%;
+    padding: $default-padding;
   }
 
   .gameBtn {
@@ -79,7 +80,7 @@ app-word {
   .nameDiv {
     display: block;
     width: 20%;
-    margin: 1%;
+    margin: $default-margin;
   }
 
   .word {

@@ -1,9 +1,11 @@
+@import "../../styles/dimensions.scss";
+
 p {
   z-index: 1;
 }
 
 mat-icon {
-  margin-left: 1%;
+  margin-left: $default-margin;
 }
 
 a {
