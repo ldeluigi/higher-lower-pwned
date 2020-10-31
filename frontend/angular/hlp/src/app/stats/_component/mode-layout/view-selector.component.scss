@@ -1,38 +1,15 @@
 @import "../../../styles/abstracts/mixins.scss";
 @import "../../../styles/dimensions.scss";
+@import "../../../styles/stats/mixins";
 
-:host {
-  width: 95%;
-}
+@include nav-bar;
 
 .layout {
   width: 95%;
   margin: auto;
 }
 
-.selector {
-  width: 40%;
-  margin: auto;
-}
-
-a {
-  width: 50%;
-}
-
-.selected {
-  text-decoration: underline;
-}
 
 @include desktop {
-  a {
-    margin: $default-Y-margin-desktop;
-  }
-  .layout {
-    width: 70%;
-    margin: $default-Y-margin-desktop;
-  }
 
-  .selector {
-    width: 20%;
-  }
 }

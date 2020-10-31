@@ -1,13 +1,6 @@
 @import "../../../styles/abstracts/mixins.scss";
 @import "../../../styles/dimensions.scss";
 
-.period-button {
-  margin: auto;
-  width: fit-content;
-}
-
 @include desktop {
-  .period-button {
-    margin: $default-Y-margin-desktop;
-  }
+
 }

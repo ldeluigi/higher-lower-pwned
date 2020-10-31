@@ -1,0 +1,36 @@
+@import "../abstracts/mixins.scss";
+
+@mixin nav-bar {
+  .nav-bar {
+    display: flex;
+    margin: auto;
+    a {
+      margin: auto;
+      margin-top: 2%;
+    }
+  }
+
+  .selected {
+    text-decoration: underline;
+    opacity: 0.8;
+  }
+
+  .selector-border {
+    width: 10%;
+  }
+
+  @include desktop {
+    .nav-bar {
+      display: flex;
+      margin: auto;
+      a {
+        margin: auto;
+        margin-top: 2%;
+      }
+    }
+
+    .selector-border {
+      width: 30%;
+    }
+  }
+}

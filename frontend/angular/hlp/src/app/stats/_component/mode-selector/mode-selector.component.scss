@@ -1,25 +1,3 @@
-@import "../../../styles/abstracts/mixins.scss";
-@import "../../../styles/dimensions.scss";
+@import "../../../styles/stats/mixins";
 
-.nav-bar {
-  width: 70%;
-  margin: auto;
-  a {
-    width: 25%;
-    margin: auto;
-  }
-}
-
-.selected {
-  text-decoration: underline;
-  opacity: 0.8;
-}
-
-@include desktop {
-  .nav-bar {
-    width: 50%;
-    a {
-      margin: $default-Y-margin-desktop;
-    }
-  }
-}
+@include nav-bar;

@@ -1,4 +1,5 @@
-<div class='selector'>
+<div class='nav-bar'>
+  <div class="selector-border"></div>
   <a mat-button [class]="isSelected('statistic') ? 'selected' : ''" routerLink="statistic">
     <mat-icon aria-hidden="true" aria-label="assessment">assessment</mat-icon>
     Statistic
@@ -7,6 +8,7 @@
     <mat-icon aria-hidden="true" aria-label="leaderboard">leaderboard</mat-icon>
     Leaderboard
   </a>
+  <div class="selector-border"></div>
 </div>
 <div class="layout">
   <router-outlet></router-outlet>
