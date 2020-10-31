@@ -1,12 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/theming";
-@include mat-core();
-@import "./app/styles/roboto.scss";
+@import "./app/styles/base/_typography.scss";
 @import "./app/styles/dimensions.scss";
 
-* {
-  @include angular-material-typography($roboto-custom-typography);
-}
+@include mat-core($roboto-custom-typography);
+
+// * {
+//   @include angular-material-typography($roboto-custom-typography);
+// }
 
 html {
   min-height: 100%;

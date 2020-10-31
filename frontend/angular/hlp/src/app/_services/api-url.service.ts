@@ -30,7 +30,7 @@ export class ApiURLService {
       const baseUrl = window.location.origin;
       this.apiURL = baseUrl;
     } else {
-      this.apiURL = 'http://localhost:8080';
+      this.apiURL = 'http://192.168.1.16:8080';
     }
     return this.apiURL;
   }

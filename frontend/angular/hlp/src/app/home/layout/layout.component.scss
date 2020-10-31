@@ -1,4 +1,5 @@
 @import "../../styles/colors.scss";
+@import "../../styles/abstracts/mixins";
 @import "../../styles/dimensions.scss";
 
 @mixin margin-padding {
@@ -6,7 +7,39 @@
   padding: $default-padding;
 }
 
-@media screen and (min-width: 995px) and (orientation: landscape) {
+.mat-display-4 {
+  max-height: 10%;
+  @include margin-padding();
+}
+
+.mat-display-4 div {
+  line-height: 1em;
+  font-size: 0.85em;
+}
+
+.left-column {
+  display: none;
+}
+.center-column {
+  max-height: 40%;
+  width: 96%;
+  @include margin-padding();
+  margin: 0 auto;
+  text-align: center;
+  align-items: center;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 5vh;
+  height: $default-footer-high;
+  width: 100%;
+  text-align: center;
+}
+
+
+@include desktop {
   .mat-display-4 {
     @include margin-padding();
     max-height: 10%;
@@ -15,8 +48,10 @@
   }
 
   .mat-display-4 div {
-    padding: $default-padding;
     max-width: 30%;
+    line-height: 1em;
+    font-size: 0.85em;
+    width: auto;
   }
 
   .mat-display-4 div#right {
@@ -30,6 +65,7 @@
   }
 
   .left-column {
+    display: flex;
     z-index: 2;
     float: left;
     width: 24%;
@@ -49,20 +85,20 @@
     margin-bottom: $default-footer-high;
   }
 
-  .right-column {
-    z-index: 2;
-    float: right;
-    width: 24%;
-    @include margin-padding();
-    * {
-      z-index: 2;
-    }
-  }
+  // .right-column {
+  //   z-index: 2;
+  //   float: right;
+  //   width: 24%;
+  //   @include margin-padding();
+  //   * {
+  //     z-index: 2;
+  //   }
+  // }
 
   footer {
     position: fixed;
     left: 0;
-    bottom: 0;
+    bottom: 5vh;
     height: $default-footer-high;
     width: 100%;
     text-align: center;
@@ -70,66 +106,22 @@
   }
 }
 
-@media (orientation: portrait), screen and (max-width: 995px) {
-  .mat-display-4 {
-    max-height: 10%;
-    @include margin-padding();
-  }
-
-  .mat-display-4 div {
-    line-height: 1em;
-    font-size: 0.85em;
-    max-height: 2%;
-    width: 100%;
-  }
-
-  .left-column {
-    display: none;
-  }
-  .center-column {
-    max-height: 40%;
-    width: 96%;
-    @include margin-padding();
-    margin: 0 auto;
-    text-align: center;
-    align-items: center;
-  }
-
-  .right-column {
-    width: 96%;
-    @include margin-padding();
-  }
-
-  footer {
-    position: static;
-    left: 0;
-    bottom: 0;
-    height: $default-footer-high;
-    width: 100%;
-    text-align: center;
-  }
-}
-
-.app-leadboard,
-.app-stats {
-  padding: 1%;
-}
 
 .center-column {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
 }
 
 .start-button,
 .start-button-pvp,
 .start-button-royale {
-  padding: 1%;
+  padding: 1vh;
   min-width: 40%;
-  height: 25%;
+  height: 6vh;
   color: $default-text-color;
-  font-size: 150%;
   margin-bottom: 1vh;
+
 }
 .start-button {
   background: $default-arcade-color;
@@ -139,15 +131,4 @@
 }
 .start-button-royale {
   background: $default-royale-color;
-}
-
-h1 {
-  text-align: center;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  span {
-    text-align: center;
-  }
 }
