@@ -18,8 +18,8 @@ services:
       MONGO_DB_USERNAME: ${MONGO_DB_USERNAME}
       MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
       EMAIL_DEBUG: ${EMAIL_DEBUG}
-      GMAIL_EMAIL: ${GMAIL_EMAIL}
-      GMAIL_PASSWORD: ${GMAIL_PASSWORD}
+      MAILER_EMAIL: ${MAILER_EMAIL}
+      MAILER_PASSWORD: ${MAILER_PASSWORD}
     volumes:
       - "./backend/js:/usr/src/app"
     depends_on:
