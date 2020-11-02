@@ -13,8 +13,8 @@ services:
       MONGO_DB_NAME: ${MONGO_DB_NAME:?err}
       MONGO_DB_USERNAME: ${MONGO_DB_USERNAME:?err}
       MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
-      GMAIL_EMAIL: ${GMAIL_EMAIL:?err}
-      GMAIL_PASSWORD: ${GMAIL_PASSWORD:?err}
+      MAILER_EMAIL: ${MAILER_EMAIL:?err}
+      MAILER_PASSWORD: ${MAILER_PASSWORD:?err}
     restart: always
     depends_on:
       - mongo
