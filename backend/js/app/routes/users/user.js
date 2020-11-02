@@ -6,6 +6,11 @@ const userToDto = require("../../model/user.model").toDto;
 const pwd = require("../../utils/password");
 const jwtTools = require("../../utils/jwt");
 const mailService = require("../../utils/mail-service");
+const tokenSchema = require("../../model/token.model").schema;
+const scoreSchema = require("../../model/score.model").schema;
+const battle = require("../../game/battle");
+const arcade = require("../../game/arcade");
+
 
 router.post("/",
   [
@@ -128,5 +133,37 @@ router.put("/:id",
     }
   });
 
+router.delete("/:id",
+  [param("id")
+    .notEmpty()
+    .isAlphanumeric()],
+  jwtTools.authentication(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    if (req.auth.id != req.params.id) {
+      return res.status(403).json({ errors: ["User not authorized."] });
+    }
+    try {
+      let userQuery = await userSchema.findByIdAndDelete(req.params.id);
+      if (userQuery === null) {
+        return res.status(404).json({ errors: ["User not found."] });
+      }
+      await battle.deleteUser(userQuery._id);
+      await arcade.deleteUser(userQuery._id);
+      await scoreSchema.deleteMany({
+        user: userQuery._id
+      });
+      await tokenSchema.deleteMany({
+        user: userQuery._id
+      });
+      let result = userToDto(userQuery);
+      res.json({ data: result });
+    } catch (err) {
+      res.status(400).json({ errors: [err.message] });
+    }
+  });
 
 module.exports = router;

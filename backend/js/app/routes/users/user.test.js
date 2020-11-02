@@ -3,7 +3,10 @@ const supertest = require("supertest");
 const request = supertest(app);
 const user = require("../../model/user.model");
 const token = require("../../model/token.model");
+const battle = require("../../model/battle.model");
+const arcade = require("../../model/game.model");
 const pwd = require("../../utils/password");
+const score = require("../../model/score.model");
 
 
 describe("user API", function () {
@@ -85,6 +88,8 @@ describe("user API", function () {
 
   it("should POST a new user", async (done) => {
     const mock = jest.spyOn(user.schema, 'create');
+    const mock2 = jest.spyOn(user.schema, 'findOne');
+    mock2.mockImplementation((input) => Promise.resolve(null));
     const nowDate = new Date();
     mock.mockImplementation((input) => {
       input._id = "createdID";
@@ -109,7 +114,63 @@ describe("user API", function () {
     expect(response.body).toHaveProperty("data");
     expect(response.body.data).toEqual(expectedResult);
     mock.mockRestore();
+    mock2.mockRestore();
     done();
   });
 
+
+  // it("should DELETE a user after login", async (done) => {
+  //   const mock = jest.spyOn(user.schema, 'findByIdAndDelete');
+  //   const userMock = {
+  //     username: "testusername",
+  //     _id: "testid",
+  //     password: pwd.sha512("testpassword", "testpasswordsalt"),
+  //     email: "testemail@email.com",
+  //     salt: "testpasswordsalt",
+  //     createdAt: new Date(),
+  //     lastLogin: new Date(),
+  //     save: async function () { }
+  //   };
+  //   mock.mockImplementation((input) => Promise.resolve(userMock));
+  //   const mock2 = jest.spyOn(token.schema, 'create');
+  //   mock2.mockImplementation((input) => {
+  //     input._id = "createdID";
+  //     return Promise.resolve(input)
+  //   });
+  //   const mock3 = jest.spyOn(battle.schema, 'findOne');
+  //   mock3.mockImplementation((input) => {
+  //     return Promise.resolve(null)
+  //   });
+  //   const mock4 = jest.spyOn(arcade.schema, 'findOne');
+  //   mock4.mockImplementation((input) => {
+  //     return Promise.resolve(null)
+  //   });
+  //   const mock5 = jest.spyOn(score.schema, 'deleteMany');
+  //   mock5.mockImplementation((input) => {
+  //     return Promise.resolve(null)
+  //   });
+  //   const mock6 = jest.spyOn(token.schema, 'deleteMany');
+  //   mock6.mockImplementation((input) => {
+  //     return Promise.resolve(null)
+  //   });
+  //   let response = await request.post("/users/login").send({
+  //     username: "testusername",
+  //     password: "testpassword"
+  //   });
+  //   let result = response.body.data;
+  //   response = await request
+  //     .delete("/users/testid")
+  //     .set("Authorization", "Bearer " + result.token)
+  //     .send();
+  //   expect(response.status).toBe(200);
+  //   expect(response.body).toHaveProperty("data");
+  //   expect(response.body.data).toHaveProperty("email", userMock.email);
+  //   mock.mockRestore();
+  //   mock2.mockRestore();
+  //   mock3.mockRestore();
+  //   mock4.mockRestore();
+  //   mock5.mockRestore();
+  //   mock6.mockRestore();
+  //   done();
+  // });
 });

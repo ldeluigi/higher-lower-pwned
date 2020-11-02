@@ -141,6 +141,24 @@ module.exports = {
     return null;
   },
   // -----------------------------------------------------------------------------------------------------------
+  deleteUser: async function (userID) {
+    if (userID) {
+      let gameQuery = await battleSchema.findOne({
+        games: {
+          $elemMatch: {
+            user: userID
+          }
+        }
+      });
+      if (gameQuery) {
+        let g = gameQuery.games.find(e => e.user.equals(userID));
+        if (g) {
+          this.quitGame(g.gameID);
+        }
+      }
+    }
+  },
+  // -----------------------------------------------------------------------------------------------------------
   submitGuess: async function (gameID, guess) {
     if (guess !== 1 && guess !== 2) {
       throw new Error("Guess must be 1 or 2");

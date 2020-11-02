@@ -115,5 +115,13 @@ module.exports = {
       throw new Error("Could not alter game data. (" + err.message + ")");
     }
     return true;
+  },
+  deleteUser: async function (userID) {
+    if (userID) {
+      let gameQuery = await gameSchema.findOne({ user: userID });
+      if (gameQuery) {
+        this.deleteGame(gameQuery.gameID);
+      }
+    }
   }
 }

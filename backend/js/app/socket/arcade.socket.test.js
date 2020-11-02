@@ -35,7 +35,7 @@ afterAll((done) => {
 beforeEach((done) => {
   // Setup
   socket = cio.connect(
-    `http://[${serverAddress.address}]:${serverAddress.port}/arcade`,
+    `http://[${serverAddress.address}]:${serverAddress.port}/socket/arcade`,
     {
       "reconnection delay": 0,
       "reopen delay": 0,

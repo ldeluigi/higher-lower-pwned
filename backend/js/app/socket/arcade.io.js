@@ -99,7 +99,7 @@ module.exports = function (sio) {
       try {
         await arcade.deleteGame(socket.id);
       } catch (err) { }
-    })
+    });
   });
   console.log("Mounted socket.io " + namespace + " module to " + namespace);
   return sio;
