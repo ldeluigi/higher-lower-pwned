@@ -1,12 +1,34 @@
 @import "./styles/dimensions.scss";
 
-.nav-home {
-  display: flex;
-  align-items: right;
-  justify-content: flex-end;
-  padding: $default-padding;
+// .nav-home {
+//   display: flex;
+//   align-items: right;
+//   justify-content: flex-end;
+//   padding: $default-padding;
+// }
+
+// .nav-home a {
+//   margin-left: $default-margin;
+// }
+
+.nav-buttons {
+  background-color: transparent;
 }
 
-.nav-home * {
-  margin-left: $default-margin;
+.div-buttons {
+  display: grid;
+}
+
+.div-buttons a {
+  background-color: white;
+  margin: $default-margin-on-height;
+}
+
+.example-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
 }

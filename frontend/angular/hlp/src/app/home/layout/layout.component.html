@@ -1,25 +1,14 @@
-<div class="mat-display-4 title" style="text-align: center">
-  <div @title1 id="left">The&nbsp;</div>
-  <div @title2>Pwned&nbsp;</div>
-  <div @title3 id="right">Game</div>
-</div>
-<div class="left-column" @fadeIn>
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav class="nav-buttons" mode="side">
+    <div class="div-buttons">
+      <a mat-stroked-button routerLink="/home" routerLinkActive="active" (click)="sidenav.toggle()">HOME</a>
+      <a mat-stroked-button routerLink="/stats/global" routerLinkActive="active" (click)="sidenav.toggle()">STATS</a>
+      <app-login-button (click)="sidenav.toggle()"></app-login-button>
+    </div>
+  </mat-sidenav>
 
-</div>
-<div class="center-column" @fadeIn>
-  <p class="mat-body-2">Is your password been pwned?</p>
-  <p class="mat-body-1">
-    A frustratingly addictive game of higher or lower using pwned password.
-  </p>
-  <p class="mat-body-1">The data is based on ... TODO .</p>
-
-  <a mat-raised-button routerLink="/game/arcade" routerLinkActive="active" class="start-button">START</a>
-  <a mat-raised-button routerLink="/game/duel" routerLinkActive="active" class="start-button-pvp">PVP</a>
-  <a mat-raised-button routerLink="/game/royale" routerLinkActive="active" class="start-button-royale">BATTLE ROYALE</a>
-</div>
-<!-- <div class="right-column">
-
-</div> -->
-<footer>
-  <app-links></app-links>
-</footer>
+  <mat-sidenav-content>
+    <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

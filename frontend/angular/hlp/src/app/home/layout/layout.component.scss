@@ -1,134 +1,23 @@
-@import "../../styles/colors.scss";
-@import "../../styles/abstracts/mixins";
 @import "../../styles/dimensions.scss";
 
-@mixin margin-padding {
-  margin: $default-margin;
-  padding: $default-padding;
+.nav-buttons {
+  background-color: transparent;
 }
 
-.mat-display-4 {
-  max-height: 10%;
-  @include margin-padding();
+.div-buttons {
+  display: grid;
 }
 
-.mat-display-4 div {
-  line-height: 1em;
-  font-size: 0.85em;
+.div-buttons a {
+  background-color: white;
+  margin: $default-margin-on-height;
 }
 
-.left-column {
-  display: none;
-}
-.center-column {
-  max-height: 40%;
-  width: 96%;
-  @include margin-padding();
-  margin: 0 auto;
-  text-align: center;
-  align-items: center;
-}
-
-footer {
-  position: fixed;
+.example-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
   left: 0;
-  bottom: 5vh;
-  height: $default-footer-high;
-  width: 100%;
-  text-align: center;
-}
-
-
-@include desktop {
-  .mat-display-4 {
-    @include margin-padding();
-    max-height: 10%;
-    align-items: center;
-    display: flex;
-  }
-
-  .mat-display-4 div {
-    max-width: 30%;
-    line-height: 1em;
-    font-size: 0.85em;
-    width: auto;
-  }
-
-  .mat-display-4 div#right {
-    @include margin-padding();
-    margin-right: auto;
-  }
-
-  .mat-display-4 div#left {
-    @include margin-padding();
-    margin-left: auto;
-  }
-
-  .left-column {
-    display: flex;
-    z-index: 2;
-    float: left;
-    width: 24%;
-    @include margin-padding();
-  }
-
-  .center-column {
-    z-index: 2;
-    float: left;
-    width: 42%;
-    @include margin-padding();
-    padding-top: 10vh;
-    margin: 0 auto;
-    text-align: center;
-    align-items: center;
-    min-height: 50%;
-    margin-bottom: $default-footer-high;
-  }
-
-  // .right-column {
-  //   z-index: 2;
-  //   float: right;
-  //   width: 24%;
-  //   @include margin-padding();
-  //   * {
-  //     z-index: 2;
-  //   }
-  // }
-
-  footer {
-    position: fixed;
-    left: 0;
-    bottom: 5vh;
-    height: $default-footer-high;
-    width: 100%;
-    text-align: center;
-    z-index: 1;
-  }
-}
-
-
-.center-column {
-  display: flex;
-  flex-direction: column;
-  // flex-wrap: wrap;
-}
-
-.start-button,
-.start-button-pvp,
-.start-button-royale {
-  padding: 1vh;
-  min-width: 40%;
-  height: 6vh;
-  color: $default-text-color;
-  margin-bottom: 1vh;
-
-}
-.start-button {
-  background: $default-arcade-color;
-}
-.start-button-pvp {
-  background: $default-pvp-color;
-}
-.start-button-royale {
-  background: $default-royale-color;
+  right: 0;
+  background-color: transparent;
 }

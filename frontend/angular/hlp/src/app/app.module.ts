@@ -22,6 +22,9 @@ import { LinksComponent } from './home/links/links.component';
 import { SharedModule } from './shared/shared.module';
 import { StatsModule } from './stats/stats.module';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { HomePageComponent } from './home/home-page/home-page.component';
+
 
 @NgModule({
   declarations: [
@@ -30,6 +33,7 @@ import { StatsModule } from './stats/stats.module';
     LayoutComponent,
     InputDialogComponent,
     LinksComponent,
+    HomePageComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -40,7 +44,8 @@ import { StatsModule } from './stats/stats.module';
     UsersModule,
     SharedModule,
     GameModule,
-    StatsModule
+    StatsModule,
+    MatSidenavModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

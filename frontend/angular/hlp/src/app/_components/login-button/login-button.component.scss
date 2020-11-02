@@ -1,0 +1,9 @@
+@import "../../styles/dimensions.scss";
+
+:host {
+  display: grid;
+  a {
+    background-color: white;
+    margin: $default-margin-on-height;
+  }
+}
