@@ -30,6 +30,18 @@ router.post("/",
     let salt = pwd.genRandomString(16);
     let output = pwd.sha512(body.password, salt);
     try {
+      let sameUsername = await userSchema.findOne({
+        username: body.username
+      });
+      if (sameUsername !== null) {
+        throw new Error("Username already taken.");
+      }
+      let sameEmail = await userSchema.findOne({
+        email: body.email
+      });
+      if (sameEmail !== null) {
+        throw new Error("Email already used.");
+      }
       await mailService.sendSubscriptionEmail(body.email, body.username);
       let result = await userSchema.create({
         username: body.username,
