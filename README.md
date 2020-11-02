@@ -52,7 +52,11 @@ EMAIL_DEBUG=true
 
 #### Optional environment variables:
 
-- `GMAIL_EMAIL` and `GMAIL_PASSWORD` are the credentials to use a Gmail account to send emails. If **both** have values, _nodemailer_ will use them to send emails ([More info](https://nodemailer.com/usage/using-gmail/)).
+- `MAILER_EMAIL` and `MAILER_PASSWORD` are the credentials to use a mail account to send emails. If **both** have values, _nodemailer_ will use them to send emails.
+
+Currently supported services:
+
+- Gmail ([More info](https://nodemailer.com/usage/using-gmail/)).
 
 **Note**: You can prevent uploading sensitive data inside the `.env` file with: `git update-index --assume-unchanged .env`
 
