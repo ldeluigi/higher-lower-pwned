@@ -109,4 +109,11 @@ export class AccountService implements OnDestroy {
         return a.data;
       }));
   }
+
+  /**
+   * TODO implement
+   */
+  deleteUser(): Observable<boolean> {
+    throw new Error('Missing implementation');
+  }
 }
