@@ -120,6 +120,7 @@ export class AccountService implements OnDestroy {
     }
     return this.http.delete<Response<User>>(`${this.apiURL.restApiUrl}/users/${user.id}`)
       .pipe(map(a => {
+        localStorage.removeItem(this.userLocalStorage);
         this.userSubject.next(null);
         return a.data;
       }));
