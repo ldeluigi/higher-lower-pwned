@@ -111,9 +111,17 @@ export class AccountService implements OnDestroy {
   }
 
   /**
-   * TODO implement
+   * // TODO implement
    */
-  deleteUser(): Observable<boolean> {
-    throw new Error('Missing implementation');
+  deleteUser(): Observable<User> {
+    const user: User | null = this.userValue;
+    if (user === null) {
+      return throwError('No user logged');
+    }
+    return this.http.delete<Response<User>>(`${this.apiURL.restApiUrl}/users/${user.id}`)
+      .pipe(map(a => {
+        this.userSubject.next(null);
+        return a.data;
+      }));
   }
 }

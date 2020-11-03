@@ -34,4 +34,8 @@
     <mat-card-title>{{this.userInfo.lastLogin | date: "M/d/yy, H:mm"}}</mat-card-title>
     <mat-card-subtitle>Last login date</mat-card-subtitle>
   </mat-card>
+  <mat-card class="delete-card">
+    <mat-card-title>Delete account</mat-card-title>
+    <mat-card-subtitle><button (click)="this.delete()">X</button></mat-card-subtitle>
+  </mat-card>
 </mat-card>

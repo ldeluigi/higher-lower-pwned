@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { InputDialogComponent } from 'src/app/_components/input-dialog/input-dialog.component';
 import { AccountService } from 'src/app/_services/account.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-info',
@@ -18,7 +19,8 @@ export class UserInfoComponent implements OnInit {
     private usersTools: UserDataService,
     public dialog: MatDialog,
     private accountService: AccountService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     usersTools.userInfo.subscribe((info) => (this.userInfo = info));
   }
@@ -45,6 +47,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   openDialog(paramName: string): void {
+    // TODO refactor this routine, maybe a better form
     const dialogRef = this.dialog.open(InputDialogComponent, {
       width: '250px',
       data: { paramName, value: '' },
@@ -61,5 +64,14 @@ export class UserInfoComponent implements OnInit {
           .subscribe(this.logUpdated, (_) => this.logUpdated(false));
       }
     });
+  }
+
+  delete(): void {
+    this.accountService
+      .deleteUser()
+      .subscribe(u => {
+        // TODO add some graphic message for the user.
+        this.router.navigate(['/home']);
+      });
   }
 }
