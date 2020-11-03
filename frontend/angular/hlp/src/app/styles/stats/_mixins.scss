@@ -1,34 +1,33 @@
 @import "../abstracts/mixins.scss";
+@import '~@angular/material/theming';
 
 @mixin nav-bar {
   .nav-bar {
     display: flex;
     margin: auto;
     a {
+      background-color: #ffffff69;
       margin: auto;
-      margin-top: 2%;
+      margin-top: 2vh;
+      margin-bottom: 2vh;
     }
-  }
-
-  .selected {
-    text-decoration: underline;
-    opacity: 0.8;
-  }
-
-  .selector-border {
-    width: 10%;
+    .not-selected {
+      @include mat-elevation-transition;
+      @include mat-elevation(12, black, 1.6);
+    }
+    .not-selected:active {
+      @include mat-elevation(2);
+    }
+    .selected {
+      @include mat-elevation-transition;
+      @include mat-elevation(2);
+    }
+    .selected:active {
+      @include mat-elevation(12);
+    }
   }
 
   @include desktop {
-    .nav-bar {
-      display: flex;
-      margin: auto;
-      a {
-        margin: auto;
-        margin-top: 2%;
-      }
-    }
-
     .selector-border {
       width: 30%;
     }

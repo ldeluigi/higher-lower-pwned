@@ -1,0 +1,15 @@
+@import "../../styles/abstracts/mixins.scss";
+@import "../../styles/dimensions.scss";
+@import "../../styles/stats/mixins";
+
+@include nav-bar;
+
+.layout {
+  width: 95%;
+  margin: auto;
+}
+
+
+@include desktop {
+
+}

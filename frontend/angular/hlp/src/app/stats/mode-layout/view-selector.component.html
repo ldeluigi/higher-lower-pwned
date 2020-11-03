@@ -1,10 +1,10 @@
 <div class='nav-bar'>
   <div class="selector-border"></div>
-  <a mat-button [class]="isSelected('statistic') ? 'selected' : ''" routerLink="statistic">
+  <a mat-button [class]="isSelected('statistic') ? 'selected' : 'not-selected'" routerLink="statistic">
     <mat-icon aria-hidden="true" aria-label="assessment">assessment</mat-icon>
     Statistic
   </a>
-  <a mat-button [class]="isSelected('leaderboard') ? 'selected' : ''" routerLink="leaderboard">
+  <a mat-button [class]="isSelected('leaderboard') ? 'selected' : 'not-selected'" routerLink="leaderboard">
     <mat-icon aria-hidden="true" aria-label="leaderboard">leaderboard</mat-icon>
     Leaderboard
   </a>
