@@ -41,7 +41,8 @@ module.exports = {
     return {
       score: schema.score,
       guesses: schema.guesses,
-      date: schema.end,
+      date: schema.end.toISOString(),
+      duration: schema.end.getTime() - schema.start.getTime(),
       username: user
     };
   }

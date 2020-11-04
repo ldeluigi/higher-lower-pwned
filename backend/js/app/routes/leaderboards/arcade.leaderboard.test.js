@@ -52,8 +52,8 @@ describe("leaderboards API", function () {
     expect(response.body)
       .toEqual({
         "data": [
-          { "score": 17, "date": "2020-08-26T20:26:20.202Z", "username": "testusername", "guesses": 5 },
-          { "score": 10, "date": "2020-08-27T20:26:20.202Z", "username": "anonymous", "guesses": 5 }
+          { "score": 17, "date": "2020-08-26T20:26:20.202Z", "username": "testusername", "duration": 240000, "guesses": 5 },
+          { "score": 10, "date": "2020-08-27T20:26:20.202Z", "username": "anonymous", "duration": 240000, "guesses": 5 }
         ]
       });
     mock.mockRestore();

@@ -1,5 +1,5 @@
 const { query, param, validationResult } = require("express-validator");
-const score = require("../model/score.model").schema;
+const score = require("../model/score.model");
 const periodTools = require("./period");
 const limitTools = require("./limit");
 
@@ -48,7 +48,7 @@ module.exports = {
             default:
               sortStrategy["score"] = "desc";
           }
-          const result = await score
+          const result = await score.schema
             .find({
               end: {
                 $gte: periodMinMax[0],
@@ -63,7 +63,13 @@ module.exports = {
           if (result === null) {
             return res.status(404).json({ errors: ["Score query error."] });
           }
-          res.json({ data: result });
+          res.json({
+            data: result.map(x => {
+              let s = score.toDto(x);
+              delete s.username;
+              return s;
+            })
+          });
         } catch (err) {
           res.status(400).json({ errors: [err.message] });
         }
