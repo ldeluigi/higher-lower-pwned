@@ -1,5 +1,9 @@
 @import "../../styles/dimensions.scss";
 
+span {
+  vertical-align: super;
+}
+
 p {
   z-index: 1;
 }
