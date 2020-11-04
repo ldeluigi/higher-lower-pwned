@@ -1,5 +1,5 @@
-@import "../abstracts/mixins.scss";
-@import '~@angular/material/theming';
+@import "../abstracts/_mixins.scss";
+@import "~@angular/material/theming";
 
 @mixin nav-bar {
   .nav-bar {
