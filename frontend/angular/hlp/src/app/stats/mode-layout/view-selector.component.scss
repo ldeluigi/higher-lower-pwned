@@ -1,4 +1,4 @@
-@import "../../styles/abstracts/mixins.scss";
+@import "../../styles/abstracts/_mixins.scss";
 @import "../../styles/dimensions.scss";
 @import "../../styles/stats/mixins";
 
@@ -9,7 +9,18 @@
   margin: auto;
 }
 
+.text {
+  display: none;
+}
+
+@include tablet {
+  .text {
+    display: initial;
+  }
+}
 
 @include desktop {
-
+  .text {
+    display: initial;
+  }
 }

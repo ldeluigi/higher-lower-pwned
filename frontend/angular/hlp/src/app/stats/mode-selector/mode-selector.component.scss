@@ -1,3 +1,20 @@
+@import "../../styles/abstracts/mixins";
 @import "../../styles/stats/mixins";
 
 @include nav-bar;
+
+.text {
+  display: none;
+}
+
+@include tablet {
+  .text {
+    display: initial;
+  }
+}
+
+@include desktop {
+  .text {
+    display: initial;
+  }
+}
