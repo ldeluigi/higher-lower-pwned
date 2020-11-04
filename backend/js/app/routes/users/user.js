@@ -17,7 +17,8 @@ router.post("/",
     body("username")
       .notEmpty()
       .isAlphanumeric()
-      .trim(),
+      .trim()
+      .isLength({ min: 4, max: 30 }),
     body("password")
       .isAlphanumeric()
       .trim()
