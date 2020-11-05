@@ -58,7 +58,8 @@ Currently supported services:
 
 - Gmail ([More info](https://nodemailer.com/usage/using-gmail/)).
 
-**Note**: You can prevent uploading sensitive data inside the `.env` file with: `git update-index --assume-unchanged .env`
+**Note**: You can prevent uploading sensitive data inside the `.env` file with:  
+`git update-index --assume-unchanged .env`
 
 ### Development mode
 
