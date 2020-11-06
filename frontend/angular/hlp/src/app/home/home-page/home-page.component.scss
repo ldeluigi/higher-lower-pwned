@@ -43,26 +43,38 @@ footer {
   clear: both;
 }
 
+$button-size: 12vh;
+$icon-size: $button-size * 2 / 3;
 
 .start-button,
 .start-button-pvp,
 .start-button-royale {
   padding: 1vh;
-  min-width: 40%;
-  height: 6vh;
-  color: $default-text-color;
+  width: $button-size;
+  height: $button-size;
+  // color: $default-text-color;
   margin-bottom: 1vh;
+  margin-left: 1vh;
+  margin-right: 1vh;
+}
 
+mat-icon {
+  // margin-top: $icon-size / 10;
+  width: $button-size;
+  height: $button-size;
 }
-.start-button {
-  background: $default-arcade-color;
-}
-.start-button-pvp {
-  background: $default-pvp-color;
-}
-.start-button-royale {
-  background: $default-royale-color;
-}
+
+
+
+// .start-button {
+//   background: $default-arcade-color;
+// }
+// .start-button-pvp {
+//   background: $default-pvp-color;
+// }
+// .start-button-royale {
+//   background: $default-royale-color;
+// }
 
 
 @include desktop {

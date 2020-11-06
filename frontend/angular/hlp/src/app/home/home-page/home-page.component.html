@@ -13,10 +13,39 @@
     A frustratingly addictive game of higher or lower using pwned password.
   </p>
   <p class="mat-body-1">The data is based on ... TODO .</p>
-
-  <a mat-raised-button routerLink="/game/arcade" routerLinkActive="active" class="start-button">START</a>
-  <a mat-raised-button routerLink="/game/duel" routerLinkActive="active" class="start-button-pvp">PVP</a>
-  <a mat-raised-button routerLink="/game/royale" routerLinkActive="active" class="start-button-royale">BATTLE ROYALE</a>
+  <a
+    mat-icon-button
+    isRoundButton
+    routerLink="/game/royale"
+    matTooltip="Play a royale game with 100 opponents"
+    matTooltipPosition="right"
+    routerLinkActive="active"
+    class="start-button-royale"
+  >
+    <mat-icon svgIcon="royal_crown"></mat-icon>
+  </a>
+  <div class="in-line">
+  <a
+    mat-icon-button
+    routerLink="/game/arcade"
+    matTooltip="Play arcade mode"
+    matTooltipPosition="left"
+    routerLinkActive="active"
+    class="start-button"
+  >
+    <mat-icon svgIcon="single_sword"></mat-icon>
+  </a>
+    <a
+      mat-icon-button
+      routerLink="/game/duel"
+      matTooltip="Play 1 vs 1 battle"
+      matTooltipPosition="right"
+      routerLinkActive="active"
+      class="start-button-pvp"
+    >
+      <mat-icon svgIcon="double_sword"></mat-icon>
+    </a>
+  </div>
 </div>
 <!-- <div class="right-column">
 

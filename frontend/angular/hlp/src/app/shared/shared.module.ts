@@ -22,6 +22,9 @@ import { InputDialogComponent } from './input-dialog/input-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   imports: [
@@ -37,7 +40,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatTooltipModule,
+    BrowserAnimationsModule
   ],
   declarations: [
     PeriodButtonsComponent,
@@ -68,7 +73,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatIconModule,
     LoginButtonComponent,
     InputDialogComponent,
-    MatSidenavModule
+    MatSidenavModule,
+    MatTooltipModule,
+    BrowserAnimationsModule
   ]
 })
 export class SharedModule { }
