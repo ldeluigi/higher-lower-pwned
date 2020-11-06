@@ -2,25 +2,17 @@
 @import "../../styles/dimensions.scss";
 @import "../../styles/stats/mixins";
 
-@include nav-bar;
-
-.layout {
+:host {
   width: 95%;
+}
+
+.data {
+  width: 90%;
   margin: auto;
 }
 
-.text {
-  display: none;
-}
-
-@include tablet {
-  .text {
-    display: initial;
-  }
-}
-
 @include desktop {
-  .text {
-    display: initial;
+  .data {
+    width: 70%;
   }
 }

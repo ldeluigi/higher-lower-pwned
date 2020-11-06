@@ -1,16 +1,26 @@
-@import "../../styles/abstracts/mixins.scss";
+@import "../../styles/abstracts/_mixins.scss";
+@import "../../styles/dimensions.scss";
+@import "../../styles/stats/mixins";
 
-:host {
+@include nav-bar;
+
+.layout {
   width: 95%;
-}
-
-.data {
-  width: 90%;
   margin: auto;
 }
 
+.text {
+  display: none;
+}
+
+@include tablet {
+  .text {
+    display: initial;
+  }
+}
+
 @include desktop {
-  .data {
-    width: 70%;
+  .text {
+    display: initial;
   }
 }

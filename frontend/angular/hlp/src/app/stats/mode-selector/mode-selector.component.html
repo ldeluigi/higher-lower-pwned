@@ -1,18 +1,18 @@
 <div class="nav-bar">
   <div class="selector-border"></div>
-  <a mat-button [class]="isSelected('global') ? 'selected' : 'not-selected'" routerLink="global">
+  <a mat-button [disabled]="disableGlobal()" [class]="isSelected('global') ? 'selected' : 'not-selected'" routerLink="global">
     <mat-icon aria-hidden="true" aria-label="public">public</mat-icon>
     <span class="text">Global</span>
   </a>
-  <a mat-button [class]="isSelected('arcade') ? 'selected' : 'not-selected'" [routerLink]="getRouterLink('arcade')">
+  <a mat-button [class]="isSelected('arcade') ? 'selected' : 'not-selected'" routerLink="arcade">
     <mat-icon aria-hidden="true" aria-label="person">person</mat-icon>
     <span class="text">Arcade</span>
   </a>
-  <a mat-button [class]="isSelected('duel') ? 'selected' : 'not-selected'" [routerLink]="getRouterLink('duel')">
+  <a mat-button [class]="isSelected('duel') ? 'selected' : 'not-selected'" routerLink="duel">
     <mat-icon aria-hidden="true" aria-label="people">people</mat-icon>
     <span class="text">Duel</span>
   </a>
-  <a mat-button [class]="isSelected('battle') ? 'selected' : 'not-selected'" [routerLink]="getRouterLink('battle')">
+  <a mat-button [class]="isSelected('royale') ? 'selected' : 'not-selected'" routerLink="royale">
     <mat-icon aria-hidden="true" aria-label="groups">groups</mat-icon>
     <span class="text">Battle</span>
   </a>
