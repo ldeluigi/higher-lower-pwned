@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { PeriodButtonsComponent } from './_components/period-buttons/period-buttons.component';
+import { PeriodButtonsComponent } from './period-buttons/period-buttons.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { LoginButtonComponent } from './login-button/login-button.component';
 
 import { MatButtonModule } from '@angular/material/button';
 
-import { HistoryItemToEndDatePipe } from '../_helper/pipe/history-item-to-end-date.pipe';
-import { HistoryItemToStartDatePipe } from '../_helper/pipe/history-item-to-start-date.pipe';
+import { HistoryItemToEndDatePipe } from './pipe/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from './pipe/history-item-to-start-date.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -16,7 +17,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { InputDialogComponent } from './input-dialog/input-dialog.component';
+
 import { MatIconModule } from '@angular/material/icon';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   imports: [
@@ -31,12 +36,15 @@ import { MatIconModule } from '@angular/material/icon';
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
-    MatIconModule
+    MatIconModule,
+    MatSidenavModule
   ],
   declarations: [
     PeriodButtonsComponent,
     HistoryItemToEndDatePipe,
-    HistoryItemToStartDatePipe
+    HistoryItemToStartDatePipe,
+    InputDialogComponent,
+    LoginButtonComponent,
   ],
   providers: [
     HistoryItemToEndDatePipe,
@@ -57,7 +65,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
-    MatIconModule
+    MatIconModule,
+    LoginButtonComponent,
+    InputDialogComponent,
+    MatSidenavModule
   ]
 })
 export class SharedModule { }

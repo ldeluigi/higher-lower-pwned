@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserDataService } from '../../_services/user-data.service';
 import { UserInfo } from 'src/app/_model/userInfo';
 import { MatDialog } from '@angular/material/dialog';
-import { InputDialogComponent } from 'src/app/_components/input-dialog/input-dialog.component';
+import { InputDialogComponent } from 'src/app/shared/input-dialog/input-dialog.component';
 import { AccountService } from 'src/app/_services/account.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';

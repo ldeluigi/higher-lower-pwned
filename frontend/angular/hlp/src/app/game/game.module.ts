@@ -22,8 +22,8 @@ import { PlayerListComponent } from './_components/player-list/player-list.compo
     CounterComponent,
     WordSpinnerComponent,
     BattleComponent,
-    PlayerListComponent,
-  ],
+    PlayerListComponent
+    ],
   imports: [
     CommonModule,
     GameRoutingModule,

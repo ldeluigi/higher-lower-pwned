@@ -10,8 +10,8 @@ import {
   daysOfTheYear,
 } from '../../_helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
-import { HistoryItemToEndDatePipe } from 'src/app/_helper/pipe/history-item-to-end-date.pipe';
-import { HistoryItemToStartDatePipe } from 'src/app/_helper/pipe/history-item-to-start-date.pipe';
+import { HistoryItemToEndDatePipe } from 'src/app/shared/pipe/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from 'src/app/shared/pipe/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
 import * as Const from './user-stats.constant';
 
