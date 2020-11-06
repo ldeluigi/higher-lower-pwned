@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LayoutComponent } from './layout/layout.component';
-import { LeadeboardComponent } from './leaderboard/leadeboard.component';
-import { StatsComponent } from './stats/stats.component';
-import { ViewSelectorComponent } from './mode-layout/view-selector.component';
+import { LayoutComponent } from '../stats/layout/layout.component';
+import { LeadeboardComponent } from '../stats/leaderboard/leadeboard.component';
+import { StatsComponent } from '../stats/stats/stats.component';
+import { ViewSelectorComponent } from '../stats/mode-layout/view-selector.component';
 
 const routes: Routes = [
   {

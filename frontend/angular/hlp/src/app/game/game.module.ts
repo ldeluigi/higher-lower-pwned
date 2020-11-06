@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GameRoutingModule } from './game-routing.module';
+import { GameRoutingModule } from '../_routers/game-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { ArcadeComponent } from './arcade/arcade.component';
 import { MatCardModule } from '@angular/material/card';
