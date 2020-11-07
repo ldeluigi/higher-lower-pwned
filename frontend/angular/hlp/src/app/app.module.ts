@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -12,14 +11,14 @@ import { UsersModule } from './users/users.module';
 import { GameModule } from './game/game.module';
 
 import { LayoutComponent } from './home/layout/layout.component';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { LinksComponent } from './home/links/links.component';
 import { SharedModule } from './shared/shared.module';
 import { StatsModule } from './stats/stats.module';
 
 import { HomePageComponent } from './home/home-page/home-page.component';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -29,8 +28,6 @@ import { HomePageComponent } from './home/home-page/home-page.component';
     HomePageComponent,
   ],
   imports: [
-    BrowserAnimationsModule,
-    BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     AccountModule,
@@ -38,6 +35,8 @@ import { HomePageComponent } from './home/home-page/home-page.component';
     SharedModule,
     GameModule,
     StatsModule,
+    BrowserModule,
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },

@@ -22,12 +22,13 @@ import { InputDialogComponent } from './input-dialog/input-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 
 @NgModule({
   imports: [
+
     CommonModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -42,7 +43,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatIconModule,
     MatSidenavModule,
     MatTooltipModule,
-    BrowserAnimationsModule
   ],
   declarations: [
     PeriodButtonsComponent,
@@ -75,7 +75,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     InputDialogComponent,
     MatSidenavModule,
     MatTooltipModule,
-    BrowserAnimationsModule
   ]
 })
 export class SharedModule { }
