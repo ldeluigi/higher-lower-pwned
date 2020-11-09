@@ -16,9 +16,6 @@
   font-size: 0.85em;
 }
 
-.left-column {
-  display: none;
-}
 .center-column {
   max-height: 50%;
   width: 96%;
@@ -64,8 +61,6 @@ mat-icon {
   height: $button-size;
 }
 
-
-
 // .start-button {
 //   background: $default-arcade-color;
 // }
@@ -75,7 +70,6 @@ mat-icon {
 // .start-button-royale {
 //   background: $default-royale-color;
 // }
-
 
 @include desktop {
   .mat-display-4 {
@@ -102,17 +96,9 @@ mat-icon {
     margin-left: auto;
   }
 
-  .left-column {
-    display: flex;
-    z-index: 2;
-    float: left;
-    width: 24%;
-    @include margin-padding();
-  }
-
   .center-column {
     z-index: 2;
-    float: left;
+    float: center;
     width: 42%;
     @include margin-padding();
     padding-top: 10vh;
@@ -122,16 +108,6 @@ mat-icon {
     min-height: 50%;
     margin-bottom: $default-footer-high;
   }
-
-  // .right-column {
-  //   z-index: 2;
-  //   float: right;
-  //   width: 24%;
-  //   @include margin-padding();
-  //   * {
-  //     z-index: 2;
-  //   }
-  // }
 
   footer {
     position: fixed;
