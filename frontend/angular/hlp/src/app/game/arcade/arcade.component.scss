@@ -4,9 +4,13 @@
 
 .wrapper {
   overflow: visible;
-  height: 30%;
+  height: 50%;
   width: 90%;
-  margin: auto;
+  margin: $default-margin auto;
+}
+
+app-word-spinner {
+  height: 100%;
 }
 
 .commands {
@@ -45,5 +49,4 @@
 
 // for desktop layout
 @include desktop {
-
 }
