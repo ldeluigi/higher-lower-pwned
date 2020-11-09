@@ -13,12 +13,12 @@
   .left-col {
     @include height-col();
     float: left;
-    width: 28%;
+    width: 26%;
   }
 
   .right-col {
     @include height-col();
     float: left;
-    width: 68%;
+    width: 66%;
   }
 }
