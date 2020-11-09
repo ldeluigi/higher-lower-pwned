@@ -25,6 +25,7 @@ export class WordSpinnerComponent {
   @Input() buttonEnable = true;
 
   private loading = false;
+  moving = false;
 
   emptyScore = '******';
   element1: Card = {
@@ -64,6 +65,7 @@ export class WordSpinnerComponent {
 
   async gameSetup(setup: GameSetup): Promise<void> {
     this.loading = false;
+    this.moving = false;
     this.element1 = {
       word: setup.word1,
       score: setup.score1.toString(),
@@ -79,6 +81,7 @@ export class WordSpinnerComponent {
 
   async next(next: NextCard): Promise<void> {
     this.loading = false;
+    this.moving = true;
     return new Promise<void>(r => {
       this.nextPromise = r;
       rollNumber(next.oldScore, 600, (n) => this.element2.score = n.toString())
@@ -89,6 +92,7 @@ export class WordSpinnerComponent {
             score: this.emptyScore,
             status: 'second'
           };
+
           this.element2.score = next.oldScore.toString();
           this.element2.status = 'first';
           this.element1.status = 'out';
@@ -98,6 +102,8 @@ export class WordSpinnerComponent {
   }
 
   async end(end: EndGame): Promise<void> {
+    this.moving = false;
+    console.log('moving' + this.moving);
     return new Promise<void>(r => {
       this.endPromise = r;
       rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString())
@@ -107,11 +113,17 @@ export class WordSpinnerComponent {
             this.endPromise = undefined;
           }
           /** qui si possono mettere effetti di fine partita, come su mobile */
+
+          this.element1.status = 'dummy';
+          this.element2.status = 'dummy';
         });
     });
   }
 
   onAnimationListDone(event: AnimationEvent): void {
+    console.log(event);
+    this.moving = false;
+    console.log(this.moving);
     if (event.toState === 'out') {
       this.element1.score = this.element2.score;
       this.element1.word = this.element2.word;

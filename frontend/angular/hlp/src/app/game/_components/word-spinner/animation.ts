@@ -92,6 +92,9 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
   state('void', style({
     opacity: 0,
   })),
+  // state('dummy', style({
+  //   display: 'none',
+  // })),
   transition('void => second', [
     style({
       opacity: 0,
@@ -133,7 +136,15 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
     }),
     animate(DURATION3, style({
       opacity: 0,
-      transform: 'translateY(-110%)',
+      //transform: 'translateY(-110%)',
+    }))
+  ]),
+  transition('out => first', [
+    style({
+      opacity: 0,
+    }),
+    animate(DURATION3, style({
+      opacity: 1,
     }))
   ]),
   transition('out => void', [
@@ -166,4 +177,19 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
       transform: 'translateY(0)'
     }))
   ]),
+  // transition('* => dummy0', [
+  //   style({
+  //     opacity: 1,
+  //     transform: 'skew(0deg, 0deg)'
+  //   }),
+  //   animate(LONG_DURATION, style({
+  //   })),
+  //   animate(LONG_DURATION, style({
+  //     opacity: 0.1,
+  //     transform: 'skew(90deg, 90deg)'
+  //   })),
+  //   animate(LONG_DURATION, style({
+  //     display: 'none'
+  //   })),
+  // ])
 ]);
