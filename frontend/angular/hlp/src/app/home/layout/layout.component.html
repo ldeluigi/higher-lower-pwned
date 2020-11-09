@@ -1,22 +1,12 @@
 <mat-sidenav-container class="example-container">
-  <mat-sidenav #sidenav class="nav-buttons" mode="side">
-    <div class="div-buttons">
-      <a mat-stroked-button routerLink="/home" routerLinkActive="active" (click)="sidenav.toggle()">HOME</a>
-      <a mat-stroked-button routerLink="/stats/global" routerLinkActive="active" (click)="sidenav.toggle()">STATS</a>
-      <span *ngIf="this.userLogged; then userIsLogged else userNotLogged"></span>
-    </div>
+  <mat-sidenav #sidenav class="nav-buttons" id="mobile" mode="side">
+    <app-nav-bar class="div-buttons" (click)="sidenav.toggle()"></app-nav-bar>
   </mat-sidenav>
-
   <mat-sidenav-content>
-    <p><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
+    <nav id="desktop">
+      <app-nav-bar></app-nav-bar>
+    </nav>
+    <p id="mobile"><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<ng-template #userNotLogged>
-  <a mat-stroked-button routerLink="/account/login" routerLinkActive="active" (click)="sidenav.toggle()">LOGIN</a>
-</ng-template>
-<ng-template #userIsLogged>
-  <a mat-stroked-button routerLink="/users" routerLinkActive="active" (click)="sidenav.toggle()">USER</a>
-  <a mat-stroked-button routerLink="/home" routerLinkActive="active" (click)="sidenav.toggle(); this.logout()">LOGOUT</a>
-</ng-template>

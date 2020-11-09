@@ -1,16 +1,16 @@
 @import "../../styles/dimensions.scss";
+@import "../../styles/abstracts/mixins";
 
 .nav-buttons {
   background-color: transparent;
 }
 
-.div-buttons {
-  display: grid;
+#desktop {
+  display: none;
 }
 
-.div-buttons a {
-  background-color: white;
-  margin: $default-margin-on-height;
+.div-buttons {
+  display: grid;
 }
 
 .example-container {
@@ -20,4 +20,20 @@
   left: 0;
   right: 0;
   background-color: transparent;
+}
+
+@include desktop {
+  #desktop {
+    width: 100%;
+    display: flex;
+    align-items: right;
+    justify-content: flex-end;
+    a {
+      margin: $default-margin;
+    }
+  }
+
+  #mobile {
+    display: none;
+  }
 }

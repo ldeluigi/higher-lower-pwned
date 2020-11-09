@@ -1,0 +1,12 @@
+<a mat-stroked-button routerLink="/home" routerLinkActive="active">HOME</a>
+<a mat-stroked-button routerLink="/stats/global" routerLinkActive="active">STATS</a>
+<span *ngIf="this.userLogged; then userIsLogged else userNotLogged"></span>
+
+
+<ng-template #userNotLogged>
+  <a mat-stroked-button routerLink="/account/login" routerLinkActive="active">LOGIN</a>
+</ng-template>
+<ng-template #userIsLogged>
+  <a mat-stroked-button routerLink="/users" routerLinkActive="active" >USER</a>
+  <a mat-stroked-button routerLink="/home" routerLinkActive="active" (click)=" this.logout()">LOGOUT</a>
+</ng-template>

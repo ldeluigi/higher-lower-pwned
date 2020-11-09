@@ -19,6 +19,7 @@ import { HomePageComponent } from './home/home-page/home-page.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { NavBarComponent } from './home/nav-bar/nav-bar.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { BrowserModule } from '@angular/platform-browser';
     LayoutComponent,
     LinksComponent,
     HomePageComponent,
+    NavBarComponent,
   ],
   imports: [
     AppRoutingModule,
