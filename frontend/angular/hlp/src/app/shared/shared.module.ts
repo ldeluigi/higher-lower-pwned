@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { PeriodButtonsComponent } from './period-buttons/period-buttons.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { LoginButtonComponent } from './login-button/login-button.component';
 
 import { MatButtonModule } from '@angular/material/button';
 
@@ -49,7 +48,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     HistoryItemToEndDatePipe,
     HistoryItemToStartDatePipe,
     InputDialogComponent,
-    LoginButtonComponent,
   ],
   providers: [
     HistoryItemToEndDatePipe,
@@ -71,7 +69,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
-    LoginButtonComponent,
     InputDialogComponent,
     MatSidenavModule,
     MatTooltipModule,

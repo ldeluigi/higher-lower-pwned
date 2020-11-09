@@ -3,7 +3,7 @@
     <div class="div-buttons">
       <a mat-stroked-button routerLink="/home" routerLinkActive="active" (click)="sidenav.toggle()">HOME</a>
       <a mat-stroked-button routerLink="/stats/global" routerLinkActive="active" (click)="sidenav.toggle()">STATS</a>
-      <app-login-button (click)="sidenav.toggle()"></app-login-button>
+      <span *ngIf="this.userLogged; then userIsLogged else userNotLogged"></span>
     </div>
   </mat-sidenav>
 
@@ -12,3 +12,11 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<ng-template #userNotLogged>
+  <a mat-stroked-button routerLink="/account/login" routerLinkActive="active" (click)="sidenav.toggle()">LOGIN</a>
+</ng-template>
+<ng-template #userIsLogged>
+  <a mat-stroked-button routerLink="/users" routerLinkActive="active" (click)="sidenav.toggle()">USER</a>
+  <a mat-stroked-button routerLink="/home" routerLinkActive="active" (click)="sidenav.toggle(); this.logout()">LOGOUT</a>
+</ng-template>
