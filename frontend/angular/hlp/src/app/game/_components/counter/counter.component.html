@@ -1,15 +1,5 @@
-<div>
-  SCORE:&nbsp;&nbsp;
-  <span [@testAnim2]="newCounter" (@testAnim2.done)="onAnimation2Done($event)">
-    {{ counter }}
-  </span>
-
-    <span
-    *ngIf="newCounter !== false"
-    (@testAnim.done)="onAnimationDone($event)"
-    [@testAnim]
-    >
-    {{ newCounter }}
-  </span>
-
-</div>
+  <div class="container">
+    <div class="score">
+        {{ counter }}
+    </div>
+  </div>

@@ -1,12 +1,17 @@
 import { interval } from 'rxjs';
-function rollNumber(end: number, time: number, update: (n: number) => void, frames: number = 100): Promise<void> {
-  const delta = Math.floor(end / frames);
+function rollNumber(end: number, time: number, update: (n: number) => void, start?: number, frames: number = 100): Promise<void> {
+  if (start === undefined) {
+    start = 0;
+  }
+  const range = end - start;
+  const delta = Math.floor(range / frames);
   const deltaT = Math.floor(time / frames);
 
   const timer$ = interval(deltaT);
   return new Promise<void>(resolve => {
     const numberSubscription = timer$.subscribe(tic => {
-      const newValue = delta * tic;
+      start = start ? start : 0;
+      const newValue = start + delta * tic;
       update(newValue);
       if (newValue >= end) {
         update(end);

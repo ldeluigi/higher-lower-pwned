@@ -1,16 +1,44 @@
-:host {
-  display: inline-block;
-  font-size: 30px;
-  font-weight: 400;
-  // border: 1px solid rgba(0, 0, 0, 0.3);
-  // padding: 10px;
-  border-radius: 5px;
-  position: relative;
-  height: 100%;
-  // overflow: hidden;
+$margin-top: 3vh;
+$big-text-size: 7vh;
+
+@function multiple-text-shadow($n, $color) {
+  $value: "-1px 0 0 #{$color}";
+  @for $i from 2 through $n {
+    $value: "#{$value} , #{-$i * - 1}px #{ -$i * - 1}px 2px "+lighten(
+        $color,
+        $i * 3
+      );
+  }
+
+  @return unquote($value);
 }
 
-span {
-  position: absolute;
-  text-align: center;
+:host {
+  height: #{$margin-top + $big-text-size};
 }
+
+.container {
+  display: flex;
+  position: relative;
+
+  .score {
+    width: 40%;
+    text-align: center;
+    font-size: $big-text-size;
+    height: $big-text-size;
+    font-weight: 400;
+    margin-top: $margin-top;
+    text-shadow: multiple-text-shadow(5, rgb(134, 0, 0));
+    animation: mymove 5s infinite;
+  }
+
+  .score::before {
+    content: ' ';
+    width: 30%;
+  }
+}
+
+@keyframes mymove {
+  50% {text-shadow: multiple-text-shadow(5, rgb(9, 0, 134));}
+}
+
