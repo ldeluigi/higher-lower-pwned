@@ -15,6 +15,7 @@ import { WordSpinnerComponent } from './_components/word-spinner/word-spinner.co
 import { BattleComponent } from './battle/battle.component';
 import { PlayerListComponent } from './_components/player-list/player-list.component';
 
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -30,7 +31,8 @@ import { PlayerListComponent } from './_components/player-list/player-list.compo
     MatButtonModule,
     MatCardModule,
     SocketIoModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatIconModule
   ],
   providers: []
 })

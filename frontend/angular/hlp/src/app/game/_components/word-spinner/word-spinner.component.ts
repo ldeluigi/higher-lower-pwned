@@ -3,6 +3,8 @@ import { AnimationEvent } from '@angular/animations';
 import { rollNumber, rollWord } from '../../_utils/wordAnimation';
 import { cardAnimation, vsAnimation, wordAnimation } from './animation';
 import { GameSetup, EndGame, NextCard } from '../../_model/animation';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface Card {
   word: string;
@@ -49,7 +51,14 @@ export class WordSpinnerComponent {
   nextPromise: undefined | ((value?: void | PromiseLike<void> | undefined) => void);
   endPromise: undefined | ((value?: void | PromiseLike<void> | undefined) => void);
 
-  constructor( ) {
+  constructor(
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+  ) {
+    this.matIconRegistry.addSvgIcon(
+      'punch_vs',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/punch_vs.svg')
+      );
   }
 
   answer(wn: number): void {

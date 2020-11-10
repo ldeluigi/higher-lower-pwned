@@ -1,5 +1,9 @@
-$margin-top: 3vh;
-$big-text-size: 7vh;
+@import "../../../styles/abstracts/mixins";
+@import "../../../styles/colors.scss";
+@import '~@angular/material/theming';
+
+$margin-top: 4vh;
+$text-size: 8vh;
 
 @function multiple-text-shadow($n, $color) {
   $value: "-1px 0 0 #{$color}";
@@ -14,31 +18,44 @@ $big-text-size: 7vh;
 }
 
 :host {
-  height: #{$margin-top + $big-text-size};
+  height: #{$margin-top + $text-size};
+  margin: $margin-top auto;
 }
 
 .container {
-  display: flex;
-  position: relative;
+  width: fit-content;
+  padding: 2vh;
+  @include mat-elevation(15);
+  // background-color: aliceblue;
+  border-radius: 100%;
 
   .score {
-    width: 40%;
+    line-height: $text-size;
     text-align: center;
-    font-size: $big-text-size;
-    height: $big-text-size;
+    font-size: $text-size;
+    height: $text-size;
     font-weight: 400;
-    margin-top: $margin-top;
-    text-shadow: multiple-text-shadow(5, rgb(134, 0, 0));
+    text-shadow: multiple-text-shadow(5, $default-higher-color);
     animation: mymove 5s infinite;
   }
 
-  .score::before {
-    content: ' ';
-    width: 30%;
-  }
 }
 
 @keyframes mymove {
-  50% {text-shadow: multiple-text-shadow(5, rgb(9, 0, 134));}
+  50% {text-shadow: multiple-text-shadow(5, $default-lower-color);}
+}
+
+// for desktop layout
+@include desktop {
+  :host {
+    height: #{$margin-top + $text-size};
+  }
+  .container {
+    .score {
+      $text-size: 8vh;
+      font-size: $text-size;
+      height: $text-size;
+    }
+  }
 }
 
