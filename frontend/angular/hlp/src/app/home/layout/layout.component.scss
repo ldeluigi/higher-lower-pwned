@@ -22,6 +22,22 @@
   background-color: transparent;
 }
 
+.text {
+  display: none;
+}
+
+@include tablet {
+  .text {
+    display: initial;
+  }
+}
+
+@include desktop {
+  .text {
+    display: initial;
+  }
+}
+
 @include desktop {
   #desktop {
     width: 100%;

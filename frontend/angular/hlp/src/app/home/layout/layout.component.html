@@ -6,7 +6,13 @@
     <nav id="desktop">
       <app-nav-bar></app-nav-bar>
     </nav>
-    <p id="mobile"><button mat-button (click)="sidenav.toggle()">Toggle</button></p>
+    <p id="mobile">
+      <button mat-button (click)="sidenav.toggle()">
+        <mat-icon aria-hidden="true" aria-label="menu" *ngIf="!sidenav.opened">menu</mat-icon>
+        <mat-icon aria-hidden="true" aria-label="menu" *ngIf="sidenav.opened">keyboard_arrow_left</mat-icon>
+        <span class="text">Menu</span>
+      </button>
+    </p>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
