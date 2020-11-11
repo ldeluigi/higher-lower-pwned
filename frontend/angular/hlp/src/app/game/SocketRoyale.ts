@@ -6,7 +6,7 @@ export class SocketRoyale extends Socket {
   ) {
     super({ url: `${url}/royale`, options: {
       autoConnect: false,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: 3,
       timeout: 1000 }
     });
   }

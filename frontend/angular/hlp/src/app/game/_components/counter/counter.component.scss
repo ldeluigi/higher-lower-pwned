@@ -26,16 +26,20 @@ $text-size: 8vh;
   width: fit-content;
   padding: 2vh;
   @include mat-elevation(15);
-  // background-color: aliceblue;
-  border-radius: 100%;
+  background-color: black;
+  border-radius: 10%;
 
   .score {
+    color: whitesmoke;
     line-height: $text-size;
     text-align: center;
     font-size: $text-size;
     height: $text-size;
     font-weight: 400;
+    $shadow-margin: 5;
     text-shadow: multiple-text-shadow(5, $default-higher-color);
+    margin-bottom: #{$shadow-margin / 2}px;
+    margin-right: #{$shadow-margin / 2}px;
     animation: mymove 5s infinite;
   }
 

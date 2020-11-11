@@ -2,7 +2,6 @@ import { OnDestroy } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable, Subject } from 'rxjs';
-import { SocketDuel } from '../game/SocketDuel';
 import { NextDuelGuess } from '../game/_model/nextguess';
 import { PlayerIdName, PlayerJoin } from '../game/_model/player-join';
 import { AccountService } from './account.service';
@@ -22,6 +21,7 @@ export class BattleModelService implements OnDestroy {
   private gameDataSubject: Subject<GameData>;
   private errorSubject: Subject<{ code: number, description: string }>;
   private isInGame = false;
+  private close = false;
   players: Observable<PlayerJoin | PlayerIdName>;
   gameData: Observable<GameData>;
   errors: Observable<{ code: number, description: string }>;
@@ -100,6 +100,7 @@ export class BattleModelService implements OnDestroy {
   }
 
   private async setUpAndConnect(): Promise<void> {
+    this.close = false;
     if (this.currentSocket) {
       if (this.accountService.userValue !== null) {
         // console.log('add token');
@@ -117,6 +118,9 @@ export class BattleModelService implements OnDestroy {
       await this.currentSocket.fromOneTimeEvent('connect')
         .then(() => {
           this.myId = this.currentSocket?.ioSocket.io.engine.id;
+          if (this.close) {
+            this.disconnect();
+          }
         });
       this.connectionOpen = true;
       return;
@@ -145,6 +149,7 @@ export class BattleModelService implements OnDestroy {
       // console.log('disconnect');
       this.currentSocket?.disconnect();
       this.currentSocket = undefined;
+      this.close = true;
     }
   }
 

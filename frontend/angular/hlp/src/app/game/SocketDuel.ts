@@ -6,7 +6,7 @@ export class SocketDuel extends Socket {
   ) {
     super({ url: `${url}/duel`, options: {
       autoConnect: false,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: 3,
       timeout: 1000 }
     });
   }

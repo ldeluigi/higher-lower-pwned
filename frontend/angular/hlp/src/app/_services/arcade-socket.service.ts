@@ -15,6 +15,7 @@ export class ArcadeSocketService implements OnDestroy {
   public game: Observable<GameEnd | NextGuess>;
   private connectionOpen = false;
   private socket: SocketArcade;
+  private close = false;
 
   constructor(
     private accountService: AccountService,
@@ -67,6 +68,7 @@ export class ArcadeSocketService implements OnDestroy {
   }
 
   private async setUpAndConnect(): Promise<void> {
+    this.close = false;
     if (this.accountService.userValue !== null) {
       // console.log('add token');
       this.socket.ioSocket.io.opts.query = {
@@ -82,7 +84,12 @@ export class ArcadeSocketService implements OnDestroy {
         this.connectionOpen = false;
       });
     this.socket.connect();
-    await this.socket.fromOneTimeEvent('connect');
+    await this.socket.fromOneTimeEvent('connect')
+      .then(() => {
+        if (this.close) {
+          this.disconnect();
+        }
+      });
     this.connectionOpen = true;
     return;
   }
@@ -103,6 +110,7 @@ export class ArcadeSocketService implements OnDestroy {
     if (this.connectionOpen) {
       // console.log('disconnect');
       this.socket.disconnect();
+      this.close = true;
     }
   }
 
