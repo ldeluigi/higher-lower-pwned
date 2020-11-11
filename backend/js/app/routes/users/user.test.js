@@ -15,7 +15,7 @@ describe("user API", function () {
     const userMock = {
       username: "testusername",
       _id: "testid",
-      password: pwd.sha512("testpassword", "testpasswordsalt"),
+      password: pwd.hash("testpassword", "testpasswordsalt"),
       email: "testemail@email.com",
       salt: "testpasswordsalt",
       createdAt: new Date(),
@@ -52,7 +52,7 @@ describe("user API", function () {
     const userMock = {
       username: "testusername",
       _id: "testid",
-      password: pwd.sha512("testpassword", "testpasswordsalt"),
+      password: pwd.hash("testpassword", "testpasswordsalt"),
       email: "testemail@email.com",
       salt: "testpasswordsalt",
       createdAt: new Date(),
@@ -72,7 +72,7 @@ describe("user API", function () {
     });
     let result = response.body.data;
     userMock.save = async function () {
-      expect(this.password).toBe(pwd.sha512(modifyUserBody.password, this.salt));
+      expect(this.password).toBe(pwd.hash(modifyUserBody.password, this.salt));
       expect(this.email).toBe(modifyUserBody.email);
     };
     response = await request.put("/users/testid").set("Authorization", "Bearer " + result.token)
@@ -124,7 +124,7 @@ describe("user API", function () {
     const userMock = {
       username: "testusername",
       _id: "testid",
-      password: pwd.sha512("testpassword", "testpasswordsalt"),
+      password: pwd.hash("testpassword", "testpasswordsalt"),
       email: "testemail@email.com",
       salt: "testpasswordsalt",
       createdAt: new Date(),

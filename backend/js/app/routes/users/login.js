@@ -26,7 +26,7 @@ router.post("/login",
       if (userQuery === null) {
         return res.status(404).json({ errors: ["Wrong credentials."] });
       }
-      let hash = pwd.sha512(req.body.password, userQuery.salt);
+      let hash = pwd.hash(req.body.password, userQuery.salt);
       if (hash != userQuery.password) {
         return res.status(400).json({ errors: ["Wrong credentials."] });
       }

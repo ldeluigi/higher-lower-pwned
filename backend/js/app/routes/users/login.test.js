@@ -13,7 +13,7 @@ describe("login API", function () {
     const userMock = {
       username: "testusername",
       _id: "testid",
-      password: pwd.sha512("testpassword", "testpasswordsalt"),
+      password: pwd.hash("testpassword", "testpasswordsalt"),
       email: "testemail@email.com",
       salt: "testpasswordsalt",
       createdAt: new Date(),

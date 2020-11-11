@@ -1,15 +1,14 @@
 const crypto = require('crypto');
 
+const hashIter = 100000;
+
 module.exports = {
   genRandomString: function (length) {
     return crypto.randomBytes(Math.ceil(length / 2))
       .toString('hex') /** convert to hexadecimal format */
       .slice(0, length);   /** return required number of characters */
   },
-  sha512: function (password, salt) {
-    let hash = crypto.createHmac('sha512', salt); /* Hashing algorithm sha512 */
-    hash.update(password);
-    let value = hash.digest('hex');
-    return value;
+  hash: function (password, salt) {
+    return crypto.pbkdf2Sync(password, salt, hashIter, 128, 'sha512').toString('hex');
   }
 }

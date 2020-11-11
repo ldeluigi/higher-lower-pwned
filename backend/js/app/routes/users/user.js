@@ -34,7 +34,7 @@ router.post("/",
     }
     let body = req.body;
     let salt = pwd.genRandomString(16);
-    let output = pwd.sha512(body.password, salt);
+    let output = pwd.hash(body.password, salt);
     try {
       let sameUsername = await userSchema.findOne({
         username: body.username
@@ -117,7 +117,7 @@ router.put("/:id",
       }
       if (newPassword !== undefined) {
         let salt = pwd.genRandomString(16);
-        let output = pwd.sha512(newPassword, salt);
+        let output = pwd.hash(newPassword, salt);
         userQuery.password = output;
         userQuery.salt = salt;
         passwordUpdated = true;
