@@ -13,7 +13,7 @@
     }
     .not-selected {
       @include mat-elevation-transition;
-      @include mat-elevation(12, black, 1.6);
+      @include mat-elevation(12, black, 0.8);
     }
     .not-selected:active {
       @include mat-elevation(2);
