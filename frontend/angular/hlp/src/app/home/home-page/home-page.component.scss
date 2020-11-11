@@ -2,6 +2,59 @@
 @import "../../styles/abstracts/mixins";
 @import "../../styles/dimensions.scss";
 
+
+@function multiple-text-shadow($n, $color, $x: 1, $y: 1) {
+  $value: "0 0 0 #{$color}";
+  @for $i from 2 through $n {
+    $value: "#{$value} , #{ $i * $x }px #{ $i *$y }px 2px "+lighten(
+        $color,
+        $i * 3
+      );
+  }
+
+  @return unquote($value);
+}
+
+@keyframes mymove {
+  50% {text-shadow: multiple-text-shadow(5, blue, 0, -0.1);}
+}
+
+
+.title {
+  align-items: center;
+  div {
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  #left {
+    width: 50%;
+    float: left;
+    text-align: right;
+    margin: auto;
+    color: red;
+    text-shadow: multiple-text-shadow(5, blue, 0, -0.1);
+  }
+
+  #center {
+    width: 30%;
+    margin: auto;
+    text-shadow: multiple-text-shadow(5, red, 0, -0.1);
+    animation: mymove 2s infinite;
+    color: white;
+    text-align: center;
+  }
+
+  #right {
+    width: 50%;
+    float: right;
+    margin: auto;
+    color: blue;
+    text-align: left;
+    text-shadow: multiple-text-shadow(5, red, 0, -0.1);
+  }
+}
+
+
 @mixin margin-padding {
   margin: $default-margin;
   padding: $default-padding;
@@ -65,16 +118,6 @@ mat-icon {
   height: $button-size;
 }
 
-// .start-button {
-//   background: $default-arcade-color;
-// }
-// .start-button-pvp {
-//   background: $default-pvp-color;
-// }
-// .start-button-royale {
-//   background: $default-royale-color;
-// }
-
 @include desktop {
   .mat-display-4 {
     @include margin-padding();
@@ -83,22 +126,12 @@ mat-icon {
     display: flex;
   }
 
-  .mat-display-4 div {
-    max-width: 30%;
-    line-height: 1em;
-    font-size: 0.85em;
-    width: auto;
-  }
-
-  .mat-display-4 div#right {
-    @include margin-padding();
-    margin-right: auto;
-  }
-
-  .mat-display-4 div#left {
-    @include margin-padding();
-    margin-left: auto;
-  }
+  // .mat-display-4 div {
+  //   max-width: 30%;
+  //   line-height: 1em;
+  //   font-size: 0.85em;
+  //   width: auto;
+  // }
 
   .center-column {
     z-index: 2;
@@ -121,5 +154,21 @@ mat-icon {
     width: 100%;
     text-align: center;
     z-index: 1;
+  }
+
+  .title {
+    width: 80%;
+    margin: auto;
+    div {
+      clear: both;
+    }
+    #left {
+      margin: auto 3vw;
+      text-align: right;
+    }
+    #right {
+      margin: auto 3vw;
+      text-align: left;
+    }
   }
 }
