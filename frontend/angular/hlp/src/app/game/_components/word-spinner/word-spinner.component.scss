@@ -71,7 +71,6 @@ mat-card-content {
 
 #vs {
   position: relative;
-  // background-color: transparent;
   height: 15%;
   width: 15%;
   margin: auto;
@@ -79,15 +78,9 @@ mat-card-content {
   text-align: center;
   z-index: 1;
   mat-icon {
-    // margin-top: $icon-size / 10;
     width: 100%;
     height: 100%;
   }
-  // span {
-  //   display: inline-block;
-  //   vertical-align: middle;
-  //   line-height: normal;
-  // }
 }
 
 @include desktop {

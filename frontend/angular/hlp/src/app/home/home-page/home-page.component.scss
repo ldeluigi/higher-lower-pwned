@@ -7,6 +7,10 @@
   padding: $default-padding;
 }
 
+.in-line {
+  margin-top: 4vh;
+}
+
 .mat-display-4 {
   @include margin-padding();
 }
