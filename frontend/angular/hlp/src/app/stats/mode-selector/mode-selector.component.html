@@ -1,6 +1,7 @@
 <div class="nav-bar">
   <div class="selector-border"></div>
-  <a mat-button [disabled]="disableGlobal()" [class]="isSelected('global') ? 'selected' : 'not-selected'" routerLink="global">
+  <a mat-button [disabled]="disableGlobal()" [class]="isSelected('global') ? 'selected' : 'not-selected'"
+    routerLink="global">
     <mat-icon aria-hidden="true" aria-label="public">public</mat-icon>
     <span class="text">Global</span>
   </a>
@@ -14,7 +15,7 @@
   </a>
   <a mat-button [class]="isSelected('royale') ? 'selected' : 'not-selected'" routerLink="royale">
     <mat-icon aria-hidden="true" aria-label="groups">groups</mat-icon>
-    <span class="text">Battle</span>
+    <span class="text">Battle Royale</span>
   </a>
   <div class="selector-border"></div>
 </div>
