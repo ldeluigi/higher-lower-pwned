@@ -5,13 +5,15 @@
 
 <div class='nav-bar'>
   <div class="selector-border"></div>
-  <a mat-button [class]="isSelected('statistics') ? 'selected' : 'not-selected'" [routerLink]="getRouterLink('statistics')">
+  <a mat-button [class]="isSelected('statistics') ? 'selected checked' : 'not-selected'"
+    [routerLink]="getRouterLink('statistics')">
     <mat-icon aria-hidden="true" aria-label="assessment">assessment</mat-icon>
-    <span class="text">Statistic</span>
+    <span class="text">Statistics</span>
   </a>
-  <a mat-button [class]="isSelected('leaderboard') ? 'selected' : 'not-selected'" [routerLink]="getRouterLink('leaderboard')">
+  <a mat-button [class]="isSelected('leaderboard') ? 'selected checked' : 'not-selected'"
+    [routerLink]="getRouterLink('leaderboard')">
     <mat-icon aria-hidden="true" aria-label="leaderboard">leaderboard</mat-icon>
-    <span class="text">Leaderboard</span>
+    <span class="text">Leaderboards</span>
   </a>
   <div class="selector-border"></div>
 </div>
