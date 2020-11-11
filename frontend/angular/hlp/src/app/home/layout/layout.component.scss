@@ -28,8 +28,11 @@
     display: flex;
     align-items: right;
     justify-content: flex-end;
-    a {
-      margin: $default-margin;
+    * {
+      width: 30%;
+      display: flex;
+      align-items: right;
+      justify-content: flex-end;
     }
   }
 
