@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserDataService } from '../../_services/user-data.service';
+import { UserDataService } from '../../../_services/user-data.service';
 import { UserInfo } from 'src/app/_model/userInfo';
 import { MatDialog } from '@angular/material/dialog';
 import { AccountService } from 'src/app/_services/account.service';

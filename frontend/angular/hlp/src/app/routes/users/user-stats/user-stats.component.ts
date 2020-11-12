@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UserDataService } from '../../_services/user-data.service';
-import { HistoryItem } from '../../_model/userStats';
+import { UserDataService } from '../../../_services/user-data.service';
+import { HistoryItem } from '../../../_model/userStats';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartType, ChartOptions } from 'chart.js';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,15 +8,16 @@ import {
   timeConversion,
   periodIterator,
   daysOfTheYear,
-} from '../../_helper/timeConversion';
+} from '../../../_helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
 import { HistoryItemToEndDatePipe } from 'src/app/shared/pipe/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from 'src/app/shared/pipe/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
-import * as Const from './user-stats.constant';
+import * as Const from '../../../shared/pipe/date-format.constant';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { ThemeService } from 'ng2-charts';
+
+export const GRAPH_EMPTY_PERIODS = '...';
 
 @Component({
   selector: 'app-user-stats',
@@ -201,7 +202,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
             element.avgPlaysPerDay === 0
           ) {
             if (periods[periods.length - 1] !== e) {
-              label.push(Const.GRAPH_EMPTY_PERIODS);
+              label.push(GRAPH_EMPTY_PERIODS);
               scores.push(element);
             } else {
               scores.pop();

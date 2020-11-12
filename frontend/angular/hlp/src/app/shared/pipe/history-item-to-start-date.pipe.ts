@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DEFAULT_PERIOD } from '../../users/user-stats/user-stats.constant';
+import { DEFAULT_PERIOD } from './date-format.constant';
 import { HistoryItem } from '../../_model/userStats';
 import { convertDayNumberInDate } from '../../_helper/timeConversion';
 

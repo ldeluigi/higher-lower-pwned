@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './_helper/interceptor/error.interceptor';
 import { JWTInterceptor } from './_helper/interceptor/jwt.interceptor';
 import { AccountModule } from './routes/account/account.module';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './routes/users/users.module';
 import { GameModule } from './routes/game/game.module';
 
 import { SharedModule } from './shared/shared.module';
