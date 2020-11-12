@@ -13,6 +13,10 @@
   display: none;
 }
 
+.selector-border {
+  width: 20vw;
+}
+
 @include tablet {
   .text {
     display: initial;
@@ -22,5 +26,9 @@
 @include desktop {
   .text {
     display: initial;
+  }
+
+  .selector-border {
+    width: 30vw;
   }
 }
