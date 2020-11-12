@@ -58,7 +58,15 @@ export class WordSpinnerComponent {
     this.matIconRegistry.addSvgIcon(
       'punch_vs',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/punch_vs.svg')
-      );
+    );
+    this.matIconRegistry.addSvgIcon(
+      'arrows',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/double-arrow.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'arrows_text',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/double-arrow-text.svg')
+    );
   }
 
   answer(wn: number): void {

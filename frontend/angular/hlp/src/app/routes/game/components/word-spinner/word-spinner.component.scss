@@ -2,6 +2,8 @@
 @import "~@angular/material/theming";
 @import "../../../../styles/colors.scss";
 
+$vs_top: 25%;
+
 :host {
   display: inline-block;
   font-size: 150%;
@@ -32,7 +34,7 @@ mat-card-content {
   .bot {
     position: relative;
     height: 46%;
-    top: -10%;
+    top: -$vs_top;
     background-color: $lower-color;
   }
 
@@ -71,15 +73,19 @@ mat-card-content {
 
 #vs {
   position: relative;
-  height: 15%;
+  height: 5% + $vs_top;
   width: 15%;
   margin: auto;
-  top: -5%;
+  top: -$vs_top/2 + 2%;
   text-align: center;
   z-index: 1;
-  mat-icon {
-    width: 100%;
-    height: 100%;
+  display: block;
+  // mat-icon {
+  //   height: 1vh;
+  // }
+  .image {
+    margin: auto;
+    height: 13vh;
   }
 }
 

@@ -15,8 +15,10 @@
 }
 
 .word {
+  overflow: visible;
   width: 64%;
-  margin: $default-margin;
+  height: 50%;
+  margin: $default-margin auto;
 }
 
 .nameDiv {
