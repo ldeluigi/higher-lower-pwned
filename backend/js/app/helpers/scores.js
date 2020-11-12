@@ -64,6 +64,10 @@ module.exports = {
             return res.status(404).json({ errors: ["Score query error."] });
           }
           res.json({
+            meta: {
+              page: queryPage,
+              size: queryLimit
+            },
             data: result.map(x => {
               let s = score.toDto(x);
               delete s.username;
