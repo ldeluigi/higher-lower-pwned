@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { LeadeboardComponent } from './leaderboard/leadeboard.component';
 import { StatsComponent } from './stats/stats.component';
-import { ViewSelectorComponent } from './mode-layout/view-selector.component';
+import { ViewSelectorComponent } from './view-selector/view-selector.component';
 
 const routes: Routes = [
   {

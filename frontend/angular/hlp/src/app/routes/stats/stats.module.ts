@@ -8,7 +8,7 @@ import { StatisticRoutingModule } from './stats-routing.module';
 
 import { SharedModule } from '../../shared/shared.module';
 import { LayoutComponent } from './layout/layout.component';
-import { ViewSelectorComponent } from './mode-layout/view-selector.component';
+import { ViewSelectorComponent } from './view-selector/view-selector.component';
 import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 
 @NgModule({
