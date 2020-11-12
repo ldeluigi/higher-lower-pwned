@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GameStatsService } from '../../_services/game-stats.service';
+import { GameStatsService } from '../../../_services/game-stats.service';
 import { from, Subscription } from 'rxjs';
 import { LbItem } from 'src/app/_model/lbItem';
 import {MatPaginator} from '@angular/material/paginator';

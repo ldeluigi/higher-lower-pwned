@@ -1,0 +1,18 @@
+@import "../../../styles/abstracts/_mixins.scss";
+@import "../../../styles/dimensions.scss";
+@import "../../../styles/stats/mixins";
+
+:host {
+  width: 95%;
+}
+
+.data {
+  width: 90%;
+  margin: auto;
+}
+
+@include desktop {
+  .data {
+    width: 70%;
+  }
+}

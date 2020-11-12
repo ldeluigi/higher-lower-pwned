@@ -7,7 +7,7 @@ import { HomePageComponent } from './routes/home/home-page/home-page.component';
 const accountModule = () => import('./routes/account/account.module').then(x => x.AccountModule);
 const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
 const gameModule = () => import('./routes/game/game.module').then(x => x.GameModule);
-const statsModule = () => import('./stats/stats.module').then(x => x.StatsModule);
+const statsModule = () => import('./routes/stats/stats.module').then(x => x.StatsModule);
 
 const routes: Routes = [
   {
