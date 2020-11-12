@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
-import { GameData } from '../../_services/battle-model.service';
-import { GameStatus } from './GameStatus';
+import { GameData } from '../../../_services/battle-model.service';
+import { GameStatus } from './gameStatus';
 import { NextDuelGuess, NextGuess } from '../_model/nextguess';
 
 enum GameType {

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from '../account/login/login.component';
-import { RegistrationComponent } from '../account/registration/registration.component';
-import { UpdateComponent } from '../account/update/update.component';
-import { LayoutComponent } from '../account/layout/layout.component';
+import { LoginComponent } from './login/login.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { UpdateComponent } from './update/update.component';
+import { LayoutComponent } from './layout/layout.component';
 import { AuthGuard } from '../_helper/guards/auth.guard';
 
 

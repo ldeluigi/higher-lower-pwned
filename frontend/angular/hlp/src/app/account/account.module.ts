@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AccountRoutingModule } from '../_routers/account-routing.module';
+import { AccountRoutingModule } from './account-routing.module';
 import { LoginComponent } from './login/login.component';
 import { UpdateComponent } from './update/update.component';
 import { RegistrationComponent } from './registration/registration.component';

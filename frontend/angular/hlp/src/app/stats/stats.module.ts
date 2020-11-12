@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LeadeboardComponent } from './leaderboard/leadeboard.component';
 import { StatsComponent } from './stats/stats.component';
 
-import { StatisticRoutingModule } from '../_routers/stats-routing.module';
+import { StatisticRoutingModule } from './stats-routing.module';
 
 import { SharedModule } from '../shared/shared.module';
 import { LayoutComponent } from './layout/layout.component';

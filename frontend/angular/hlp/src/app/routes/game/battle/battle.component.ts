@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Socket } from 'ngx-socket-io';
 import { SocketDuel } from '../SocketDuel';
 import { SocketRoyale } from '../SocketRoyale';
-import { GameStatus } from '../_utils/GameStatus';
+import { GameStatus } from '../_utils/gameStatus';
 import { ApiURLService } from 'src/app/_services/api-url.service';
 import { first } from 'rxjs/operators';
 

@@ -136,7 +136,7 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
     }),
     animate(DURATION3, style({
       opacity: 0,
-      //transform: 'translateY(-110%)',
+      // transform: 'translateY(-110%)',
     }))
   ]),
   transition('out => first', [

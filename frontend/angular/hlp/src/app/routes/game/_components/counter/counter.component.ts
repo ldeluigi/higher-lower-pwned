@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AnimationTriggerMetadata, trigger, transition, style, AnimationEvent, animate } from '@angular/animations';
 import { rollNumber } from '../../_utils/wordAnimation';
 
 @Component({

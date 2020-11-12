@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { AppRoutingModule } from './_routers/app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { ErrorInterceptor } from './_helper/interceptor/error.interceptor';
 import { JWTInterceptor } from './_helper/interceptor/jwt.interceptor';
 import { AccountModule } from './account/account.module';
 import { UsersModule } from './users/users.module';
-import { GameModule } from './game/game.module';
+import { GameModule } from './routes/game/game.module';
 
 import { LayoutComponent } from './home/layout/layout.component';
 import { LinksComponent } from './home/links/links.component';

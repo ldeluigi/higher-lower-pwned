@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 // import * as io from 'ngx-socket-io';
-import { Error } from '../game/_model/error';
-import { GameEnd } from '../game/_model/gameEnd';
-import { NextGuess } from '../game/_model/nextguess';
+import { Error } from '../routes/game/_model/error';
+import { GameEnd } from '../routes/game/_model/gameEnd';
+import { NextGuess } from '../routes/game/_model/nextguess';
 import { Observable } from 'rxjs';
 import { AccountService } from './account.service';
-import { SocketArcade } from '../game/SocketArcade';
+import { SocketArcade } from '../routes/game/SocketArcade';
 import { ApiURLService } from './api-url.service';
 import { first } from 'rxjs/operators';
 

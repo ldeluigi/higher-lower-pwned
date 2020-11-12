@@ -86,6 +86,7 @@ export class AccountService implements OnDestroy {
     return;
   }
 
+  // tslint:disable-next-line: no-any
   private async update(data: any): Promise<void> {
     const user = this.extractUser();
     if (user === null) {
