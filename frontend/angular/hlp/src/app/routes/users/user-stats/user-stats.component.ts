@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UserDataService } from '../../../_services/user-data.service';
-import { HistoryItem } from '../../../_model/userStats';
+import { UserDataService } from '../../../services/user-data.service';
+import { HistoryItem } from '../../../model/userStats';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartType, ChartOptions } from 'chart.js';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,7 +8,7 @@ import {
   timeConversion,
   periodIterator,
   daysOfTheYear,
-} from '../../../_helper/timeConversion';
+} from '../../../helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
 import { HistoryItemToEndDatePipe } from 'src/app/shared/pipe/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from 'src/app/shared/pipe/history-item-to-start-date.pipe';

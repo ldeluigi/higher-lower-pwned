@@ -1,7 +1,7 @@
 import { ViewChild } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
-import { BattleModelService, GameData } from 'src/app/_services/battle-model.service';
+import { BattleModelService, GameData } from 'src/app/services/battle-model.service';
 import { WordSpinnerComponent } from '../components/word-spinner/word-spinner.component';
 import { Player } from '../components/player-list/player-list.component';
 import { NextDuelGuess } from '../model/nextguess';
@@ -12,7 +12,7 @@ import { Socket } from 'ngx-socket-io';
 import { SocketDuel } from '../SocketDuel';
 import { SocketRoyale } from '../SocketRoyale';
 import { GameStatus } from '../utils/gameStatus';
-import { ApiURLService } from 'src/app/_services/api-url.service';
+import { ApiURLService } from 'src/app/services/api-url.service';
 import { first } from 'rxjs/operators';
 
 @Component({

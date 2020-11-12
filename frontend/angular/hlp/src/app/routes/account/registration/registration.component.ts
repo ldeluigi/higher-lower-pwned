@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AccountService } from 'src/app/_services/account.service';
+import { AccountService } from 'src/app/services/account.service';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   AbstractControl,
 } from '@angular/forms';
-import { UserRegistration } from '../../../_model/UserRegistration';
+import { UserRegistration } from '../../../model/UserRegistration';
 import { first } from 'rxjs/operators';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Stats } from '../../../_model/stats';
-import { GameStatsService } from '../../../_services/game-stats.service';
-import { timeConversion } from '../../../_helper/timeConversion';
+import { Stats } from '../../../model/stats';
+import { GameStatsService } from '../../../services/game-stats.service';
+import { timeConversion } from '../../../helper/timeConversion';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';

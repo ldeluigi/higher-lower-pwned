@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AccountService } from 'src/app/_services/account.service';
+import { AccountService } from 'src/app/services/account.service';
 import { animationTitle1, animationTitle2, animationTitle3, fadeInFast } from './animation';
 
 @Component({

@@ -1,12 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { User } from '../_model/user';
-import { UserRegistration, UserRegistrationResponse } from '../_model/UserRegistration';
-import { TokenRefresh } from '../_model/tokenRefresh';
+import { User } from '../model/user';
+import { UserRegistration, UserRegistrationResponse } from '../model/UserRegistration';
+import { TokenRefresh } from '../model/tokenRefresh';
 import { Route, Router } from '@angular/router';
 import { HttpClient, JsonpInterceptor } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { Response } from '../_model/serverResponse';
+import { Response } from '../model/serverResponse';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiURLService } from './api-url.service';
 

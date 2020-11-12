@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { UserStats } from '../_model/userStats';
-import { UserInfo } from '../_model/userInfo';
+import { UserStats } from '../model/userStats';
+import { UserInfo } from '../model/userInfo';
 import { AccountService } from './account.service';
-import { Response } from '../_model/serverResponse';
+import { Response } from '../model/serverResponse';
 import { map } from 'rxjs/operators';
-import { addParamsToHttp } from '../_helper/httpUtils';
+import { addParamsToHttp } from '../helper/httpUtils';
 import { ApiURLService } from './api-url.service';
 
 @Injectable({

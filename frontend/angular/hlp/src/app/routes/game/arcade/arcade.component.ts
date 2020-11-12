@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ArcadeSocketService } from '../../../_services/arcade-socket.service';
+import { ArcadeSocketService } from '../../../services/arcade-socket.service';
 import { GameEnd } from '../model/gameEnd';
 import { NextGuess } from '../model/nextguess';
 import { interval, Subscription } from 'rxjs';

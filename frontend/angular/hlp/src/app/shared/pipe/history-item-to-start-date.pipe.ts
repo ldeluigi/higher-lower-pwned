@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DEFAULT_PERIOD } from './date-format.constant';
-import { HistoryItem } from '../../_model/userStats';
-import { convertDayNumberInDate } from '../../_helper/timeConversion';
+import { HistoryItem } from '../../model/userStats';
+import { convertDayNumberInDate } from '../../helper/timeConversion';
 
 @Pipe({
   name: 'historyItemToStartDate'

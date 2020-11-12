@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { HistoryItem } from '../../_model/userStats';
-import { convertDayNumberInDate } from '../../_helper/timeConversion';
+import { HistoryItem } from '../../model/userStats';
+import { convertDayNumberInDate } from '../../helper/timeConversion';
 
 @Pipe({
   name: 'historyItemToEndDate'

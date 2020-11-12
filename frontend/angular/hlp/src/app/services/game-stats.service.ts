@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { LbItem } from '../_model/lbItem';
+import { LbItem } from '../model/lbItem';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Response } from '../_model/serverResponse';
-import { Stats } from '../_model/stats';
-import { addParamsToHttp } from '../_helper/httpUtils';
+import { Response } from '../model/serverResponse';
+import { Stats } from '../model/stats';
+import { addParamsToHttp } from '../helper/httpUtils';
 import { ApiURLService } from './api-url.service';
 import { first } from 'rxjs/operators';
 
