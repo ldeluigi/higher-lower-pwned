@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
-import { rollNumber, rollWord } from '../../_utils/wordAnimation';
+import { rollNumber, rollWord } from '../../utils/wordAnimation';
 import { cardAnimation, vsAnimation, wordAnimation } from './animation';
-import { GameSetup, EndGame, NextCard } from '../../_model/animation';
+import { GameSetup, EndGame, NextCard } from '../../model/animation';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 

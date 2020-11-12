@@ -2,8 +2,8 @@ import { OnDestroy } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable, Subject } from 'rxjs';
-import { NextDuelGuess } from '../routes/game/_model/nextguess';
-import { PlayerIdName, PlayerJoin } from '../routes/game/_model/player-join';
+import { NextDuelGuess } from '../routes/game/model/nextguess';
+import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
 import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
 

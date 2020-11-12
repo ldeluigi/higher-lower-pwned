@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { rollNumber } from '../../_utils/wordAnimation';
+import { rollNumber } from '../../utils/wordAnimation';
 
 @Component({
   selector: 'app-counter',

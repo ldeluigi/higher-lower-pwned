@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ArcadeSocketService } from '../../../_services/arcade-socket.service';
-import { GameEnd } from '../_model/gameEnd';
-import { NextGuess } from '../_model/nextguess';
+import { GameEnd } from '../model/gameEnd';
+import { NextGuess } from '../model/nextguess';
 import { interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { WordSpinnerComponent } from '../_components/word-spinner/word-spinner.component';
-import { rollNumber } from '../_utils/wordAnimation';
+import { WordSpinnerComponent } from '../components/word-spinner/word-spinner.component';
+import { rollNumber } from '../utils/wordAnimation';
 
 export interface CardData {
   word: string;
