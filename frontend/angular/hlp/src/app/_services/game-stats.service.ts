@@ -6,6 +6,7 @@ import { Response } from '../_model/serverResponse';
 import { Stats } from '../_model/stats';
 import { addParamsToHttp } from '../_helper/httpUtils';
 import { ApiURLService } from './api-url.service';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,7 @@ export class GameStatsService {
     const urlMode = mode.length > 0 ? `/${mode}` : '';
     const url = `${this.apiURL.restApiUrl}/stats${urlMode}`;
     this.http.get<Response<Stats>>(url, { params: param })
+      .pipe(first())
       .subscribe(response => {
         this.statsSubject.next(response.data);
       });
@@ -52,6 +54,7 @@ export class GameStatsService {
     ]);
     const url = `${this.apiURL.restApiUrl}/leaderboards/${mode}`;
     this.http.get<Response<LbItem[]>>(url, { params })
+      .pipe(first())
       .subscribe(response => {
         this.leaderboardSubject.next(response.data);
       });

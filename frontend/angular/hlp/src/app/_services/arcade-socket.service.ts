@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { AccountService } from './account.service';
 import { SocketArcade } from '../game/SocketArcade';
 import { ApiURLService } from './api-url.service';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +42,7 @@ export class ArcadeSocketService implements OnDestroy {
         console.log('>error: ', e);
         if (e === 'error-connection') {
           if (this.accountService.userValue !== null) {
-            this.accountService.refreshToken().subscribe(t => {
+            this.accountService.refreshToken().pipe(first()).subscribe(t => {
               this.startGame();
             },
               error => {
