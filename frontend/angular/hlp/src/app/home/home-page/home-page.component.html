@@ -6,43 +6,27 @@
 </div>
 
 <div class="center-column" @fadeIn>
-  <p class="mat-body-2">Has your password been pwned?</p>
-  <p class="mat-body-1">
-    A frustratingly addictive game of higher or lower using pwned password.
-  </p>
-  <p class="mat-body-1">The data is based on ... TODO .</p>
+  <div class="autoscroll">
+    <p>
+      This is a frustratingly addictive game! Choose from ARCADE, DUEL or BATTLE ROYALE mode and challenge yourself and
+      your friends to be the best at guessing what password is the most popular! Keep in mind that this is only a game
+      but you should avoid using any oth these password for your accounts, your privacy and security is very important!
+    </p>
+  </div>
 
   <div class="in-line">
-    <a
-      mat-icon-button
-      routerLink="/game/arcade"
-      matTooltip="Play arcade mode"
-      matTooltipPosition="left"
-      routerLinkActive="active"
-      class="start-button"
-    >
+    <a mat-icon-button routerLink="/game/arcade" matTooltip="Arcade mode ~ You against time! ~"
+      matTooltipPosition="left" routerLinkActive="active" class="start-button">
       <mat-icon svgIcon="single_sword"></mat-icon>
     </a>
-    <a
-      mat-icon-button
-      routerLink="/game/duel"
-      matTooltip="Play 1 vs 1 battle"
-      matTooltipPosition="right"
-      routerLinkActive="active"
-      class="start-button-pvp"
-    >
+    <a mat-icon-button routerLink="/game/duel" matTooltip="Duel ~ You against one opponent, but look out for time! ~"
+      matTooltipPosition="right" routerLinkActive="active" class="start-button-pvp">
       <mat-icon svgIcon="double_sword"></mat-icon>
     </a>
   </div>
-  <a
-    mat-icon-button
-    isRoundButton
-    routerLink="/game/royale"
-    matTooltip="Play a royale game with 100 opponents"
-    matTooltipPosition="right"
-    routerLinkActive="active"
-    class="start-button-royale"
-  >
+  <a mat-icon-button isRoundButton routerLink="/game/royale"
+    matTooltip="Battle Royale ~ You against 99 opponents, each with their own timer! ~" matTooltipPosition="right"
+    routerLinkActive="active" class="start-button-royale">
     <mat-icon svgIcon="royal_crown"></mat-icon>
   </a>
 </div>

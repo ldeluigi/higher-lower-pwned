@@ -1,12 +1,13 @@
 @import "../abstracts/_mixins.scss";
 @import "~@angular/material/theming";
+@import "../colors.scss";
 
 @mixin nav-bar {
   .nav-bar {
     display: flex;
     margin: auto;
     a {
-      background-color: #ffffff69;
+      background-color: $button-bg;
       margin: auto;
       margin-top: 2vh;
       margin-bottom: 2vh;

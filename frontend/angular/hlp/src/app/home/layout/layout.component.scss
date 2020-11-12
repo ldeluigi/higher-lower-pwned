@@ -1,8 +1,9 @@
 @import "../../styles/dimensions.scss";
 @import "../../styles/abstracts/mixins";
+@import "../../styles/colors.scss";
 
 .nav-buttons {
-  background-color: transparent;
+  background-color: $button-bg;
 }
 
 #desktop {
@@ -19,7 +20,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: transparent;
+  background-color: $button-bg;
 }
 
 .text {

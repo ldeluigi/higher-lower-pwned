@@ -1,27 +1,24 @@
 <div class="words">
-  <div class="top not-moving"  [@cardAnimation]="element1.status" (click)="answer(1)">
+  <div class="top not-moving" [@cardAnimation]="element1.status" (click)="answer(1)">
     <div id="dummy10p"></div>
     <div>
-      <h1 [@wordAnimation]="element1.status"  (@wordAnimation.done)="onAnimationListDone($event)"> {{ element1.word }} </h1>
+      <h1 [@wordAnimation]="element1.status" (@wordAnimation.done)="onAnimationListDone($event)"> {{ element1.word }}
+      </h1>
       <div id="dummy10p"></div>
       <p>
         {{ element1.score }}
       </p>
     </div>
   </div>
-  <div id="vs" [@vsAnimation]="rotateVs"
-      mat-icon-button
-      isRoundButton
-      matTooltip="Play a royale game with 100 opponents"
-      matTooltipPosition="right"
-      routerLinkActive="active"
-      class="start-button-royale">
-      <mat-icon svgIcon="punch_vs"></mat-icon>
+  <div id="vs" [@vsAnimation]="rotateVs" mat-icon-button isRoundButton matTooltipPosition="right"
+    routerLinkActive="active" class="start-button-royale">
+    <mat-icon svgIcon="punch_vs"></mat-icon>
   </div>
   <div class="bot" [ngClass]="moving ? 'moving' : 'not-moving'" [@cardAnimation]="element2.status" (click)="answer(2)">
     <div id="dummy10p"></div>
     <div>
-      <h1 [@wordAnimation]="element2.status" (@wordAnimation.done)="onAnimationListDone($event)"> {{ element2.word }} </h1>
+      <h1 [@wordAnimation]="element2.status" (@wordAnimation.done)="onAnimationListDone($event)"> {{ element2.word }}
+      </h1>
       <div id="dummy10p"></div>
       <p>
         {{ element2.score }}

@@ -2,7 +2,6 @@
 @import "../../styles/abstracts/mixins";
 @import "../../styles/dimensions.scss";
 
-
 @function multiple-text-shadow($n, $color, $x: 1, $y: 1) {
   $value: "0 0 0 #{$color}";
   @for $i from 2 through $n {
@@ -16,9 +15,10 @@
 }
 
 @keyframes mymove {
-  50% {text-shadow: multiple-text-shadow(5, blue, 0, -0.1);}
+  50% {
+    text-shadow: multiple-text-shadow(5, blue, 0, -0.1);
+  }
 }
-
 
 .title {
   align-items: center;
@@ -31,16 +31,14 @@
     float: left;
     text-align: right;
     margin: auto;
-    color: red;
-    text-shadow: multiple-text-shadow(5, blue, 0, -0.1);
+    color: $higher-color;
   }
 
   #center {
     width: 30%;
     margin: auto;
-    text-shadow: multiple-text-shadow(5, red, 0, -0.1);
     animation: mymove 2s infinite;
-    color: white;
+    color: $default-text-color;
     text-align: center;
   }
 
@@ -48,12 +46,10 @@
     width: 50%;
     float: right;
     margin: auto;
-    color: blue;
+    color: $lower-color;
     text-align: left;
-    text-shadow: multiple-text-shadow(5, red, 0, -0.1);
   }
 }
-
 
 @mixin margin-padding {
   margin: $default-margin;
@@ -97,7 +93,7 @@ footer {
   clear: both;
 }
 
-$button-size: 12vh;
+$button-size: 14vh;
 $icon-size: $button-size * 2 / 3;
 
 .start-button,
@@ -170,5 +166,54 @@ mat-icon {
       margin: auto 3vw;
       text-align: left;
     }
+  }
+}
+
+$autoscroll-width: 700%;
+$autoscroll-duration: 30s;
+
+.autoscroll {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  white-space: nowrap;
+}
+.autoscroll p {
+  /* Starting position */
+  -moz-transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
+  /* Apply animation to this element */
+  -moz-animation: autoscroll $autoscroll-duration linear infinite;
+  -webkit-animation: autoscroll $autoscroll-duration linear infinite;
+  animation: autoscroll $autoscroll-duration linear infinite;
+}
+/* Move it (define the animation) */
+@-moz-keyframes autoscroll {
+  0% {
+    -moz-transform: translateX($autoscroll-width);
+  }
+  100% {
+    -moz-transform: translateX(-$autoscroll-width);
+  }
+}
+@-webkit-keyframes autoscroll {
+  0% {
+    -webkit-transform: translateX($autoscroll-width);
+  }
+  100% {
+    -webkit-transform: translateX(-$autoscroll-width);
+  }
+}
+@keyframes autoscroll {
+  0% {
+    -moz-transform: translateX($autoscroll-width); /* Firefox bug fix */
+    -webkit-transform: translateX($autoscroll-width); /* Firefox bug fix */
+    transform: translateX($autoscroll-width);
+  }
+  100% {
+    -moz-transform: translateX(-$autoscroll-width); /* Firefox bug fix */
+    -webkit-transform: translateX(-$autoscroll-width); /* Firefox bug fix */
+    transform: translateX(-$autoscroll-width);
   }
 }

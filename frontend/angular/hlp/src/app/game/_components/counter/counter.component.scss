@@ -1,6 +1,6 @@
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/colors.scss";
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
 
 $margin-top: 4vh;
 $text-size: 8vh;
@@ -26,27 +26,28 @@ $text-size: 8vh;
   width: fit-content;
   padding: 2vh;
   @include mat-elevation(15);
-  background-color: black;
+  background-color: $label-bg;
   border-radius: 10%;
 
   .score {
-    color: whitesmoke;
+    color: $label-text;
     line-height: $text-size;
     text-align: center;
     font-size: $text-size;
     height: $text-size;
     font-weight: 400;
     $shadow-margin: 5;
-    text-shadow: multiple-text-shadow(5, $default-higher-color);
+    text-shadow: multiple-text-shadow(5, $higher-color);
     margin-bottom: #{$shadow-margin / 2}px;
     margin-right: #{$shadow-margin / 2}px;
     animation: mymove 5s infinite;
   }
-
 }
 
 @keyframes mymove {
-  50% {text-shadow: multiple-text-shadow(5, $default-lower-color);}
+  50% {
+    text-shadow: multiple-text-shadow(5, $lower-color);
+  }
 }
 
 // for desktop layout
@@ -62,4 +63,3 @@ $text-size: 8vh;
     }
   }
 }
-

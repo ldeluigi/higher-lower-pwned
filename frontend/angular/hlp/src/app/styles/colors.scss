@@ -1,21 +1,13 @@
-// primary color TODO define
-$primary_color: red;
-$secondary_color: blue;
-$tertiary_color: yellow;
-
-// TODO  color derivation
-
-
 // default
 $default-text-color: aliceblue;
 $dark-text-color: black;
-$default-higher-color: red;
-$default-lower-color: blue;
-$default-arcade-color: rgb(200, 0, 0);
-$default-pvp-color: rgb(0, 0, 200);
-$default-royale-color: black;
+$higher-color: #ff2147;
+$lower-color: #add8e6;
 $white-bg: white;
 $black-bg: black;
 $default-error-color: red;
 $behind-player-color: lightcoral;
 $losing-player-color: darkslategrey;
+$button-bg: rgba(0, 0, 0, 0);
+$label-bg: rgba(255, 255, 255, 0.212);
+$label-text: rgba(0, 0, 0, 0.7);

@@ -2,18 +2,15 @@
   <app-counter [counter]="actualScore"></app-counter>
 </div>
 <div class="wrapper">
-  <app-word-spinner
-    [buttonEnable]="!this.loading"
-    (answerEmitter)="response($event)"
-  ></app-word-spinner>
+  <app-word-spinner [buttonEnable]="!this.loading" (answerEmitter)="response($event)"></app-word-spinner>
 </div>
 <div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>
 <ng-template #gameIsNotOn>
   <div class="flex">
     <div class="endGameDummy"></div>
     <div class="endGameButton">
-      <button mat-raised-button routerLink="/home" routerLinkActive="active">Home</button>
-      <button mat-raised-button (click)="start()">Play again</button>
+      <button mat-raised-button routerLink="/home" routerLinkActive="active">HOME</button>
+      <button mat-raised-button (click)="start()">PLAY AGAIN</button>
     </div>
     <div class="endGameDummy"></div>
   </div>
@@ -21,9 +18,6 @@
 <ng-template #gameIsOn>
   <div class="progressBar">
     <div>{{ timeLeft | date: "s:S" }} s</div>
-    <mat-progress-bar
-      mode="determinate"
-      [value]="progressbarValue"
-    ></mat-progress-bar>
+    <mat-progress-bar mode="determinate" [value]="progressbarValue"></mat-progress-bar>
   </div>
 </ng-template>

@@ -1,5 +1,6 @@
 @import "../../../styles/abstracts/mixins.scss";
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
+@import "../../../styles/colors.scss";
 
 :host {
   display: inline-block;
@@ -26,13 +27,13 @@ mat-card-content {
   height: 100%;
   .top {
     height: 46%;
-    background-color: red;
+    background-color: $higher-color;
   }
   .bot {
     position: relative;
     height: 46%;
     top: -10%;
-    background-color: lightblue;
+    background-color: $lower-color;
   }
 
   .not-moving {
@@ -42,9 +43,8 @@ mat-card-content {
 
   .moving {
     @include mat-elevation-transition;
-    @include mat-elevation(20, black, 1.6)
+    @include mat-elevation(20, black, 1.6);
   }
-
 
   div {
     margin: 1%;
@@ -87,7 +87,7 @@ mat-card-content {
   .words {
     width: 60%;
     .top {
-      background-color: lightblue;
+      background-color: $lower-color;
       transition: 1.1s;
     }
     .bot {
@@ -95,11 +95,11 @@ mat-card-content {
     }
     .top:hover {
       cursor: pointer;
-      background-color: red;
+      background-color: $higher-color;
     }
     .bot:hover {
       cursor: pointer;
-      background-color: red;
+      background-color: $higher-color;
     }
     div {
       h1 {
