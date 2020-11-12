@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UserDataService } from '../../_services/user-data.service';
 import { HistoryItem } from '../../_model/userStats';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,13 +14,16 @@ import { HistoryItemToEndDatePipe } from 'src/app/shared/pipe/history-item-to-en
 import { HistoryItemToStartDatePipe } from 'src/app/shared/pipe/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
 import * as Const from './user-stats.constant';
+import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { ThemeService } from 'ng2-charts';
 
 @Component({
   selector: 'app-user-stats',
   templateUrl: './user-stats.component.html',
   styleUrls: ['./user-stats.component.scss'],
 })
-export class UserStatsComponent implements OnInit {
+export class UserStatsComponent implements OnInit, OnDestroy {
   expanded = true;
 
   lineChartType: ChartType = 'bar';
@@ -86,6 +89,7 @@ export class UserStatsComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   actualPeriod = 'week';
+  private sub: Subscription | undefined;
 
   constructor(
     private usersTools: UserDataService,
@@ -93,128 +97,10 @@ export class UserStatsComponent implements OnInit {
     private endDatePipe: HistoryItemToEndDatePipe,
     private datePipe: DatePipe
   ) {
-    usersTools.data.subscribe((data) => {
-      const array = data?.history || [];
-      // console.log('array', array);
-      this.dataSource.data = array;
-      const scores: HistoryItem[] = [];
-      const label: Array<string> = [];
-      if (array.length > 0) {
-        const end = this.periodBegin();
-        const periods = periodIterator(
-          end.period,
-          this.actualLimitValue,
-          end.year,
-          this.actualPeriod
-        );
-        let lastElement: HistoryItem = { avgPlaysPerDay: 0 } as HistoryItem;
-        periods.forEach((e) => {
-          // console.log(e);
-          const periodN = e.period;
-          const findResult = array.find(
-            (item) => item.periodNumber === periodN && item.year === e.year
-          );
-          const element = findResult
-            ? findResult
-            : {
-                periodNumber: periodN,
-                year: e.year,
-                avgScore: 0,
-                avgGuesses: 0,
-                avgPlaysPerDay: 0,
-                avgDuration: 0,
-                maxScore: 0,
-                maxGuesses: 0,
-                maxDuration: 0,
-              };
-          // console.log("out", lastElement, element);
-          if (
-            lastElement.avgPlaysPerDay !== 0 &&
-            element.avgPlaysPerDay === 0
-          ) {
-            if (periods[periods.length - 1] !== e) {
-              label.push(Const.GRAPH_EMPTY_PERIODS);
-              scores.push(element);
-            } else {
-              scores.pop();
-            }
-            // ignoring other void periods
-          } else if (
-            !(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)
-          ) {
-            scores.push(element);
+  }
 
-            // console.log(element);
-            const startDate = startDatePipe.transform(
-              element,
-              this.actualPeriod
-            );
-            switch (this.actualPeriod) {
-              case 'day':
-                label.push(
-                  datePipe.transform(startDate, Const.FORMAT_DAY) as string
-                );
-                break;
-              case 'week':
-                label.push(
-                  ((datePipe.transform(
-                    startDate,
-                    Const.FORMAT_WEEK
-                  ) as string) +
-                    ' - ' +
-                    datePipe.transform(
-                      endDatePipe.transform(element, this.actualPeriod),
-                      Const.FORMAT_WEEK
-                    )) as string
-                );
-                break;
-              case 'month':
-                label.push(
-                  datePipe.transform(startDate, Const.FORMAT_MONTH) as string
-                );
-                break;
-              case 'year':
-                label.push(
-                  datePipe.transform(startDate, Const.FORMAT_YEAR) as string
-                );
-                break;
-            }
-          }
-          // save lastElement
-          lastElement = element;
-        });
-      }
-      // console.log('scores:', scores, 'label:', label);
-      let lastIndex = scores.length;
-      for (let i = scores.length - 1; i > 0; i--) {
-        if (scores[i].avgPlaysPerDay > 0) {
-          break;
-        }
-        lastIndex = i;
-      }
-      if (lastIndex < scores.length) {
-        scores.splice(lastIndex);
-        label.splice(lastIndex);
-      }
-      this.expanded = scores.length !== 0;
-
-      this.chartLabels = label;
-      this.lineChartData = [
-        {
-          data: scores.map((hist) => Math.floor(hist.avgScore)),
-          label: 'Avg Score',
-          categoryPercentage: 1,
-          barPercentage: 0.6,
-          type: 'line',
-        },
-        {
-          data: scores.map((hist) => hist.maxScore),
-          label: 'Max Score',
-          categoryPercentage: 1,
-          barPercentage: 0.2,
-        },
-      ];
-    });
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   private prependToDefaultColumns(columns: string[]): string[] {
@@ -275,6 +161,129 @@ export class UserStatsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.sub = this.usersTools.data.subscribe((data) => {
+      const array = data?.history || [];
+      // console.log('array', array);
+      this.dataSource.data = array;
+      const scores: HistoryItem[] = [];
+      const label: Array<string> = [];
+      if (array.length > 0) {
+        const end = this.periodBegin();
+        const periods = periodIterator(
+          end.period,
+          this.actualLimitValue,
+          end.year,
+          this.actualPeriod
+        );
+        let lastElement: HistoryItem = { avgPlaysPerDay: 0 } as HistoryItem;
+        periods.forEach((e) => {
+          // console.log(e);
+          const periodN = e.period;
+          const findResult = array.find(
+            (item) => item.periodNumber === periodN && item.year === e.year
+          );
+          const element = findResult
+            ? findResult
+            : {
+                periodNumber: periodN,
+                year: e.year,
+                avgScore: 0,
+                avgGuesses: 0,
+                avgPlaysPerDay: 0,
+                avgDuration: 0,
+                maxScore: 0,
+                maxGuesses: 0,
+                maxDuration: 0,
+              };
+          // console.log("out", lastElement, element);
+          if (
+            lastElement.avgPlaysPerDay !== 0 &&
+            element.avgPlaysPerDay === 0
+          ) {
+            if (periods[periods.length - 1] !== e) {
+              label.push(Const.GRAPH_EMPTY_PERIODS);
+              scores.push(element);
+            } else {
+              scores.pop();
+            }
+            // ignoring other void periods
+          } else if (
+            !(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)
+          ) {
+            scores.push(element);
+
+            // console.log(element);
+            const startDate = this.startDatePipe.transform(
+              element,
+              this.actualPeriod
+            );
+            switch (this.actualPeriod) {
+              case 'day':
+                label.push(
+                  this.datePipe.transform(startDate, Const.FORMAT_DAY) as string
+                );
+                break;
+              case 'week':
+                label.push(
+                  ((this.datePipe.transform(
+                    startDate,
+                    Const.FORMAT_WEEK
+                  ) as string) +
+                    ' - ' +
+                    this.datePipe.transform(
+                      this.endDatePipe.transform(element, this.actualPeriod),
+                      Const.FORMAT_WEEK
+                    )) as string
+                );
+                break;
+              case 'month':
+                label.push(
+                  this.datePipe.transform(startDate, Const.FORMAT_MONTH) as string
+                );
+                break;
+              case 'year':
+                label.push(
+                  this.datePipe.transform(startDate, Const.FORMAT_YEAR) as string
+                );
+                break;
+            }
+          }
+          // save lastElement
+          lastElement = element;
+        });
+      }
+      // console.log('scores:', scores, 'label:', label);
+      let lastIndex = scores.length;
+      for (let i = scores.length - 1; i > 0; i--) {
+        if (scores[i].avgPlaysPerDay > 0) {
+          break;
+        }
+        lastIndex = i;
+      }
+      if (lastIndex < scores.length) {
+        scores.splice(lastIndex);
+        label.splice(lastIndex);
+      }
+      this.expanded = scores.length !== 0;
+
+      this.chartLabels = label;
+      this.lineChartData = [
+        {
+          data: scores.map((hist) => Math.floor(hist.avgScore)),
+          label: 'Avg Score',
+          categoryPercentage: 1,
+          barPercentage: 0.6,
+          type: 'line',
+        },
+        {
+          data: scores.map((hist) => hist.maxScore),
+          label: 'Max Score',
+          categoryPercentage: 1,
+          barPercentage: 0.2,
+        },
+      ];
+    });
+
     this.dataSource.paginator = this.paginator;
     this.updateUserStats();
   }
@@ -285,9 +294,9 @@ export class UserStatsComponent implements OnInit {
     }
     this.updateStatsLayout();
     if (this.limit.invalid) {
-      this.usersTools.loadData(this.actualPeriod, undefined).subscribe();
+      this.usersTools.loadData(this.actualPeriod, undefined).pipe(first()).subscribe();
     } else {
-      this.usersTools.loadData(this.actualPeriod, this.limit.value).subscribe();
+      this.usersTools.loadData(this.actualPeriod, this.limit.value).pipe(first()).subscribe();
     }
   }
 

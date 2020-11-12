@@ -13,6 +13,7 @@ import { SocketDuel } from '../SocketDuel';
 import { SocketRoyale } from '../SocketRoyale';
 import { GameStatus } from '../_utils/GameStatus';
 import { ApiURLService } from 'src/app/_services/api-url.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-battle',
@@ -23,15 +24,13 @@ export class BattleComponent implements OnInit, OnDestroy {
 
   @ViewChild(WordSpinnerComponent)
   private wordAnimation!: WordSpinnerComponent;
-  private modeSub: Subscription;
 
   private game: Game = new Game();
 
   mode = 'duel';
   gameMode: GameMode = GameMode.Duel;
 
-  playersSub: Subscription | undefined;
-  gameDataSub: Subscription | undefined;
+  gameSub: Subscription | undefined;
 
   players: Player[] = [];
 
@@ -46,7 +45,6 @@ export class BattleComponent implements OnInit, OnDestroy {
   progressbarValue = 100;
   timeLeft = 0;
   private subTimer: Subscription | undefined;
-  private errorSub: Subscription | undefined;
 
   constructor(
     private gameSocket: BattleModelService,
@@ -54,7 +52,7 @@ export class BattleComponent implements OnInit, OnDestroy {
     route: ActivatedRoute,
     private apiURL: ApiURLService
   ) {
-    this.modeSub = route.data.subscribe(elem => {
+    route.data.pipe(first()).subscribe(elem => {
       this.mode = elem.mode;
       this.gameMode = elem.mode === 'duel' ? GameMode.Duel : GameMode.BattleRoyale;
     });
@@ -71,7 +69,8 @@ export class BattleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.game = new Game();
-    this.game.nextGuessObservable.subscribe(card => {
+    this.gameSub = new Subscription();
+    this.gameSub.add(this.game.nextGuessObservable.subscribe(card => {
       if (this.gameStatus === GameStatus.WAITING_START) { // game start
         this.wordAnimation.gameSetup(card)
           .then(() => {
@@ -97,15 +96,15 @@ export class BattleComponent implements OnInit, OnDestroy {
         }
         this.gameStatus = GameStatus.END;
       }
-    });
+    }));
 
-    this.game.timerObservable.subscribe(timer => {
+    this.gameSub.add(this.game.timerObservable.subscribe(timer => {
       if (this.isInGame() || this.gameStatus === GameStatus.WAITING_START) {
         this.setProgressBarTimer(timer);
       }
-    });
+    }));
 
-    this.playersSub = this.gameSocket.players.subscribe(pj => {
+    this.gameSub.add(this.gameSocket.players.subscribe(pj => {
       if (pj.id.includes(this.gameSocket.myId)) {
         this.myName = pj.name;
       }
@@ -119,13 +118,13 @@ export class BattleComponent implements OnInit, OnDestroy {
           guesses: 0
         });
       }
-    });
+    }));
 
-    this.gameDataSub = this.gameSocket.gameData.subscribe(data => {
+    this.gameSub.add(this.gameSocket.gameData.subscribe(data => {
       this.analiseGuess(data);
-    });
+    }));
 
-    this.errorSub = this.gameSocket.errors.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`));
+    this.gameSub.add(this.gameSocket.errors.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`)));
   }
 
   log(message: string, type: string = 'ok'): void {
@@ -135,13 +134,8 @@ export class BattleComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.disconnect();
     this.gameSocket.disconnect();
-    this.gameDataSub?.unsubscribe();
-    this.gameDataSub = undefined;
-    this.playersSub?.unsubscribe();
-    this.playersSub = undefined;
-    this.errorSub?.unsubscribe();
-    this.errorSub = undefined;
-    this.modeSub.unsubscribe();
+    this.gameSub?.unsubscribe();
+    this.gameSub = undefined;
   }
 
   answer(value: number): void {

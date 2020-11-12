@@ -4,6 +4,7 @@ import { GameStatsService } from '../../_services/game-stats.service';
 import { timeConversion } from '../../_helper/timeConversion';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 export interface Stat {
   name: string;
@@ -17,7 +18,7 @@ export interface Stat {
   styleUrls: ['./stats.component.scss']
 })
 export class StatsComponent implements OnInit, OnDestroy {
-  private modeSub: Subscription;
+  private sub: Subscription | undefined;
   mode = 'arcade';
   displayedColumns: string[] = ['name', 'avg', 'max'];
   myStats: Stat[] = [];
@@ -26,15 +27,15 @@ export class StatsComponent implements OnInit, OnDestroy {
     private statsService: GameStatsService,
     private route: ActivatedRoute
   ) {
-    this.modeSub = route.data.subscribe(elem => this.mode = elem.mode);
   }
 
   ngOnDestroy(): void {
-    this.modeSub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.statsService.observableStats
+    this.route.data.pipe(first()).subscribe(elem => this.mode = elem.mode);
+    this.sub = this.statsService.observableStats
       .subscribe(s => this.udpateStats(s));
     this.statsService.refreshStats(undefined, this.mode);
   }

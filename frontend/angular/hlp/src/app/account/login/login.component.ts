@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           this.error = 'Login failed. Please try again.';
-        }
+        },
       );
   }
 }

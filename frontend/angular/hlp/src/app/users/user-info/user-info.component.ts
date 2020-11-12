@@ -6,6 +6,7 @@ import { InputDialogComponent } from 'src/app/shared/input-dialog/input-dialog.c
 import { AccountService } from 'src/app/_services/account.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-info',
@@ -69,6 +70,7 @@ export class UserInfoComponent implements OnInit {
   delete(): void {
     this.accountService
       .deleteUser()
+      .pipe(first())
       .subscribe(u => {
         // TODO add some graphic message for the user.
         this.router.navigate(['/home']);

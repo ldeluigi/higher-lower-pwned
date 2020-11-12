@@ -29,12 +29,12 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   progressbarValue = 100;
   timeLeft = 0;
   private sub: Subscription | undefined;
+  private subscription: Subscription | undefined;
 
   loading = true;
   playing = false;
   private firstWord = true;
 
-  private subscription: Subscription | null = null;
 
   constructor(
     private gameSocket: ArcadeSocketService,
@@ -42,8 +42,8 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnDestroy(): void {
-    // console.log('OnDestry', this.subscription);
     this.playing = false;
+    this.sub?.unsubscribe();
     this.subscription?.unsubscribe();
     this.gameSocket.disconnect();
   }

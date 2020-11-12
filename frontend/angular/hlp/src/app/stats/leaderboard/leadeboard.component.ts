@@ -6,6 +6,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-leadeboard',
@@ -14,8 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class LeadeboardComponent implements OnInit, OnDestroy {
 
-  private modeSub: Subscription;
-  private leadSub: Subscription;
+  private statsSub: Subscription | undefined;
   mode = 'arcade';
 
   limit = new FormControl('', [
@@ -33,21 +33,22 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
     private leaderboardService: GameStatsService,
     private route: ActivatedRoute
   ) {
-    this.modeSub = route.data.subscribe(elem => this.mode = elem.mode);
-    this.leadSub = this.leaderboardService.observableLeaderboard
-      .subscribe(newLb => {
-        this.dataSource.data = newLb;
-      });
+
   }
 
   ngOnInit(): void {
+    this.statsSub = new Subscription();
+    this.statsSub.add(this.route.data.pipe(first()).subscribe(elem => this.mode = elem.mode));
+    this.statsSub.add(this.leaderboardService.observableLeaderboard
+      .subscribe(newLb => {
+        this.dataSource.data = newLb;
+      }));
     this.dataSource.paginator = this.paginator;
     this.updateLeaderboard();
   }
 
   ngOnDestroy(): void {
-    this.modeSub.unsubscribe();
-    this.leadSub.unsubscribe();
+    this.statsSub?.unsubscribe();
   }
 
   updateLeaderboard(limit?: number, period?: string): void {

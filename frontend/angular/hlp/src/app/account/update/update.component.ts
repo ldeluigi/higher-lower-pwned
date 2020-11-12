@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../_services/account.service';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-update',
   templateUrl: './update.component.html',
   styleUrls: ['./update.component.scss']
 })
-export class UpdateComponent implements OnInit {
+export class UpdateComponent implements OnInit, OnDestroy {
 
+  private sub: Subscription | undefined;
   formPwd: FormGroup;
   formEmail: FormGroup;
   loadingEmail = false;
@@ -35,12 +37,17 @@ export class UpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.accountService.user.subscribe(user => {
+    this.sub = new Subscription();
+    this.sub.add(this.accountService.user.subscribe(user => {
       if (user !== null) {
         this.username = user.username;
       }
-    });
+    }));
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   onEmailSubmit(): void {
