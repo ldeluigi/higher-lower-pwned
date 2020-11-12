@@ -46,6 +46,7 @@ describe("user API", function () {
   it("should PUT a user after login", async (done) => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const modifyUserBody = {
+      oldPassword: "testpassword",
       password: "newtestpassword",
       email: "newtestemail@email.com"
     };

@@ -94,6 +94,11 @@ router.put("/:id",
     .isAlphanumeric()
     .trim()
     .isLength({ min: 8, max: 1024 }),
+  body("oldPassword")
+    .optional({ nullable: true })
+    .isAlphanumeric()
+    .trim()
+    .isLength({ min: 8, max: 1024 }),
   body("email")
     .optional({ nullable: true })
     .normalizeEmail()
@@ -108,6 +113,7 @@ router.put("/:id",
       return res.status(403).json({ errors: ["User not authorized."] });
     }
     let newPassword = req.body.password;
+    let oldPassword = req.body.oldPassword;
     let passwordUpdated = false;
     let newEmail = req.body.email;
     try {
@@ -116,6 +122,13 @@ router.put("/:id",
         return res.status(404).json({ errors: ["User not found."] });
       }
       if (newPassword !== undefined) {
+        if (oldPassword === undefined) {
+          return res.status(400).json({ errors: ["Old password not specified."] });
+        }
+        let oldPasswordHash = pwd.hash(oldPassword, userQuery.salt);
+        if (oldPasswordHash !== userQuery.password) {
+          return res.status(400).json({ errors: ["Wrong credentials."] });
+        }
         let salt = pwd.genRandomString(16);
         let output = pwd.hash(newPassword, salt);
         userQuery.password = output;
