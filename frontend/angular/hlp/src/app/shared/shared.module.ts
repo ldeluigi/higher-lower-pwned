@@ -16,8 +16,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { InputDialogComponent } from './input-dialog/input-dialog.component';
-
 import { MatIconModule } from '@angular/material/icon';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -44,7 +42,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PeriodButtonsComponent,
     HistoryItemToEndDatePipe,
     HistoryItemToStartDatePipe,
-    InputDialogComponent,
   ],
   providers: [
     HistoryItemToEndDatePipe,
@@ -66,7 +63,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
-    InputDialogComponent,
     MatSidenavModule,
     MatTooltipModule,
   ]

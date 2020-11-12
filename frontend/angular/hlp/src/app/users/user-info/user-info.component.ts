@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { UserDataService } from '../../_services/user-data.service';
 import { UserInfo } from 'src/app/_model/userInfo';
 import { MatDialog } from '@angular/material/dialog';
-import { InputDialogComponent } from 'src/app/shared/input-dialog/input-dialog.component';
 import { AccountService } from 'src/app/_services/account.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { DialogData, UpdateComponent } from 'src/app/account/update/update.component';
 
 @Component({
   selector: 'app-user-info',
@@ -49,22 +49,17 @@ export class UserInfoComponent implements OnInit {
 
   openDialog(paramName: string): void {
     // TODO refactor this routine, maybe a better form
-    const dialogRef = this.dialog.open(InputDialogComponent, {
-      width: '250px',
-      data: { paramName, value: '' },
+    const passwordUpdate: boolean = paramName === 'password';
+    const options: DialogData = {
+      passwordUpdate,
+      currentEmail: this.userInfo.email
+    };
+    this.dialog.open(UpdateComponent, {
+      data: options,
+    }).afterClosed().pipe(first()).subscribe(e => {
+      this.updateUserInfo();
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (paramName === 'email') {
-        this.accountService
-          .update(undefined, result)
-          .subscribe(this.logUpdated, (_) => this.logUpdated(false));
-      } else if (paramName === 'password') {
-        this.accountService
-          .update(result, undefined)
-          .subscribe(this.logUpdated, (_) => this.logUpdated(false));
-      }
-    });
   }
 
   delete(): void {

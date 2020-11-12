@@ -5,7 +5,7 @@ import { TokenRefresh } from '../_model/tokenRefresh';
 import { Route, Router } from '@angular/router';
 import { HttpClient, JsonpInterceptor } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { Response } from '../_model/serverResponse';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiURLService } from './api-url.service';
@@ -50,6 +50,7 @@ export class AccountService implements OnDestroy {
   }
 
   login(username: string, password: string): Observable<User | null> {
+    // console.log({ username, password });
     return this.http.post<Response<User | null>>(`${this.apiURL.restApiUrl}/users/login`, { username, password })
       .pipe(map(u => {
         localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
@@ -73,25 +74,28 @@ export class AccountService implements OnDestroy {
       .pipe(map(u => u.data));
   }
 
-  update(password?: string, email?: string): Observable<boolean> {
-    if (password === undefined && email === undefined) {
-      return of(false);
-    }
-    const params: { password?: string; email?: string; } = {
-      password,
-      email
-    };
+  async updateEmail(newEmail: string): Promise<void> {
+    const data = {email: newEmail};
+    await this.update(data);
+    return;
+  }
+
+  async updatePassword(oldPassword: string, newPassword: string): Promise<void> {
+    const data = { oldPassword, password: newPassword };
+    await this.update(data);
+    return;
+  }
+
+  private async update(data: any): Promise<void> {
     const user = this.extractUser();
     if (user === null) {
-      this.log('Can\'t update your data');
-      return of(false);
-    } else {
-      return this.http.put(`${this.apiURL.restApiUrl}/users/${user.id}`, params)
-        .pipe(map(x => {
-          this.log('Data update correctly');
-          return true;
-        }));
+      throw Error('Invalid user');
     }
+    this.http.put(`${this.apiURL.restApiUrl}/users/${user.id}`, data)
+      .pipe(map(_ => {
+        this.log('Data update correctly');
+        return;
+      })).pipe(first()).subscribe();
   }
 
   refreshToken(): Observable<TokenRefresh> {

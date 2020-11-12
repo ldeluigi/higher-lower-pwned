@@ -112,7 +112,7 @@ export class WordSpinnerComponent {
 
   async end(end: EndGame): Promise<void> {
     this.moving = false;
-    console.log('moving' + this.moving);
+    // console.log('moving' + this.moving);
     return new Promise<void>(r => {
       this.endPromise = r;
       rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString())
@@ -130,9 +130,9 @@ export class WordSpinnerComponent {
   }
 
   onAnimationListDone(event: AnimationEvent): void {
-    console.log(event);
+    // console.log(event);
     this.moving = false;
-    console.log(this.moving);
+    // console.log(this.moving);
     if (event.toState === 'out') {
       this.element1.score = this.element2.score;
       this.element1.word = this.element2.word;

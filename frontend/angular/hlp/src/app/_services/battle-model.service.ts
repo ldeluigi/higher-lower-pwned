@@ -61,7 +61,7 @@ export class BattleModelService implements OnDestroy {
     });
 
     this.currentSocket.on('on-error', (err: { code: number, description: string }) => {
-      console.log('>on-error: ', err);
+      // console.log('>on-error: ', err);
       this.errorSubject.next(err);
     });
 

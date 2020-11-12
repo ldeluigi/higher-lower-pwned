@@ -1,9 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../_services/account.service';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export interface DialogData {
+  passwordUpdate: boolean;
+  currentEmail: string | undefined;
+}
 
 @Component({
   selector: 'app-update',
@@ -19,20 +25,38 @@ export class UpdateComponent implements OnInit, OnDestroy {
   loadingPwd = false;
   submittedEmail = false;
   submittedPwd = false;
-  returnUrl = '';
+  passwordUpdate = false;
+  error = '';
   username = 'No userName';
+  emailOld = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private accountService: AccountService
+    private accountService: AccountService,
+    public dialogRef: MatDialogRef<UpdateComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
     this.formPwd = this.formBuilder.group({
-      password: ['', Validators.required],
+      oldPassword: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(8),
+      ])],
+      password: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(8),
+      ])],
+      confirmPassword: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(8),
+      ])],
     });
     this.formEmail = this.formBuilder.group({
-      email: ['', Validators.required]
+      email: ['', Validators.compose([
+        Validators.required,
+        Validators.email
+      ])],
     });
   }
 
@@ -43,7 +67,9 @@ export class UpdateComponent implements OnInit, OnDestroy {
         this.username = user.username;
       }
     }));
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
+
+    this.passwordUpdate = this.data.passwordUpdate;
+    this.emailOld = this.data.currentEmail || '';
   }
 
   ngOnDestroy(): void {
@@ -61,15 +87,18 @@ export class UpdateComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.formEmail.controls.email.value === this.data.currentEmail) {
+      this.error = 'The new password must be different from the old one!';
+    }
+
     this.loadingEmail = true;
-    this.accountService.update(undefined, this.formEmail.controls.email.value)
-      .pipe(first())
-      .subscribe(
-        () => {
-          this.router.navigate([this.returnUrl]);
-        },
-        () => {
-          // this.alertService.error(error); TODO do an allertService
+    this.accountService.updateEmail(this.formEmail.controls.email.value)
+      .then(() => {
+          // TODO close
+          this.dialogRef.close();
+        })
+        .catch((error: Error) => {
+          this.error = error.message;
           this.loadingEmail = false;
         });
   }
@@ -80,21 +109,27 @@ export class UpdateComponent implements OnInit, OnDestroy {
     // reset alerts on submit
     // this.alertService.clear();TODO do an allertService
 
+    const newPass = this.formPwd.controls.password.value;
+    const newPassConfirm = this.formPwd.controls.confirmPassword.value;
+
+    if (newPass !== newPassConfirm) {
+      this.error = 'Confirm password is different from new password.';
+    }
+
     // stop here if form is invalid
     if (this.formPwd.invalid) {
+      this.error = 'Invalid passwords';
       return;
     }
 
     this.loadingPwd = true;
-    this.accountService.update(this.formPwd.controls.password.value, undefined)
-      .pipe(first())
-      .subscribe(
-        () => {
-          this.router.navigate([this.returnUrl]);
-        },
-        () => {
-          // this.alertService.error(error); TODO do an allertService
-          this.loadingPwd = false;
-        });
+    this.accountService.updatePassword(this.formPwd.controls.oldPassword.value, newPass)
+      .then(() => {
+        this.dialogRef.close();
+      })
+      .catch((error: Error) => {
+        this.error = error.message;
+        this.loadingPwd = false;
+      });
   }
 }
