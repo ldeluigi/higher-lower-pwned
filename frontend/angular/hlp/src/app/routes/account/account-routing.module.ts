@@ -4,8 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { UpdateComponent } from './update/update.component';
 import { LayoutComponent } from './layout/layout.component';
-import { AuthGuard } from '../_helper/guards/auth.guard';
-
+import { AuthGuard } from '../../_helper/guards/auth.guard';
 
 const routes: Routes = [
   {

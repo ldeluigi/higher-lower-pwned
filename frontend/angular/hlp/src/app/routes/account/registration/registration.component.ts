@@ -7,8 +7,9 @@ import {
   Validators,
   AbstractControl,
 } from '@angular/forms';
-import { UserRegistration } from '../../_model/UserRegistration';
+import { UserRegistration } from '../../../_model/UserRegistration';
 import { first } from 'rxjs/operators';
+
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',

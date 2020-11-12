@@ -1,6 +1,6 @@
-@import "../../styles/colors.scss";
-@import "../../styles/abstracts/mixins";
-@import "../../styles/dimensions.scss";
+@import "../../../styles/colors.scss";
+@import "../../../styles/abstracts/mixins";
+@import "../../../styles/dimensions.scss";
 
 @function multiple-text-shadow($n, $color, $x: 1, $y: 1) {
   $value: "0 0 0 #{$color}";

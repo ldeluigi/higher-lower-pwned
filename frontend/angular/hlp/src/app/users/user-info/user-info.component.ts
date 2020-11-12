@@ -6,7 +6,7 @@ import { AccountService } from 'src/app/_services/account.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { DialogData, UpdateComponent } from 'src/app/account/update/update.component';
+import { DialogData, UpdateComponent } from 'src/app/routes/account/update/update.component';
 
 @Component({
   selector: 'app-user-info',
@@ -28,15 +28,6 @@ export class UserInfoComponent implements OnInit {
 
   private log(message: string): void {
     this.snackBar.open(message, 'ok', { duration: 3000 });
-  }
-
-  private logUpdated(bool: boolean): void {
-    if (bool) {
-      this.log('successfully updated');
-      this.updateUserInfo();
-    } else {
-      this.log('an error occurred during the update');
-    }
   }
 
   ngOnInit(): void {
