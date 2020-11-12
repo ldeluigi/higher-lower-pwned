@@ -34,6 +34,10 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
 
+  registration(): void {
+    this.router.navigate(['/account/register'], { queryParams: { returnUrl: `${this.returnUrl}`, username: `${this.f.username.value}` }});
+  }
+
   // convenience getter for easy access to form fields
   // tslint:disable-next-line: typedef
   get f() {
@@ -45,16 +49,16 @@ export class LoginComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
-      this.error = '';
+      this.error = 'Missing ';
+      const errors: string[] = [];
       if (this.f.username.invalid) {
-        this.error += 'Missing username';
+        errors.push('username');
       }
       if (this.f.password.invalid) {
-        if (this.error.length > 0) {
-          this.error += ' and password';
-        } else {
-          this.error += 'Missing password';
-        }
+        errors.push('password');
+      }
+      if (errors.length > 0) {
+        this.error = 'Missing ' + errors.join(' and ') + '.';
       }
       return;
     }

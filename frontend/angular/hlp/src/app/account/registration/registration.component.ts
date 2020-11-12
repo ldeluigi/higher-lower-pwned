@@ -46,12 +46,15 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
+    this.f.username.setValue(this.route.snapshot.queryParams.username);
   }
 
   // convenience getter for easy access to form fields
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
+
 
   onSubmit(): void {
     this.error = '';
