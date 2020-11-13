@@ -11,6 +11,9 @@ import { MatIconModule } from '@angular/material/icon';
 /** Component declaration */
 import { HomePageComponent } from './home-page/home-page.component';
 import { LinksComponent } from './links/links.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +25,9 @@ import { LinksComponent } from './links/links.component';
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    BrowserAnimationsModule,
+    MatTooltipModule
   ],
 })
 export class HomeModule { }
