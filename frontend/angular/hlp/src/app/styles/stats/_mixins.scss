@@ -22,6 +22,7 @@
     .selected {
       @include mat-elevation-transition;
       @include mat-elevation(2);
+      background-color: $selected-button-bg;
     }
     .selected:active {
       @include mat-elevation(12);

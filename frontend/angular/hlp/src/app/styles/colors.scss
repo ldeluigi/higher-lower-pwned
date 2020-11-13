@@ -1,13 +1,14 @@
 // default
 $default-text-color: aliceblue;
-$dark-text-color: black;
+$dark-text-color: rgb(31, 31, 31);
 $higher-color: #ff2147;
 $lower-color: #add8e6;
-$white-bg: white;
-$black-bg: black;
+$white-bg: rgb(230, 230, 230);
+$black-bg: rgb(29, 29, 29);
 $default-error-color: red;
 $behind-player-color: lightcoral;
 $losing-player-color: darkslategrey;
 $button-bg: rgba(0, 0, 0, 0);
+$selected-button-bg: rgba(0, 0, 0, 0.2);
 $label-bg: rgba(255, 255, 255, 0.212);
 $label-text: rgba(0, 0, 0, 0.7);

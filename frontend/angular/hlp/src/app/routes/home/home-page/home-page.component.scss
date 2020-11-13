@@ -16,13 +16,13 @@
     text-shadow: multiple-text-shadow(15, $higher-color, 0, -0.5);
   }
   25% {
-    text-shadow: multiple-text-shadow(15, black, 0, -0.5);
+    text-shadow: multiple-text-shadow(15, $black-bg, 0, -0.5);
   }
   50% {
     text-shadow: multiple-text-shadow(15, $lower-color, 0, -0.5);
   }
   75% {
-    text-shadow: multiple-text-shadow(15, black, 0, -0.5);
+    text-shadow: multiple-text-shadow(15, $black-bg, 0, -0.5);
   }
   100% {
     text-shadow: multiple-text-shadow(15, $higher-color, 0, -0.5);
@@ -37,7 +37,8 @@
   width: auto;
   justify-content: center;
   div {
-    text-shadow: -3px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    text-shadow: -3px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,
+      0 -1px $black-bg;
     font-family: titleFont;
     font-weight: 800;
     text-transform: uppercase;
@@ -69,6 +70,7 @@
 
 .subtitle {
   font-family: subtitleFont;
+  color: $default-text-color;
 }
 
 @mixin margin-padding {
@@ -126,7 +128,6 @@ $icon-size: $button-size * 2 / 3;
   margin-bottom: 1vh;
   margin-left: 1vh;
   margin-right: 1vh;
-
 }
 
 mat-icon {
