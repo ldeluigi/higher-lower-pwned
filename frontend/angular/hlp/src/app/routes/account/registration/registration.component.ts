@@ -88,9 +88,13 @@ export class RegistrationComponent implements OnInit {
         (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        (error: [{param: string}]) => {
-          this.error = 'Invalid ' + error.map(elem => elem.param).join(' ,') + '.';
-        }
+        (error) => {
+          const inputError = error.map((elem: { param: string; }) => elem.param).join(' ,')
+          if (inputError.length > 0) {
+            this.error = 'Invalid ' + inputError + '.';
+          }
+          this.error = error.join(' ,');
+          }
       );
   }
 }
