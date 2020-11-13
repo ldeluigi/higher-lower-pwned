@@ -4,7 +4,7 @@
 
 .wrapper {
   overflow: visible;
-  height: 50%;
+  height: 45%;
   width: 90%;
   margin: $default-margin auto;
 }
@@ -21,7 +21,7 @@ app-word-spinner {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: $default-margin * 3;
+  margin: $default-margin * 2;
 }
 
 .progressBar {
