@@ -67,6 +67,10 @@
   }
 }
 
+.subtitle {
+  font-family: subtitleFont;
+}
+
 @mixin margin-padding {
   margin: $default-margin;
   padding: $default-padding;
@@ -187,6 +191,7 @@ $autoscroll-duration: 60s;
   white-space: nowrap;
 }
 .autoscroll p,
+.autoscroll h2,
 .autoscroll h3 {
   /* Apply animation to this element */
   -moz-animation: autoscroll $autoscroll-duration linear infinite;

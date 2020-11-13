@@ -34,15 +34,24 @@ $roboto-custom-typography: mat-typography-config(
   // $body-1: mat-typography-level(1.8vw, 1.8vw, $medium-font-weight),
   // $caption: mat-typography-level(1.8vw, 1.8vw, $medium-font-weight),
   // $button: mat-typography-level(1.8vw, 1.8vw, $high-font-weight),
-  // $input: mat-typography-level(inherit, 1.125, $medium-font-weight),,,,,,,,,
+  // $input: mat-typography-level(inherit, 1.125, $medium-font-weight),,,,,,,,,,
 );
 
 $titleFontName: TimeandSpace-Regular;
+$subtitleFontName: CRYSTAL-Regular;
 
 @font-face {
   font-family: "titleFont";
   src: url("/assets/fonts/#{$titleFontName}.eot"); /* IE9 Compat Modes */
   src: url("/assets/fonts/#{$titleFontName}.woff") format("woff"),
     /* Modern Browsers */ url("/assets/fonts/#{$titleFontName}.ttf")
+      format("truetype"); /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: "subtitleFont";
+  src: url("/assets/fonts/#{$subtitleFontName}.eot"); /* IE9 Compat Modes */
+  src: url("/assets/fonts/#{$subtitleFontName}.woff") format("woff"),
+    /* Modern Browsers */ url("/assets/fonts/#{$subtitleFontName}.ttf")
       format("truetype"); /* Safari, Android, iOS */
 }
