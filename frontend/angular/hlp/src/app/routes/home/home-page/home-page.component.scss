@@ -5,49 +5,65 @@
 @function multiple-text-shadow($n, $color, $x: 1, $y: 1) {
   $value: "0 0 0 #{$color}";
   @for $i from 2 through $n {
-    $value: "#{$value} , #{ $i * $x }px #{ $i *$y }px 2px "+lighten(
-        $color,
-        $i * 3
-      );
+    $value: "#{$value} , #{ $i * $x }px #{ $i *$y }px 2px "+lighten($color, $i);
   }
 
   @return unquote($value);
 }
 
 @keyframes mymove {
+  0% {
+    text-shadow: multiple-text-shadow(15, $higher-color, 0, -0.5);
+  }
+  25% {
+    text-shadow: multiple-text-shadow(15, black, 0, -0.5);
+  }
   50% {
-    text-shadow: multiple-text-shadow(5, blue, 0, -0.1);
+    text-shadow: multiple-text-shadow(15, $lower-color, 0, -0.5);
+  }
+  75% {
+    text-shadow: multiple-text-shadow(15, black, 0, -0.5);
+  }
+  100% {
+    text-shadow: multiple-text-shadow(15, $higher-color, 0, -0.5);
   }
 }
 
 .title {
   align-items: center;
+  display: flex;
+  height: 20vh;
+  margin: 10vh 10vw 0 10vw;
+  width: auto;
+  justify-content: center;
   div {
+    text-shadow: -3px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    font-family: titleFont;
     font-weight: 800;
     text-transform: uppercase;
+    font-size: 8vh;
+    margin-bottom: 3vh;
   }
   #left {
-    width: 50%;
-    float: left;
-    text-align: right;
-    margin: auto;
+    justify-content: flex-start;
+    text-align: left;
     color: $higher-color;
+    align-self: flex-start;
   }
 
   #center {
-    width: 30%;
-    margin: auto;
     animation: mymove 2s infinite;
     color: $default-text-color;
     text-align: center;
+    justify-content: center;
+    align-self: center;
   }
 
   #right {
-    width: 50%;
-    float: right;
-    margin: auto;
     color: $lower-color;
-    text-align: left;
+    text-align: right;
+    justify-content: flex-end;
+    align-self: flex-end;
   }
 }
 
@@ -132,7 +148,7 @@ mat-icon {
   .center-column {
     z-index: 2;
     float: center;
-    width: 42%;
+    width: 66%;
     @include margin-padding();
     padding-top: 10vh;
     margin: 0 auto;
@@ -154,23 +170,15 @@ mat-icon {
 
   .title {
     width: 80%;
-    margin: auto;
     div {
       clear: both;
-    }
-    #left {
-      margin: auto 3vw;
-      text-align: right;
-    }
-    #right {
-      margin: auto 3vw;
-      text-align: left;
+      font-size: 11vh;
     }
   }
 }
 
 $autoscroll-width: 700%;
-$autoscroll-duration: 30s;
+$autoscroll-duration: 60s;
 
 .autoscroll {
   overflow: hidden;
@@ -178,11 +186,8 @@ $autoscroll-duration: 30s;
   width: 100%;
   white-space: nowrap;
 }
-.autoscroll p {
-  /* Starting position */
-  -moz-transform: translateX(100%);
-  -webkit-transform: translateX(100%);
-  transform: translateX(100%);
+.autoscroll p,
+.autoscroll h3 {
   /* Apply animation to this element */
   -moz-animation: autoscroll $autoscroll-duration linear infinite;
   -webkit-animation: autoscroll $autoscroll-duration linear infinite;
@@ -191,7 +196,7 @@ $autoscroll-duration: 30s;
 /* Move it (define the animation) */
 @-moz-keyframes autoscroll {
   0% {
-    -moz-transform: translateX($autoscroll-width);
+    -moz-transform: translateX(150%);
   }
   100% {
     -moz-transform: translateX(-$autoscroll-width);
@@ -199,7 +204,7 @@ $autoscroll-duration: 30s;
 }
 @-webkit-keyframes autoscroll {
   0% {
-    -webkit-transform: translateX($autoscroll-width);
+    -webkit-transform: translateX(150%);
   }
   100% {
     -webkit-transform: translateX(-$autoscroll-width);
@@ -207,9 +212,9 @@ $autoscroll-duration: 30s;
 }
 @keyframes autoscroll {
   0% {
-    -moz-transform: translateX($autoscroll-width); /* Firefox bug fix */
-    -webkit-transform: translateX($autoscroll-width); /* Firefox bug fix */
-    transform: translateX($autoscroll-width);
+    -moz-transform: translateX(150%); /* Firefox bug fix */
+    -webkit-transform: translateX(150%); /* Firefox bug fix */
+    transform: translateX(150%);
   }
   100% {
     -moz-transform: translateX(-$autoscroll-width); /* Firefox bug fix */
