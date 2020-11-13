@@ -24,6 +24,7 @@ router.post("/",
       .trim()
       .isLength({ min: 8, max: 1024 }),
     body("email")
+      .notEmpty()
       .normalizeEmail()
       .isEmail()
   ],
