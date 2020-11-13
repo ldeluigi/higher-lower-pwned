@@ -10,7 +10,7 @@
       <button mat-button (click)="sidenav.toggle()">
         <mat-icon aria-hidden="true" aria-label="menu" *ngIf="!sidenav.opened">menu</mat-icon>
         <mat-icon aria-hidden="true" aria-label="menu" *ngIf="sidenav.opened">keyboard_arrow_left</mat-icon>
-        <span class="text">Menu</span>
+        <span class="text">{{ menuText }}</span>
       </button>
     </p>
     <router-outlet></router-outlet>

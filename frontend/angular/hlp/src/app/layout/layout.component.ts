@@ -29,4 +29,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
   logout(): void {
     this.accountService.logout();
   }
+
+  get menuText(): string {
+    const userValue =  this.accountService.userValue;
+    return userValue === null ? 'Menu' : userValue.username;
+  }
 }

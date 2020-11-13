@@ -31,4 +31,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.accountService.logout();
   }
 
+  get menuText(): string {
+    const userValue =  this.accountService.userValue;
+    return userValue === null ? 'Menu' : userValue.username;
+  }
 }

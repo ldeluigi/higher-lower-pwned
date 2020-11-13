@@ -7,6 +7,6 @@
   <a mat-raised-button routerLink="/account/login" routerLinkActive="active">LOGIN</a>
 </ng-template>
 <ng-template #userIsLogged>
-  <a mat-raised-button routerLink="/users" routerLinkActive="active" >USER</a>
+  <a mat-raised-button routerLink="/users" routerLinkActive="active" >{{ menuText | uppercase }}</a>
   <a mat-raised-button routerLink="/home" routerLinkActive="active" (click)=" this.logout()">LOGOUT</a>
 </ng-template>
