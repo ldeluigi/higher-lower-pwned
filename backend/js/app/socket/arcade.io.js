@@ -1,7 +1,7 @@
 const jwtTools = require('../utils/jwt');
 const arcade = require("../game/arcade");
 
-const namespace = "/socket/arcade";
+const namespace = "socket/arcade";
 
 module.exports = function (sio) {
   let io = sio.of(namespace);
