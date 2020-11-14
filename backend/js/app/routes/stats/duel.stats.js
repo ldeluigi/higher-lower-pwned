@@ -1,21 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const statsHelper = require("../../../helpers/stats");
+const statsHelper = require("../../helpers/stats");
 
 router.get(
-  "/",
+  "/duel",
   statsHelper.guards,
   statsHelper.requestHandler(/^duel\.(win|lose)$/)
 );
 
 router.get(
-  "/win",
+  "/duel/win",
   statsHelper.guards,
   statsHelper.requestHandler(/^duel\.win$/)
 );
 
 router.get(
-  "/lose",
+  "/duel/lose",
   statsHelper.guards,
   statsHelper.requestHandler(/^duel\.lose$/)
 );

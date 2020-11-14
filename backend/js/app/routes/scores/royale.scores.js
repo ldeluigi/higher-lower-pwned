@@ -11,4 +11,18 @@ router.get(
   scoresHelper.requestHandler(/^royale\.(win|lose)$/)
 );
 
+router.get(
+  "/:userid/royale/win",
+  scoresHelper.guards,
+  jwtTools.authentication(),
+  scoresHelper.requestHandler(/^royale\.win$/)
+);
+
+router.get(
+  "/:userid/royale/lose",
+  scoresHelper.guards,
+  jwtTools.authentication(),
+  scoresHelper.requestHandler(/^royale\.lose$/)
+);
+
 module.exports = router;

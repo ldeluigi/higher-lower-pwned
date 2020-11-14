@@ -132,29 +132,25 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         const old1 = new Date(
           currentYear,
           0,
-          daysOfTheYear(now) - this.actualLimitValue + 1
+          daysOfTheYear(now) - (this.actualLimitValue - 1)
         );
         return { period: daysOfTheYear(old1), year: old1.getFullYear() };
       case 'week':
-        const weekVariance = new Date(currentYear, 0, 1).getDay();
         const old2 = new Date(
           currentYear,
           0,
-          daysOfTheYear(now) + -this.actualLimitValue * 7
+          daysOfTheYear(now) - now.getDay() - (this.actualLimitValue - 1) * 7
         );
-        return {
-          period: Math.floor((daysOfTheYear(old2) - weekVariance + 7) / 7),
-          year: old2.getFullYear(),
-        };
+        return { period: daysOfTheYear(old2), year: old2.getFullYear() };
       case 'month':
         const old3 = new Date(
           currentYear,
-          now.getMonth() - this.actualLimitValue + 1,
+          now.getMonth() - (this.actualLimitValue - 1),
           1
         );
         return { period: old3.getMonth(), year: old3.getFullYear() };
       case 'year':
-        const old4 = new Date(currentYear - this.actualLimitValue, 1, 1);
+        const old4 = new Date(currentYear - (this.actualLimitValue - 1), 0, 1);
         return { period: old4.getFullYear(), year: old4.getFullYear() };
       default:
         throw new Error('Illegal period');
@@ -169,11 +165,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       const scores: HistoryItem[] = [];
       const label: Array<string> = [];
       if (array.length > 0) {
-        const end = this.periodBegin();
+        const start = this.periodBegin();
         const periods = periodIterator(
-          end.period,
+          start.period,
           this.actualLimitValue,
-          end.year,
+          start.year,
           this.actualPeriod
         );
         let lastElement: HistoryItem = { avgPlaysPerDay: 0 } as HistoryItem;

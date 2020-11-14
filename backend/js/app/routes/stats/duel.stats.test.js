@@ -1,7 +1,7 @@
-const app = require("../../../../config/server").express;
+const app = require("../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const score = require("../../../model/score.model");
+const score = require("../../model/score.model");
 
 
 describe("stats API", function () {
@@ -21,7 +21,7 @@ describe("stats API", function () {
         mock.mockImplementation((input) => {
             return Promise.resolve([fakeStats]);
         });
-        let response = await request.get("/stats/royale", params = { period: "year" })
+        let response = await request.get("/stats/duel", params = { period: "year" })
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
@@ -46,7 +46,7 @@ describe("stats API", function () {
         mock.mockImplementation((input) => {
             return Promise.resolve([fakeStats]);
         });
-        let response = await request.get("/stats/royale/win", params = { period: "year" })
+        let response = await request.get("/stats/duel/win", params = { period: "year" })
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
@@ -71,7 +71,7 @@ describe("stats API", function () {
         mock.mockImplementation((input) => {
             return Promise.resolve([fakeStats]);
         });
-        let response = await request.get("/stats/royale/lose", params = { period: "year" })
+        let response = await request.get("/stats/duel/lose", params = { period: "year" })
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
