@@ -1,8 +1,8 @@
 ![Node.js CI](https://github.com/ldeluigi/higher-lower-pwned/workflows/Node.js%20CI/badge.svg)
 
-# HigherLowerPwned
+# The Pwned Game
 
-This project is a web-based game where you guess what password is the most popular between two shown on screen.
+This project is a web game where you guess which password is the most popular between two shown on screen.
 
 ## Technologies
 
@@ -10,7 +10,7 @@ This project is a web-based game where you guess what password is the most popul
 
 ### Needed on the host
 
-- [Angular CLI](https://github.com/angular/angular-cli) version 10.0.9.
+- [Angular CLI](https://github.com/angular/angular-cli) version 10.0.6.
 - [NodeJS](https://nodejs.org/) version 12.18.0.
 - [Docker](https://www.docker.com/) engine version 19.03.1.
 
@@ -54,7 +54,7 @@ EMAIL_DEBUG=true
 
 - `MAILER_EMAIL` and `MAILER_PASSWORD` are the credentials to use a mail account to send emails. If **both** have values, _nodemailer_ will use them to send emails.
 
-Currently supported services:
+Currently supported mail services:
 
 - Gmail ([More info](https://nodemailer.com/usage/using-gmail/)).
 
@@ -75,11 +75,11 @@ Docker should create these containers:
 - `hlp-backend-dev` with the live version of the nodejs backend mapped with host source files, and updated in real-time by [nodemon](https://www.npmjs.com/package/nodemon)
   - Every file inside `/backend/js` is mapped inside the container, including _node_modules_
   - After an edit is detected by nodemon on the source files (.js, .json) index.js is restarted inside the container, so that changes are online as soon as possible
-  - You can look at the container logs for errors or debugging, with `docker logs <backend-container-id>`
+  - You can look at the container logs for errors or debugging, with `docker logs --follow <backend-container-id>`
 
 ## Development: client
 
-To develop a client, follow the instructions in the [previous section](#development-server). When you have the backend ready and listening on its port, you can use any frontend to communicate with it, directly from your local machine or host.
+To develop the client, follow the instructions in the [previous section](#development-server). When you have the backend ready and listening on its port, you can use any frontend to communicate with it, directly from your local machine or host.
 
 ### Developing the Angular Web App client
 
@@ -87,6 +87,13 @@ The client is developed and compiled on the host machine, so you need to run `np
 If you want to contribute to the main client made with Angular you can write your code while `ng serve` provides a live version if it, automatically updated and compiled.
 
 Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+#### Manual tests
+
+To test the angular client by hand usually you just need to run `ng serve`, but if you want to make the client available to every machine on your local network, making the angular host similar to a server, you need:
+
+1. To make sure that the backend port is mapped to an host public port and reachable from the local network;
+1. To run `ng serve --host 0.0.0.0 --port <port> --disableHostCheck` to serve the client on the specified port on your machine ip under your local network.
 
 #### Code scaffolding
 
@@ -104,10 +111,10 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 To run the entire project in production mode just type `docker-compose up -d` in the root folder of the repository.
 
-**Note:** Only requests to `/api` path are forwarded to the server.
+**Note:** Only requests to `/api` or `/socket` path are forwarded to the server by Nginx.
 
 ## Stopping containers
 
 To properly stop running containers use `docker-compose [-f ...] down`.
 To stop and **clean volumes** use `docker-compose [-f ...] down -v`.  
-**Note:** _Volumes left inside docker storage could fill up the space on the host machine_
+**Note:** _Volumes left inside docker storage could fill up the space on the host machine!_
