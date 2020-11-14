@@ -9,7 +9,7 @@ const jwtTools = require("../../utils/jwt");
 
 
 
-describe("scores arcade API", function () {
+describe("scores royale API", function () {
   it("should GET duel user score after login", async (done) => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
