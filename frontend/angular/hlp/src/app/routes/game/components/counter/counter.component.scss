@@ -30,21 +30,23 @@ $text-size: 8vh;
 }
 
 :host {
-  height: #{$margin-top + $text-size};
   margin: $margin-top auto;
 }
 
 .name {
   text-align: center;
   color: $default-text-color;
+  width: 40vw;
+  margin: 0 auto;
+  height: 8vh;
 }
 
 .container {
-  width: fit-content;
+  width: 40vw;
   padding: 2vh;
   @include mat-elevation(15);
   background-color: $label-bg;
-  border-radius: 10%;
+  border-radius: 1%;
 
   .score {
     color: $label-text;
@@ -55,8 +57,7 @@ $text-size: 8vh;
     font-weight: 400;
     $shadow-margin: 5;
     text-shadow: counter-multiple-text-shadow(5, $higher-color);
-    margin-bottom: #{$shadow-margin / 2}px;
-    margin-right: #{$shadow-margin / 2}px;
+    margin: auto 1vh;
     animation: counter-animation 5s infinite;
   }
 }

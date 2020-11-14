@@ -6,88 +6,55 @@
   display: block;
 }
 
-.container {
+.score {
   display: flex;
-}
-
-.leaderboard {
-  width: 30%;
-  margin: $default-margin;
+  align-items: center;
+  justify-content: center;
+  margin: $default-margin 0;
+  max-height: 15%;
 }
 
 .word {
   overflow: visible;
   width: 64%;
-  height: 50%;
+  max-height: 40%;
   margin: $default-margin auto;
 }
 
-.nameDiv {
-  display: none;
+.timer {
+  width: 80%;
+  text-align: center;
+  margin: $default-margin auto;
+  height: 5%;
+}
+
+.options {
+  margin: $default-margin;
+  width: 60%;
 }
 
 .divStart {
-  div {
-    display: flex;
-    width: 60%;
-    margin: auto;
-    align-self: center;
-    button {
-      width: 40%;
-      margin: auto;
-    }
+  display: flex;
+  margin: $default-margin auto;
+  align-self: center;
+  button {
+    width: 40%;
+    margin: $default-margin auto;
   }
 }
 
-app-word {
-  margin: 0% auto;
-  text-align: center;
-}
-
-.wrapper {
-  position: relative;
-  overflow: visible;
-  height: 30%;
-}
-
-.commands {
-  position: relative;
+.leaderboard {
   margin: $default-margin;
-}
-
-.wrapper-small {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: $default-margin 0;
-}
-
-.gameBtnC {
-  display: flex;
-  .dummyGBtn {
-    width: 32%;
-    padding: $default-padding;
-  }
-
-  .gameBtn {
-    margin: auto;
-    width: 46%;
-  }
-
-  .dummyGBtn2 {
-    width: 24%;
-  }
+  overflow: scroll;
 }
 
 @include desktop {
-  .nameDiv {
-    display: block;
-    width: 20%;
-    margin: $default-margin;
+  .word {
+    width: 60%;
   }
 
-  .word {
-    width: 0.6%;
+  .timer {
+    width: 30%;
   }
 }
 

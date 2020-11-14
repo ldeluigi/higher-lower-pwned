@@ -8,9 +8,11 @@ import { rollNumber } from '../../utils/wordAnimation';
   animations: [
   ]
 })
+
 export class CounterComponent implements OnInit {
   counter = 0;
   newCounter: number | boolean = false;
+  @Input() name: string | undefined = undefined;
 
   constructor() { }
 

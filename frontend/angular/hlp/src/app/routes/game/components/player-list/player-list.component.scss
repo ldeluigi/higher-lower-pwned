@@ -1,25 +1,96 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/dimensions.scss";
 
-mat-card {
-  @include wide-col();
+/// TODO spostare in un file separato
+/// Calculates the color of a linear gradient at a specific point.
+///
+/// @param {Color}  $start  - gradient’s start color
+/// @param {Color}  $end    - gradient’s end color
+/// @param {Number} $point  - point of the gradient (between 0 and 1, or 0% and 100%) at which we want the color
+/// @return {Color}
+///
+/// @example scss
+///   background-color: gradient-color-at(#BBE087, #DCDE85, 0.4);
+///
+@function gradient-color-at($start, $end, $point) {
+  $error-message: "$point needs to be a percentage (0% to 100%) or a unitless number (0 to 1)";
+  $unit: unit($point);
+  // $point needs to be unitless or percentage
+  @if $unit != "" and $unit != "%" {
+    @error $error-message;
+  }
+  @else {
+    // convert $point to fraction
+    @if $unit == "%" { $point: $point / 100%; }
+    // check if within bounds
+    @if $point < 0 or $point > 1 { @error $error-message; }
+  }
+
+  $delta_h:         hue($end) - hue($start);
+  $delta_s:  saturation($end) - saturation($start);
+  $delta_l:   lightness($end) - lightness($start);
+  $delta_a:       alpha($end) - alpha($start);
+
+  @return adjust-color(
+    $color:       $start,
+    $hue:         $point * $delta_h,
+    $saturation:  $point * $delta_s,
+    $lightness:   $point * $delta_l,
+    $alpha:       $point * $delta_a
+  );
 }
 
-mat-card-subtitle {
-  color: $dark-text-color;
-  text-align: right;
+$name-font-size: 160%;
+$score-font-size: 120%;
+$rank-font-size: $name-font-size + $score-font-size;
+
+.container {
+  height: 30vh;
+  overflow: auto;
 }
 
-.player {
-  background-color: $white-bg;
-  color: $dark-text-color;
+table {
+  margin: 0 auto;
+  width: 60%;
 }
 
-#behind {
+.header {
+  text-align: center;
+}
+
+@for $i from 0 through 100 {
+  .rank-#{$i} {
+    text-align: center;
+    font-weight: 800;
+    font-size: $rank-font-size;
+    $value: $i * 20%;
+    @if $value > 100% {
+      background-color: gradient-color-at(green, red, 100%)
+    }
+    @else {
+      background-color: gradient-color-at(green, red, $value)
+    }
+  }
+}
+
+.name {
+  text-align: center;
+  font-weight: 500;
+  font-size: $score-font-size;
+  div {
+    font-size: $name-font-size;
+  }
+}
+
+.in-game {
+  background-color: $player-ingame-color;
+}
+
+.behind {
   background-color: $behind-player-color;
 }
 
-#lost {
+.lost {
   background-color: $losing-player-color;
   color: $default-text-color;
 

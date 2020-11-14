@@ -1,13 +1,29 @@
-<dl *ngFor="let p of players; let i = index">
-  <dl>
-    <mat-card>
-        <mat-card-title>
-          <p class="rank">#{{i + 1}} </p>
-          <span class="name" [attr.id]="playerStatus(p)">{{ p.name }} </span>
-        </mat-card-title>
-        <mat-card-subtitle>
-          <span class="score">score: {{ p.score }}</span>
-        </mat-card-subtitle>
-    </mat-card>
-  </dl>
-</dl>
+<div class="container">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Position Column -->
+    <ng-container matColumnDef="Rank">
+      <th mat-header-cell *matHeaderCellDef [class]="'header'"> Rank </th>
+      <td mat-cell *matCellDef="let element" [class]="'rank-' + (dataSource.data.indexOf(element))"> {{ dataSource.data.indexOf(element) + 1 }} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef [class]="'header'"> Name </th>
+      <td mat-cell *matCellDef="let element" [class]="playerStatus(element) + ' name'">
+        <div>
+          {{ element.name }}
+        </div>
+        {{ element.score }}
+      </td>
+    </ng-container>
+
+    Score Column
+    <ng-container matColumnDef="Score">
+      <th mat-header-cell *matHeaderCellDef [class]="'score score-header'"> Score </th>
+      <td mat-cell *matCellDef="let element" [class]="'score'"> {{ element.score }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

@@ -63,10 +63,6 @@ export class WordSpinnerComponent {
       'arrows',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/double-arrow.svg')
     );
-    this.matIconRegistry.addSvgIcon(
-      'arrows_text',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/double-arrow-text.svg')
-    );
   }
 
   answer(wn: number): void {

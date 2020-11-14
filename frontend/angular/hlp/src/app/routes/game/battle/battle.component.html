@@ -1,43 +1,50 @@
-<div class="wrapper-small">
+<div class="score">
   <app-counter [counter]="actualScore"></app-counter>
 </div>
-<div class="container">
-  <div class="leaderboard">
-    <app-player-list [players]="players"></app-player-list>
-  </div>
-  <div class="word">
-    <span *ngIf="this.gameStatus !== status.IDLE">
-      <app-word-spinner [buttonEnable]="this.gameStatus === status.PLAYING" (answerEmitter)="answer($event)"></app-word-spinner>
-      <div *ngIf="this.gameStatus === status.PLAYING">time left: {{ timeLeft | date: "s:S" }} s</div>
-      <mat-progress-bar
-      *ngIf="this.gameStatus === status.PLAYING"
-      mode="determinate"
-      [value]="progressbarValue"
-      ></mat-progress-bar>
-    </span>
-  </div>
-  <div class="nameDiv">
-    <mat-card *ngIf="myName !== undefined">
-      <mat-card-header>
-        <mat-card-title>
-          {{ this.myName }}
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        score: {{ this.actualScore }}
-      </mat-card-content>
-    </mat-card>
-  </div>
+<div class="word" *ngIf="this.gameStatus !== status.IDLE">
+    <app-word-spinner
+      [buttonEnable]="this.gameStatus === status.PLAYING"
+      (answerEmitter)="answer($event)"
+    ></app-word-spinner>
 </div>
-<div class="divStart" >
+<div *ngIf="this.gameStatus === status.PLAYING" class="timer">
+  <div>time left: {{ timeLeft | date: "s:S" }} s</div>
+  <mat-progress-bar
+    mode="determinate"
+    [value]="progressbarValue"
+  ></mat-progress-bar>
+</div>
+<div
+  class="options"
+  *ngIf="this.gameStatus !== status.IDLE; then players; else buttons"
+></div>
+<ng-template #buttons>
   <div *ngIf="this.gameStatus === status.IDLE">
-    <button class="start" mat-button (click)="start()">START</button>
+    <button class="divStart" mat-button (click)="start()">START</button>
   </div>
-  <div *ngIf="this.gameStatus === status.END || this.gameStatus === status.LOST || this.gameStatus === status.SPECTATORE">
-    <button mat-button *ngIf="this.gameStatus === status.LOST" (click)="spectatoreMode()">SPECTATOR</button>
+  <div
+    *ngIf="
+      this.gameStatus === status.END ||
+      this.gameStatus === status.LOST ||
+      this.gameStatus === status.SPECTATORE
+    "
+    class="divStart"
+  >
+    <button
+      mat-button
+      *ngIf="this.gameStatus === status.LOST"
+      (click)="spectatoreMode()"
+    >
+      SPECTATOR
+    </button>
+  </div>
+  <div
+    *ngIf="this.isInGame() || this.gameStatus === status.WAITING_START"
+    class="divStart"
+  >
     <button mat-button (click)="disconnect()">QUIT</button>
   </div>
-  <div *ngIf="this.isInGame() ||  this.gameStatus === status.WAITING_START">
-    <button mat-button (click)="disconnect()">{{ this.gameStatus === status.WAITING_N_GUESS ? 'GIVE UP' : 'QUIT'}}</button>
-  </div>
-</div>
+</ng-template>
+<ng-template #players class="leaderboard">
+  <app-player-list></app-player-list>
+</ng-template>

@@ -1,38 +1,37 @@
-import { ViewChild } from '@angular/core';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
-import { BattleModelService, GameData } from 'src/app/services/battle-model.service';
-import { WordSpinnerComponent } from '../components/word-spinner/word-spinner.component';
-import { Player, PlayerListComponent } from '../components/player-list/player-list.component';
-import { NextDuelGuess } from '../model/nextguess';
-import { getDataFromId, GameDataType, gameDataType, Game, gameIsEnd } from '../utils/gameHelper';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Socket } from 'ngx-socket-io';
-import { SocketRoyale } from '../SocketRoyale';
-import { GameStatus } from '../utils/gameStatus';
+import { Subscription, interval } from 'rxjs';
+import { AccountService } from 'src/app/services/account.service';
 import { ApiURLService } from 'src/app/services/api-url.service';
+import { BattleModelService, GameData } from 'src/app/services/battle-model.service';
+import { WordSpinnerComponent } from '../components/word-spinner/word-spinner.component';
+import { NextDuelGuess } from '../model/nextguess';
+import { SocketDuel } from '../SocketDuel';
+import { Game, getDataFromId, GameDataType, gameDataType, gameIsEnd } from '../utils/gameHelper';
+import { GameStatus } from '../utils/gameStatus';
 
 @Component({
-  selector: 'app-battle',
-  templateUrl: './battle.component.html',
-  styleUrls: ['./battle.component.scss']
+  selector: 'app-duel',
+  templateUrl: './duel.component.html',
+  styleUrls: ['./duel.component.scss']
 })
-export class BattleComponent implements OnInit, OnDestroy {
+export class DuelComponent implements OnInit, OnDestroy {
 
   @ViewChild(WordSpinnerComponent)
   private wordAnimation!: WordSpinnerComponent;
-  @ViewChild(PlayerListComponent)
-  private playerList: PlayerListComponent | undefined;
 
   private game: Game = new Game();
-
   gameSub: Subscription | undefined;
 
   actualScore = 0;
+  name = 'YOU';
+  opponentScore = 0;
+  opponentName = 'OPPONENT';
+  opponentLost = false;
+
   gameStatus = GameStatus.IDLE;
   status = GameStatus;
-
-  myName: string | undefined;
 
   private timeoutValue: number | undefined;
 
@@ -43,11 +42,14 @@ export class BattleComponent implements OnInit, OnDestroy {
   constructor(
     private gameSocket: BattleModelService,
     private snackBar: MatSnackBar,
-    private apiURL: ApiURLService
-  ) { }
+    private apiURL: ApiURLService,
+    private accountService: AccountService
+  ) {
+    this.name = this.accountService.userValue?.username || 'YOU';
+  }
 
   private socket(): Socket {
-    return new SocketRoyale(this.apiURL.socketApiUrl);
+    return new SocketDuel(this.apiURL.socketApiUrl);
   }
 
   ngOnInit(): void {
@@ -91,16 +93,11 @@ export class BattleComponent implements OnInit, OnDestroy {
 
     this.gameSub.add(this.gameSocket.players.subscribe(pj => {
       if (pj.id.includes(this.gameSocket.myId)) {
-        this.myName = pj.name;
+        const accountName = this.accountService.userValue?.username;
+        this.name = accountName ? accountName : pj.name;
+      } else {
+        this.opponentName = pj.name;
       }
-      this.playerList?.addPlayer({
-        name: pj.name,
-        score: 0,
-        id: pj.id,
-        haveLost: false,
-        timeout: 0,
-        guesses: 0
-      });
     }));
 
     this.gameSub.add(this.gameSocket.gameData.subscribe(data => {
@@ -128,9 +125,16 @@ export class BattleComponent implements OnInit, OnDestroy {
     this.gameStatus = GameStatus.WAITING_N_GUESS;
   }
 
+  private resetPlayersData(): void {
+    this.actualScore = 0;
+    this.opponentScore = 0;
+    this.name = this.accountService.userValue?.username || 'YOU';
+    this.opponentName = 'OPPONENT';
+  }
+
   start(): void {
     this.game.reset();
-    this.playerList?.clear();
+    this.resetPlayersData();
     this.actualScore = 0;
     this.gameSocket.startGame(this.socket())
       .then(() => {
@@ -161,8 +165,7 @@ export class BattleComponent implements OnInit, OnDestroy {
   disconnect(): void {
     this.onEnd();
     this.gameStatus = GameStatus.IDLE;
-    this.myName = undefined;
-    this.playerList?.clear();
+    this.resetPlayersData();
     this.gameSocket.disconnect();
   }
 
@@ -200,64 +203,30 @@ export class BattleComponent implements OnInit, OnDestroy {
     const gameType: GameDataType = gameDataType(data, this.game.currentGuess?.word2);
     this.game.next(myGuess, gameType);
 
-    this.updateGameBattle(data);
-    this.updateGuessNumber(data);
+    this.updateGameDuel(data);
 
     if (gameIsEnd(data)) { /** everybody have lost */
       this.gameStatus = GameStatus.END;
     }
   }
 
-  private updateGameBattle(data: GameData): void {
+  private updateGameDuel(data: GameData): void {
     data.ids.forEach((id: string, index) => {
-      const player = this.playerList?.list.find(e => e.id === id);
-      if (player) {
+      if (id.includes(this.gameSocket.myId)) { // player data
+        const playerData = data.data[index];
+        if (playerData.score) {
+          this.actualScore = playerData.score;
+        }
+      } else { // opponents data
         const playerData = data.data[index];
         if (playerData.lost !== undefined) {
-          player.haveLost = playerData.lost;
+          this.opponentLost = playerData.lost;
         }
         if (playerData.score) {
-          player.score = playerData.score;
-        }
-        if (playerData.timeout) {
-          player.timeout = playerData.timeout;
+          this.opponentScore = playerData.score;
         }
       }
     });
-    this.playerList?.list.sort((p1, p2) => {
-      if (p1.score === p2.score) {
-        if (p1.guesses === p2.guesses) {
-          if (p1.timeout === p2.timeout) {
-            return p1.id > p2.id ? 1 : -1;
-          } else {
-            return p1.timeout - p2.timeout;
-          }
-        } else {
-          return p2.guesses - p1.guesses;
-        }
-      } else {
-        return p2.score - p1.score;
-      }
-    });
-  }
-
-  private updateGuessNumber(data: GameData): void {
-    data.ids.forEach((id: string, index) => {
-      const player = this.playerList?.list.find(e => e.id === id);
-      if (player) {
-        const pData = data.data[index];
-        player.guesses = pData.guesses;
-      }
-    });
-    const disconnectedPlayer: Player[] = [];
-    this.playerList?.list.forEach(p => {
-      if (data.ids.find(e => e === p.id) === undefined) {
-        disconnectedPlayer.push(p);
-      }
-    });
-    if (this.playerList) {
-      this.playerList.list = this.playerList?.list.filter(p => !disconnectedPlayer.some(p2 => p.id === p2.id));
-    }
   }
 
   private async setProgressBarTimer(milliseconds: number): Promise<void> {
@@ -287,4 +256,5 @@ export class BattleComponent implements OnInit, OnDestroy {
       });
     });
   }
+
 }

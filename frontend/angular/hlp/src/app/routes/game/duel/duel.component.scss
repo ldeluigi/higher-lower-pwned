@@ -1,0 +1,100 @@
+@import "../../../styles/abstracts/mixins";
+@import "../../../styles/dimensions.scss";
+@import "../../../styles/colors.scss";
+
+:host {
+  display: block;
+}
+
+.counter {
+  height: 25%;
+}
+
+.container {
+  display: flex;
+}
+
+.leaderboard {
+  width: 30%;
+  margin: $default-margin;
+}
+
+.word {
+  overflow: visible;
+  width: 64%;
+  height: 50%;
+  margin: $default-margin auto;
+}
+
+.nameDiv {
+  display: none;
+}
+
+.divStart {
+  div {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    align-self: center;
+    button {
+      width: 40%;
+      margin: auto;
+    }
+  }
+}
+
+app-word {
+  margin: 0% auto;
+  text-align: center;
+}
+
+.wrapper {
+  position: relative;
+  overflow: visible;
+  height: 30%;
+}
+
+.commands {
+  position: relative;
+  margin: $default-margin;
+}
+
+.wrapper-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: $default-margin 0;
+}
+
+.gameBtnC {
+  display: flex;
+  .dummyGBtn {
+    width: 32%;
+    padding: $default-padding;
+  }
+
+  .gameBtn {
+    margin: auto;
+    width: 46%;
+  }
+
+  .dummyGBtn2 {
+    width: 24%;
+  }
+}
+
+@include desktop {
+  .nameDiv {
+    display: block;
+    width: 20%;
+    margin: $default-margin;
+  }
+
+  .word {
+    width: 60%;
+  }
+}
+
+button {
+  color: $default-text-color;
+}

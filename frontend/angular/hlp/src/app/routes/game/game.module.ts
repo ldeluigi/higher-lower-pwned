@@ -16,6 +16,10 @@ import { BattleComponent } from './battle/battle.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 
 import { MatIconModule } from '@angular/material/icon';
+import { DuelCounterComponent } from './components/duel-counter/duel-counter.component';
+import { DuelComponent } from './duel/duel.component';
+import { MatTableModule } from '@angular/material/table';
+
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -23,7 +27,9 @@ import { MatIconModule } from '@angular/material/icon';
     CounterComponent,
     WordSpinnerComponent,
     BattleComponent,
-    PlayerListComponent
+    PlayerListComponent,
+    DuelCounterComponent,
+    DuelComponent
     ],
   imports: [
     CommonModule,
@@ -32,7 +38,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatCardModule,
     SocketIoModule,
     MatProgressBarModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule
   ],
   providers: []
 })

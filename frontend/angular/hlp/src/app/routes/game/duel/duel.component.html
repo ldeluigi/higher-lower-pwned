@@ -1,0 +1,52 @@
+<div class="counter">
+  <app-duel-counter
+    [player1Score]="actualScore"
+    [player2Score]="opponentScore"
+    [player1Name]="name"
+    [player2Name]="opponentName"
+  ></app-duel-counter>
+</div>
+<div class="container">
+  <div class="word">
+    <span *ngIf="this.gameStatus !== status.IDLE">
+      <app-word-spinner
+        [buttonEnable]="this.gameStatus === status.PLAYING"
+        (answerEmitter)="answer($event)"
+      ></app-word-spinner>
+      <div *ngIf="this.gameStatus === status.PLAYING">
+        time left: {{ timeLeft | date: "s:S" }} s
+      </div>
+      <mat-progress-bar
+        *ngIf="this.gameStatus === status.PLAYING"
+        mode="determinate"
+        [value]="progressbarValue"
+      ></mat-progress-bar>
+    </span>
+  </div>
+</div>
+<div class="divStart">
+  <div *ngIf="this.gameStatus === status.IDLE">
+    <button class="start" mat-button (click)="start()">START</button>
+  </div>
+  <div
+    *ngIf="
+      this.gameStatus === status.END ||
+      this.gameStatus === status.LOST ||
+      this.gameStatus === status.SPECTATORE
+    "
+  >
+    <button
+      mat-button
+      *ngIf="this.gameStatus === status.LOST"
+      (click)="spectatoreMode()"
+    >
+      SPECTATOR
+    </button>
+    <button mat-button (click)="disconnect()">QUIT</button>
+  </div>
+  <div *ngIf="this.isInGame() || this.gameStatus === status.WAITING_START">
+    <button mat-button (click)="disconnect()">
+      {{ this.gameStatus === status.WAITING_N_GUESS ? "GIVE UP" : "QUIT" }}
+    </button>
+  </div>
+</div>
