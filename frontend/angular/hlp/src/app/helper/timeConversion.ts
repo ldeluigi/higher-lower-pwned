@@ -50,26 +50,25 @@ function periodIterator(
   periodType: string
 ): { period: number; year: number }[] {
   const result: { period: number; year: number }[] = [];
-  for (let index = 0; index <= times; index++) {
+  for (let index = 0; index < times; index++) {
     let date: Date = new Date();
     let p = 0;
     switch (periodType) {
       case 'day':
         date = new Date(yearStart, 0, startPeriod + index);
-        p = daysOfTheYear(date) + 1;
+        p = daysOfTheYear(date);
         break;
       case 'week':
-        const weekVariance = new Date(yearStart, 0, 1).getDay();
-        date = new Date(yearStart, 0, (startPeriod + index) * 7);
-        p = Math.floor((daysOfTheYear(date) - weekVariance + 7) / 7);
+        date = new Date(yearStart, 0, startPeriod + (index * 7));
+        p = Math.ceil((daysOfTheYear(date) - daysOfTheYear(new Date(yearStart, 0, 1)))  / 7);
         break;
       case 'month':
-        date = new Date(yearStart, startPeriod + index, 1);
+        date = new Date(yearStart, startPeriod + index + 1, 1);
         p = date.getMonth();
         break;
       case 'year':
         if (startPeriod === yearStart) {
-          date = new Date(yearStart + index, 1, 1);
+          date = new Date(yearStart + index, 0, 1);
           p = date.getFullYear();
         } else {
           throw new Error('Invalid period type');
@@ -78,7 +77,7 @@ function periodIterator(
       default:
         throw new Error('Invalid period type');
     }
-    result.push({ period: p, year: date.getUTCFullYear() });
+    result.push({ period: p, year: date.getFullYear() });
   }
   return result;
 }
