@@ -3,7 +3,7 @@
 @import "../../../styles/dimensions.scss";
 
 @function multiple-text-shadow($n, $color, $x: 1, $y: 1) {
-  $value: "0 0 0 #{$color}";
+  $value: "0 1px #{$color}";
   @for $i from 2 through $n {
     $value: "#{$value} , #{ $i * $x }px #{ $i *$y }px 2px "+lighten($color, $i);
   }
@@ -13,19 +13,19 @@
 
 @keyframes mymove {
   0% {
-    text-shadow: multiple-text-shadow(15, $higher-color, 0, -0.5);
+    text-shadow: multiple-text-shadow(10, $higher-color, 0, -1);
   }
   25% {
-    text-shadow: multiple-text-shadow(15, $black-bg, 0, -0.5);
+    text-shadow: multiple-text-shadow(10, $black-bg, 0, -1);
   }
   50% {
-    text-shadow: multiple-text-shadow(15, $lower-color, 0, -0.5);
+    text-shadow: multiple-text-shadow(10, $lower-color, 0, -1);
   }
   75% {
-    text-shadow: multiple-text-shadow(15, $black-bg, 0, -0.5);
+    text-shadow: multiple-text-shadow(10, $black-bg, 0, -1);
   }
   100% {
-    text-shadow: multiple-text-shadow(15, $higher-color, 0, -0.5);
+    text-shadow: multiple-text-shadow(10, $higher-color, 0, -1);
   }
 }
 
@@ -37,8 +37,8 @@
   width: auto;
   justify-content: center;
   div {
-    text-shadow: -3px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,
-      0 -1px $black-bg;
+    text-shadow: -1px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,
+      0 -3px $black-bg;
     font-family: titleFont;
     font-weight: 800;
     text-transform: uppercase;

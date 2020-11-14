@@ -31,13 +31,13 @@
 </div>
 <div class="divStart" >
   <div *ngIf="this.gameStatus === status.IDLE">
-    <button class="start" mat-raised-button (click)="start()">start</button>
+    <button class="start" mat-button (click)="start()">START</button>
   </div>
   <div *ngIf="this.gameStatus === status.END || this.gameStatus === status.LOST || this.gameStatus === status.SPECTATORE">
-    <button mat-raised-button *ngIf="this.gameStatus === status.LOST" (click)="spectatoreMode()">Spectatore mode</button>
-    <button mat-raised-button (click)="disconnect()">Quit</button>
+    <button mat-button *ngIf="this.gameStatus === status.LOST" (click)="spectatoreMode()">SPECTATOR</button>
+    <button mat-button (click)="disconnect()">QUIT</button>
   </div>
   <div *ngIf="this.isInGame() ||  this.gameStatus === status.WAITING_START">
-    <button mat-raised-button (click)="disconnect()">{{ this.gameStatus === status.WAITING_N_GUESS ? 'surrend' : 'quit'}}</button>
+    <button mat-button (click)="disconnect()">{{ this.gameStatus === status.WAITING_N_GUESS ? 'GIVE UP' : 'QUIT'}}</button>
   </div>
 </div>

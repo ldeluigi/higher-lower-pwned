@@ -2,6 +2,7 @@
 @import "~@angular/material/theming";
 @import "./app/styles/base/_typography.scss";
 @import "./app/styles/dimensions.scss";
+@import "./app/styles/colors.scss";
 
 @include mat-core($roboto-custom-typography);
 

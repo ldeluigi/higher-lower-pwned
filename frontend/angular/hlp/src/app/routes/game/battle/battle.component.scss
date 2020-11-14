@@ -1,5 +1,6 @@
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/dimensions.scss";
+@import "../../../styles/colors.scss";
 
 :host {
   display: block;
@@ -88,4 +89,8 @@ app-word {
   .word {
     width: 0.6%;
   }
+}
+
+button {
+  color: $default-text-color;
 }

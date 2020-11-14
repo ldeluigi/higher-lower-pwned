@@ -1,4 +1,5 @@
 @import "../../../styles/dimensions.scss";
+@import "../../../styles/colors.scss";
 
 span {
   vertical-align: super;
@@ -13,6 +14,9 @@ mat-icon {
 }
 
 a {
-  color: inherit;
   text-decoration: none;
+}
+
+* {
+  color: $default-text-color;
 }

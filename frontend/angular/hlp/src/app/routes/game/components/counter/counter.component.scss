@@ -6,7 +6,7 @@ $margin-top: 4vh;
 $text-size: 8vh;
 
 @function multiple-text-shadow($n, $color) {
-  $value: "-1px 0 0 #{$color}";
+  $value: "0 0 0 #{$color}";
   @for $i from 2 through $n {
     $value: "#{$value} , #{-$i * - 1}px #{ -$i * - 1}px 2px "+lighten(
         $color,
