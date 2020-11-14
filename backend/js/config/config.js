@@ -7,6 +7,10 @@ function emailTransport() {
         auth: {
           user: process.env.MAILER_EMAIL,
           pass: process.env.MAILER_PASSWORD
+        },
+        secure: false,
+        tls: {
+          rejectUnauthorized: false
         }
       };
     } else {
