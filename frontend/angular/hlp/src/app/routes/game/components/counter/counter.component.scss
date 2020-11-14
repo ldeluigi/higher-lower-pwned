@@ -22,6 +22,11 @@ $text-size: 8vh;
   margin: $margin-top auto;
 }
 
+.name {
+  text-align: center;
+  color: $default-text-color;
+}
+
 .container {
   width: fit-content;
   padding: 2vh;
