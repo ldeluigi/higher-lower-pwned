@@ -11,4 +11,18 @@ router.get(
   scoresHelper.requestHandler(/^duel\.(win|lose)$/)
 );
 
+router.get(
+  "/:userid/duel/win",
+  scoresHelper.guards,
+  jwtTools.authentication(),
+  scoresHelper.requestHandler(/^duel\.win$/)
+);
+
+router.get(
+  "/:userid/duel/lose",
+  scoresHelper.guards,
+  jwtTools.authentication(),
+  scoresHelper.requestHandler(/^duel\.lose$/)
+);
+
 module.exports = router;
