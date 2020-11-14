@@ -1,7 +1,7 @@
-const app = require("../../../../config/server").express;
+const app = require("../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const score = require("../../../model/score.model");
+const score = require("../../model/score.model");
 
 
 describe("stats API", function () {
