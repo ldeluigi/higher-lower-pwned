@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const jwtTools = require("../../../../../utils/jwt");
 const scoresHelper = require("../../../../../helpers/scores");
 

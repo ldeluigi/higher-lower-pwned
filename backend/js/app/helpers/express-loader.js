@@ -33,13 +33,14 @@ module.exports = {
 
             if (route) {
                 try {
-                    console.log(route)
-                    route = require(route);
                     if (mount) {
-                        console.log(`[*] Mounting ${mount}`);
-                        router.use(mount.replace('#', ':'), route);
+                        console.log(`[${'*'.repeat((route.match(/[\/\\]/g) || []).length)}] Mounting ${mount}`);
+                    }
+                    let loadedRoute = require(route);
+                    if (mount) {
+                        router.use(mount.replace('#', ':'), loadedRoute);
                     } else {
-                        router.use(route);
+                        router.use(loadedRoute);
                     }
                 } catch (e) {
                     console.error(e);
