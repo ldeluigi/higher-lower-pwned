@@ -83,7 +83,7 @@ To develop the client, follow the instructions in the [previous section](#develo
 
 ### API Documentation
 
-Available in the [Wiki](https://github.com/ldeluigi/higher-lower-pwned/wiki).
+Available in the [Wiki](https://github.com/ldeluigi/higher-lower-pwned/wiki#backend-api-documentation).
 
 ### Developing the Angular Web App client
 
