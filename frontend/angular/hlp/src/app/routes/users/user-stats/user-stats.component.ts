@@ -179,6 +179,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           const findResult = array.find(
             (item) => item.periodNumber === periodN && item.year === e.year
           );
+          // console.log(findResult);
           const element = findResult
             ? findResult
             : {
@@ -194,22 +195,19 @@ export class UserStatsComponent implements OnInit, OnDestroy {
               };
           // console.log("out", lastElement, element);
           if (
+            // element void after a played elem
             lastElement.avgPlaysPerDay !== 0 &&
             element.avgPlaysPerDay === 0
           ) {
             if (periods[periods.length - 1] !== e) {
               label.push(GRAPH_EMPTY_PERIODS);
               scores.push(element);
-            } else {
-              scores.pop();
             }
-            // ignoring other void periods
           } else if (
+            //element has to be added
             !(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)
           ) {
             scores.push(element);
-
-            // console.log(element);
             const startDate = this.startDatePipe.transform(
               element,
               this.actualPeriod
@@ -243,6 +241,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
                   this.datePipe.transform(startDate, Const.FORMAT_YEAR) as string
                 );
                 break;
+            }
+          } else {
+            if (periods[periods.length - 1] === e) {
+              label.pop();
+              scores.pop();
             }
           }
           // save lastElement
