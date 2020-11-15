@@ -19,7 +19,7 @@ module.exports = {
         if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
         }
-        const queryLimit = req.query.limit || limitTools.limit;
+        const queryLimit = req.query.limit || limitTools.default;
         const queryPeriod = req.query.period || periodTools.default;
         const minMax = periodTools.periods[queryPeriod];
         const result = await score

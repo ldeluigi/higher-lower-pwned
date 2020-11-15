@@ -1,12 +1,12 @@
-const app = require("../../../config/server").express;
+const app = require("../../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const user = require("../../model/user.model");
-const score = require("../../model/score.model");
-const token = require("../../model/token.model");
-const pwd = require("../../utils/password");
-const jwtTools = require("../../utils/jwt");
-const { mongoose } = require("../../../config/config");
+const user = require("../../../model/user.model");
+const score = require("../../../model/score.model");
+const token = require("../../../model/token.model");
+const pwd = require("../../../utils/password");
+const jwtTools = require("../../../utils/jwt");
+const { mongoose } = require("../../../../config/config");
 
 
 
@@ -54,7 +54,7 @@ describe("user stats API", function () {
     mock3.mockImplementation((input) => Promise.resolve(userStatsMock));
 
     const payload = { limit: 30, period: 'week' }
-    response = await request.get("/users/abcabcabcabcabcabcabcabc/stats", params = payload).set("Authorization", "Bearer " + result.token);
+    response = await request.get("/users/abcabcabcabcabcabcabcabc/stats").query(payload).set("Authorization", "Bearer " + result.token);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
     expect(response.body.data).toEqual({ id: "abcabcabcabcabcabcabcabc", history: userStatsMock });

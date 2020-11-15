@@ -1,14 +1,14 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const { query, validationResult, param } = require("express-validator");
-const periodTools = require("../../helpers/period");
-const score = require("../../model/score.model").schema;
-const jwtTools = require("../../utils/jwt");
+const periodTools = require("../../../helpers/period");
+const score = require("../../../model/score.model").schema;
+const jwtTools = require("../../../utils/jwt");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-router.get("/:id/stats",
+router.get("/stats",
   [
-    param("id")
+    param("userid")
       .notEmpty()
       .isAlphanumeric(),
     periodTools.checkPeriod(query("period")),
@@ -23,7 +23,7 @@ router.get("/:id/stats",
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    if (req.auth.id != req.params.id) {
+    if (req.auth.id != req.params.userid) {
       return res.status(403).json({ errors: ["User not authorized."] });
     }
     try {
@@ -33,7 +33,7 @@ router.get("/:id/stats",
       let validStartDateFrom = periodTools.subtractPeriodNTimesFromToday(queryPeriod, queryLimit);
       let periodGroupDB = mapFromPeriodToDBPeriod[queryPeriod];
 
-      let userID = req.params.id;
+      let userID = req.params.userid;
       const history = await score
         .aggregate([
           {

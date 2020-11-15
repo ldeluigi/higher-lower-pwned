@@ -46,20 +46,23 @@ describe("scores arcade API", function () {
     });
     let result = response.body.data;
 
-    const mock3 = jest.spyOn(score.schema, 'find');
+    const mock3 = jest.spyOn(score.schema, 'aggregate');
     mock3.mockImplementation((input) => {
-      var x = {
-        skip: (_) => x,
-        limit: (_) => x,
-        sort: (_) => Promise.resolve(fakeScores)
-      };
-      return x;
+      return Promise.resolve({
+        totalCount: 1,
+        totalData: fakeScores
+      });
     });
 
-    const payload = { limit: 30, period: 'year' }
-    response = await request.get("/users/testid/scores/arcade", params = payload).set("Authorization", "Bearer " + result.token);
+    const payload = { limit: 30 }
+    response = await request.get("/users/testid/scores/arcade").query(payload).set("Authorization", "Bearer " + result.token);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
+    expect(response.body.meta).toEqual({
+      total: 1,
+      page: 0,
+      size: 30
+    });
     expect(response.body.data).toEqual([
       {
         score: fakeScores[0].score,

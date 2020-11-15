@@ -21,7 +21,7 @@ describe("stats API", function () {
         mock.mockImplementation((input) => {
             return Promise.resolve([fakeStats]);
         });
-        let response = await request.get("/stats/duel", params = { period: "year" })
+        let response = await request.get("/stats/duel").query({ period: "year" })
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
@@ -46,7 +46,7 @@ describe("stats API", function () {
         mock.mockImplementation((input) => {
             return Promise.resolve([fakeStats]);
         });
-        let response = await request.get("/stats/duel/win", params = { period: "year" })
+        let response = await request.get("/stats/duel/win").query({ period: "year" })
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
@@ -71,7 +71,7 @@ describe("stats API", function () {
         mock.mockImplementation((input) => {
             return Promise.resolve([fakeStats]);
         });
-        let response = await request.get("/stats/duel/lose", params = { period: "year" })
+        let response = await request.get("/stats/duel/lose").query({ period: "year" })
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");

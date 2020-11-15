@@ -12,7 +12,6 @@ module.exports = {
     param("userid")
       .notEmpty()
       .isAlphanumeric(),
-    periodTools.checkPeriod(query("period")),
     limitTools.checkLimit(query("limit")),
     query("page").optional({ nullable: true }).trim().isInt({ min: 0 }),
     query("sortby").optional({ nullable: true }).trim().isIn(sortStrategies)
@@ -31,9 +30,7 @@ module.exports = {
           return res.status(403).json({ errors: ["User not authorized."] });
         }
         try {
-          const queryLimit = req.query.limit || limitTools.default;
-          const queryPeriod = req.query.period || periodTools.default;
-          const periodMinMax = periodTools.periods[queryPeriod];
+          const queryLimit = parseInt(req.query.limit) || limitTools.default;
           const queryPage = req.query.page || 0;
           const querySortStrategy = req.query.sortby;
           const userID = req.params.userid;
@@ -49,26 +46,33 @@ module.exports = {
               sortStrategy["score"] = "desc";
           }
           const result = await score.schema
-            .find({
-              end: {
-                $gte: periodMinMax[0],
-                $lte: periodMinMax[1]
-              },
-              mode: modeInDatabase,
-              user: userID
-            })
-            .skip(queryPage * queryLimit)
-            .limit(parseInt(queryLimit))
-            .sort(sortStrategy);
+            .aggregate([{
+              $match: {
+                mode: modeInDatabase,
+                user: userID
+              }
+            }, {
+              $facet: {
+                totalData: [
+                  { $skip: queryPage * queryLimit },
+                  { $limit: queryLimit },
+                  { $sort: sortStrategy }
+                ],
+                totalCount: [
+                  { $count: "count" }
+                ]
+              }
+            }]);
           if (result === null) {
             return res.status(404).json({ errors: ["Score query error."] });
           }
           res.json({
             meta: {
+              total: result.totalCount,
               page: queryPage,
               size: queryLimit
             },
-            data: result.map(x => {
+            data: result.totalData.map(x => {
               let s = score.toDto(x);
               delete s.username;
               return s;

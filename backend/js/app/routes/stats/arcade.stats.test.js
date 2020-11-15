@@ -21,7 +21,7 @@ describe("stats API", function () {
         mock.mockImplementation((input) => {
             return Promise.resolve([fakeStats]);
         });
-        let response = await request.get("/stats/arcade", params = { period: "year" })
+        let response = await request.get("/stats/arcade").query({ period: "year" })
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("data");
