@@ -1,25 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const jwtTools = require("../../utils/jwt");
-const scoresHelper = require("../../helpers/scores");
+const jwtTools = require("../../../../../utils/jwt");
+const scoresHelper = require("../../../../../helpers/scores");
 
 
 router.get(
-  "/:userid/duel",
+  "/",
   scoresHelper.guards,
   jwtTools.authentication(),
   scoresHelper.requestHandler(/^duel\.(win|lose)$/)
 );
 
 router.get(
-  "/:userid/duel/win",
+  "/win",
   scoresHelper.guards,
   jwtTools.authentication(),
   scoresHelper.requestHandler(/^duel\.win$/)
 );
 
 router.get(
-  "/:userid/duel/lose",
+  "/lose",
   scoresHelper.guards,
   jwtTools.authentication(),
   scoresHelper.requestHandler(/^duel\.lose$/)

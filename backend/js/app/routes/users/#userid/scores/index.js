@@ -1,3 +1,3 @@
-const loader = require("../helpers/express-loader");
+const loader = require("../../../../helpers/express-loader");
 
 module.exports = loader.routerFromDir(__dirname, __filename);

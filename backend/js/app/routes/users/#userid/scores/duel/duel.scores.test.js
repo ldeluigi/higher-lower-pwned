@@ -1,16 +1,16 @@
-const app = require("../../../config/server").express;
+const app = require("../../../../../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const user = require("../../model/user.model");
-const score = require("../../model/score.model");
-const token = require("../../model/token.model");
-const pwd = require("../../utils/password");
-const jwtTools = require("../../utils/jwt");
+const user = require("../../../../../model/user.model");
+const score = require("../../../../../model/score.model");
+const token = require("../../../../../model/token.model");
+const pwd = require("../../../../../utils/password");
+const jwtTools = require("../../../../../utils/jwt");
 
 
 
 describe("scores royale API", function () {
-  it("should GET royale user score after login", async (done) => {
+  it("should GET duel user score after login", async (done) => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -57,7 +57,7 @@ describe("scores royale API", function () {
     });
 
     const payload = { limit: 30, period: 'year' }
-    response = await request.get("/scores/testid/royale", params = payload).set("Authorization", "Bearer " + result.token);
+    response = await request.get("/users/testid/scores/duel", params = payload).set("Authorization", "Bearer " + result.token);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
     expect(response.body.data).toEqual([
@@ -80,7 +80,7 @@ describe("scores royale API", function () {
     done();
   });
 
-  it("should GET royale/win user score after login", async (done) => {
+  it("should GET duel/win user score after login", async (done) => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -127,7 +127,7 @@ describe("scores royale API", function () {
     });
 
     const payload = { limit: 30, period: 'year' }
-    response = await request.get("/scores/testid/royale/win", params = payload).set("Authorization", "Bearer " + result.token);
+    response = await request.get("/users/testid/scores/duel/win", params = payload).set("Authorization", "Bearer " + result.token);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
     expect(response.body.data).toEqual([
@@ -150,7 +150,7 @@ describe("scores royale API", function () {
     done();
   });
 
-  it("should GET royale/lose user score after login", async (done) => {
+  it("should GET duel/lose user score after login", async (done) => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -197,7 +197,7 @@ describe("scores royale API", function () {
     });
 
     const payload = { limit: 30, period: 'year' }
-    response = await request.get("/scores/testid/royale/lose", params = payload).set("Authorization", "Bearer " + result.token);
+    response = await request.get("/users/testid/scores/duel/lose", params = payload).set("Authorization", "Bearer " + result.token);
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
     expect(response.body.data).toEqual([
