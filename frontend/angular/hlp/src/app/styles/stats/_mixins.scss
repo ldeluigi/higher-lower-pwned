@@ -11,6 +11,7 @@
       margin: auto;
       margin-top: 2vh;
       margin-bottom: 2vh;
+      color: $default-text-color;
     }
     .not-selected {
       @include mat-elevation-transition;
