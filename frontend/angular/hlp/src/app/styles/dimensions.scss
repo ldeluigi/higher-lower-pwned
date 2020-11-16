@@ -3,12 +3,12 @@ $default-padding: 1%;
 $default-margin: 1%;
 $default-margin-on-height: 0.4vh;
 $default-X-margin: 0 $default-margin;
-$default-Y-margin-desktop: calc(2 * $default-margin) 0;
+$default-Y-margin-desktop: calc(2 * #{$default-margin}) 0;
 
 @mixin wide-col {
   margin: $default-X-margin;
   padding: $default-padding;
-  width: calc(100% - $default-margin - $default-padding);
+  width: calc(100% - #{$default-margin} - #{$default-padding});
 }
 
 @mixin height-col {
