@@ -69,12 +69,7 @@
 .subtitle {
   font-family: subtitleFont;
   color: $default-text-color;
-  margin-top: 5vh;
-}
-
-@mixin margin-padding {
-  margin: $default-margin;
-  padding: $default-padding;
+  margin-top: 1vh;
 }
 
 .in-line {
@@ -84,7 +79,7 @@
 .center-column {
   max-height: 50%;
   width: 90%;
-  margin: 1vh auto;
+  margin: 1vh auto 0 auto;
   text-align: center;
   align-items: center;
   display: flex;
@@ -95,7 +90,7 @@
 footer {
   position: fixed;
   left: 0;
-  bottom: 5vh;
+  bottom: 0;
   height: $default-footer-height;
   width: 100%;
   text-align: center;
@@ -167,7 +162,6 @@ $button-size: 14vh;
   .center-column {
     z-index: 2;
     width: 66%;
-    padding-top: 5vh;
     margin: 0 auto;
     min-height: 50%;
     margin-bottom: $default-footer-height;
@@ -188,7 +182,7 @@ $button-size: 14vh;
 
 @include tablet {
   .title {
-    width: 40%;
+    width: 30%;
     div {
       clear: both;
       font-size: 11vh;
@@ -213,6 +207,7 @@ $autoscroll-duration: 60s;
   -webkit-animation: autoscroll $autoscroll-duration linear infinite;
   animation: autoscroll $autoscroll-duration linear infinite;
 }
+
 /* Move it (define the animation) */
 @-moz-keyframes autoscroll {
   0% {
