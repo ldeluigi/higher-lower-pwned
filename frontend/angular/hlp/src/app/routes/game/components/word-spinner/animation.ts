@@ -13,7 +13,7 @@ export const vsAnimation: AnimationTriggerMetadata = trigger('vsAnimation', [
 ]);
 
 
-const DURATION2 = '0.5s';
+const DURATION2 = '4.5s';
 export const wordAnimation: AnimationTriggerMetadata = trigger('wordAnimation', [
 
   transition('void => second', [
@@ -83,8 +83,7 @@ export const wordAnimation: AnimationTriggerMetadata = trigger('wordAnimation', 
   ]),
 ]);
 
-
-const DURATION3 = '0.5s';
+const DURATION3 = '0.3s';
 const firstBackground = 'red';
 const secondBackground = 'lightblue';
 export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', [
@@ -104,10 +103,24 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
       transform: 'translateY(-110%)'
     }))
   ]),
-  transition('* => second', [
-    animate(DURATION3, style({
-      'background-color': secondBackground
+  transition('first => second', [
+    style({
+      opacity: -1000,
+      transform: 'translateY(-110%)'
+    }),
+    animate('0.0001ms', style({
+      opacity: 0,
+      transform: 'translateY(-220%)'
     })),
+    animate('0.0001ms', style({
+      opacity: 0,
+      transform: 'translateY(200%)'
+    })
+    ),
+    animate(DURATION3 + ' ' + '0.2s', style({
+      opacity: 1,
+      transform: 'translateY(20%)'
+    }))
   ]),
   transition('* => start2', [
     style({
@@ -121,10 +134,8 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
   ]),
   transition('second => first, start2 => first', [
     style({
-      'background-color': secondBackground
     }),
     animate(DURATION3, style({
-      'background-color': firstBackground,
       transform: 'translateY(-110%)',
     }))
   ]),
@@ -134,17 +145,14 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
       transform: 'translateY(0)'
     }),
     animate(DURATION3, style({
-      opacity: 0,
-      // transform: 'translateY(-110%)',
+      opacity: 1,
+      transform: 'translateY(-120%)',
     }))
   ]),
   transition('out => first', [
     style({
-      opacity: 0,
-    }),
-    animate(DURATION3, style({
       opacity: 1,
-    }))
+    }),
   ]),
   transition('out => void', [
     style({

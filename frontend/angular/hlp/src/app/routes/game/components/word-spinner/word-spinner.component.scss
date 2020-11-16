@@ -4,7 +4,7 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/game/variables";
 
-$card_width: 90vw;
+$card_width: 85vw;
 $card_width_desktop: 60vw;
 
 $card_heigth: 45%;
@@ -13,19 +13,19 @@ $bottom_card_Y: #{math.round( (100%/$card_heigth) * ($vs_heigth / 2%)) * 1%};
 $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
 
 :host {
+  width: 100vw;
   display: flex;
   height: 100%;
   justify-content: center;
   font-size: 150%;
   font-weight: 400;
-  margin: 1vh 1vw;
+  margin: 1vh 0;
   overflow: hidden;
 }
 
 .words {
   height: 100%;
   max-height: 100%;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,6 +38,8 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
     height: $card_heigth;
     transform: translateY($bottom_card_Y);
     background-color: $lower-color;
+
+
   }
 
   .not-moving {
@@ -53,13 +55,15 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
   div {
     border-radius: #{$card-border-radius};
     width: $card_width;
-    margin: 0 4vw;
     h1 {
       font-size: 120%;
       font-weight: 500;
-      margin: 1% 4%;
+      margin: auto;
       text-align: center;
+      transition-duration: 2s;
+
     }
+
     p {
       font-size: 100%;
       font-weight: 400;
@@ -67,6 +71,7 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
       margin-right: 10%;
       text-align: right;
     }
+
   }
 
   .vs {
@@ -106,11 +111,18 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
     }
     div {
       width: $card_width_desktop;
+      border-radius: #{$card-border-radius};
       h1 {
         font-size: 180%;
       }
       p {
         font-size: 150%;
+      }
+
+      &:hover {
+        h1 {
+          font-size: 250%;
+        }
       }
     }
   }

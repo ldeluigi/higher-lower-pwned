@@ -108,6 +108,7 @@ export class WordSpinnerComponent {
 
           this.element2.score = next.oldScore.toString();
           this.element2.status = 'first';
+          console.log(this.element2.status);
           this.element1.status = 'out';
         });
 
@@ -142,8 +143,7 @@ export class WordSpinnerComponent {
       this.element1.word = this.element2.word;
       this.element1.status = 'first';
       this.element2.status = 'second';
-      rollWord(this.newElement.word, 600, w => this.element2.word = w)
-        .then(() => this.loading = false);
+      console.log(this.element2.status);
       this.element2.score = this.emptyScore;
       if (this.nextPromise) {
         this.nextPromise();
@@ -154,6 +154,10 @@ export class WordSpinnerComponent {
         this.startPromise();
         this.startPromise = undefined;
       }
+    }
+    if (event.fromState === 'first' && event.toState === 'second') {
+      this.loading = false;
+      rollWord(this.newElement.word, 300, w => this.element2.word = w);
     }
   }
 }
