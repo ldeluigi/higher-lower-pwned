@@ -26,6 +26,7 @@ export const GRAPH_EMPTY_PERIODS = '...';
 })
 export class UserStatsComponent implements OnInit, OnDestroy {
   expanded = true;
+  showing_chart = true;
 
   lineChartType: ChartType = 'bar';
   lineChartData: Array<object> = [];
@@ -302,5 +303,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   timeC(millisecond: number): string {
     return timeConversion(millisecond);
+  }
+
+  toggle() {
+    this.showing_chart = !this.showing_chart
   }
 }
