@@ -31,11 +31,12 @@
 
 .title {
   display: flex;
-  height: 24vh;
+  height: 28vh;
   margin: 10vh auto 0 auto;
   width: 85%;
+  flex-direction: column;
   justify-content: space-between;
-  flex-direction: row;
+
   .title-piece {
     text-shadow: -1px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,
       0 -3px $black-bg;
@@ -46,9 +47,11 @@
     height: 8vh;
     text-transform: uppercase;
   }
+
   #left {
     color: $higher-color;
     align-self: flex-start;
+    margin-left: 5%;
   }
 
   #center {
@@ -128,10 +131,9 @@ mat-icon {
 @include desktop {
   .center-column {
     z-index: 2;
-    float: center;
     width: 66%;
     @include margin-padding();
-    padding-top: 10vh;
+    padding-top: 5vh;
     margin: 0 auto;
     text-align: center;
     align-items: center;
@@ -150,7 +152,17 @@ mat-icon {
   }
 
   .title {
-    width: 80%;
+    width: 25%;
+    div {
+      clear: both;
+      font-size: 11vh;
+    }
+  }
+}
+
+@include tablet {
+  .title {
+    width: 40%;
     div {
       clear: both;
       font-size: 11vh;
