@@ -1,24 +1,17 @@
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/colors.scss";
+@import "../../../styles/game/mixins";
 
-:host {
-  display: block;
+.wrapper {
+  @include app-word-spinner-wrapper();
 }
 
 .score {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: $default-margin 0;
-  max-height: 15%;
-}
-
-.word {
-  overflow: visible;
-  width: 64%;
-  max-height: 40%;
-  margin: $default-margin auto;
+  margin: $default-margin * 2;
 }
 
 .timer {
@@ -30,6 +23,7 @@
 
 .options {
   margin: $default-margin;
+  height: 35%;
   width: 60%;
 }
 
@@ -49,10 +43,6 @@
 }
 
 @include desktop {
-  .word {
-    width: 60%;
-  }
-
   .timer {
     width: 30%;
   }

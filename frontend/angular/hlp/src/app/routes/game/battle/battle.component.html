@@ -1,12 +1,13 @@
 <div class="score">
-  <app-counter [counter]="actualScore"></app-counter>
+  <app-counter [counter]="actualScore" [name]="myName"></app-counter>
 </div>
-<div class="word" *ngIf="this.gameStatus !== status.IDLE">
+<div class="wrapper" *ngIf="this.gameStatus !== status.IDLE">
     <app-word-spinner
       [buttonEnable]="this.gameStatus === status.PLAYING"
       (answerEmitter)="answer($event)"
     ></app-word-spinner>
 </div>
+
 <div *ngIf="this.gameStatus === status.PLAYING" class="timer">
   <div>time left: {{ timeLeft | date: "s:S" }} s</div>
   <mat-progress-bar
@@ -14,10 +15,16 @@
     [value]="progressbarValue"
   ></mat-progress-bar>
 </div>
+
 <div
   class="options"
   *ngIf="this.gameStatus !== status.IDLE; then players; else buttons"
 ></div>
+
+<ng-template #players class="leaderboard">
+  <app-player-list></app-player-list>
+</ng-template>
+
 <ng-template #buttons>
   <div *ngIf="this.gameStatus === status.IDLE">
     <button class="divStart" mat-button (click)="start()">START</button>
@@ -45,6 +52,4 @@
     <button mat-button (click)="disconnect()">QUIT</button>
   </div>
 </ng-template>
-<ng-template #players class="leaderboard">
-  <app-player-list></app-player-list>
-</ng-template>
+

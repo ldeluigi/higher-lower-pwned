@@ -6,23 +6,21 @@
     [player2Name]="opponentName"
   ></app-duel-counter>
 </div>
+<div class="wrapper">
+  <app-word-spinner *ngIf="this.gameStatus !== status.IDLE"
+    [buttonEnable]="this.gameStatus === status.PLAYING"
+    (answerEmitter)="answer($event)"
+  ></app-word-spinner>
+</div>
 <div class="container">
-  <div class="word">
-    <span *ngIf="this.gameStatus !== status.IDLE">
-      <app-word-spinner
-        [buttonEnable]="this.gameStatus === status.PLAYING"
-        (answerEmitter)="answer($event)"
-      ></app-word-spinner>
-      <div *ngIf="this.gameStatus === status.PLAYING">
-        time left: {{ timeLeft | date: "s:S" }} s
-      </div>
-      <mat-progress-bar
-        *ngIf="this.gameStatus === status.PLAYING"
-        mode="determinate"
-        [value]="progressbarValue"
-      ></mat-progress-bar>
-    </span>
+  <div *ngIf="this.gameStatus === status.PLAYING">
+    time left: {{ timeLeft | date: "s:S" }} s
   </div>
+  <mat-progress-bar
+    *ngIf="this.gameStatus === status.PLAYING"
+    mode="determinate"
+    [value]="progressbarValue"
+  ></mat-progress-bar>
 </div>
 <div class="divStart">
   <div *ngIf="this.gameStatus === status.IDLE">

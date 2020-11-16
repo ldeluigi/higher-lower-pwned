@@ -10,10 +10,6 @@
       </p>
     </div>
   </div>
-  <div class="vs" [@vsAnimation]="rotateVs" mat-icon-button isRoundButton>
-    <mat-icon class="mat-icon" svgIcon="punch_vs"></mat-icon>
-    <!-- <img class="image" src="./assets/double-arrow-text.png" alt=""> -->
-  </div>
   <div class="bot" [ngClass]="moving ? 'moving' : 'not-moving'" [@cardAnimation]="element2.status" (click)="answer(2)">
     <div id="dummy10p"></div>
     <div>
@@ -24,5 +20,8 @@
         {{ element2.score }}
       </p>
     </div>
+  </div>
+  <div class="vs" [@vsAnimation]="rotateVs" mat-icon-button isRoundButton>
+    <mat-icon class="mat-icon" svgIcon="punch_vs"></mat-icon>
   </div>
 </div>

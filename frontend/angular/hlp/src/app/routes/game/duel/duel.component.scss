@@ -1,9 +1,9 @@
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/colors.scss";
-
-:host {
-  display: block;
+@import "../../../styles/game/mixins";
+:host{
+  height: 100%;
 }
 
 .counter {
@@ -11,23 +11,21 @@
 }
 
 .container {
-  display: flex;
+  height: 5%;
+  width: 60%;
+  margin: auto;
+  div {
+    text-align: center;
+  }
+}
+
+.wrapper {
+  @include app-word-spinner-wrapper();
 }
 
 .leaderboard {
   width: 30%;
   margin: $default-margin;
-}
-
-.word {
-  overflow: visible;
-  width: 64%;
-  height: 50%;
-  margin: $default-margin auto;
-}
-
-.nameDiv {
-  display: none;
 }
 
 .divStart {
@@ -41,17 +39,6 @@
       margin: auto;
     }
   }
-}
-
-app-word {
-  margin: 0% auto;
-  text-align: center;
-}
-
-.wrapper {
-  position: relative;
-  overflow: visible;
-  height: 30%;
 }
 
 .commands {
@@ -84,15 +71,7 @@ app-word {
 }
 
 @include desktop {
-  .nameDiv {
-    display: block;
-    width: 20%;
-    margin: $default-margin;
-  }
 
-  .word {
-    width: 60%;
-  }
 }
 
 button {

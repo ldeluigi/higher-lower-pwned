@@ -57,7 +57,7 @@ export class WordSpinnerComponent {
   ) {
     this.matIconRegistry.addSvgIcon(
       'punch_vs',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/punch_vs.svg')
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/recycle.svg')
     );
     this.matIconRegistry.addSvgIcon(
       'arrows',

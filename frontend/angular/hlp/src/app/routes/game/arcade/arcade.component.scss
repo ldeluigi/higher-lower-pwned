@@ -1,23 +1,17 @@
 @import "../../../styles/colors.scss";
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/abstracts/mixins";
+@import "../../../styles/game/mixins";
 
 .wrapper {
-  overflow: visible;
-  height: 45%;
-  width: 90%;
-  margin: $default-margin auto;
-}
-
-app-word-spinner {
-  height: 100%;
+  @include app-word-spinner-wrapper();
 }
 
 .commands {
   margin: auto;
 }
 
-.wrapper-small {
+.wrapper-counter {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,4 +43,8 @@ app-word-spinner {
 
 // for desktop layout
 @include desktop {
+}
+
+button {
+  color: $default-text-color;
 }

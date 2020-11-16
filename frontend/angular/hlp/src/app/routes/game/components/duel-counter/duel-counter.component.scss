@@ -4,4 +4,14 @@
 
 .counter-container {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90vw;
+  margin: auto;
+}
+
+@include desktop {
+  .counter-container {
+    width: 60vw;
+  }
 }
