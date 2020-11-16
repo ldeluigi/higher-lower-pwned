@@ -30,24 +30,23 @@
 }
 
 .title {
-  align-items: center;
   display: flex;
-  height: 20vh;
-  margin: 10vh 10vw 0 10vw;
-  width: auto;
-  justify-content: center;
-  div {
+  height: 24vh;
+  margin: 10vh auto 0 auto;
+  width: 85%;
+  justify-content: space-between;
+  flex-direction: row;
+  .title-piece {
     text-shadow: -1px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,
       0 -3px $black-bg;
     font-family: titleFont;
     font-weight: 800;
-    text-transform: uppercase;
     font-size: 8vh;
-    margin-bottom: 3vh;
+    line-height: 8vh;
+    height: 8vh;
+    text-transform: uppercase;
   }
   #left {
-    justify-content: flex-start;
-    text-align: left;
     color: $higher-color;
     align-self: flex-start;
   }
@@ -55,15 +54,11 @@
   #center {
     animation: home-animation 2s infinite;
     color: $default-text-color;
-    text-align: center;
-    justify-content: center;
     align-self: center;
   }
 
   #right {
     color: $lower-color;
-    text-align: right;
-    justify-content: flex-end;
     align-self: flex-end;
   }
 }
@@ -71,6 +66,7 @@
 .subtitle {
   font-family: subtitleFont;
   color: $default-text-color;
+  margin-top: 5vh;
 }
 
 @mixin margin-padding {
@@ -82,15 +78,6 @@
   margin-top: 4vh;
 }
 
-.mat-display-4 {
-  @include margin-padding();
-}
-
-.mat-display-4 div {
-  line-height: 1em;
-  font-size: 0.85em;
-}
-
 .center-column {
   max-height: 50%;
   width: 96%;
@@ -99,6 +86,7 @@
   text-align: center;
   align-items: center;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
 }
 
@@ -124,10 +112,6 @@ $icon-size: $button-size * 2 / 3;
   padding: 1vh;
   width: $button-size;
   height: $button-size;
-  // color: $default-text-color;
-  margin-bottom: 1vh;
-  margin-left: 1vh;
-  margin-right: 1vh;
 }
 
 mat-icon {
@@ -142,20 +126,6 @@ mat-icon {
 }
 
 @include desktop {
-  .mat-display-4 {
-    @include margin-padding();
-    max-height: 10%;
-    align-items: center;
-    display: flex;
-  }
-
-  // .mat-display-4 div {
-  //   max-width: 30%;
-  //   line-height: 1em;
-  //   font-size: 0.85em;
-  //   width: auto;
-  // }
-
   .center-column {
     z-index: 2;
     float: center;
