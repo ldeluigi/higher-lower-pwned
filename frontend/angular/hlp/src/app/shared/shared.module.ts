@@ -5,10 +5,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { MatButtonModule } from '@angular/material/button';
 
-import { HistoryItemToEndDatePipe } from './pipe/history-item-to-end-date.pipe';
-import { HistoryItemToStartDatePipe } from './pipe/history-item-to-start-date.pipe';
+import { HistoryItemToEndDatePipe } from './pipes/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from './pipes/history-item-to-start-date.pipe';
 import { MatTableModule } from '@angular/material/table';
-import { MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { MatCardModule } from '@angular/material/card';

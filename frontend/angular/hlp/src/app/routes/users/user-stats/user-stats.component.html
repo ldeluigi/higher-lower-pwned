@@ -14,8 +14,107 @@
       #input
     />
   </mat-form-field>
+  <button class="input" mat-mini-fab aria-label="chart button" (click)="toggle()">
+    <div *ngIf="showing_chart; then assessment; else show_chart"></div>
+    <ng-template #show_chart><mat-icon>show_chart</mat-icon></ng-template>
+    <ng-template #assessment><mat-icon>assessment</mat-icon></ng-template>
+  </button>
 </div>
-<mat-accordion>
+<div *ngIf="showing_chart; then chart; else stats"></div>
+<ng-template #chart>
+  <div style="display: block">
+    <canvas
+      baseChart
+      [datasets]="lineChartData"
+      [labels]="chartLabels"
+      [colors]="lineChartColors"
+      [options]="lineChartOptions"
+      [chartType]="lineChartType"
+    ></canvas>
+  </div>
+</ng-template>
+<ng-template #stats>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="day">
+        <th mat-header-cell *matHeaderCellDef>Day</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element | historyItemToStartDate: 'day' | date:'dd/M/yy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="month">
+        <th mat-header-cell *matHeaderCellDef>Month</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element | historyItemToStartDate: 'month' | date:'M/yy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef>Year</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element | historyItemToStartDate: 'year' | date:'yyyy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef> From </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element | historyItemToStartDate: actualPeriod | date:'dd/M/yy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef> To </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element | historyItemToEndDate: actualPeriod | date:'dd/M/yy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="avgScore">
+        <th mat-header-cell *matHeaderCellDef>Avg. score</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.avgScore | number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="avgGuesses">
+        <th mat-header-cell *matHeaderCellDef>Avg. guesses</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.avgGuesses | number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="avgPlaysPerDay">
+        <th mat-header-cell *matHeaderCellDef>Avg. plays per day</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.avgPlaysPerDay | number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="avgDuration">
+        <th mat-header-cell *matHeaderCellDef>Avg. duration</th>
+        <td mat-cell *matCellDef="let element">
+          {{ timeC(element.avgDuration) }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="maxScore">
+        <th mat-header-cell *matHeaderCellDef>Max score</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.maxScore | number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="maxGuesses">
+        <th mat-header-cell *matHeaderCellDef>Max guesses</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.maxGuesses | number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="maxDuration">
+        <th mat-header-cell *matHeaderCellDef>Max duration</th>
+        <td mat-cell *matCellDef="let element">
+          {{ timeC(element.maxDuration) }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator showFirstLastButtons></mat-paginator>
+  </div>
+</ng-template>
+<!--mat-accordion>
   <mat-expansion-panel [expanded]="expanded">
     <mat-expansion-panel-header>
       <mat-panel-title> Graph </mat-panel-title>
@@ -118,4 +217,4 @@
       <mat-paginator showFirstLastButtons></mat-paginator>
     </div>
   </mat-expansion-panel>
-</mat-accordion>
+</mat-accordion-->

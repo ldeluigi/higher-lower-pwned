@@ -3,8 +3,9 @@
   aria-label="Font Style"
   [value]="selectedVal"
   (change)="onSelectPeriod(group.value)"
+  class="group"
 >
-  <mat-button-toggle *ngFor="let period of periods" value="{{ period }}">{{
-    period
+  <mat-button-toggle class="period" *ngFor="let period of periods" value="{{ period }}">{{
+    period.charAt(0).toUpperCase() + period.slice(1)
   }}</mat-button-toggle>
 </mat-button-toggle-group>

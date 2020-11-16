@@ -30,40 +30,38 @@
 }
 
 .title {
-  align-items: center;
   display: flex;
-  height: 20vh;
-  margin: 10vh 10vw 0 10vw;
-  width: auto;
-  justify-content: center;
-  div {
+  height: 28vh;
+  margin: 10vh auto 0 auto;
+  width: 85%;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .title-piece {
     text-shadow: -1px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,
       0 -3px $black-bg;
     font-family: titleFont;
     font-weight: 800;
-    text-transform: uppercase;
     font-size: 8vh;
-    margin-bottom: 3vh;
+    line-height: 8vh;
+    height: 8vh;
+    text-transform: uppercase;
   }
+
   #left {
-    justify-content: flex-start;
-    text-align: left;
     color: $higher-color;
     align-self: flex-start;
+    margin-left: 5%;
   }
 
   #center {
     animation: home-animation 2s infinite;
     color: $default-text-color;
-    text-align: center;
-    justify-content: center;
     align-self: center;
   }
 
   #right {
     color: $lower-color;
-    text-align: right;
-    justify-content: flex-end;
     align-self: flex-end;
   }
 }
@@ -71,42 +69,29 @@
 .subtitle {
   font-family: subtitleFont;
   color: $default-text-color;
-}
-
-@mixin margin-padding {
-  margin: $default-margin;
-  padding: $default-padding;
+  margin-top: 1vh;
 }
 
 .in-line {
   margin-top: 4vh;
 }
 
-.mat-display-4 {
-  @include margin-padding();
-}
-
-.mat-display-4 div {
-  line-height: 1em;
-  font-size: 0.85em;
-}
-
 .center-column {
   max-height: 50%;
-  width: 96%;
-  @include margin-padding();
-  margin: 0 auto;
+  width: 90%;
+  margin: 1vh auto 0 auto;
   text-align: center;
   align-items: center;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
 }
 
 footer {
   position: fixed;
   left: 0;
-  bottom: 5vh;
-  height: $default-footer-high;
+  bottom: 0;
+  height: $default-footer-height;
   width: 100%;
   text-align: center;
 }
@@ -116,71 +101,88 @@ footer {
 }
 
 $button-size: 14vh;
-$icon-size: $button-size * 2 / 3;
 
-.start-button,
-.start-button-pvp,
-.start-button-royale {
-  padding: 1vh;
-  width: $button-size;
-  height: $button-size;
-  // color: $default-text-color;
-  margin-bottom: 1vh;
-  margin-left: 1vh;
-  margin-right: 1vh;
+@mixin mode-fading-animation($start_opacity) {
+  @keyframes mode-fading-#{$start_opacity} {
+    0% {
+      opacity: $start_opacity;
+    }
+    10% {
+      opacity: $start_opacity;
+    }
+    20% {
+      opacity: 1 - $start_opacity;
+    }
+    25% {
+      opacity: 1 - $start_opacity;
+    }
+    35% {
+      opacity: $start_opacity;
+    }
+    100% {
+      opacity: $start_opacity;
+    }
+  }
 }
 
-mat-icon {
-  // margin-top: $icon-size / 10;
+@include mode-fading-animation(0);
+@include mode-fading-animation(1);
+
+.mode-button {
   width: $button-size;
   height: $button-size;
+  .mode-text {
+    color: $default-text-color;
+    font-size: 3vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: 100%;
+    white-space: normal;
+    line-height: normal;
+    font-weight: 700;
+    opacity: 0;
+    animation: mode-fading-0 10s infinite;
+  }
+  mat-icon {
+    width: $button-size;
+    height: $button-size;
+    opacity: 1;
+    animation: mode-fading-1 10s infinite;
+  }
   transition-duration: 0.7s;
-
   &:hover {
     transform: scale(1.3);
   }
 }
 
 @include desktop {
-  .mat-display-4 {
-    @include margin-padding();
-    max-height: 10%;
-    align-items: center;
-    display: flex;
-  }
-
-  // .mat-display-4 div {
-  //   max-width: 30%;
-  //   line-height: 1em;
-  //   font-size: 0.85em;
-  //   width: auto;
-  // }
-
   .center-column {
     z-index: 2;
-    float: center;
     width: 66%;
-    @include margin-padding();
-    padding-top: 10vh;
     margin: 0 auto;
-    text-align: center;
-    align-items: center;
     min-height: 50%;
-    margin-bottom: $default-footer-high;
+    margin-bottom: $default-footer-height;
   }
 
   footer {
-    position: fixed;
-    left: 0;
-    bottom: 5vh;
-    height: $default-footer-high;
-    width: 100%;
-    text-align: center;
     z-index: 1;
   }
 
   .title {
-    width: 80%;
+    width: 25%;
+    div {
+      clear: both;
+      font-size: 11vh;
+    }
+  }
+}
+
+@include tablet {
+  .title {
+    width: 30%;
     div {
       clear: both;
       font-size: 11vh;
@@ -205,6 +207,7 @@ $autoscroll-duration: 60s;
   -webkit-animation: autoscroll $autoscroll-duration linear infinite;
   animation: autoscroll $autoscroll-duration linear infinite;
 }
+
 /* Move it (define the animation) */
 @-moz-keyframes autoscroll {
   0% {

@@ -10,10 +10,10 @@ import {
   daysOfTheYear,
 } from '../../../helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
-import { HistoryItemToEndDatePipe } from 'src/app/shared/pipe/history-item-to-end-date.pipe';
-import { HistoryItemToStartDatePipe } from 'src/app/shared/pipe/history-item-to-start-date.pipe';
+import { HistoryItemToEndDatePipe } from 'src/app/shared/pipes/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from 'src/app/shared/pipes/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
-import * as Const from '../../../shared/pipe/date-format.constant';
+import * as Const from '../../../shared/pipes/date-format.constant';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -26,6 +26,7 @@ export const GRAPH_EMPTY_PERIODS = '...';
 })
 export class UserStatsComponent implements OnInit, OnDestroy {
   expanded = true;
+  showing_chart = true;
 
   lineChartType: ChartType = 'bar';
   lineChartData: Array<object> = [];
@@ -179,37 +180,35 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           const findResult = array.find(
             (item) => item.periodNumber === periodN && item.year === e.year
           );
+          // console.log(findResult);
           const element = findResult
             ? findResult
             : {
-                periodNumber: periodN,
-                year: e.year,
-                avgScore: 0,
-                avgGuesses: 0,
-                avgPlaysPerDay: 0,
-                avgDuration: 0,
-                maxScore: 0,
-                maxGuesses: 0,
-                maxDuration: 0,
-              };
+              periodNumber: periodN,
+              year: e.year,
+              avgScore: 0,
+              avgGuesses: 0,
+              avgPlaysPerDay: 0,
+              avgDuration: 0,
+              maxScore: 0,
+              maxGuesses: 0,
+              maxDuration: 0,
+            };
           // console.log("out", lastElement, element);
           if (
+            // element void after a played elem
             lastElement.avgPlaysPerDay !== 0 &&
             element.avgPlaysPerDay === 0
           ) {
             if (periods[periods.length - 1] !== e) {
               label.push(GRAPH_EMPTY_PERIODS);
               scores.push(element);
-            } else {
-              scores.pop();
             }
-            // ignoring other void periods
           } else if (
+            //element has to be added
             !(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)
           ) {
             scores.push(element);
-
-            // console.log(element);
             const startDate = this.startDatePipe.transform(
               element,
               this.actualPeriod
@@ -243,6 +242,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
                   this.datePipe.transform(startDate, Const.FORMAT_YEAR) as string
                 );
                 break;
+            }
+          } else {
+            if (periods[periods.length - 1] === e) {
+              label.pop();
+              scores.pop();
             }
           }
           // save lastElement
@@ -299,5 +303,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   timeC(millisecond: number): string {
     return timeConversion(millisecond);
+  }
+
+  toggle() {
+    this.showing_chart = !this.showing_chart
   }
 }

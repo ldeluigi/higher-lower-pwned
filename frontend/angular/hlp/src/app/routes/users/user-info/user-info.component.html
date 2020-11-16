@@ -1,11 +1,11 @@
-<mat-card>
+<mat-card class="container">
   <mat-card class="username-card">
     <mat-card-title>{{ this.userInfo.username }}</mat-card-title>
     <mat-card-subtitle>Username</mat-card-subtitle>
   </mat-card>
   <mat-card class="password-card">
-    <mat-card-title>
-      ******
+    <mat-card-title class="withButton">
+      ****** &nbsp;
       <button mat-mini-fab aria-label="Edit button" (click)="openDialog('password')">
         <mat-icon>edit</mat-icon>
       </button>
@@ -14,8 +14,8 @@
   </mat-card>
 
   <mat-card class="email-card">
-    <mat-card-title>
-      {{ this.userInfo.email }}
+    <mat-card-title class="withButton">
+      {{ this.userInfo.email }} &nbsp;
       <button mat-mini-fab aria-label="Edit button" (click)="openDialog('email')">
         <mat-icon>edit</mat-icon>
       </button>
@@ -23,6 +23,15 @@
     <mat-card-subtitle>
       Email
     </mat-card-subtitle>
+  </mat-card>
+  <mat-card class="delete-card">
+    <mat-card-title class="withButton">
+      Delete Account &nbsp;
+      <button class="delete" mat-mini-fab aria-label="Delete button" (click)="this.delete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-subtitle>this operation is irreversible</mat-card-subtitle>
   </mat-card>
   <mat-card class="reg-date-card">
     <mat-card-title>{{
@@ -33,9 +42,5 @@
   <mat-card class="last-update-card">
     <mat-card-title>{{this.userInfo.lastLogin | date: "M/d/yy, H:mm"}}</mat-card-title>
     <mat-card-subtitle>Last login date</mat-card-subtitle>
-  </mat-card>
-  <mat-card class="delete-card">
-    <mat-card-title>Delete account</mat-card-title>
-    <mat-card-subtitle><button (click)="this.delete()">X</button></mat-card-subtitle>
   </mat-card>
 </mat-card>

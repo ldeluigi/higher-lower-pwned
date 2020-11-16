@@ -1,0 +1,17 @@
+<div class="nav-bar">
+  <div class="selector-border"></div>
+  <a mat-button [class]="isSelected('info') ? 'selected' : 'not-selected'"
+    routerLink="info">
+    <mat-icon aria-hidden="true" aria-label="info">info</mat-icon>
+    <span class="text">&ensp;Info</span>
+  </a>
+  <a mat-button [class]="isSelected('stats') ? 'selected' : 'not-selected'" routerLink="stats">
+    <mat-icon aria-hidden="true" aria-label="assessment">assessment</mat-icon>
+    <span class="text">&ensp;Stats</span>
+  </a>
+  <a mat-button [class]="isSelected('score') ? 'selected' : 'not-selected'" routerLink="scores">
+    <mat-icon aria-hidden="true" aria-label="scores">scores</mat-icon>
+    <span class="text">&ensp;Scores</span>
+  </a>
+  <div class="selector-border"></div>
+</div>

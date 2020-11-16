@@ -1,7 +1,7 @@
 <div class="title">
-  <div @title1 id="left">The</div>
-  <div @title2 id="center">Pwned</div>
-  <div @title3 id="right">Game</div>
+  <span @title1 id="left" class="title-piece">The</span>
+  <span @title2 id="center" class="title-piece">Pwned</span>
+  <span @title3 id="right" class="title-piece">Game</span>
 </div>
 
 <div class="center-column" @fadeIn>
@@ -14,24 +14,25 @@
   </div>
 
   <div class="in-line">
-    <a mat-icon-button routerLink="/game/arcade" matTooltip="Arcade mode ~ You against time! ~"
-      matTooltipPosition="left" routerLinkActive="active" class="start-button">
+    <a mat-icon-button routerLink="/game/arcade" matTooltip="You against time!" matTooltipPosition="left"
+      routerLinkActive="active" class="start-button mode-button" aria-labelledby="arcade-button-text">
       <mat-icon svgIcon="single_sword"></mat-icon>
+      <span id="arcade-button-text" class="mode-text">ARCADE</span>
     </a>
-    <a mat-icon-button routerLink="/game/duel" matTooltip="Duel ~ You against one opponent, but look out for time! ~"
-      matTooltipPosition="right" routerLinkActive="active" class="start-button-pvp">
+    <a mat-icon-button routerLink="/game/duel" matTooltip="You against one opponent, but look out for time!"
+      matTooltipPosition="right" routerLinkActive="active" class="start-button-pvp mode-button"
+      aria-labelledby="duel-button-text">
       <mat-icon svgIcon="double_sword"></mat-icon>
+      <span id="duel-button-text" class="mode-text">DUEL</span>
     </a>
   </div>
   <a mat-icon-button isRoundButton routerLink="/game/royale"
-    matTooltip="Battle Royale ~ You against 99 opponents, each with their own timer! ~" matTooltipPosition="right"
-    routerLinkActive="active" class="start-button-royale">
+    matTooltip="You against 99 opponents, each with their own timer!" matTooltipPosition="right"
+    routerLinkActive="active" class="start-button-royale mode-button" aria-labelledby="royale-button-text">
     <mat-icon svgIcon="royal_crown"></mat-icon>
+    <span id="royale-button-text" class="mode-text">BATTLE ROYALE</span>
   </a>
 </div>
-<!-- <div class="right-column">
-
-</div> -->
 <footer>
   <app-links></app-links>
 </footer>
