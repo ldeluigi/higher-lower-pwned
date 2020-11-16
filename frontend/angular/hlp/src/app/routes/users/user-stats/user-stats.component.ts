@@ -10,10 +10,10 @@ import {
   daysOfTheYear,
 } from '../../../helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
-import { HistoryItemToEndDatePipe } from 'src/app/shared/pipe/history-item-to-end-date.pipe';
-import { HistoryItemToStartDatePipe } from 'src/app/shared/pipe/history-item-to-start-date.pipe';
+import { HistoryItemToEndDatePipe } from 'src/app/shared/pipes/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from 'src/app/shared/pipes/history-item-to-start-date.pipe';
 import { DatePipe } from '@angular/common';
-import * as Const from '../../../shared/pipe/date-format.constant';
+import * as Const from '../../../shared/pipes/date-format.constant';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -182,16 +182,16 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           const element = findResult
             ? findResult
             : {
-                periodNumber: periodN,
-                year: e.year,
-                avgScore: 0,
-                avgGuesses: 0,
-                avgPlaysPerDay: 0,
-                avgDuration: 0,
-                maxScore: 0,
-                maxGuesses: 0,
-                maxDuration: 0,
-              };
+              periodNumber: periodN,
+              year: e.year,
+              avgScore: 0,
+              avgGuesses: 0,
+              avgPlaysPerDay: 0,
+              avgDuration: 0,
+              maxScore: 0,
+              maxGuesses: 0,
+              maxDuration: 0,
+            };
           // console.log("out", lastElement, element);
           if (
             lastElement.avgPlaysPerDay !== 0 &&
