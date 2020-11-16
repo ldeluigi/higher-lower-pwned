@@ -12,6 +12,8 @@ canvas {
 div.inputs {
   margin-bottom: $default-margin;
   background: $white-bg;
+  display: flex;
+  place-content: center;
 }
 
 .input {

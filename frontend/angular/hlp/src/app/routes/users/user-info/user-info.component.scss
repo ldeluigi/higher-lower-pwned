@@ -1,5 +1,34 @@
+@import "../../../styles/colors.scss";
+@import "../../../styles/dimensions.scss";
+@import "../../../styles/abstracts/mixins";
+
+.delete {
+  padding: $default-padding;
+  background-color: $default-error-color;
+}
+
+mat-card mat-card {
+  display: grid;
+  place-content: center;
+}
+
+mat-card-subtitle,
+mat-card-title {
+  text-align: center;
+}
+
+.withButton {
+  align-items: baseline;
+  display: flex;
+}
+
 button {
-  align-content: right;
-  align-self: right;
-  align-items: right;
+  margin: $default-margin;
+}
+
+@include tablet {
+  .container {
+    display: grid;
+    grid-template-columns: auto auto;
+  }
 }

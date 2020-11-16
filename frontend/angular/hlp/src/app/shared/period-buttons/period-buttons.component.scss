@@ -1,3 +1,6 @@
-button {
-  margin: auto;
+@import "../../styles/dimensions.scss";
+
+.group {
+  padding: $default-padding;
+  border: transparent;
 }
