@@ -11,6 +11,8 @@
       margin: auto;
       margin-top: 2vh;
       margin-bottom: 2vh;
+    }
+    a:not(.mat-button-disabled) {
       color: $default-text-color;
     }
     .not-selected {
