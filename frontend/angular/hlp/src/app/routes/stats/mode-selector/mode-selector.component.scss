@@ -1,5 +1,6 @@
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/stats/mixins";
+@import "../../../styles/colors.scss";
 
 @include nav-bar;
 
@@ -17,4 +18,8 @@
   .text {
     display: initial;
   }
+}
+
+a {
+  color: $default-text-color;
 }
