@@ -81,6 +81,10 @@ Docker should create these containers:
 
 To develop the client, follow the instructions in the [previous section](#development-server). When you have the backend ready and listening on its port, you can use any frontend to communicate with it, directly from your local machine or host.
 
+### API Documentation
+
+Available in the [Wiki](https://github.com/ldeluigi/higher-lower-pwned/wiki#backend-api-documentation).
+
 ### Developing the Angular Web App client
 
 The client is developed and compiled on the host machine, so you need to run `npm install` in the frontend folder `frontend/angular/hlp` to download dependencies.
