@@ -1,4 +1,11 @@
+import { DatePipe } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HistoryItemToEndDatePipe } from 'src/app/shared/pipes/history-item-to-end-date.pipe';
+import { HistoryItemToStartDatePipe } from 'src/app/shared/pipes/history-item-to-start-date.pipe';
 
 import { UserStatsComponent } from './user-stats.component';
 
@@ -8,9 +15,25 @@ describe('UserStatsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserStatsComponent ]
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        MatSnackBarModule,
+        MatDialogModule,
+      ],
+      declarations: [
+        UserStatsComponent,
+        HistoryItemToEndDatePipe,
+        HistoryItemToStartDatePipe,
+        DatePipe
+      ],
+      providers: [
+        HistoryItemToEndDatePipe,
+        HistoryItemToStartDatePipe,
+        DatePipe
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
