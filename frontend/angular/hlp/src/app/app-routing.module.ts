@@ -16,12 +16,12 @@ const routes: Routes = [
       { path: 'home', component: HomePageComponent },
       { path: 'account', loadChildren: accountModule },
       { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard] },
-      { path: 'game', loadChildren: gameModule},
-      { path: 'stats', loadChildren: statsModule},
+      { path: 'game', loadChildren: gameModule },
+      { path: 'stats', loadChildren: statsModule },
       { path: 'info', loadChildren: () => import('./routes/info/info.module').then(m => m.InfoModule) },
+      { path: '**', redirectTo: 'home' }
     ]
   },
-  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({
