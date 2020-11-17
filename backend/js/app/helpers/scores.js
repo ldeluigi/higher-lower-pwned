@@ -1,6 +1,5 @@
 const { query, param, validationResult } = require("express-validator");
 const score = require("../model/score.model");
-const periodTools = require("./period");
 const limitTools = require("./limit");
 
 const scoreSortKey = "score"
@@ -45,34 +44,43 @@ module.exports = {
             default:
               sortStrategy["score"] = -1;
           }
-          const result = await score.schema
-            .aggregate([{
-              $match: {
-                mode: modeInDatabase,
-                user: userID
-              }
-            }, {
-              $facet: {
-                totalData: [
-                  { $skip: queryPage * queryLimit },
-                  { $limit: queryLimit },
-                  { $sort: sortStrategy }
-                ],
-                totalCount: [
-                  { $count: "count" }
-                ]
-              }
-            }]);
-          if (result === null) {
+          const aggResult = await score.schema
+            .aggregate([
+              {
+                $addFields: {
+                  userId: { $toString: "$user" }
+                }
+              },
+              {
+                $match: {
+                  mode: modeInDatabase,
+                  userId: userID
+                }
+              }, {
+                $facet: {
+                  totalData: [
+                    { $skip: queryPage * queryLimit },
+                    { $limit: queryLimit },
+                    { $sort: sortStrategy }
+                  ],
+                  totalCount: [
+                    { $count: "count" }
+                  ]
+                }
+              }]);
+          if (aggResult === null) {
             return res.status(404).json({ errors: ["Score query error."] });
           }
+          const result = aggResult[0];
+          const totalCount = result.totalCount[0] ? result.totalCount[0].count : 0;
+          const totalData = result.totalData;
           res.json({
             meta: {
-              total: result.totalCount,
+              total: totalCount,
               page: queryPage,
               size: queryLimit
             },
-            data: result.totalData.map(x => {
+            data: totalData.map(x => {
               let s = score.toDto(x);
               delete s.username;
               return s;

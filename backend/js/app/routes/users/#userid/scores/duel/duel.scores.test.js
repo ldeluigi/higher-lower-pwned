@@ -48,10 +48,10 @@ describe("scores royale API", function () {
 
     const mock3 = jest.spyOn(score.schema, 'aggregate');
     mock3.mockImplementation((input) => {
-      return Promise.resolve({
-        totalCount: 1,
+      return Promise.resolve([{
+        totalCount: [{ count: 1 }],
         totalData: fakeScores
-      });
+      }]);
     });
 
     const payload = { limit: 30 }
@@ -121,10 +121,10 @@ describe("scores royale API", function () {
 
     const mock3 = jest.spyOn(score.schema, 'aggregate');
     mock3.mockImplementation((input) => {
-      return Promise.resolve({
-        totalCount: 1,
+      return Promise.resolve([{
+        totalCount: [{ count: 1 }],
         totalData: fakeScores
-      });
+      }]);
     });
 
     const payload = { limit: 30 }
@@ -194,10 +194,10 @@ describe("scores royale API", function () {
 
     const mock3 = jest.spyOn(score.schema, 'aggregate');
     mock3.mockImplementation((input) => {
-      return Promise.resolve({
-        totalCount: 1,
+      return Promise.resolve([{
+        totalCount: [{ count: 1 }],
         totalData: fakeScores
-      });
+      }]);
     });
 
     const payload = { limit: 30 }
