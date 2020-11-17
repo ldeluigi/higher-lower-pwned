@@ -5,21 +5,22 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["*"]
+    branches: ['*']
   pull_request:
-    branches: ["*"]
+    branches: ['*']
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
+    - uses: actions/checkout@v2
+    - name: Cache node modules
         uses: actions/cache@v2
         env:
           cache-name: cache-node-modules
@@ -29,18 +30,21 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        working-directory: backend/js
-        run: npm ci
-      - name: Build
-        working-directory: backend/js
-        run: npm build
-      - name: Test
-        working-directory: backend/js
-        run: npm test
+    - name: Install dependencies
+      working-directory: frontend/angular/hlp
+      run: npm ci
+    - name: Build
+      working-directory: frontend/angular/hlp
+      run: npm run-script build-prod
+    - name: Test
+      working-directory: frontend/angular/hlp
+      run: npm run-script test-prod
+    
