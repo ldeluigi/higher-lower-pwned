@@ -18,9 +18,10 @@ const routes: Routes = [
       { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard] },
       { path: 'game', loadChildren: gameModule},
       { path: 'stats', loadChildren: statsModule},
-      { path: '**', redirectTo: 'home' }
+      { path: 'info', loadChildren: () => import('./routes/info/info.module').then(m => m.InfoModule) },
     ]
-  }
+  },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

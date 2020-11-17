@@ -1,11 +1,13 @@
-<a mat-button routerLink="/home" routerLinkActive="active">HOME</a>
-<a mat-button routerLink="/stats/global" routerLinkActive="active">STATS</a>
+<a mat-button routerLink="/home" routerLinkActive="active">Home</a>
+<a mat-button routerLink="/stats/global" routerLinkActive="active">Stats</a>
 <span *ngIf="this.userLogged; then userIsLogged else userNotLogged"></span>
+<a mat-button routerLink="/info/how-to-play" routerLinkActive="active">Help</a>
+<a mat-button routerLink="/info" routerLinkActive="active">Info</a>
 
 <ng-template #userNotLogged>
-  <a mat-button routerLink="/account/login" routerLinkActive="active">LOGIN</a>
+  <a mat-button routerLink="/account/login" routerLinkActive="active">Login</a>
 </ng-template>
 <ng-template #userIsLogged>
-  <a mat-button routerLink="/users" routerLinkActive="active" >{{ menuText | uppercase }}</a>
-  <a mat-button routerLink="/home" routerLinkActive="active" (click)=" this.logout()">LOGOUT</a>
+  <a mat-button routerLink="/users" routerLinkActive="active" >{{ menuText }}</a>
+  <a mat-button routerLink="/home" routerLinkActive="active" (click)="this.logout()">Logout</a>
 </ng-template>

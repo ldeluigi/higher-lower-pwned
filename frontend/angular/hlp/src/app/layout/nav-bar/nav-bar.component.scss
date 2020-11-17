@@ -1,8 +1,10 @@
 @import "../../styles/dimensions.scss";
 @import "../../styles/colors.scss";
 
+button,
 a {
   margin: $default-margin;
   background-color: $button-bg;
   color: $default-text-color;
+  text-transform: uppercase;
 }

@@ -1,0 +1,30 @@
+@import "../../styles/colors.scss";
+@import "../../styles/abstracts/mixins";
+
+* {
+  color: $default-text-color;
+}
+
+#info {
+  width: 90%;
+  margin: 5vh auto 0 auto;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+a,
+span {
+  font-weight: 500;
+}
+
+@include tablet {
+  #info {
+    width: 70%;
+  }
+}
+
+@include desktop {
+  #info {
+    width: 40%;
+  }
+}
