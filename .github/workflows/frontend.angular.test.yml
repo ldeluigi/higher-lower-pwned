@@ -43,7 +43,7 @@ jobs:
       run: npm ci
     - name: Build
       working-directory: frontend/angular/hlp
-      run: npm run-script build-prod
+      run: npm run-script build
     - name: Test
       working-directory: frontend/angular/hlp
       run: npm run-script test-prod
