@@ -72,8 +72,14 @@
   margin-top: 1vh;
 }
 
+$button-size: 14vh;
+
 .in-line {
   margin-top: 4vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: $button-size * 2.2;
 }
 
 .center-column {
@@ -99,8 +105,6 @@ footer {
 .clear {
   clear: both;
 }
-
-$button-size: 14vh;
 
 @mixin mode-fading-animation($start_opacity) {
   @keyframes mode-fading-#{$start_opacity} {
