@@ -3,6 +3,10 @@
 @import "../../../styles/colors.scss";
 @import "../../../styles/game/mixins";
 
+:host {
+  height: 100%;
+}
+
 .wrapper {
   @include app-word-spinner-wrapper();
 }
@@ -18,7 +22,7 @@
   width: 80%;
   text-align: center;
   margin: $default-margin auto;
-  height: 5%;
+  height: 4%;
 }
 
 .options {

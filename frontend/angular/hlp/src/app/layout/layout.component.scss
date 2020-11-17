@@ -37,9 +37,7 @@
   .text {
     display: initial;
   }
-}
 
-@include desktop {
   #desktop {
     width: 100%;
     display: flex;
