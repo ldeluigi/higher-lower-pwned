@@ -37,13 +37,13 @@ module.exports = {
           let sortStrategy = {};
           switch (querySortStrategy) {
             case scoreSortKey:
-              sortStrategy["score"] = "desc";
+              sortStrategy["score"] = -1;
               break;
             case dateSortKey:
-              sortStrategy["end"] = "desc";
+              sortStrategy["end"] = -1;
               break;
             default:
-              sortStrategy["score"] = "desc";
+              sortStrategy["score"] = -1;
           }
           const result = await score.schema
             .aggregate([{
