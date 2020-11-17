@@ -1,24 +1,12 @@
 @import "../../../styles/abstracts/mixins.scss";
 @import "../../../styles/dimensions.scss";
 
-.left-col {
-  @include wide-col();
-}
-
-.right-col {
-  @include wide-col();
+.nav {
+  @include default-wide-col();
 }
 
 @include desktop {
-  .left-col {
-    @include height-col();
-    float: left;
-    width: 22%;
-  }
-
-  .right-col {
-    @include height-col();
-    float: left;
-    width: 70%;
+  .nav {
+    @include wide-col(10 * $default-margin, $default-padding);
   }
 }

@@ -1,26 +1,30 @@
-<div class="inputs">
-  <app-period-buttons
-    class="input"
-    (period)="updateUserStats($event)"
-  ></app-period-buttons>
-  <mat-form-field class="input">
-    <mat-label>period number</mat-label>
-    <input
-      matInput
-      (keyup)="updateUserStats()"
-      [formControl]="limit"
-      input="number"
-      placeholder="Ex. 10, max 30"
-      #input
-    />
-  </mat-form-field>
-  <button class="input" mat-mini-fab aria-label="chart button" (click)="toggle()">
-    <div *ngIf="showing_chart; then assessment; else show_chart"></div>
-    <ng-template #show_chart><mat-icon>show_chart</mat-icon></ng-template>
-    <ng-template #assessment><mat-icon>assessment</mat-icon></ng-template>
-  </button>
+<div class="container">
+  <div class="inputs">
+    <app-period-buttons
+      class="input"
+      (period)="updateUserStats($event)"
+    ></app-period-buttons>
+    <mat-form-field class="input">
+      <mat-label>period number</mat-label>
+      <input
+        matInput
+        (keyup)="updateUserStats()"
+        [formControl]="limit"
+        input="number"
+        placeholder="Ex. 10, max 30"
+        #input
+      />
+    </mat-form-field>
+    <button class="input" mat-mini-fab aria-label="chart button" (click)="toggle()">
+      <div *ngIf="showing_chart; then assessment; else show_chart"></div>
+      <ng-template #show_chart><mat-icon>show_chart</mat-icon></ng-template>
+      <ng-template #assessment><mat-icon>assessment</mat-icon></ng-template>
+    </button>
+  </div>
+  <div *ngIf="showing_chart; then chart; else stats"></div>
 </div>
-<div *ngIf="showing_chart; then chart; else stats"></div>
+
+
 <ng-template #chart>
   <div style="display: block">
     <canvas
@@ -114,6 +118,8 @@
     <mat-paginator showFirstLastButtons></mat-paginator>
   </div>
 </ng-template>
+
+
 <!--mat-accordion>
   <mat-expansion-panel [expanded]="expanded">
     <mat-expansion-panel-header>

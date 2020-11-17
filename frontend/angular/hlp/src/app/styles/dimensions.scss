@@ -5,10 +5,14 @@ $default-margin-on-height: 0.4vh;
 $default-X-margin: 0 $default-margin;
 $default-Y-margin-desktop: calc(2 * #{$default-margin}) 0;
 
-@mixin wide-col {
-  margin: $default-X-margin;
-  padding: $default-padding;
-  width: calc(100% - #{$default-margin} - #{$default-padding});
+@mixin default-wide-col {
+  @include wide-col($default-margin, $default-padding);
+}
+
+@mixin wide-col($margin, $padding) {
+  margin: 0 $margin;
+  padding: $padding;
+  width: calc(100% - 2 * #{$margin} - 2 * #{$padding});
 }
 
 @mixin height-col {

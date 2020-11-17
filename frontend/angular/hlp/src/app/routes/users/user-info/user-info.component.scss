@@ -2,14 +2,20 @@
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/abstracts/mixins";
 
+$icon-dimension: 40px;
+
 .delete {
-  padding: $default-padding;
   background-color: $default-error-color;
+}
+
+.withButton#short {
+  margin-left: $icon-dimension;
 }
 
 mat-card mat-card {
   display: grid;
   place-content: center;
+  margin: 0.5 * $default-margin;
 }
 
 mat-card-subtitle,
@@ -18,17 +24,23 @@ mat-card-title {
 }
 
 .withButton {
-  align-items: baseline;
+  align-items: center;
   display: flex;
-}
-
-button {
-  margin: $default-margin;
+  place-content: center;
 }
 
 @include tablet {
   .container {
     display: grid;
     grid-template-columns: auto auto;
+    @include wide-col(3 * $default-margin, $default-padding);
+  }
+}
+
+@include desktop {
+  .container {
+    display: grid;
+    grid-template-columns: auto auto;
+    @include wide-col(10 * $default-margin, $default-padding);
   }
 }

@@ -1,5 +1,6 @@
 @import "../../../styles/colors.scss";
 @import "../../../styles/dimensions.scss";
+@import "../../../styles/abstracts/mixins";
 
 table {
   width: 100%;
@@ -18,4 +19,22 @@ div.inputs {
 
 .input {
   margin: $default-margin;
+}
+
+@include tablet {
+  .container {
+    @include wide-col(3 * $default-margin, $default-padding);
+  }
+  .input {
+    margin: auto;
+  }
+}
+
+@include desktop {
+  .container {
+    @include wide-col(10 * $default-margin, $default-padding);
+  }
+  .input {
+    margin: auto;
+  }
 }
