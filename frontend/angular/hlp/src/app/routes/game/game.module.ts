@@ -20,8 +20,6 @@ import { DuelCounterComponent } from './components/duel-counter/duel-counter.com
 import { DuelComponent } from './duel/duel.component';
 import { MatTableModule } from '@angular/material/table';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -42,7 +40,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatProgressBarModule,
     MatIconModule,
     MatTableModule,
-    BrowserAnimationsModule
   ],
   providers: []
 })
