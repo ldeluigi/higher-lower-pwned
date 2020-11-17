@@ -7,7 +7,7 @@ on:
   push:
     branches: ["*"]
     paths:
-      - "frontend/angular"
+      - "frontend/angular/**"
   pull_request:
     branches: ["*"]
 
