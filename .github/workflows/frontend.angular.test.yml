@@ -6,6 +6,8 @@ name: Angular CI
 on:
   push:
     branches: ["*"]
+    paths:
+      - "frontend/angular"
   pull_request:
     branches: ["*"]
 
