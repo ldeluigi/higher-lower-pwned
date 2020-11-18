@@ -4,12 +4,12 @@ export interface UserScores {
     page: number,
     size: number
   };
-  data: [
-    {
-        score: number,
-        guesses: number,
-        date: Date,
-        duration: number
-    }
-  ];
+  data: [ CoreUserScores ];
+}
+
+export interface CoreUserScores {
+  score: number,
+  guesses: number,
+  date: Date,
+  duration: number
 }
