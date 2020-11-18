@@ -73,10 +73,6 @@ export class UserScoresService {
     }
     const url = `${this.apiURLService.restApiUrl}/users/${this.accountService.userValue?.id}/scores/${finalUrlPart}`;
     console.log(httpParams);
-    return this.http.get<Response<UserScores>>(url, { params: httpParams})
-    .pipe(first())
-    .pipe(map(r => {
-      return r.data;
-    }));
+    return this.http.get<UserScores>(url, { params: httpParams});
   }
 }
