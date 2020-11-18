@@ -1,4 +1,4 @@
-export interface Error {
+export interface OnError {
   code: number;
   description: string;
 }

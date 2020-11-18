@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 // import * as io from 'ngx-socket-io';
-import { Error } from '../routes/game/model/error';
+import { OnError } from '../routes/game/model/error';
 import { GameEnd } from '../routes/game/model/gameEnd';
 import { NextGuess } from '../routes/game/model/nextguess';
 import { Observable } from 'rxjs';
@@ -30,11 +30,11 @@ export class ArcadeSocketService implements OnDestroy {
         console.log('>guess: ', nextGuess);
         s.next(nextGuess);
       });
-      this.socket.on('on-error', (err: Error) => {
+      this.socket.on('on-error', (err: OnError) => {
         console.log('>on-error: ', err);
         s.error(err);
       });
-      this.socket.on('gameEnd', (gameEnd: GameEnd) => {
+      this.socket.on('game-end', (gameEnd: GameEnd) => {
         console.log('>gameEnd: ', gameEnd);
         s.next(gameEnd);
       });
