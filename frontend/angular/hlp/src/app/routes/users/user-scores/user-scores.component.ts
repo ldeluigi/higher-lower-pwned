@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserScoresService } from "../../../services/user-scores.service";
+import { AccountService } from '../../../services/account.service';
 import { Subscription } from 'rxjs';
 import { RequestScore } from 'src/app/model/users/scores/requestScore';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,6 +18,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
   private haveToBeDeleted: RequestScore | undefined = {limit: 5,
     page: 0,
     sortbyDate: true}
+
   private cs: CoreUserScores | undefined;
   private s: UserScores | undefined;
 
@@ -25,20 +28,30 @@ export class UserScoresComponent implements OnInit, OnDestroy {
     'date',
     'duration',
   ];
+
   displayedColumns = this.defaultColumns;
   dataSource = new MatTableDataSource<CoreUserScores>([]);
   
 
-  constructor(private scoreService:UserScoresService) { }
+  constructor(
+    private router: Router,
+    private accountService: AccountService,
+    private scoreService:UserScoresService) { }
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.sub = this.scoreService.getArcadeScores(this.haveToBeDeleted).subscribe((data) => {
-      console.log(data.data)
-      this.dataSource.data = data.data; 
-    })
+    if (this.accountService.userValue === null) {
+      this.router.navigate(['/login']);
+    } else {
+      this.sub = this.scoreService.getArcadeScores(this.haveToBeDeleted).subscribe((data) => {
+        this.dataSource.data = data.data; 
+      });
+      this.sub = this.scoreService.getDuelScores(this.haveToBeDeleted).subscribe((data) => {
+        this.dataSource.data = data.data; 
+      });
+    }
   }
 }
