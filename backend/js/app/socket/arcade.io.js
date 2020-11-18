@@ -47,7 +47,7 @@ module.exports = function (sio) {
         } else {
           try {
             let endData = await arcade.deleteGame(socket.id);
-            socket.emit("gameEnd", endData);
+            socket.emit("game-end", endData);
           } catch (err) {
             socket.emit("on-error", {
               code: 202,
@@ -79,7 +79,7 @@ module.exports = function (sio) {
           } else {
             try {
               let endData = await arcade.deleteGame(socket.id);
-              socket.emit("gameEnd", endData);
+              socket.emit("game-end", endData);
             } catch (err) {
               socket.emit("on-error", {
                 code: 303,

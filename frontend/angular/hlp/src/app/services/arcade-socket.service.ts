@@ -34,7 +34,7 @@ export class ArcadeSocketService implements OnDestroy {
         console.log('>on-error: ', err);
         s.error(err);
       });
-      this.socket.on('gameEnd', (gameEnd: GameEnd) => {
+      this.socket.on('game-end', (gameEnd: GameEnd) => {
         console.log('>gameEnd: ', gameEnd);
         s.next(gameEnd);
       });
