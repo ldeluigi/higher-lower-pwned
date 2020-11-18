@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from '../users/layout/layout.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { UserStatsComponent } from './user-stats/user-stats.component';
+import { UserScoresComponent } from './user-scores/user-scores.component';
 
 const routes: Routes = [
   {
@@ -10,7 +11,7 @@ const routes: Routes = [
     children: [
       { path: 'info', component: UserInfoComponent },
       { path: 'stats', component: UserStatsComponent },
-      { path: 'scores', component: UserStatsComponent },
+      { path: 'scores', component: UserScoresComponent },
       { path: '**', redirectTo: 'info' }
     ]
   }

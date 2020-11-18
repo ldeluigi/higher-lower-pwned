@@ -16,9 +16,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UserNavBarComponent } from './user-nav-bar/user-nav-bar.component';
+import { UserScoresComponent } from './user-scores/user-scores.component';
 
 @NgModule({
-  declarations: [LayoutComponent, UserInfoComponent, UserStatsComponent, UserNavBarComponent],
+  declarations: [LayoutComponent, UserInfoComponent, UserStatsComponent, UserNavBarComponent, UserScoresComponent],
   imports: [
     MatCardModule,
     CommonModule,
