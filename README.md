@@ -1,4 +1,5 @@
 ![Node.js CI](https://github.com/ldeluigi/higher-lower-pwned/workflows/Node.js%20CI/badge.svg)
+![Angular CI](https://github.com/ldeluigi/higher-lower-pwned/workflows/Angular%20CI/badge.svg)
 
 # The Pwned Game
 
