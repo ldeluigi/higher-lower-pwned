@@ -1,3 +1,6 @@
+/**
+ * Used as last guess for Arcade, Duel and Royale mode.
+ */
 export interface GameEnd {
   guesses: number;
   password1: string;

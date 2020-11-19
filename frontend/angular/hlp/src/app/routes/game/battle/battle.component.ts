@@ -1,113 +1,66 @@
-import { ViewChild } from '@angular/core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
-import { BattleModelService, GameData } from 'src/app/services/battle-model.service';
-import { WordSpinnerComponent } from '../components/word-spinner/word-spinner.component';
-import { Player, PlayerListComponent } from '../components/player-list/player-list.component';
-import { NextDuelGuess } from '../model/nextguess';
-import { getDataFromId, GameDataType, gameDataType, Game, gameIsEnd } from '../utils/gameHelper';
+import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Socket } from 'ngx-socket-io';
-import { SocketRoyale } from '../SocketRoyale';
 import { GameStatus } from '../utils/gameStatus';
-import { ApiURLService } from 'src/app/services/api-url.service';
+import { GameManagerService } from 'src/app/services/game-manager.service';
+import { GameSocketService } from 'src/app/services/game-socket.service';
+import { ROYALE } from '../model/const';
+import { ProgressBarHelper } from '../utils/progressBarHelper';
 
 @Component({
   selector: 'app-battle',
   templateUrl: './battle.component.html',
   styleUrls: ['./battle.component.scss']
 })
-export class BattleComponent implements OnInit, OnDestroy {
-
-  @ViewChild(WordSpinnerComponent)
-  private wordAnimation!: WordSpinnerComponent;
-  @ViewChild(PlayerListComponent)
-  private playerList: PlayerListComponent | undefined;
-
-  private game: Game = new Game();
+export class BattleComponent extends ProgressBarHelper implements OnInit, OnDestroy {
 
   gameSub: Subscription | undefined;
 
-  actualScore = 0;
-  gameStatus = GameStatus.IDLE;
-  status = GameStatus;
-
   myName: string | undefined;
 
-  private timeoutValue: number | undefined;
-
-  progressbarValue = 100;
-  timeLeft = 0;
-  private subTimer: Subscription | undefined;
-
   constructor(
-    private gameSocket: BattleModelService,
     private snackBar: MatSnackBar,
-    private apiURL: ApiURLService
-  ) { }
-
-  private socket(): Socket {
-    return new SocketRoyale(this.apiURL.socketApiUrl);
+    private socketService: GameSocketService,
+    private gameManagerService: GameManagerService
+  ) {
+    super();
   }
 
   ngOnInit(): void {
-    this.game = new Game();
     this.gameSub = new Subscription();
-    this.gameSub.add(
-      this.game.nextGuessObservable.subscribe(card => {
-        if (this.gameStatus === GameStatus.WAITING_START) { // game start
-          this.wordAnimation.gameSetup(card)
-            .then(() => {
-              this.gameStatus = GameStatus.PLAYING;
-            });
-        } else if (this.isInGame() && this.game.status === GameStatus.PLAYING) { // in game
-          this.wordAnimation.next({ oldScore: card.score1, newWord: card.word2 })
-            .then(() => {
-              this.gameStatus = GameStatus.PLAYING;
-            });
-        } else if (this.isInGame() && this.game.status === GameStatus.SPECTATORE) { // have lost now
-          this.gameStatus = GameStatus.LOST;
-          this.log('You have lost');
-          this.endGame(card.score1);  // take the old value
-        } else if (this.game.status === GameStatus.SPECTATORE && this.gameStatus === GameStatus.SPECTATORE) { // spectatore mode
-          this.wordAnimation.next({ oldScore: card.score1, newWord: card.word2 });
-        } else if (this.game.status === GameStatus.END) {
-          if (this.isInGame() || this.gameStatus === GameStatus.SPECTATORE) {
-            this.endGame(this.game.myLastGuess?.score2 || 0);
-          }
-          if (this.gameStatus !== GameStatus.END) {
-            this.log('This game is ended');
-          }
-          this.gameStatus = GameStatus.END;
-        }
-      })
-    );
+    this.gameSub.add(this.socketService.timerObservable.subscribe(timer => {
+      this.setProgressBarTimer(timer);
+    }));
 
-    this.gameSub.add(this.game.timerObservable.subscribe(timer => {
-      if (this.isInGame() || this.gameStatus === GameStatus.WAITING_START) {
-        this.setProgressBarTimer(timer);
+    this.gameSub.add(this.gameManagerService.gameStatusObservable.subscribe(ns => {
+      if (ns !== GameStatus.PLAYING) {
+        this.subTimer?.unsubscribe();
       }
     }));
+    // TODO find a good way to manage errors
+    this.gameSub.add(this.socketService.errorObservable.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`)));
+  }
 
-    this.gameSub.add(this.gameSocket.players.subscribe(pj => {
-      if (pj.id.includes(this.gameSocket.myId)) {
-        this.myName = pj.name;
-      }
-      this.playerList?.addPlayer({
-        name: pj.name,
-        score: 0,
-        id: pj.id,
-        haveLost: false,
-        timeout: 0,
-        guesses: 0
-      });
-    }));
+  get displayTimer(): boolean {
+    return this.gameManagerService.currentGameStatus === GameStatus.PLAYING;
+  }
 
-    this.gameSub.add(this.gameSocket.gameData.subscribe(data => {
-      this.analiseGuess(data);
-    }));
+  get isWaitingStart(): boolean {
+    return this.gameManagerService.currentGameStatus === GameStatus.WAITING_START;
+  }
 
-    this.gameSub.add(this.gameSocket.errors.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`)));
+  get canExit(): boolean {
+    return this.gameManagerService.currentGameStatus === GameStatus.LOST
+      || this.gameManagerService.currentGameStatus === GameStatus.END;
+  }
+
+  get canStartANewGame(): boolean {
+    return this.gameManagerService.currentGameStatus === GameStatus.IDLE;
+  }
+
+  get inGame(): boolean {
+    const cgs = this.gameManagerService.currentGameStatus;
+    return cgs !== GameStatus.IDLE;
   }
 
   log(message: string, type: string = 'ok'): void {
@@ -115,176 +68,25 @@ export class BattleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.disconnect();
-    this.gameSocket.disconnect();
+    this.quit();
     this.gameSub?.unsubscribe();
-    this.gameSub = undefined;
-  }
-
-  answer(value: number): void {
-    this.gameSocket.answer(value);
-    this.subTimer?.unsubscribe();
-    this.subTimer = undefined;
-    this.gameStatus = GameStatus.WAITING_N_GUESS;
+    this.gameManagerService.disconnect();
   }
 
   start(): void {
-    this.game.reset();
-    this.playerList?.clear();
-    this.actualScore = 0;
-    this.gameSocket.startGame(this.socket())
-      .then(() => {
-        this.gameStatus = GameStatus.WAITING_START;
-      })
-      .catch(() => {
-        this.log('Impossible start a new game');
-        this.gameStatus = GameStatus.IDLE;
-      });
-  }
-
-  private onEnd(): void {
-    if (this.gameStatus === GameStatus.PLAYING || this.gameStatus === GameStatus.WAITING_N_GUESS) {
-      this.gameStatus = GameStatus.LOST;
-      if (this.timeoutValue) {
-        clearTimeout(this.timeoutValue);
-      }
-      this.subTimer?.unsubscribe();
-      this.subTimer = undefined;
-    }
+    this.gameManagerService.startGame(ROYALE);
   }
 
   quit(): void {
-    this.onEnd();
-    this.gameSocket.endGame();
-  }
-
-  disconnect(): void {
-    this.onEnd();
-    this.gameStatus = GameStatus.IDLE;
-    this.myName = undefined;
-    this.playerList?.clear();
-    this.gameSocket.disconnect();
-  }
-
-  spectatoreMode(): void {
-    if (this.gameStatus === GameStatus.LOST) {
-      this.gameStatus = GameStatus.SPECTATORE;
-      const lastCard = this.game.currentGuess;
-      if (lastCard) {
-        if (this.wordAnimation.element1.word === lastCard?.word1) {
-          /** nothing */
-        } else if (this.wordAnimation.element2.word === lastCard?.word1) {
-          this.wordAnimation.next({ oldScore: lastCard.score1, newWord: lastCard.word2 });
-        } else {
-          this.wordAnimation.gameSetup(lastCard);
-        }
-      }
-    }
+    this.gameManagerService.quit();
   }
 
   repeat(): void {
-    this.gameSocket.repeat();
-  }
-
-  private endGame(value2: number): void {
-    this.onEnd();
-    this.wordAnimation.end({ oldScore: value2 });
+    this.gameManagerService.repeat();
   }
 
   isInGame(): boolean {
-    return this.gameStatus === GameStatus.PLAYING || this.gameStatus === GameStatus.WAITING_N_GUESS;
-  }
-
-  private analiseGuess(data: GameData): void {
-    const myGuess: NextDuelGuess = getDataFromId(this.gameSocket.myId, data);
-    const gameType: GameDataType = gameDataType(data, this.game.currentGuess?.word2);
-    this.game.next(myGuess, gameType);
-
-    this.updateGameBattle(data);
-    this.updateGuessNumber(data);
-
-    if (gameIsEnd(data)) { /** everybody have lost */
-      this.gameStatus = GameStatus.END;
-    }
-  }
-
-  private updateGameBattle(data: GameData): void {
-    data.ids.forEach((id: string, index) => {
-      const player = this.playerList?.list.find(e => e.id === id);
-      if (player) {
-        const playerData = data.data[index];
-        if (playerData.lost !== undefined) {
-          player.haveLost = playerData.lost;
-        }
-        if (playerData.score) {
-          player.score = playerData.score;
-        }
-        if (playerData.timeout) {
-          player.timeout = playerData.timeout;
-        }
-      }
-    });
-    this.playerList?.list.sort((p1, p2) => {
-      if (p1.score === p2.score) {
-        if (p1.guesses === p2.guesses) {
-          if (p1.timeout === p2.timeout) {
-            return p1.id > p2.id ? 1 : -1;
-          } else {
-            return p1.timeout - p2.timeout;
-          }
-        } else {
-          return p2.guesses - p1.guesses;
-        }
-      } else {
-        return p2.score - p1.score;
-      }
-    });
-  }
-
-  private updateGuessNumber(data: GameData): void {
-    data.ids.forEach((id: string, index) => {
-      const player = this.playerList?.list.find(e => e.id === id);
-      if (player) {
-        const pData = data.data[index];
-        player.guesses = pData.guesses;
-      }
-    });
-    const disconnectedPlayer: Player[] = [];
-    this.playerList?.list.forEach(p => {
-      if (data.ids.find(e => e === p.id) === undefined) {
-        disconnectedPlayer.push(p);
-      }
-    });
-    if (this.playerList) {
-      this.playerList.list = this.playerList?.list.filter(p => !disconnectedPlayer.some(p2 => p.id === p2.id));
-    }
-  }
-
-  private async setProgressBarTimer(milliseconds: number): Promise<void> {
-    const progressBarMax = 100;
-    const frames = 200;
-    const delta = progressBarMax / frames;
-    const deltaT = Math.floor(milliseconds / frames);
-    const timer$ = interval(deltaT);
-
-    if (this.subTimer) {
-      this.subTimer.unsubscribe();
-    }
-
-    return new Promise<void>(resolve => {
-      this.subTimer = timer$.subscribe((d) => {
-        const currentValue = delta * d;
-        const currentMillis = deltaT * d;
-        this.timeLeft = milliseconds - currentMillis;
-        this.progressbarValue = progressBarMax - currentValue;
-        if (this.timeLeft <= 0 && this.subTimer) {
-          this.subTimer.unsubscribe();
-          this.subTimer = undefined;
-          this.progressbarValue = 0;
-          this.timeLeft = 0;
-          resolve();
-        }
-      });
-    });
+    const cgs = this.gameManagerService.currentGameStatus;
+    return cgs === GameStatus.PLAYING || cgs === GameStatus.WAITING_N_GUESS;
   }
 }

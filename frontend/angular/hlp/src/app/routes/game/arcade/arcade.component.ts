@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ArcadeSocketService } from '../../../services/arcade-socket.service';
-import { GameEnd } from '../model/gameEnd';
-import { NextGuess } from '../model/nextguess';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { WordSpinnerComponent } from '../components/word-spinner/word-spinner.component';
-import { rollNumber } from '../utils/wordAnimation';
+import { GameManagerService } from 'src/app/services/game-manager.service';
+import { GameSocketService } from 'src/app/services/game-socket.service';
+import { GameStatus } from '../utils/gameStatus';
 
 export interface CardData {
   word: string;
@@ -18,130 +16,124 @@ export interface CardData {
   styleUrls: ['./arcade.component.scss']
 })
 export class ArcadeComponent implements OnInit, OnDestroy {
-
-  @ViewChild(WordSpinnerComponent)
-  private wordAnimation!: WordSpinnerComponent;
-
-  card: CardData = { word: '', score: 0 };
-  card2: CardData = { word: '' };
-  actualScore = 0;
-
   progressbarValue = 100;
   timeLeft = 0;
-  private sub: Subscription | undefined;
-  private subscription: Subscription | undefined;
-
-  loading = true;
-  playing = false;
-  private firstWord = true;
-
+  private timerSub: Subscription | undefined;
+  private gameSubs: Subscription | undefined;
 
   constructor(
-    private gameSocket: ArcadeSocketService,
-    private snackBar: MatSnackBar
+    // private gameSocket: ArcadeSocketService,
+    private snackBar: MatSnackBar,
+    private socketService: GameSocketService,
+    private gameManagerService: GameManagerService
   ) { }
 
-  ngOnDestroy(): void {
-    this.playing = false;
-    this.sub?.unsubscribe();
-    this.subscription?.unsubscribe();
-    this.gameSocket.disconnect();
+  get playing(): boolean {
+    const cgs = this.gameManagerService.currentGameStatus;
+    return cgs === GameStatus.PLAYING || cgs === GameStatus.WAITING_N_GUESS;
   }
 
-  private log(message: string): void {
-    this.snackBar.open(message, 'ok', { duration: 3000 });
+  ngOnDestroy(): void {
+    this.timerSub?.unsubscribe();
+    this.gameSubs?.unsubscribe();
+    // this.gameSocket.disconnect();
+    this.gameManagerService.quit();
   }
+
 
   ngOnInit(): void {
+    this.setup();
+    this.start();
+
     // console.log('OnInit');
-    this.subscription = this.gameSocket.game.subscribe(
-      r => {
-        const ng = r as NextGuess;
-        const ge = r as GameEnd;
-        if (ng.timeout) {
-          if (this.firstWord) {
-            this.firstWord = false;
-            this.card = {
-              word: ng.password1,
-              score: ng.value1
-            };
-            this.card2 = {
-              word: ng.password2
-            };
-            this.wordAnimation.gameSetup({ word1: ng.password1, word2: ng.password2, score1: ng.value1 });
-          } else {
-            this.next(ng.password2, ng.value1);
-          }
-          this.actualScore = ng.score;
-          this.setTimer(ng.timeout)
-            .then(_ => {
-              this.gameSocket.repeat();
-            });
-        } else if (ge.value2) {
-          // console.log('game end');
-          this.gameEnd(ge.value2, ge.score);
-        }
-      },
-      _ => {
-        // console.log(error);
-        this.gameEnd(-1);
-      }
-    );
+    // this.subscription = this.gameSocket.game.subscribe(
+    //   r => {
+    //     const ng = r as NextGuess;
+    //     const ge = r as GameEnd;
+    //     if (ng.timeout) {
+    //       if (this.firstWord) {
+    //         this.firstWord = false;
+    //         this.card = {
+    //           word: ng.password1,
+    //           score: ng.value1
+    //         };
+    //         this.card2 = {
+    //           word: ng.password2
+    //         };
+    //         this.wordAnimation.gameSetup({ word1: ng.password1, word2: ng.password2, score1: ng.value1 });
+    //       } else {
+    //         this.next(ng.password2, ng.value1);
+    //       }
+    //       this.actualScore = ng.score;
+    //       this.setTimer(ng.timeout)
+    //         .then(_ => {
+    //           this.gameSocket.repeat();
+    //         });
+    //     } else if (ge.value2) {
+    //       // console.log('game end');
+    //       this.gameEnd(ge.value2, ge.score);
+    //     }
+    //   },
+    //   _ => {
+    //     // console.log(error);
+    //     this.gameEnd(-1);
+    //   }
+    // );
+    // this.start();
+  }
+
+  replay(): void {
+    this.setup();
     this.start();
   }
 
-  buttonState(): string {
-    if (!this.playing) {
-      return 'lost';
-    }
-    if (!this.loading) {
-      return '';
-    }
-    return 'waiting';
+  private setup(): void {
+    this.gameManagerService.quit();
+    this.gameSubs = new Subscription();
+    this.gameSubs.add(
+      this.socketService.timerObservable.subscribe(nt => {
+        this.timerSub?.unsubscribe();
+        this.setTimer(nt).then(() => this.gameManagerService.repeat());
+      })
+    );
   }
 
   start(): void {
-    this.gameSocket.startGame()
-      .then(() => {
-        this.actualScore = 0;
-        this.playing = true;
-        this.loading = false;
-        this.firstWord = true;
-      });
+    this.gameManagerService.startGame('arcade');
   }
 
-  private gameEnd(value2: number, score: number = -1): void {
-    rollNumber(value2, 800, n => this.card2.score = n);
-    this.wordAnimation.end({ oldScore: value2 })
-      .then(() => {
-        this.log('The game is ended. ' + (score >= 0 ? `Your score is ${score}` : 'With a server error.'));
-        this.gameSocket.disconnect();
-        this.sub?.unsubscribe();
-        this.sub = undefined;
-        this.playing = false;
-        this.loading = false;
-      });
+  get inGame(): boolean {
+    const cgs = this.gameManagerService.currentGameStatus;
+    return cgs !== GameStatus.IDLE;
   }
 
-  response(value: number): void {
-    this.loading = true;
-    this.gameSocket.answer(value);
-  }
+  // private gameEnd(value2: number, score: number = -1): void {
+  //   rollNumber(value2, 800, n => this.card2.score = n);
+  //   this.wordAnimation.end({ oldScore: value2 })
+  //     .then(() => {
+  //       this.log('The game is ended. ' + (score >= 0 ? `Your score is ${score}` : 'With a server error.'));
+  //       this.gameSocket.disconnect();
+  //       this.sub?.unsubscribe();
+  //       this.sub = undefined;
+  //     });
+  // }
 
-  private next(newWord: string, oldScore: number): void {
-    this.wordAnimation.next({ oldScore, newWord })
-      .then(() => {
-        setTimeout(() => {
-          // console.log('Timeout ended');
-          this.card = this.card2;
-          this.card.score = oldScore;
-          this.card2 = {
-            word: newWord
-          };
-          this.loading = false;
-        }, 200);
-      });
-  }
+  // response(value: number): void {
+  //   this.gameManagerService.answer(value);
+  // }
+
+  // private next(newWord: string, oldScore: number): void {
+  //   this.wordAnimation.next({ oldScore, newWord })
+  //     .then(() => {
+  //       setTimeout(() => {
+  //         this.card = this.card2;
+  //         this.card.score = oldScore;
+  //         this.card2 = {
+  //           word: newWord
+  //         };
+  //       }, 200);
+  //     });
+  // }
 
   private async setTimer(milliseconds: number): Promise<void> {
     const progressBarMax = 100;
@@ -150,17 +142,17 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     const deltaT = Math.floor(milliseconds / frames);
     const timer$ = interval(deltaT);
 
-    this.sub?.unsubscribe();
+    this.timerSub?.unsubscribe();
 
     return new Promise<void>(resolve => {
-      this.sub = timer$.subscribe((d) => {
+      this.timerSub = timer$.subscribe((d) => {
         const currentValue = delta * d;
         const currentMillis = deltaT * d;
         this.timeLeft = milliseconds - currentMillis;
         this.progressbarValue = progressBarMax - currentValue;
-        if (this.timeLeft <= 0 && this.sub !== null) {
-          this.sub?.unsubscribe();
-          this.sub = undefined;
+        if (this.timeLeft <= 0 && this.timerSub !== null) {
+          this.timerSub?.unsubscribe();
+          this.timerSub = undefined;
           this.progressbarValue = 0;
           this.timeLeft = 0;
           resolve();

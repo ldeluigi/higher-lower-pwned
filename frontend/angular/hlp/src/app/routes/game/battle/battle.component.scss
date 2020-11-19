@@ -16,6 +16,7 @@
   align-items: center;
   justify-content: center;
   margin: $default-margin * 2;
+  height: 15%;
 }
 
 .timer {
@@ -25,9 +26,19 @@
   height: 4%;
 }
 
+.quit {
+  display: flex;
+  align-items: center;
+  height: 5%;
+  margin: $default-margin auto;
+  button {
+    margin: auto;
+  }
+}
+
 .options {
   margin: $default-margin;
-  height: 35%;
+  height: 30%;
   width: 60%;
 }
 

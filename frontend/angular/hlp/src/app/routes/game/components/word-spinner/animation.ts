@@ -84,8 +84,6 @@ export const wordAnimation: AnimationTriggerMetadata = trigger('wordAnimation', 
 ]);
 
 const DURATION3 = '0.3s';
-const firstBackground = 'red';
-const secondBackground = 'lightblue';
 export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', [
   state('void', style({
     opacity: 0,
@@ -128,7 +126,7 @@ export const cardAnimation: AnimationTriggerMetadata = trigger('cardAnimation', 
       transform: 'translateY(200%)'
     }),
     animate(DURATION3, style({
-      opacity: 0.9,
+      opacity: 1,
       transform: 'translateY(0)'
     }))
   ]),

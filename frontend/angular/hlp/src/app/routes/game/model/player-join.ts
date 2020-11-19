@@ -1,9 +1,22 @@
-export interface PlayerJoin extends PlayerIdName {
+interface PlayerJoin extends GameInfo, PlayerIdName { }
+
+interface PlayerIdName {
+  id: string;
+  name: string;
+}
+
+interface PlayerList {
+  list: PlayerIdName[];
+}
+
+interface GameInfo {
   players: number;
   max: number;
 }
 
-export interface PlayerIdName {
-  id: string;
-  name: string;
-}
+export {
+  PlayerList,
+  GameInfo,
+  PlayerIdName,
+  PlayerJoin
+};
