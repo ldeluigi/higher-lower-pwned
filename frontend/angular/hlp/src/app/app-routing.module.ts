@@ -8,6 +8,7 @@ const accountModule = () => import('./routes/account/account.module').then(x => 
 const usersModule = () => import('./routes/users/users.module').then(x => x.UsersModule);
 const gameModule = () => import('./routes/game/game.module').then(x => x.GameModule);
 const statsModule = () => import('./routes/stats/stats.module').then(x => x.StatsModule);
+const infoModule = () => import('./routes/info/info.module').then(m => m.InfoModule);
 
 const routes: Routes = [
   {
@@ -18,7 +19,7 @@ const routes: Routes = [
       { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard] },
       { path: 'game', loadChildren: gameModule },
       { path: 'stats', loadChildren: statsModule },
-      { path: 'info', loadChildren: () => import('./routes/info/info.module').then(m => m.InfoModule) },
+      { path: 'info', loadChildren: infoModule },
       { path: '**', redirectTo: 'home' }
     ]
   },

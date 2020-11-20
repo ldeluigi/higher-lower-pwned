@@ -36,4 +36,4 @@ import { UserScoresComponent } from './user-scores/user-scores.component';
   ],
   schemas: [],
 })
-export class UsersModule {}
+export class UsersModule { }

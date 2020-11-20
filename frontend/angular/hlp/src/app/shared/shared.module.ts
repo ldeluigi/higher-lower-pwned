@@ -20,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatSidenavModule,
     MatTooltipModule,
+    MatSnackBarModule
   ]
 })
 export class SharedModule { }
