@@ -9,10 +9,10 @@ import { ProgressBarHelper } from '../utils/progressBarHelper';
 
 @Component({
   selector: 'app-battle',
-  templateUrl: './battle.component.html',
-  styleUrls: ['./battle.component.scss']
+  templateUrl: './royale.component.html',
+  styleUrls: ['./royale.component.scss']
 })
-export class BattleComponent extends ProgressBarHelper implements OnInit, OnDestroy {
+export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDestroy {
 
   gameSub: Subscription | undefined;
 

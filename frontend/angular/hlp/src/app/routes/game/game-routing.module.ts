@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BattleComponent } from './battle/battle.component';
+import { RoyaleComponent } from './royale/royale.component';
 import { ArcadeComponent } from './arcade/arcade.component';
 import { DuelComponent } from './duel/duel.component';
 
@@ -15,7 +15,7 @@ const routes: Routes = [
         path: 'duel', component: DuelComponent
       },
       {
-        path: 'royale', component: BattleComponent, data: { mode: 'royale' }
+        path: 'royale', component: RoyaleComponent
       },
       {
         path: '**', redirectTo: '/game/arcade', pathMatch: 'full'

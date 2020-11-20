@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SocketIoModule } from 'ngx-socket-io';
 import { CounterComponent } from './components/counter/counter.component';
 import { WordSpinnerComponent } from './components/word-spinner/word-spinner.component';
-import { BattleComponent } from './battle/battle.component';
+import { RoyaleComponent } from './royale/royale.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -27,7 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ArcadeComponent,
     CounterComponent,
     WordSpinnerComponent,
-    BattleComponent,
+    RoyaleComponent,
     PlayerListComponent,
     DuelCounterComponent,
     DuelComponent
