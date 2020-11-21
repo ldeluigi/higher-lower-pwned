@@ -4,6 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserScoresComponent } from './user-scores.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 describe('UserScoresComponent', () => {
@@ -17,6 +18,7 @@ describe('UserScoresComponent', () => {
         RouterTestingModule,
         MatSnackBarModule,
         MatDialogModule,
+        MatMenuModule,
       ],
       declarations: [ UserScoresComponent ]
     })
@@ -29,7 +31,7 @@ describe('UserScoresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

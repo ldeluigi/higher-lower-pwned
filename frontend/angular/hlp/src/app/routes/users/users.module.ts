@@ -5,7 +5,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { UserNavBarComponent } from './user-nav-bar/user-nav-bar.component';
 import { UserScoresComponent } from './user-scores/user-scores.component';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { UserStatsComponent } from './user-stats/user-stats.component';
 import { UsersRoutingModule } from './users-routing.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
