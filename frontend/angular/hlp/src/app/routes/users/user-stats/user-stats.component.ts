@@ -303,7 +303,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     return timeConversion(millisecond);
   }
 
-  toggle() {
+  toggle(): void {
     this.showingChart = !this.showingChart;
   }
 }
