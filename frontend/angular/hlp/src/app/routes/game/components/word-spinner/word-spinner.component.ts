@@ -66,12 +66,8 @@ export class WordSpinnerComponent {
 
   ) {
     this.matIconRegistry.addSvgIcon(
-      'punch_vs',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/recycle.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'arrows',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/double-arrow.svg')
+      'vs_icon',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/vs.svg')
     );
     this.setup();
   }
@@ -100,7 +96,7 @@ export class WordSpinnerComponent {
           // console.log('next guess word spinner next', ng);
           this.next({ oldScore: ng.value1, newWord: ng.password2 });
         }
-    });
+      });
     this.sub.add(this.socketService.gameEndObservable.subscribe(ge => {
       this.end({ oldScore: ge.value2 });
     }));

@@ -23,17 +23,17 @@ export class HomePageComponent implements OnInit {
     private domSanitizer: DomSanitizer
   ) {
     this.matIconRegistry.addSvgIcon(
-      'double_sword',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/duel-samurai.svg'),
-      );
+      'arcade_menu_icon',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/menu/arcade.svg'),
+    );
     this.matIconRegistry.addSvgIcon(
-      'royal_crown',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/crown.svg')
-      );
+      'duel_menu_icon',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/menu/duel.svg')
+    );
     this.matIconRegistry.addSvgIcon(
-      'single_sword',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/arcade.svg')
-      );
+      'royale_menu_icon',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/menu/battle-royale.svg')
+    );
   }
 
   ngOnInit(): void {
