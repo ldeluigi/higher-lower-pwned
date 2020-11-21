@@ -57,7 +57,7 @@ export class UserScoresService {
   }
 
   getRoyaleLostScores(req?: RequestScore): Observable<UserScores> {
-    return this._getRoyaleScores(this.requestToParams(req), 'lost');
+    return this._getRoyaleScores(this.requestToParams(req), 'lose');
   }
 
   private _getRoyaleScores(httpParams: HttpParams, winOrLose?: string): Observable<UserScores> {
