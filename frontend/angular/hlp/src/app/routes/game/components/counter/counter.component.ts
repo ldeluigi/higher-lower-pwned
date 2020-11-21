@@ -51,13 +51,9 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   private setUp(): void {
     if (this.user === undefined) {
-      this.counterSub = this.socketService.userScoreObservable.subscribe(newScore => {
-        rollNumber(newScore, 600, c => this.counter = c, this.counter);
-      });
+      this.counterSub = this.socketService.userScoreObservable.subscribe(this.updateScore);
     } else if (this.user && this.user === true) {
-      this.counterSub = this.socketService.userScoreObservable.subscribe(newScore => {
-        rollNumber(newScore, 600, c => this.counter = c, this.counter);
-      });
+      this.counterSub = this.socketService.userScoreObservable.subscribe(this.updateScore);
       this.socketService.playerObservable.pipe(take(2)).subscribe(nps => {
         this.addPlayerData(nps);
       });
@@ -67,7 +63,7 @@ export class CounterComponent implements OnInit, OnDestroy {
           const ID: string = this.id;
           const otherPlayer = gd.users.find(u => u.id.includes(ID));
           if (otherPlayer && otherPlayer.score) {
-            this.counter = otherPlayer.score;
+            this.updateScore(otherPlayer.score);
           }
         }
       });
@@ -99,6 +95,8 @@ export class CounterComponent implements OnInit, OnDestroy {
       this.name = playerName ? playerName : p.name;
     }
   }
+
+  private updateScore = (newScore: number) => rollNumber(newScore, 600, c => this.counter = c, this.counter);
 
   ngOnDestroy(): void {
     this.counterSub?.unsubscribe();
