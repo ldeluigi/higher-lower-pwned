@@ -1,4 +1,5 @@
-import { interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 function rollNumber(end: number, time: number, update: (n: number) => void, start?: number, frames: number = 100): Promise<void> {
   if (start === undefined) {
     start = 0;
@@ -48,7 +49,22 @@ function rollWord(word: string, time: number, update: (s: string) => void): Prom
   });
 }
 
+function slowDigitWord(word: string, time: number, update: (s: string) => void): Subscription {
+  const frame = word.length;
+  const deltaT = Math.floor(time / frame);
+
+  const timer$ = interval(deltaT);
+  return timer$.pipe(take(frame + 1)).subscribe(tic => {
+    const newValue = word.substr(0, tic);
+    update(newValue);
+    if (tic > frame) {
+      update(word);
+    }
+  });
+}
+
 export {
   rollNumber,
-  rollWord
+  rollWord,
+  slowDigitWord
 };
