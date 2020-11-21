@@ -17,6 +17,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { UserNavBarComponent } from './user-nav-bar/user-nav-bar.component';
 import { UserScoresComponent } from './user-scores/user-scores.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [LayoutComponent, UserInfoComponent, UserStatsComponent, UserNavBarComponent, UserScoresComponent],
@@ -33,6 +34,7 @@ import { UserScoresComponent } from './user-scores/user-scores.component';
     ChartsModule,
     MatSnackBarModule,
     MatExpansionModule,
+    MatMenuModule,
   ],
   schemas: [],
 })
