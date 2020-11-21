@@ -16,7 +16,7 @@
       />
     </mat-form-field>
     <button class="input" mat-mini-fab aria-label="chart button" (click)="toggle()">
-      <div *ngIf="showing_chart; then assessment; else show_chart"></div>
+      <div *ngIf="showingChart; then assessment; else show_chart"></div>
       <ng-template #show_chart><mat-icon>show_chart</mat-icon></ng-template>
       <ng-template #assessment><mat-icon>assessment</mat-icon></ng-template>
     </button>
