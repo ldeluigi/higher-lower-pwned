@@ -1,6 +1,9 @@
 @import "../../../styles/colors.scss";
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/abstracts/mixins";
+@import "../../../styles/stats/mixins";
+
+@include underNavBarContainer();
 
 $icon-dimension: 40px;
 
@@ -33,7 +36,6 @@ mat-card-title {
   .container {
     display: grid;
     grid-template-columns: auto auto;
-    @include wide-col(3 * $default-margin, $default-padding);
   }
 }
 
@@ -41,6 +43,5 @@ mat-card-title {
   .container {
     display: grid;
     grid-template-columns: auto auto;
-    @include wide-col(10 * $default-margin, $default-padding);
   }
 }

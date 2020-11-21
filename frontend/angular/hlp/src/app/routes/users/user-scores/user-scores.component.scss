@@ -1,6 +1,8 @@
 @import "../../../styles/stats/mixins";
+@import "../../../styles/stats/mixins";
 
 @include nav-bar;
+@include underNavBarContainer();
 
 table {
   width: 100%;

@@ -15,11 +15,21 @@ import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScor
 export class UserScoresComponent implements OnInit, OnDestroy {
 
   private sub: Subscription | undefined;
-  private haveToBeDeleted: RequestScore | undefined = {
+  private haveToBeDeleted: RequestScore | undefined /* = { //todo
     limit: 5,
     page: 0,
     sortbyDate: true
-  };
+  };*/
+  private defaultDuelSelection = "global";
+  private victoryDuelSelection = "victory";
+  private loseDuelSelection = "lose";
+  private duelSelection = this.defaultDuelSelection;
+
+  
+  private defaultRoyaleSelection = "global";
+  private victoryRoyaleSelection = "victory";
+  private loseRoyaleSelection = "lose";
+  private royaleSelection = this.defaultRoyaleSelection;
 
   private cs: CoreUserScores | undefined;
   private s: UserScores | undefined;
@@ -33,7 +43,10 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   displayedColumns = this.defaultColumns;
   dataSource = new MatTableDataSource<CoreUserScores>([]);
-  selected = 'arcade';
+  duelString = 'duel';
+  arcadeString = 'arcade';
+  royaleString = 'royale';
+  selected = this.arcadeString;
 
   constructor(
     private router: Router,
@@ -57,25 +70,57 @@ export class UserScoresComponent implements OnInit, OnDestroy {
     const tmp = this.selected;
     this.selected = mode;
     switch (mode) {
-      case 'arcade':
+      case this.arcadeString:
         this.updateData(this.scoreService.getArcadeScores(this.haveToBeDeleted));
         break;
-      case 'duel':
-        this.updateData(this.scoreService.getDuelScores(this.haveToBeDeleted));
+      case this.duelString:
+        if (this.isDuelLose()) {
+          this.updateData(this.scoreService.getDuelLostScores(this.haveToBeDeleted));
+        } else if (this.isDuelVictory()) {
+          this.updateData(this.scoreService.getDuelWinScores(this.haveToBeDeleted));
+        } else { // default duel selection
+          this.updateData(this.scoreService.getDuelScores(this.haveToBeDeleted));
+        }
         break;
-      case 'duelWin':
-        this.updateData(this.scoreService.getDuelScores(this.haveToBeDeleted));
-        break;
-      case 'royale':
-        this.updateData(this.scoreService.getRoyaleScores(this.haveToBeDeleted));
-        break;
-      case 'royaleWin':
-        this.updateData(this.scoreService.getRoyaleScores(this.haveToBeDeleted));
+      case this.royaleString:
+        if (this.isRoyaleLose()) {
+          this.updateData(this.scoreService.getRoyaleLostScores(this.haveToBeDeleted));
+        } else if (this.royaleSelection === this.victoryRoyaleSelection) {
+          this.updateData(this.scoreService.getRoyaleWinScores(this.haveToBeDeleted));
+        } else { // default royale selection
+          this.updateData(this.scoreService.getRoyaleScores(this.haveToBeDeleted));
+        }
         break;
       default:
         this.selected = tmp;
         throw new Error('unknown mode');
     }
+  }
+
+  duelScopeSelection(scope: string) {
+    this.duelSelection = scope;
+    this.select(this.duelString);
+  }
+
+  isDuelVictory(): boolean {
+    return this.duelSelection === this.victoryDuelSelection;
+  }  
+  
+  isDuelLose(): boolean {
+    return this.duelSelection === this.loseDuelSelection;
+  }  
+  
+  isRoyaleVictory(): boolean {
+    return this.royaleSelection === this.victoryRoyaleSelection;
+  }  
+  
+  isRoyaleLose(): boolean {
+    return this.royaleSelection === this.loseRoyaleSelection;
+  }
+
+  royaleScopeSelection(scope: string) {
+    this.royaleSelection = scope;
+    this.select(this.royaleString);
   }
 
   isSelected(mode: string) {
