@@ -1,31 +1,69 @@
-<div class="mat-elevation-z8" class="container">
-  <table mat-table [dataSource]="dataSource">
-    <ng-container matColumnDef="score">
-      <th mat-header-cell *matHeaderCellDef>Score</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.score | number }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="guesses">
-      <th mat-header-cell *matHeaderCellDef>Guesses</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.guesses | number }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Date </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.date | date:'dd/M/yy' }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="duration">
-      <th mat-header-cell *matHeaderCellDef> Duration </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.duration | number }}
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-  <mat-paginator showFirstLastButtons></mat-paginator>
+<div class="container">
+  <div class="nav-bar">
+    <div class="selector-border"></div>
+    <a mat-button (click)="select('arcade')" [class] = "isSelected('arcade') ? 'selected' : 'not-selected'">
+      <mat-icon aria-hidden="true" aria-label="person">person</mat-icon>
+      <span class="text">&ensp;Arcade</span>
+    </a>
+    <a mat-button [matMenuTriggerFor]="duel" (click)="select('duel')" 
+      [class] = "isSelected('duel') ? 'selected' : 'not-selected'">
+      <mat-icon aria-hidden="true" aria-label="people">people</mat-icon>
+      <span class="text">&ensp;Duel</span>
+    </a>
+    <mat-menu #duel="matMenu">
+      <button mat-menu-item><mat-icon aria-hidden="true" aria-label="done">public</mat-icon> Global</button>
+      <button mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_up</mat-icon> Victories</button>
+      <button mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_down</mat-icon> Lost</button>
+    </mat-menu>
+    <!--a mat-button (click)="select('duel')" [class] = "isSelected('duel') ? 'selected' : 'not-selected'">
+      <mat-icon aria-hidden="true" aria-label="people">people</mat-icon>
+      <span class="text">&ensp;Duel</span>
+    </a>
+    <a mat-button (click)="select('duelWin')" [class] = "isSelected('duelWin') ? 'selected' : 'not-selected'">
+      <mat-icon aria-hidden="true" aria-label="people">people</mat-icon>
+      <mat-icon aria-hidden="true" aria-label="done">done</mat-icon>
+      <span class="text">&ensp;Duel Victories</span>
+    </a-->
+    <a mat-button (click)="select('royale')" [class] = "isSelected('royale') ? 'selected' : 'not-selected'">
+      <mat-icon aria-hidden="true" aria-label="groups">groups</mat-icon>
+      <span class="text">&ensp;Battle Royale</span>
+    </a>
+    <!--a mat-button (click)="select('royaleWin')" [class] = "isSelected('royaleWin') ? 'selected' : 'not-selected'">
+      <mat-icon aria-hidden="true" aria-label="groups">groups</mat-icon>
+      <mat-icon aria-hidden="true" aria-label="done">done</mat-icon>
+      <span class="text">&ensp;Battle Royale Victories</span>
+    </a-->
+    <div class="selector-border"></div>
+  </div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef>Score</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.score | number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="guesses">
+        <th mat-header-cell *matHeaderCellDef>Guesses</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.guesses | number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Date </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.date | date:'dd/M/yy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef> Duration </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.duration | number }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator showFirstLastButtons></mat-paginator>
+  </div>
 </div>

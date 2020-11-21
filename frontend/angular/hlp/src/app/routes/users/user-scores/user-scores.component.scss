@@ -1,3 +1,7 @@
+@import "../../../styles/stats/mixins";
+
+@include nav-bar;
+
 table {
   width: 100%;
 }
