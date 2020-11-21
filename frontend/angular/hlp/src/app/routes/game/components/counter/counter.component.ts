@@ -36,10 +36,7 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gameSub = this.gameManagerService.gameStatusObservable.subscribe(nv => {
-      if (nv === GameStatus.PLAYING) {
-        this.gameStarted = true;
-      }
-      if (this.gameStarted && nv === GameStatus.IDLE) {
+      if (nv === GameStatus.IDLE) {
         this.counter = 0;
         this.name = undefined;
         this.counterSub?.unsubscribe();
