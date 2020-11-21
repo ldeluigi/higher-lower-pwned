@@ -40,7 +40,7 @@ export class UserScoresService {
   }
 
   getDuelLostScores(req?: RequestScore): Observable<UserScores> {
-    return this._getDuelScores(this.requestToParams(req), 'lost');
+    return this._getDuelScores(this.requestToParams(req), 'lose');
   }
 
   private _getDuelScores(httpParams: HttpParams, winOrLose?: string): Observable<UserScores> {
