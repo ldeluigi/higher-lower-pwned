@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { UserScoresService } from '../../../services/user-scores.service';
@@ -6,6 +6,7 @@ import { AccountService } from '../../../services/account.service';
 import { Observable, Subscription } from 'rxjs';
 import { RequestScore } from 'src/app/model/users/scores/requestScore';
 import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScore';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-scores',
@@ -31,9 +32,6 @@ export class UserScoresComponent implements OnInit, OnDestroy {
   private loseRoyaleSelection = "lose";
   private royaleSelection = this.defaultRoyaleSelection;
 
-  private cs: CoreUserScores | undefined;
-  private s: UserScores | undefined;
-
   private defaultColumns = [
     'score',
     'guesses',
@@ -41,8 +39,11 @@ export class UserScoresComponent implements OnInit, OnDestroy {
     'duration',
   ];
 
+  
+
   displayedColumns = this.defaultColumns;
   dataSource = new MatTableDataSource<CoreUserScores>([]);
+  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   duelString = 'duel';
   arcadeString = 'arcade';
   royaleString = 'royale';
@@ -63,6 +64,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
       this.router.navigate(['/login']);
     } else {
       this.select(this.selected);
+      this.dataSource.paginator = this.paginator;
     }
   }
 
