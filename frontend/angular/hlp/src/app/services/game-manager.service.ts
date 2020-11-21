@@ -53,18 +53,15 @@ export class GameManagerService {
   startGame(gameMode: string): Observable<boolean> {
     this.resetGame();
     this.gameStatusSubject.next(GameStatus.IDLE);
+    this.currentGameMode = gameMode;
     return this.socketService.setup(gameMode)
       .pipe(first())
       .pipe(map(res => {
-        // console.log('res=', res);
         if (res) {
           this.setupGameSubscription();
           this.socketService.startGame();
-          return true;
-        } else {
-          // TODO LOG
-          return false;
         }
+        return res;
       }));
   }
 
@@ -79,7 +76,6 @@ export class GameManagerService {
   }
 
   private setupGameSubscription(): void {
-    this.gameSub?.unsubscribe();
     this.gameSub = new Subscription();
     if (this.currentGameMode === ARCADE) {              // ARCADE mode
       this.gameStatusSubject.next(GameStatus.PLAYING);

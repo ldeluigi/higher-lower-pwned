@@ -3,7 +3,7 @@ import { Component, EventEmitter } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { debounceTime, filter, takeWhile } from 'rxjs/operators';
+import { debounceTime, filter, map, takeWhile } from 'rxjs/operators';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
 import { EndGame, GameSetup, NextCard } from '../../model/animation';

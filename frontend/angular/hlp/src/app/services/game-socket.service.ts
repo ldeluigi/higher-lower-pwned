@@ -32,7 +32,7 @@ export class GameSocketService {
   /// Emit event when opponents list is available (only for multiplayer mode)
   opponentsObservable!: Observable<PlayerIdName[]>;
 
-  private nextGuessSubject!: Subject<Guess>;
+  private simpleNextGuessSubject!: Subject<Guess>;
   /// Emit next guess, valid for every mode (contain only, psw1, psw2, and val1)
   simpleNextGuessObservable!: Observable<Guess>;
 
@@ -68,10 +68,6 @@ export class GameSocketService {
     private accountService: AccountService,
     private apiURL: ApiURLService
   ) {
-    this.setupObservable();
-  }
-
-  private setupObservable(): void {
     this.playersSubject = new Subject<PlayerIdName>();
     this.playerObservable = this.playersSubject.asObservable();
 
@@ -81,8 +77,8 @@ export class GameSocketService {
     this.opponentsSubject = new Subject<PlayerIdName[]>();
     this.opponentsObservable = this.opponentsSubject.asObservable();
 
-    this.nextGuessSubject = new Subject<Guess>();
-    this.simpleNextGuessObservable = this.nextGuessSubject.asObservable();
+    this.simpleNextGuessSubject = new Subject<Guess>();
+    this.simpleNextGuessObservable = this.simpleNextGuessSubject.asObservable();
 
     this.nextBattleGuessSubject = new Subject<NextDuelGuess>();
     this.nextBattleGuessObservable = this.nextBattleGuessSubject.asObservable();
@@ -148,31 +144,31 @@ export class GameSocketService {
     this.socket?.disconnect();
     this.socket = this.newSocket(gameMode);
     this.setUpSocketObservable(this.socket);
-    return this.connect();
+    return this.connect(this.socket);
   }
 
-  private connect(): Observable<boolean> {
+  private connect(socket: Socket): Observable<boolean> {
     if (this.connectionSubject === undefined) {
       this.connectionSubject = new Subject<boolean>();
     }
     this.stopConnection = false;
-    if (this.socket === undefined) {
+    if (socket === undefined) {
       this.connectionSubject.next(false);
     } else {
       if (this.accountService.userValue !== null) {
-        this.socket.ioSocket.io.opts.query = {
+        socket.ioSocket.io.opts.query = {
           token: this.accountService.userValue.token
         };
       } else {
-        this.socket.ioSocket.io.opts.query = {};
+        socket.ioSocket.io.opts.query = {};
       }
-      this.socket.fromOneTimeEvent('disconnect')
+      socket.fromOneTimeEvent('disconnect')
       .then(_ => {
         console.log('disconect'); // TODO remove
         this.connectionOpen = false;
       });
-      this.socket.connect();
-      this.socket.fromOneTimeEvent('connect')
+      socket.connect();
+      socket.fromOneTimeEvent('connect')
       .then(() => {
         if (this.stopConnection) {
           this.disconnect();
@@ -195,7 +191,7 @@ export class GameSocketService {
     const guessAsNextGuess = guess as NextGuess;  // contiene solo il guess
     const guessAsGameData = guess as GameData;    // contiene una lista di valori
     if (guessAsNextGuess.password1) {                   // Case arcade
-      this.nextGuessSubject.next(guessAsNextGuess);       // call next guess
+      this.simpleNextGuessSubject.next(guessAsNextGuess);       // call next guess
       if (guessAsNextGuess.score) {
         const playerScore = guessAsNextGuess.score;
         this.userScoreSubject.next(playerScore);          // update score
@@ -275,7 +271,7 @@ export class GameSocketService {
             // this.socket.disconnect();
             this.socket = this.newSocket(this.gameMode);
             this.setUpSocketObservable(this.socket);
-            this.connect();
+            this.connect(this.socket);
           } else {
             // TODO gestire l'errore
           }
