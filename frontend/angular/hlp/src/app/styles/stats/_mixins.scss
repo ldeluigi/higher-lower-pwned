@@ -1,6 +1,7 @@
 @import "../abstracts/_mixins.scss";
 @import "~@angular/material/theming";
 @import "../colors.scss";
+@import "../dimensions.scss";
 
 @mixin nav-bar {
   .nav-bar {
@@ -35,6 +36,20 @@
   @include desktop {
     .selector-border {
       width: 25%;
+    }
+  }
+}
+
+@mixin underNavBarContainer {
+  @include tablet {
+    .container {
+      @include wide-col(3 * $default-margin, $default-padding);
+    }
+  }
+
+  @include desktop {
+    .container {
+      @include wide-col(10 * $default-margin, $default-padding);
     }
   }
 }

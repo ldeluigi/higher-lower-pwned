@@ -1,6 +1,9 @@
 @import "../../../styles/colors.scss";
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/abstracts/mixins";
+@import "../../../styles/stats/mixins";
+
+@include underNavBarContainer();
 
 table {
   width: 100%;
@@ -23,18 +26,12 @@ div.inputs {
 }
 
 @include tablet {
-  .container {
-    @include wide-col(3 * $default-margin, $default-padding);
-  }
   .input {
     margin: auto;
   }
 }
 
 @include desktop {
-  .container {
-    @include wide-col(10 * $default-margin, $default-padding);
-  }
   .input {
     margin: auto;
   }
