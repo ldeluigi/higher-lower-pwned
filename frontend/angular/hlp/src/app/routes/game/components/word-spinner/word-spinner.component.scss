@@ -13,7 +13,7 @@ $bottom_card_Y: #{math.round( (100%/$card_heigth) * ($vs_heigth / 2%)) * 1%};
 $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
 
 :host {
-  width: 98vw;
+  // width: 98vw;
   display: flex;
   height: 100%;
   justify-content: center;

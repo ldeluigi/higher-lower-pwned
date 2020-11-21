@@ -8,6 +8,10 @@
   align-items: center;
   width: 90vw;
   margin: auto;
+
+  .child {
+    width: 50%;
+  }
 }
 
 @include desktop {
