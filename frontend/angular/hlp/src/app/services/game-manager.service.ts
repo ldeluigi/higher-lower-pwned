@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, pipe, Subject, Subscription } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { ARCADE, DUEL, ROYALE } from '../routes/game/model/const';
 import { Guess } from '../routes/game/model/nextguess';
 import { SocketArcade } from '../routes/game/SocketArcade';
@@ -49,30 +50,22 @@ export class GameManagerService {
   }
 
   // start game
-  async startGame(gameMode: string): Promise<void> {
+  startGame(gameMode: string): Observable<boolean> {
     this.resetGame();
     this.gameStatusSubject.next(GameStatus.IDLE);
-    let socket: Socket;
-    this.currentGameMode = gameMode;
-    switch (gameMode) {
-      case ARCADE:
-        socket = new SocketArcade(this.apiURL.socketApiUrl);
-        break;
-      case DUEL:
-        socket = new SocketDuel(this.apiURL.socketApiUrl);
-        break;
-      case ROYALE:
-        socket = new SocketRoyale(this.apiURL.socketApiUrl);
-        break;
-      default:
-        throw new Error(`Illegal argument [${gameMode}]`);
-    }
-    await this.socketService.setup(socket)
-      .then(() => {
-        this.setupGameSubscription();
-        this.socketService.startGame();
-        return;
-      });
+    return this.socketService.setup(gameMode)
+      .pipe(first())
+      .pipe(map(res => {
+        // console.log('res=', res);
+        if (res) {
+          this.setupGameSubscription();
+          this.socketService.startGame();
+          return true;
+        } else {
+          // TODO LOG
+          return false;
+        }
+      }));
   }
 
   private resetGame(): void {

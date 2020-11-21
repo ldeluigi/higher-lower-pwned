@@ -42,17 +42,17 @@ export class ErrorInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenSubject.next('');
       return this.accountService.refreshToken()
-      .pipe(catchError(err => {
-        this.accountService.logout();
-        return throwError('Error in token refresh');
-      }))
-      .pipe(
-        switchMap(t => {
-          this.isRefreshing = false;
-          this.refreshTokenSubject.next(t.token);
-          return next.handle(this.addToken(request, t.token));
-        })
-      );
+        .pipe(catchError(err => {
+          this.accountService.logout();
+          return throwError('Error in token refresh');
+        }))
+        .pipe(
+          switchMap(t => {
+            this.isRefreshing = false;
+            this.refreshTokenSubject.next(t.token);
+            return next.handle(this.addToken(request, t.token));
+          })
+        );
     } else {
       return this.refreshTokenSubject.pipe(
         filter(token => token.length > 0),

@@ -99,7 +99,14 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   }
 
   start(): void {
-    this.gameManagerService.startGame('arcade');
+    this.gameManagerService.startGame('arcade')
+      .subscribe(isStart => {
+        if (!isStart) {
+          this.gameManagerService.quit();
+          // TODO Log game not started
+          console.log('game not started!');
+        }
+      });
   }
 
   get inGame(): boolean {

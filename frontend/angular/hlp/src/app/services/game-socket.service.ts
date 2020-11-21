@@ -3,12 +3,17 @@ import { Socket } from 'ngx-socket-io';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
+import { ARCADE, DUEL, ROYALE } from '../routes/game/model/const';
 import { OnError } from '../routes/game/model/error';
 import { GameEnd } from '../routes/game/model/gameEnd';
 import { GameData, Guess, MultiplayerGameUpdate, NextDuelGuess, NextGuess, UpdatePlayersInfo } from '../routes/game/model/nextguess';
 import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
+import { SocketArcade } from '../routes/game/SocketArcade';
+import { SocketDuel } from '../routes/game/SocketDuel';
+import { SocketRoyale } from '../routes/game/SocketRoyale';
 import { extractId, getDataFromId } from '../routes/game/utils/gameHelper';
 import { AccountService } from './account.service';
+import { ApiURLService } from './api-url.service';
 
 @Injectable({
   providedIn: 'root'
@@ -53,11 +58,15 @@ export class GameSocketService {
 
   private socket: Socket | undefined;
 
+  private connectionTry = 0;
+  private connectionSubject: Subject<boolean> | undefined;
   private stopConnection = false;
-  private connectionOpen = false;
+  connectionOpen = false;
+  private gameMode = '';
 
   constructor(
     private accountService: AccountService,
+    private apiURL: ApiURLService
   ) {
     this.setupObservable();
   }
@@ -111,45 +120,71 @@ export class GameSocketService {
     return this.socket?.ioSocket.io.engine.id;
   }
 
+  private newSocket(gameMode: string): Socket {
+    let socket: Socket;
+    this.gameMode = gameMode;
+    switch (gameMode) {
+      case ARCADE:
+        socket = new SocketArcade(this.apiURL.socketApiUrl);
+        break;
+      case DUEL:
+        socket = new SocketDuel(this.apiURL.socketApiUrl);
+        break;
+      case ROYALE:
+        socket = new SocketRoyale(this.apiURL.socketApiUrl);
+        break;
+      default:
+        throw new Error(`Illegal argument [${gameMode}]`);
+    }
+    return socket;
+  }
+
   /**
    *
    * @param socket the socket type to use (Arcade, Duel, Royale)
    */
-  async setup(socket: Socket): Promise<void> {
+  setup(gameMode: string): Observable<boolean> {
+    this.connectionTry = 0;
     this.socket?.disconnect();
-    this.socket = socket;
-    this.setUpSocketObservable(socket);
-    await this.connect();
+    this.socket = this.newSocket(gameMode);
+    this.setUpSocketObservable(this.socket);
+    return this.connect();
   }
 
-  private async connect(): Promise<void> {
+  private connect(): Observable<boolean> {
+    if (this.connectionSubject === undefined) {
+      this.connectionSubject = new Subject<boolean>();
+    }
     this.stopConnection = false;
     if (this.socket === undefined) {
-      return;
-    }
-    if (this.accountService.userValue !== null) {
-      this.socket.ioSocket.io.opts.query = {
-        token: this.accountService.userValue.token
-      };
+      this.connectionSubject.next(false);
     } else {
-      this.socket.ioSocket.io.opts.query = {};
-    }
-    this.socket.fromOneTimeEvent('disconnect')
+      if (this.accountService.userValue !== null) {
+        this.socket.ioSocket.io.opts.query = {
+          token: this.accountService.userValue.token
+        };
+      } else {
+        this.socket.ioSocket.io.opts.query = {};
+      }
+      this.socket.fromOneTimeEvent('disconnect')
       .then(_ => {
-        console.log('disconect');
+        console.log('disconect'); // TODO remove
         this.connectionOpen = false;
-
       });
-    this.socket.connect();
-    await this.socket.fromOneTimeEvent('connect')
+      this.socket.connect();
+      this.socket.fromOneTimeEvent('connect')
       .then(() => {
         if (this.stopConnection) {
           this.disconnect();
+          return;
         }
-        console.log('connect!');
+        console.log('connect!'); // TODO remove
+        this.connectionSubject?.next(true);
+        this.connectionSubject = undefined;
       });
-    this.connectionOpen = true;
-    return;
+      this.connectionOpen = true;
+    }
+    return this.connectionSubject.asObservable();
   }
 
   /**
@@ -201,6 +236,7 @@ export class GameSocketService {
 
   /**
    * Error 'on-error'
+   * // TODO gestire l'errore
    */
   private onError = (error: OnError) => console.log(error);
 
@@ -218,7 +254,7 @@ export class GameSocketService {
    * GameEnd: 'game-end'
    */
   private gameEnd = (data: GameEnd) => {
-    console.log('socket game end', data);
+    // console.log('socket game end', data);
     this.gameEndSubject.next(data);
   }
 
@@ -226,20 +262,29 @@ export class GameSocketService {
    *  Error in connection of any type.
    */
   private error = (e: string) => {
-    console.log('>error: ', e);
-    if (e === 'error-connection') {
-      if (this.accountService.userValue !== null) {
-        this.accountService.refreshToken().pipe(first()).subscribe(() => {
-          this.startGame();
-        },
-          () => {
-            this.accountService.logout('Can\'t connet to the service, login again and retry');
+    // console.log('>error: ', e, this.accountService);
+    if (this.connectionTry > 2) {
+      this.accountService.logout('Can\'t connecto to the server.'); // TODO cambiare con un error service
+      return;
+    }
+    if (this.accountService.userValue !== null && e.indexOf('jwt') >= 0) {
+      this.connectionTry++;
+      this.accountService.refreshToken().pipe(first()).subscribe(
+        (_) => {
+          if (this.socket) {
+            // this.socket.disconnect();
+            this.socket = this.newSocket(this.gameMode);
+            this.setUpSocketObservable(this.socket);
+            this.connect();
+          } else {
+            // TODO gestire l'errore
           }
-        );
-      } else {
-        console.log('Connection lost');
-        this.errorSubject.next({ code: -1, description: 'Connection lost' });
-      }
+        },
+        e2 => this.accountService.logout('Can\'t connet to the service, login again and retry ' + e2)
+      );
+    } else {
+      // console.log('Connection lost');
+      this.errorSubject.next({ code: -1, description: 'Connection lost' });
     }
   }
 
