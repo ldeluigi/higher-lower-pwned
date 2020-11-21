@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
 import { ViewSelectorComponent } from './view-selector.component';
+
 
 describe('ViewSelectorComponent', () => {
   let component: ViewSelectorComponent;

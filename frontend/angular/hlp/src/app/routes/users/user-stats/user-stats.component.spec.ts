@@ -6,8 +6,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HistoryItemToEndDatePipe } from 'src/app/shared/pipes/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from 'src/app/shared/pipes/history-item-to-start-date.pipe';
-
 import { UserStatsComponent } from './user-stats.component';
+
 
 describe('UserStatsComponent', () => {
   let component: UserStatsComponent;

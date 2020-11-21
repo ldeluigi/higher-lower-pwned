@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GameStatus } from '../utils/gameStatus';
+import { Subscription } from 'rxjs';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
 import { ROYALE } from '../model/const';
+import { GameStatus } from '../utils/gameStatus';
 import { ProgressBarHelper } from '../utils/progressBarHelper';
 
 @Component({

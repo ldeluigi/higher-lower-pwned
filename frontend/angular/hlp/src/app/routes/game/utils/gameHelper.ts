@@ -1,5 +1,4 @@
-import { GameData } from '../model/nextguess';
-import { NextDuelGuess } from '../model/nextguess';
+import { GameData, NextDuelGuess } from '../model/nextguess';
 
 enum GameType {
   NextGuess,  // next guess, with word update

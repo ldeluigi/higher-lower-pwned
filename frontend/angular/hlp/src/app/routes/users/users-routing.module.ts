@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from '../users/layout/layout.component';
 import { UserInfoComponent } from './user-info/user-info.component';
-import { UserStatsComponent } from './user-stats/user-stats.component';
 import { UserScoresComponent } from './user-scores/user-scores.component';
+import { UserStatsComponent } from './user-stats/user-stats.component';
 
 const routes: Routes = [
   {

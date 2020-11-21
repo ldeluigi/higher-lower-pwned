@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
-import { rollNumber, rollWord } from '../../utils/wordAnimation';
-import { cardAnimation, vsAnimation, wordAnimation } from './animation';
-import { GameSetup, EndGame, NextCard } from '../../model/animation';
+import { Component, EventEmitter } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GameSocketService } from 'src/app/services/game-socket.service';
-import { GameManagerService } from 'src/app/services/game-manager.service';
-import { GameStatus } from '../../utils/gameStatus';
 import { Subscription } from 'rxjs';
+import { debounceTime, filter, takeWhile } from 'rxjs/operators';
+import { GameManagerService } from 'src/app/services/game-manager.service';
+import { GameSocketService } from 'src/app/services/game-socket.service';
+import { EndGame, GameSetup, NextCard } from '../../model/animation';
 import { FlowManager } from '../../utils/gameFlowHelper';
-import { debounceTime, filter, first, takeWhile } from 'rxjs/operators';
+import { GameStatus } from '../../utils/gameStatus';
+import { rollNumber, rollWord } from '../../utils/wordAnimation';
+import { cardAnimation, vsAnimation, wordAnimation } from './animation';
 
 export interface Card {
   word: string;

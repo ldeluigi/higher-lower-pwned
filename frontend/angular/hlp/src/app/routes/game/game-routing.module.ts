@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { RoyaleComponent } from './royale/royale.component';
+import { RouterModule, Routes } from '@angular/router';
 import { ArcadeComponent } from './arcade/arcade.component';
 import { DuelComponent } from './duel/duel.component';
+import { RoyaleComponent } from './royale/royale.component';
 
 const routes: Routes = [
   {

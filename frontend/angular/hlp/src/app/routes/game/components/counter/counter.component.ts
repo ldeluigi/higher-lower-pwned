@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { rollNumber } from '../../utils/wordAnimation';
-import { GameSocketService } from '../../../../services/game-socket.service';
-import { GameManagerService } from '../../../../services/game-manager.service';
-import { FlowManager } from '../../utils/gameFlowHelper';
-import { AccountService } from 'src/app/services/account.service';
 import { first, take } from 'rxjs/operators';
+import { AccountService } from 'src/app/services/account.service';
+import { GameManagerService } from '../../../../services/game-manager.service';
+import { GameSocketService } from '../../../../services/game-socket.service';
 import { PlayerIdName } from '../../model/player-join';
 import { GameStatus } from '../../utils/gameStatus';
+import { rollNumber } from '../../utils/wordAnimation';
 
 @Component({
   selector: 'app-counter',

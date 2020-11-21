@@ -1,4 +1,4 @@
-import { AnimationTriggerMetadata, trigger, transition, style, animate } from '@angular/animations';
+import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
 
 export function animationTitle1(): AnimationTriggerMetadata {
   return trigger('title1', [

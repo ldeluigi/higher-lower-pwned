@@ -1,12 +1,12 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { GameStatsService } from '../../../services/game-stats.service';
-import { from, Subscription } from 'rxjs';
-import { LbItem } from 'src/app/model/lbItem';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { LbItem } from 'src/app/model/lbItem';
+import { GameStatsService } from '../../../services/game-stats.service';
 
 @Component({
   selector: 'app-leadeboard',

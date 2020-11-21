@@ -5,11 +5,10 @@ import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
 import { OnError } from '../routes/game/model/error';
 import { GameEnd } from '../routes/game/model/gameEnd';
-import { Guess, MultiplayerGameUpdate, NextDuelGuess, NextGuess, UpdatePlayersInfo } from '../routes/game/model/nextguess';
+import { GameData, Guess, MultiplayerGameUpdate, NextDuelGuess, NextGuess, UpdatePlayersInfo } from '../routes/game/model/nextguess';
 import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
 import { extractId, getDataFromId } from '../routes/game/utils/gameHelper';
 import { AccountService } from './account.service';
-import { GameData } from '../routes/game/model/nextguess';
 
 @Injectable({
   providedIn: 'root'

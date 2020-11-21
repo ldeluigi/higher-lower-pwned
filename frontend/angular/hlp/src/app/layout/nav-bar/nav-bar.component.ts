@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
+
 
 @Component({
   selector: 'app-nav-bar',

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { ARCADE, DUEL, ROYALE } from '../routes/game/model/const';
+import { Guess } from '../routes/game/model/nextguess';
 import { SocketArcade } from '../routes/game/SocketArcade';
 import { SocketDuel } from '../routes/game/SocketDuel';
 import { SocketRoyale } from '../routes/game/SocketRoyale';
 import { GameStatus } from '../routes/game/utils/gameStatus';
 import { ApiURLService } from './api-url.service';
 import { GameSocketService } from './game-socket.service';
-import { ARCADE, DUEL, ROYALE } from '../routes/game/model/const';
-import { Guess } from '../routes/game/model/nextguess';
 
 @Injectable({
   providedIn: 'root'

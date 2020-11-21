@@ -1,26 +1,26 @@
-import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { PeriodButtonsComponent } from './period-buttons/period-buttons.component';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PeriodButtonsComponent } from './period-buttons/period-buttons.component';
 import { HistoryItemToEndDatePipe } from './pipes/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from './pipes/history-item-to-start-date.pipe';
-import { MatTableModule } from '@angular/material/table';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatPaginatorModule } from '@angular/material/paginator';
 
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule } from '@angular/material/dialog';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MatIconModule } from '@angular/material/icon';
 
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 
 @NgModule({
   imports: [
@@ -50,6 +50,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     DatePipe
   ],
   exports: [
+    CommonModule,
     PeriodButtonsComponent,
     MatButtonModule,
     MatButtonToggleModule,

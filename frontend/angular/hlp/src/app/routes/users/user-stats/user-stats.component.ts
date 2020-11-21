@@ -1,21 +1,19 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UserDataService } from '../../../services/user-data.service';
-import { HistoryItem } from '../../../model/userStats';
-import { MatTableDataSource } from '@angular/material/table';
-import { ChartType, ChartOptions } from 'chart.js';
-import { MatPaginator } from '@angular/material/paginator';
-import {
-  timeConversion,
-  periodIterator,
-  daysOfTheYear,
-} from '../../../helper/timeConversion';
 import { FormControl, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { ChartOptions, ChartType } from 'chart.js';
+import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { HistoryItemToEndDatePipe } from 'src/app/shared/pipes/history-item-to-end-date.pipe';
 import { HistoryItemToStartDatePipe } from 'src/app/shared/pipes/history-item-to-start-date.pipe';
-import { DatePipe } from '@angular/common';
+import {
+  daysOfTheYear, periodIterator, timeConversion
+} from '../../../helper/timeConversion';
+import { HistoryItem } from '../../../model/userStats';
+import { UserDataService } from '../../../services/user-data.service';
 import * as Const from '../../../shared/pipes/date-format.constant';
-import { first } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 
 export const GRAPH_EMPTY_PERIODS = '...';
 

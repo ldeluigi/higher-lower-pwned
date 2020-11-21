@@ -1,4 +1,4 @@
-import { trigger, state, style, animate, transition, AnimationEvent, AnimationTriggerMetadata } from '@angular/animations';
+import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
 
 const DURATION1 = '1.0s';
 export const vsAnimation: AnimationTriggerMetadata = trigger('vsAnimation', [

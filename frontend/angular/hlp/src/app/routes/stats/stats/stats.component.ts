@@ -1,10 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { timeConversion } from '../../../helper/timeConversion';
 import { Stats } from '../../../model/stats';
 import { GameStatsService } from '../../../services/game-stats.service';
-import { timeConversion } from '../../../helper/timeConversion';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { first } from 'rxjs/operators';
 
 export interface Stat {
   name: string;
