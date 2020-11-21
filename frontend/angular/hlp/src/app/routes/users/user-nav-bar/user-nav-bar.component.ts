@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-nav-bar.component.scss']
 })
 export class UserNavBarComponent {
-  
+
   constructor(
     private router: Router
   ) { }

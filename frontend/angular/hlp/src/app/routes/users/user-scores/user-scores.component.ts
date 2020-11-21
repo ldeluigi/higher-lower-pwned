@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { UserScoresService } from "../../../services/user-scores.service";
+import { UserScoresService } from '../../../services/user-scores.service';
 import { AccountService } from '../../../services/account.service';
 import { Observable, Subscription } from 'rxjs';
 import { RequestScore } from 'src/app/model/users/scores/requestScore';
@@ -15,9 +15,11 @@ import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScor
 export class UserScoresComponent implements OnInit, OnDestroy {
 
   private sub: Subscription | undefined;
-  private haveToBeDeleted: RequestScore | undefined = {limit: 5,
+  private haveToBeDeleted: RequestScore | undefined = {
+    limit: 5,
     page: 0,
-    sortbyDate: true}
+    sortbyDate: true
+  };
 
   private cs: CoreUserScores | undefined;
   private s: UserScores | undefined;
@@ -31,8 +33,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   displayedColumns = this.defaultColumns;
   dataSource = new MatTableDataSource<CoreUserScores>([]);
-  selected = "arcade";
-  
+  selected = 'arcade';
 
   constructor(
     private router: Router,
@@ -73,7 +74,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
         break;
       default:
         this.selected = tmp;
-        throw new Error("unknown mode");
+        throw new Error('unknown mode');
     }
   }
 
@@ -83,7 +84,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   private updateData( obs: Observable<UserScores>) {
     this.sub = obs.subscribe((data) => {
-      this.dataSource.data = data.data; 
+      this.dataSource.data = data.data;
     });
   }
 }

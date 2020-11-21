@@ -24,7 +24,7 @@ export const GRAPH_EMPTY_PERIODS = '...';
 })
 export class UserStatsComponent implements OnInit, OnDestroy {
   expanded = true;
-  showing_chart = true;
+  showingChart = true;
 
   lineChartType: ChartType = 'bar';
   lineChartData: Array<object> = [];
@@ -203,7 +203,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
               scores.push(element);
             }
           } else if (
-            //element has to be added
+            // element has to be added
             !(lastElement.avgPlaysPerDay === 0 && element.avgPlaysPerDay === 0)
           ) {
             scores.push(element);
@@ -304,6 +304,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   toggle() {
-    this.showing_chart = !this.showing_chart
+    this.showingChart = !this.showingChart;
   }
 }
