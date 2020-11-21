@@ -15,13 +15,13 @@ export class UserNavBarComponent {
   isSelected(mode: string): boolean {
     switch (mode) {
       case 'info':
-        return new RegExp('\/arcade').test(this.router.url);
+        return new RegExp('\/info').test(this.router.url);
       case 'stats':
-        return new RegExp('\/duel').test(this.router.url);
+        return new RegExp('\/stats').test(this.router.url);
       case 'score':
-        return new RegExp('\/royale').test(this.router.url);
+        return new RegExp('\/scores').test(this.router.url);
       default:
-        return new RegExp('\/global').test(this.router.url);
+        return false;
     }
   }
 

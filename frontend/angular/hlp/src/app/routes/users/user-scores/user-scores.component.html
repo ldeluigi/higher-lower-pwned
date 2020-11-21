@@ -1,42 +1,46 @@
+<div class="nav-bar">
+  <div class="selector-border"></div>
+  <a mat-button (click)="select(arcadeString)" [class] = "isSelected(arcadeString) ? 'selected' : 'not-selected'">
+    <mat-icon aria-hidden="true" aria-label="person">person</mat-icon>
+    <span class="text">&ensp;Arcade</span>
+  </a>
+  <a mat-button (click)="select(duelString)" [class] = "isSelected(duelString) ? 'selected' : 'not-selected'">
+    <mat-icon aria-hidden="true" aria-label="people">people</mat-icon>
+    <span class="text">&ensp;Duel
+      <span *ngIf="isDuelVictory()"> Victories</span>
+      <span *ngIf="isDuelLose()"> Loses</span>
+    </span>
+    <mat-icon class="not-text" *ngIf="isDuelVictory()" aria-hidden="true" aria-label="done">thumb_up</mat-icon>
+    <mat-icon class="not-text" *ngIf="isDuelLose()"aria-hidden="true" aria-label="done">thumb_down</mat-icon>
+    <mat-icon [matMenuTriggerFor]="duel" aria-hidden="true" aria-label="arrow_drop_down">
+      arrow_drop_down
+    </mat-icon>
+  </a>
+  <mat-menu #duel="matMenu">
+    <button (click)="duelScopeSelection('global')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">public</mat-icon> Global</button>
+    <button (click)="duelScopeSelection('victory')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_up</mat-icon> Victories</button>
+    <button (click)="duelScopeSelection('lose')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_down</mat-icon> Lost</button>
+  </mat-menu>
+  <a mat-button (click)="select(royaleString)" [class] = "isSelected(royaleString) ? 'selected' : 'not-selected'">
+    <mat-icon aria-hidden="true" aria-label="groups">groups</mat-icon>
+    <span class="text">&ensp;Battle Royale
+      <span *ngIf="isRoyaleVictory()"> Victories</span>
+      <span *ngIf="isRoyaleLose()"> Loses</span>
+    </span>
+    <mat-icon class="not-text" *ngIf="isRoyaleVictory()" aria-hidden="true" aria-label="done">thumb_up</mat-icon>
+    <mat-icon class="not-text" *ngIf="isRoyaleLose()"aria-hidden="true" aria-label="done">thumb_down</mat-icon>
+    <mat-icon [matMenuTriggerFor]="royale" aria-hidden="true" aria-label="arrow_drop_down">
+      arrow_drop_down
+    </mat-icon>
+  </a>
+  <mat-menu #royale="matMenu">
+    <button (click)="royaleScopeSelection('global')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">public</mat-icon> Global</button>
+    <button (click)="royaleScopeSelection('victory')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_up</mat-icon> Victories</button>
+    <button (click)="royaleScopeSelection('lose')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_down</mat-icon> Lost</button>
+  </mat-menu>
+  <div class="selector-border"></div>
+</div>
 <div class="container">
-  <div class="nav-bar">
-    <div class="selector-border"></div>
-    <a mat-button (click)="select(arcadeString)" [class] = "isSelected(arcadeString) ? 'selected' : 'not-selected'">
-      <mat-icon aria-hidden="true" aria-label="person">person</mat-icon>
-      <span class="text">&ensp;Arcade</span>
-    </a>
-    <a mat-button (click)="select(duelString)" [class] = "isSelected(duelString) ? 'selected' : 'not-selected'">
-      <mat-icon aria-hidden="true" aria-label="people">people</mat-icon>
-      <span class="text">&ensp;Duel
-        <span *ngIf="isDuelVictory()"> Victories</span>
-        <span *ngIf="isDuelLose()"> Loses</span>
-      </span>
-      <mat-icon [matMenuTriggerFor]="duel" aria-hidden="true" aria-label="arrow_drop_down">
-        arrow_drop_down
-      </mat-icon>
-    </a>
-    <mat-menu #duel="matMenu">
-      <button (click)="duelScopeSelection('global')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">public</mat-icon> Global</button>
-      <button (click)="duelScopeSelection('victory')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_up</mat-icon> Victories</button>
-      <button (click)="duelScopeSelection('lose')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_down</mat-icon> Lost</button>
-    </mat-menu>
-    <a mat-button (click)="select(royaleString)" [class] = "isSelected(royaleString) ? 'selected' : 'not-selected'">
-      <mat-icon aria-hidden="true" aria-label="groups">groups</mat-icon>
-      <span class="text">&ensp;Battle Royale
-        <span *ngIf="isRoyaleVictory()"> Victories</span>
-        <span *ngIf="isRoyaleLose()"> Loses</span>
-      </span>
-      <mat-icon [matMenuTriggerFor]="royale" aria-hidden="true" aria-label="arrow_drop_down">
-        arrow_drop_down
-      </mat-icon>
-    </a>
-    <mat-menu #royale="matMenu">
-      <button (click)="royaleScopeSelection('global')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">public</mat-icon> Global</button>
-      <button (click)="royaleScopeSelection('victory')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_up</mat-icon> Victories</button>
-      <button (click)="royaleScopeSelection('lose')" mat-menu-item><mat-icon aria-hidden="true" aria-label="done">thumb_down</mat-icon> Lost</button>
-    </mat-menu>
-    <div class="selector-border"></div>
-  </div>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="score">
@@ -66,6 +70,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
