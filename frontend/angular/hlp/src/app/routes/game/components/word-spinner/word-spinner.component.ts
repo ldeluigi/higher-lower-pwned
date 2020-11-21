@@ -166,9 +166,7 @@ export class WordSpinnerComponent {
   }
 
   private rollVS(): void {
-    if (!this.inAnimation) {
-      this.rotateVs = !this.rotateVs;
-    }
+    this.rotateVs = !this.rotateVs;
   }
 
   gameSetup(setup: GameSetup): void {
