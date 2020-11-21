@@ -1,9 +1,10 @@
 @import "../../../styles/stats/mixins";
-@import "../../../styles/stats/mixins";
+@import "../../../styles/dimensions.scss";
 
 @include nav-bar;
 @include underNavBarContainer();
 
 table {
   width: 100%;
+  margin-top: 2 * $default-margin;
 }

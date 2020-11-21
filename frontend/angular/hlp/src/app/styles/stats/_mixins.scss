@@ -7,13 +7,13 @@
   .nav-bar {
     display: flex;
     margin: auto;
-    a {
+    .mat-button {
       background-color: $button-bg;
       margin: auto;
       margin-top: 2vh;
       margin-bottom: 2vh;
     }
-    a:not(.mat-button-disabled) {
+    .mat-button:not(.mat-button-disabled) {
       color: $default-text-color;
     }
     .not-selected {
@@ -33,14 +33,45 @@
     }
   }
 
+  .text {
+    display: none;
+  }
+
+  .not-text {
+    margin: 10 * $default-margin;
+    display: initial;
+  }
+
+  @include tablet {
+    .text {
+      display: initial;
+    }
+
+    .not-text {
+      display: none;
+    }
+  }
+
   @include desktop {
+    .text {
+      display: initial;
+    }
+
+    .not-text {
+      display: none;
+    }
+
     .selector-border {
-      width: 25%;
+      width: 20%;
     }
   }
 }
 
 @mixin underNavBarContainer {
+  .container {
+    @include wide-col($default-margin, 0);
+  }
+
   @include tablet {
     .container {
       @include wide-col(3 * $default-margin, $default-padding);
