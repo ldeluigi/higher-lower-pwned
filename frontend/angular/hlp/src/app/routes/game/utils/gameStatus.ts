@@ -4,6 +4,5 @@ export enum GameStatus {
   PLAYING,
   WAITING_N_GUESS,
   LOST,
-  SPECTATORE,
   END
 }

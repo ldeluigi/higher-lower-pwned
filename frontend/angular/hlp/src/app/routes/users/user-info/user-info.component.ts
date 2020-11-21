@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { UserDataService } from '../../../services/user-data.service';
-import { UserInfo } from 'src/app/model/userInfo';
 import { MatDialog } from '@angular/material/dialog';
-import { AccountService } from 'src/app/services/account.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { UserInfo } from 'src/app/model/userInfo';
 import { DialogData, UpdateComponent } from 'src/app/routes/account/update/update.component';
+import { AccountService } from 'src/app/services/account.service';
+import { UserDataService } from '../../../services/user-data.service';
 
 @Component({
   selector: 'app-user-info',

@@ -1,5 +1,5 @@
 <div class="words">
-  <div class="top not-moving" [@cardAnimation]="element1.status" (@cardAnimation.done)="onAnimationListDone($event)" (click)="answer(1)">
+  <div class="top not-moving" [ngClass]="topCardClass" [@cardAnimation]="element1.status" (@cardAnimation.done)="onAnimationListDone($event)" (click)="answer(1)">
     <div id="dummy10p"></div>
     <div>
       <p> {{ element1.score }} </p>
@@ -7,7 +7,7 @@
       <h1>{{ element1.word }}</h1>
     </div>
   </div>
-  <div class="bot" [ngClass]="moving ? 'moving' : 'not-moving'" [@cardAnimation]="element2.status"  (@cardAnimation.done)="onAnimationListDone($event)" (click)="answer(2)">
+  <div class="bot" [ngClass]="botCardClass" [@cardAnimation]="element2.status" (@cardAnimation.start)="onAnimationStart($event)"  (@cardAnimation.done)="onAnimationListDone($event)" (click)="answer(2)">
     <div id="dummy10p"></div>
     <div>
       <p> {{ element2.score }} </p>
@@ -16,6 +16,7 @@
     </div>
   </div>
   <div class="vs" [@vsAnimation]="rotateVs" mat-icon-button isRoundButton>
-    <mat-icon class="mat-icon" svgIcon="punch_vs"></mat-icon>
+    <mat-icon *ngIf="!isWaitingOpponents" class="mat-icon" svgIcon="punch_vs"></mat-icon>
+    <mat-spinner *ngIf="isWaitingOpponents" class="mat-icon center"></mat-spinner>
   </div>
 </div>

@@ -1,13 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AccountService } from './account.service';
-import { ApiURLService } from './api-url.service';
-import { RequestScore } from '../model/users/scores/requestScore';
-import { UserScores } from '../model/users/scores/modeScore';
-import { Response } from '../model/serverResponse';
-import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { addParamsToHttp } from '../helper/httpUtils';
+import { UserScores } from '../model/users/scores/modeScore';
+import { RequestScore } from '../model/users/scores/requestScore';
+import { AccountService } from './account.service';
+import { ApiURLService } from './api-url.service';
 
 @Injectable({
   providedIn: 'root'

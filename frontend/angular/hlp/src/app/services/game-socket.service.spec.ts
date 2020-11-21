@@ -3,11 +3,11 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
+import { GameSocketService } from './game-socket.service';
 
-import { ArcadeSocketService } from './arcade-socket.service';
 
-describe('ArcadeSocketService', () => {
-  let service: ArcadeSocketService;
+describe('GameSocketService', () => {
+  let service: GameSocketService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -16,9 +16,9 @@ describe('ArcadeSocketService', () => {
         RouterTestingModule,
         MatSnackBarModule,
         MatDialogModule
-      ]
+      ],
     });
-    service = TestBed.inject(ArcadeSocketService);
+    service = TestBed.inject(GameSocketService);
   });
 
   it('should be created', () => {

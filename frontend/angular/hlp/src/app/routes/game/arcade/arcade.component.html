@@ -1,8 +1,8 @@
 <div class="wrapper-counter">
-  <app-counter [counter]="actualScore"></app-counter>
+  <app-counter></app-counter>
 </div>
 <div class="wrapper">
-  <app-word-spinner [buttonEnable]="!this.loading" (answerEmitter)="response($event)"></app-word-spinner>
+  <app-word-spinner></app-word-spinner>
 </div>
 <div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>
 <ng-template #gameIsOn>
@@ -16,7 +16,7 @@
     <div class="endGameDummy"></div>
     <div class="endGameButton">
       <button mat-button routerLink="/home" routerLinkActive="active">HOME</button>
-      <button mat-button (click)="start()">PLAY AGAIN</button>
+      <button mat-button (click)="replay()">PLAY AGAIN</button>
     </div>
     <div class="endGameDummy"></div>
   </div>

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { UserScoresService } from "../../../services/user-scores.service";
 import { AccountService } from '../../../services/account.service';
 import { Observable, Subscription } from 'rxjs';
 import { RequestScore } from 'src/app/model/users/scores/requestScore';
-import { MatTableDataSource } from '@angular/material/table';
-import { UserScores, CoreUserScores } from 'src/app/model/users/scores/modeScore';
+import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScore';
 
 @Component({
   selector: 'app-user-scores',

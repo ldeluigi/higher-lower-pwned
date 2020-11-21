@@ -1,9 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AccountService } from '../../../services/account.service';
-import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AccountService } from '../../../services/account.service';
 
 export interface DialogData {
   passwordUpdate: boolean;

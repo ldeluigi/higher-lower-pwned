@@ -1,24 +1,25 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { SocketIoModule } from 'ngx-socket-io';
+import { ArcadeComponent } from './arcade/arcade.component';
+import { CounterComponent } from './components/counter/counter.component';
+import { DuelCounterComponent } from './components/duel-counter/duel-counter.component';
+import { PlayerListComponent } from './components/player-list/player-list.component';
+import { WordSpinnerComponent } from './components/word-spinner/word-spinner.component';
+import { DuelComponent } from './duel/duel.component';
 import { GameRoutingModule } from './game-routing.module';
 import { LayoutComponent } from './layout/layout.component';
-import { ArcadeComponent } from './arcade/arcade.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { RoyaleComponent } from './royale/royale.component';
 
-import { MatButtonModule } from '@angular/material/button';
 
-import { SocketIoModule } from 'ngx-socket-io';
-import { CounterComponent } from './components/counter/counter.component';
-import { WordSpinnerComponent } from './components/word-spinner/word-spinner.component';
-import { BattleComponent } from './battle/battle.component';
-import { PlayerListComponent } from './components/player-list/player-list.component';
 
-import { MatIconModule } from '@angular/material/icon';
-import { DuelCounterComponent } from './components/duel-counter/duel-counter.component';
-import { DuelComponent } from './duel/duel.component';
-import { MatTableModule } from '@angular/material/table';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { MatTableModule } from '@angular/material/table';
     ArcadeComponent,
     CounterComponent,
     WordSpinnerComponent,
-    BattleComponent,
+    RoyaleComponent,
     PlayerListComponent,
     DuelCounterComponent,
     DuelComponent
@@ -40,6 +41,7 @@ import { MatTableModule } from '@angular/material/table';
     MatProgressBarModule,
     MatIconModule,
     MatTableModule,
+    MatProgressSpinnerModule
   ],
   providers: []
 })

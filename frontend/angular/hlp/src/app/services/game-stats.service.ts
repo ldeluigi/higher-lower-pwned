@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { LbItem } from '../model/lbItem';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { addParamsToHttp } from '../helper/httpUtils';
+import { LbItem } from '../model/lbItem';
 import { Response } from '../model/serverResponse';
 import { Stats } from '../model/stats';
-import { addParamsToHttp } from '../helper/httpUtils';
 import { ApiURLService } from './api-url.service';
-import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

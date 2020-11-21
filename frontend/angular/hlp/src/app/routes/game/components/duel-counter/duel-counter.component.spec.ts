@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DuelCounterComponent } from './duel-counter.component';
+
 
 describe('DuelCounterComponent', () => {
   let component: DuelCounterComponent;

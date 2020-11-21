@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
-import { InfoComponent } from './info.component';
+import { RouterModule, Routes } from '@angular/router';
 import { HowToPlayComponent } from './how-to-play/how-to-play.component';
+import { InfoComponent } from './info.component';
+
 
 const routes: Routes = [
   { path: 'how-to-play', component: HowToPlayComponent},

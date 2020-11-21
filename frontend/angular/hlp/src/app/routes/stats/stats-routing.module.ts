@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { LeadeboardComponent } from './leaderboard/leadeboard.component';
 import { StatsComponent } from './stats/stats.component';
