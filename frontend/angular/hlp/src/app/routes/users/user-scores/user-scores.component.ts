@@ -6,7 +6,7 @@ import { AccountService } from '../../../services/account.service';
 import { Observable, Subscription } from 'rxjs';
 import { RequestScore } from 'src/app/model/users/scores/requestScore';
 import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScore';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-scores',
@@ -16,11 +16,6 @@ import { MatPaginator } from '@angular/material/paginator';
 export class UserScoresComponent implements OnInit, OnDestroy {
 
   private sub: Subscription | undefined;
-  private haveToBeDeleted: RequestScore | undefined /* = { //todo
-    limit: 5,
-    page: 0,
-    sortbyDate: true
-  };*/
   private defaultDuelSelection = 'global';
   private victoryDuelSelection = 'victory';
   private loseDuelSelection = 'lose';
@@ -40,11 +35,20 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   displayedColumns = this.defaultColumns;
   dataSource = new MatTableDataSource<CoreUserScores>([]);
-  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
+  total = 0;
   duelString = 'duel';
   arcadeString = 'arcade';
   royaleString = 'royale';
   selected = this.arcadeString;
+  pageSizeOptions: number[] = [10, 20, 50];
+  pageSize: number = this.pageSizeOptions[0];
+  currentPage = 0;
+  sort = false;
+  private filter: RequestScore = { // todo
+    limit: this.pageSize,
+    page: this.currentPage,
+    sortbyDate: this.sort // todo
+  };
 
   constructor(
     private router: Router,
@@ -62,33 +66,35 @@ export class UserScoresComponent implements OnInit, OnDestroy {
       this.router.navigate(['/login']);
     } else {
       this.select(this.selected);
-      this.dataSource.paginator = this.paginator;
     }
   }
 
   select(mode: string): void {
     const tmp = this.selected;
+    if (this.selected !== mode) {
+      this.filter.page = 0;
+    }
     this.selected = mode;
     switch (mode) {
       case this.arcadeString:
-        this.updateData(this.scoreService.getArcadeScores(this.haveToBeDeleted));
+        this.updateData(this.scoreService.getArcadeScores(this.filter));
         break;
       case this.duelString:
         if (this.isDuelLose()) {
-          this.updateData(this.scoreService.getDuelLostScores(this.haveToBeDeleted));
+          this.updateData(this.scoreService.getDuelLostScores(this.filter));
         } else if (this.isDuelVictory()) {
-          this.updateData(this.scoreService.getDuelWinScores(this.haveToBeDeleted));
+          this.updateData(this.scoreService.getDuelWinScores(this.filter));
         } else { // default duel selection
-          this.updateData(this.scoreService.getDuelScores(this.haveToBeDeleted));
+          this.updateData(this.scoreService.getDuelScores(this.filter));
         }
         break;
       case this.royaleString:
         if (this.isRoyaleLose()) {
-          this.updateData(this.scoreService.getRoyaleLostScores(this.haveToBeDeleted));
+          this.updateData(this.scoreService.getRoyaleLostScores(this.filter));
         } else if (this.royaleSelection === this.victoryRoyaleSelection) {
-          this.updateData(this.scoreService.getRoyaleWinScores(this.haveToBeDeleted));
+          this.updateData(this.scoreService.getRoyaleWinScores(this.filter));
         } else { // default royale selection
-          this.updateData(this.scoreService.getRoyaleScores(this.haveToBeDeleted));
+          this.updateData(this.scoreService.getRoyaleScores(this.filter));
         }
         break;
       default:
@@ -129,7 +135,28 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   private updateData(obs: Observable<UserScores>): void {
     this.sub = obs.subscribe((data) => {
+      console.log(data);
       this.dataSource.data = data.data;
+      this.total = data.meta.total;
+      this.pageSize = data.meta.size;
+      this.pageSizeOptions = [10, 20, 50];
+      this.currentPage = Number(data.meta.page);
     });
   }
+
+  onPaginateChange(pageEvent: PageEvent): void {
+    this.filter = {
+      limit: pageEvent.pageSize,
+      page: pageEvent.pageIndex,
+      sortbyDate: this.sort
+    };
+    this.select(this.selected);
+  }
+
+  resort(): void {
+    this.filter.sortbyDate = !this.sort;
+    this.sort = !this.sort;
+    this.select(this.selected);
+  }
+
 }

@@ -69,7 +69,28 @@
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-footer-row *matFooterRowDef="['checkbox', 'paginator']"></tr>
+
+
+    <!-- Exporter column -->
+    <ng-container matColumnDef="checkbox">
+      <td mat-footer-cell *matFooterCellDef colspan="1">
+        <mat-checkbox (click)="resort()">sort by date</mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- Paginator column -->
+    <ng-container matColumnDef="paginator">
+      <td mat-footer-cell *matFooterCellDef colspan="3">
+        <mat-paginator 
+          [length]="total"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions"
+          [pageIndex]="currentPage"
+          (page)="onPaginateChange($event)"
+          showFirstLastButtons></mat-paginator>
+      </td>
+    </ng-container>
     </table>
-    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

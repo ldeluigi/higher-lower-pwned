@@ -10,6 +10,7 @@ import { UserStatsComponent } from './user-stats/user-stats.component';
 import { UsersRoutingModule } from './users-routing.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatSnackBarModule,
     MatExpansionModule,
     MatMenuModule,
+    MatCheckboxModule,
   ],
   schemas: [],
 })

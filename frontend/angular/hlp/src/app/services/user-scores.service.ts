@@ -70,7 +70,6 @@ export class UserScoresService {
       throw new Error('User not logged!');
     }
     const url = `${this.apiURLService.restApiUrl}/users/${this.accountService.userValue?.id}/scores/${finalUrlPart}`;
-    console.log(httpParams);
     return this.http.get<UserScores>(url, { params: httpParams});
   }
 }
