@@ -85,20 +85,20 @@ export class CounterComponent implements OnInit, OnDestroy {
   private setupArcadeAnimation(): void {
     if (this.animation === true) {
       this.gameManagerService.gameStatusObservable
-      .pipe(
-        filter(x => x === GameStatus.END),
-        first()
-      )
-      .subscribe( ns => {
-        console.log(ns);
-        if (ns === GameStatus.END) {
-          if (this.counter > 0) {
-            this.animationState = 'win';
-          } else {
-            this.animationState = 'lose';
+        .pipe(
+          filter(x => x === GameStatus.END),
+          first()
+        )
+        .subscribe(ns => {
+          console.log(ns);
+          if (ns === GameStatus.END) {
+            if (this.counter > 0) {
+              this.animationState = 'win';
+            } else {
+              this.animationState = 'lose';
+            }
           }
-        }
-      });
+        });
     }
   }
 
@@ -132,12 +132,12 @@ export class CounterComponent implements OnInit, OnDestroy {
     }
     if (event.toState === 'win') {
       this.counterSub?.add(
-        slowDigitWord('Nice score!', 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessage(), 2000, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     } else if (event.toState === 'lose') {
       this.counterSub?.add(
-        slowDigitWord('Oh no...', 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessage(), 2000, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
@@ -148,5 +148,36 @@ export class CounterComponent implements OnInit, OnDestroy {
       this.endGameMessate = '';
       this.animationState = 'none';
     }, value);
+  }
+
+  private scoreToMessage(): string {
+    if (this.counter === 0) {
+      return 'Oh no...';
+    }
+    if (this.counter < 200) {
+      return 'Better than nothing';
+    }
+    if (this.counter < 1000) {
+      return 'Pretty good.';
+    }
+    if (this.counter < 1500) {
+      return 'Nice score!';
+    }
+    if (this.counter < 2000) {
+      return 'Good job!';
+    }
+    if (this.counter < 5000) {
+      return 'Awesome!';
+    }
+    if (this.counter < 7500) {
+      return 'Amazing!';
+    }
+    if (this.counter < 10000) {
+      return 'Damn son!';
+    }
+    if (this.counter < 15000) {
+      return 'How did you do that?';
+    }
+    return 'WOOOOOOHOOOOO!!!';
   }
 }
