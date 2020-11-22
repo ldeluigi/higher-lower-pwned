@@ -74,7 +74,14 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
   }
 
   start(): void {
-    this.gameManagerService.startGame(ROYALE);
+    this.gameManagerService.startGame(ROYALE)
+    .subscribe(isStart => {
+      if (!isStart) {
+        this.gameManagerService.quit();
+        // TODO Log game not started
+        console.log('game not started!');
+      }
+    });
   }
 
   quit(): void {

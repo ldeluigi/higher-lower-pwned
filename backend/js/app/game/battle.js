@@ -7,6 +7,7 @@ const scoreSchema = require('../model/score.model').schema;
 const startTimeMillis = 1000 * 15;
 const correctGuessMillis = 1000 * 6;
 const correctGuessScore = 100;
+const maxExpirationTimeMillis = 1000 * 30;
 
 module.exports = {
   newGame: async function (gameIDs, userIDs, modeName = "royale") {
@@ -182,7 +183,8 @@ module.exports = {
         if ((gameQuery.valueP1 >= gameQuery.valueP2 && guess === 1) ||
           (gameQuery.valueP1 <= gameQuery.valueP2 && guess === 2)) {
           game.score += correctGuessScore + Math.floor((game.expiration.getTime() - now.getTime()) / 1000);
-          game.expiration = new Date(game.expiration.getTime() + correctGuessMillis);
+          const futureExpirationMillis = game.expiration.getTime() + correctGuessMillis;
+          game.expiration = new Date(Math.min(futureExpirationMillis, now.getTime() + maxExpirationTimeMillis));
           game.lastGuess = now;
         } else {
           game.lost = true;
@@ -206,11 +208,7 @@ module.exports = {
         }
         checkVictories(gameQuery);
         if (gameQuery.games.filter(g => !g.lost).length > 0) {
-          gameQuery.currentP1 = gameQuery.currentP2;
-          gameQuery.valueP1 = gameQuery.valueP2;
-          let newP = await passwords.pickPasswordAndValue();
-          gameQuery.currentP2 = newP.password;
-          gameQuery.valueP2 = newP.value;
+          await loadNewPassword(gameQuery);
         }
       } else if (game.guesses == minGuesses) {
         guessHandler();
@@ -312,12 +310,20 @@ function checkVictories(gameQuery) {
   }
 }
 
+async function loadNewPassword(gameQuery) {
+  gameQuery.currentP1 = gameQuery.currentP2;
+  gameQuery.valueP1 = gameQuery.valueP2;
+  let newP = await passwords.pickPasswordAndValue();
+  gameQuery.currentP2 = newP.password;
+  gameQuery.valueP2 = newP.value;
+}
+
 async function currentGuessFromQuery(gameQuery) {
   if (gameQuery === null) throw new Error("Game not found.");
-  let now = Date.now();
+  let nowInMillis = Date.now();
   let minGuesses = computeMinGuesses(gameQuery, true);
   let playingNumber = gamesNotLost(gameQuery).length;
-  let everyoneExpired = hasEverybodyExpired(gameQuery, now);
+  let everyoneExpired = hasEverybodyExpired(gameQuery, nowInMillis);
   try {
     if (everyoneExpired) {
       gameQuery.games.forEach(e => {
@@ -329,7 +335,7 @@ async function currentGuessFromQuery(gameQuery) {
       gameQuery.games.filter(e => {
         let timeout = e.guesses > minGuesses ?
           Number.MAX_SAFE_INTEGER :
-          e.expiration.getTime() - now;
+          e.expiration.getTime() - nowInMillis;
         return !e.lost && e.guesses == minGuesses && timeout <= 0
       }).forEach(e => {
         e.lost = true;
@@ -345,18 +351,14 @@ async function currentGuessFromQuery(gameQuery) {
       if (!_someoneIsBehind && someoneJustLost && _minGuesses > minGuesses) {
         gameQuery.games.filter(e => !e.lost).forEach(g => {
           if (g.lastGuess && !g.lost) {
-            g.expiration = new Date(g.expiration.getTime() + now - g.lastGuess.getTime());
+            g.expiration = new Date(g.expiration.getTime() + nowInMillis - g.lastGuess.getTime());
           }
-          if (g.expiration.getTime() < now) {
+          if (g.expiration.getTime() < nowInMillis) {
             g.lost = true;
           }
         });
         checkVictories(gameQuery);
-        gameQuery.currentP1 = gameQuery.currentP2;
-        gameQuery.valueP1 = gameQuery.valueP2;
-        let newP = await passwords.pickPasswordAndValue();
-        gameQuery.currentP2 = newP.password;
-        gameQuery.valueP2 = newP.value;
+        await loadNewPassword(gameQuery);
       }
     }
     await gameQuery.save();
@@ -378,7 +380,7 @@ async function currentGuessFromQuery(gameQuery) {
     if (!someoneIsBehind) {
       let timeout = game.guesses > minGuesses ?
         Number.MAX_SAFE_INTEGER :
-        game.expiration.getTime() - now;
+        game.expiration.getTime() - nowInMillis;
       res.score = game.score;
       res.timeout = timeout;
       res.lost = game.lost;

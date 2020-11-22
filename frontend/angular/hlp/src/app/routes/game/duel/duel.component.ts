@@ -78,7 +78,14 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
   }
 
   start(): void {
-    this.gameManager.startGame(DUEL);
+    this.gameManager.startGame(DUEL)
+    .subscribe(isStart => {
+      if (!isStart) {
+        this.gameManager.quit();
+        // TODO Log game not started
+        console.log('game not started!');
+      }
+    });
   }
 
   disconnect(): void {

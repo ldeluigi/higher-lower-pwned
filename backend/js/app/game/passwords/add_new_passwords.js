@@ -8,7 +8,7 @@ const csv = require('async-csv');
 
 const folder = "./";
 const debug = false;
-const readBufferLimit = 40;
+const readBufferLimit = 180;
 
 (async () => {
   try {
@@ -86,6 +86,14 @@ async function startUpdating(f) {
         readCount = 0;
       }
     }
+  }
+  for await (const result of readBuffer.map(s => downloadPasswordData(s))) {
+    await fsPromises.appendFile(asCSV,
+      result.password + "," +
+      result.hash + "," +
+      result.number + "\n");
+    if (debug)
+      console.log(result);
   }
 }
 

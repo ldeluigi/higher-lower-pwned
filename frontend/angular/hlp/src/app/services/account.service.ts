@@ -110,7 +110,6 @@ export class AccountService implements OnDestroy {
       .pipe(map(a => {
         user.token = a.data.token;
         user.refresh = a.data.refresh;
-        // console.log(user.token, a.data.token);
         this.userSubject.next(user);
         return a.data;
       }));

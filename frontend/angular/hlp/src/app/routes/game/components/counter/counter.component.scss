@@ -20,18 +20,6 @@ $width-desktop: 60%;
   @return unquote($value);
 }
 
-@keyframes counter-animation {
-  0% {
-    text-shadow: counter-multiple-text-shadow(5, $higher-color);
-  }
-  50% {
-    text-shadow: counter-multiple-text-shadow(5, $lower-color);
-  }
-  100% {
-    text-shadow: counter-multiple-text-shadow(5, $higher-color);
-  }
-}
-
 .counter-container {
   display: flex;
   flex-direction: column;
@@ -75,7 +63,7 @@ $width-desktop: 60%;
   .container {
     min-width: $width-desktop / 2;
     .score {
-      $text-size: 8vh;
+      $text-size: 8vh; // TODO use also vw maybe a min function
       font-size: $text-size;
       height: $text-size;
     }

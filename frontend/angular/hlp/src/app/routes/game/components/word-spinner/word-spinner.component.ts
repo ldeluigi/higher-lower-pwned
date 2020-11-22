@@ -3,7 +3,7 @@ import { Component, EventEmitter } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { debounceTime, filter, takeWhile } from 'rxjs/operators';
+import { debounceTime, filter, map, takeWhile } from 'rxjs/operators';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
 import { EndGame, GameSetup, NextCard } from '../../model/animation';
@@ -66,12 +66,8 @@ export class WordSpinnerComponent {
 
   ) {
     this.matIconRegistry.addSvgIcon(
-      'punch_vs',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/recycle.svg')
-    );
-    this.matIconRegistry.addSvgIcon(
-      'arrows',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/double-arrow.svg')
+      'vs_icon',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/vs.svg')
     );
     this.setup();
   }
@@ -89,18 +85,18 @@ export class WordSpinnerComponent {
       .pipe(filter(p => p.password1 !== this.currentFirstPassword))
       .subscribe(ng => {
         this.currentFirstPassword = ng.password1;
-        console.log('recived in word-spinner', ng);
+        // console.log('recived in word-spinner', ng);
         if (this.first) {
           this.first = false;
           this.gameSetup({ word1: ng.password1, word2: ng.password2, score1: ng.value1 });
         } else if (ng.password1 === this.element1.word) {
-          console.log('next guess word spinner skipped', ng);
+          // console.log('next guess word spinner skipped', ng);
           // nothing
         } else {
-          console.log('next guess word spinner next', ng);
+          // console.log('next guess word spinner next', ng);
           this.next({ oldScore: ng.value1, newWord: ng.password2 });
         }
-    });
+      });
     this.sub.add(this.socketService.gameEndObservable.subscribe(ge => {
       this.end({ oldScore: ge.value2 });
     }));
@@ -170,13 +166,11 @@ export class WordSpinnerComponent {
   }
 
   private rollVS(): void {
-    if (!this.inAnimation) {
-      this.rotateVs = !this.rotateVs;
-    }
+    this.rotateVs = !this.rotateVs;
   }
 
   gameSetup(setup: GameSetup): void {
-    console.log('game set up');
+    // console.log('game set up');
     this.moving = false;
     this.inAnimation = true;
     this.element1 = {
