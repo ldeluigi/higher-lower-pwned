@@ -155,6 +155,8 @@ footer {
     height: $button-size;
     opacity: 1;
     animation: mode-fading-1 10s infinite;
+    border-radius: 50%;
+    background: $ui-color;
   }
   transition-duration: 0.7s;
   &:hover {

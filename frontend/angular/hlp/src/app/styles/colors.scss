@@ -3,11 +3,13 @@ $default-text-color: aliceblue;
 $dark-text-color: rgb(224, 224, 224);
 $higher-color: #ff2147;
 $lower-color: #add8e6;
+$ui-color: #c7ffff;
 $white-bg: rgb(230, 230, 230);
 $black-bg: rgb(29, 29, 29);
-$default-error-color: red;
+$default-error-color: rgb(179, 0, 0);
 
 $player-ingame-color: rgba(0, 128, 0, 0.3);
+$player-lost-color: grey;
 $behind-player-color: rgba(255, 0, 0, 0.3);
 $losing-player-color: rgba(0, 0, 0, 0.3);
 $button-bg: rgba(0, 0, 0, 0);
