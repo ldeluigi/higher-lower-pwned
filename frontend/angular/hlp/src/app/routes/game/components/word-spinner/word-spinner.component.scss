@@ -9,8 +9,8 @@ $card_width_desktop: 60vw;
 
 $card_heigth: 45%;
 $vs_heigth: 20%;
-$bottom_card_Y: #{math.round( (100%/$card_heigth) * ($vs_heigth / 2%)) * 1%};
-$vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
+$bottom_card_Y: #{math.round((100% / $card_heigth) * ($vs_heigth / 2%)) * 1%};
+$vs_Y: #{- (100% / $vs_heigth) * ($card_heigth)};
 
 :host {
   // width: 98vw;
@@ -38,15 +38,14 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
     height: $card_heigth;
     transform: translateY($bottom_card_Y);
     background-color: $lower-color;
-
   }
 
   .lost {
-    background-color: grey;
+    background-color: $player-lost-color;
   }
 
   .lost:hover {
-    background-color: grey;
+    background-color: $player-lost-color;
   }
 
   .not-moving {
@@ -72,7 +71,6 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
       margin: auto;
       text-align: center;
       transition-duration: 2s;
-
     }
 
     p {
@@ -94,8 +92,10 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
     text-align: center;
     pointer-events: none;
     .mat-icon {
-      width: 100%;
-      height: 100%;
+      border-radius: 50%;
+      background: black;
+      width: 6vh;
+      height: 6vh;
     }
     .center {
       margin: auto;
@@ -146,14 +146,13 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
       pointer-events: none;
     }
 
-
     .lost {
-      background-color: grey;
+      background-color: $player-lost-color;
       cursor: default;
     }
 
     .lost:hover {
-      background-color: grey;
+      background-color: $player-lost-color;
       cursor: default;
       h1 {
         font-size: 180%;
@@ -161,4 +160,3 @@ $vs_Y: #{-(100%/$vs_heigth) * ($card_heigth)};
     }
   }
 }
-
