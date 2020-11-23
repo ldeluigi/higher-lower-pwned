@@ -59,9 +59,9 @@ module.exports = {
               }, {
                 $facet: {
                   totalData: [
+                    { $sort: sortStrategy },
                     { $skip: queryPage * queryLimit },
-                    { $limit: queryLimit },
-                    { $sort: sortStrategy }
+                    { $limit: queryLimit }
                   ],
                   totalCount: [
                     { $count: "count" }
