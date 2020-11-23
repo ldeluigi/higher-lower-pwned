@@ -89,7 +89,7 @@ $button-size: 14vh;
   text-align: center;
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   flex-direction: column;
 }
 
@@ -111,16 +111,16 @@ footer {
     0% {
       opacity: $start_opacity;
     }
-    10% {
+    15% {
       opacity: $start_opacity;
-    }
-    20% {
-      opacity: 1 - $start_opacity;
     }
     25% {
       opacity: 1 - $start_opacity;
     }
-    35% {
+    45% {
+      opacity: 1 - $start_opacity;
+    }
+    60% {
       opacity: $start_opacity;
     }
     100% {
@@ -173,6 +173,10 @@ footer {
     margin-bottom: $default-footer-height;
   }
 
+  .in-line {
+    width: $button-size * 2.4;
+  }
+
   footer {
     z-index: 1;
   }
@@ -197,7 +201,7 @@ footer {
 }
 
 $autoscroll-width: 700%;
-$autoscroll-duration: 60s;
+$autoscroll-duration: 20s;
 
 .autoscroll {
   overflow: hidden;
@@ -212,6 +216,20 @@ $autoscroll-duration: 60s;
   -moz-animation: autoscroll $autoscroll-duration linear infinite;
   -webkit-animation: autoscroll $autoscroll-duration linear infinite;
   animation: autoscroll $autoscroll-duration linear infinite;
+
+  @include tablet {
+    /* Apply animation to this element */
+    -moz-animation: autoscroll $autoscroll-duration * 2 linear infinite;
+    -webkit-animation: autoscroll $autoscroll-duration * 2 linear infinite;
+    animation: autoscroll $autoscroll-duration * 2 linear infinite;
+  }
+
+  @include desktop {
+    /* Apply animation to this element */
+    -moz-animation: autoscroll $autoscroll-duration * 3 linear infinite;
+    -webkit-animation: autoscroll $autoscroll-duration * 3 linear infinite;
+    animation: autoscroll $autoscroll-duration * 3 linear infinite;
+  }
 }
 
 /* Move it (define the animation) */
