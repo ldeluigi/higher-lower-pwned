@@ -280,7 +280,7 @@ async function onStart(io, socket, code, modeName, matchmaking, socketRoomPrefix
     emitError(socket, code, "Already in matchmaking.");
     return;
   }
-  if (await battle.isPlaying(playerID)) {
+  if (await battle.isPlaying(playerID, socket.userData.id)) {
     emitError(socket, code, "Already playing.");
     return;
   }
