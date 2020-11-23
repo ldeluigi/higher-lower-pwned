@@ -22,7 +22,7 @@ jobs:
       if: always()
       with:
         chat: ${{ secrets.TELEGRAM_CHAT_ID }} # save your chat id at settings/secrets with name: TELEGRAM_CHAT_ID
-        token: ${{ secrets.TELEGRAM_BOT_ID }} # savethe bot token at settings/secrets with name: TELEGRAM_BOT_ID
+        token: ${{ secrets.TELEGRAM_BOT_TOKEN }} # savethe bot token at settings/secrets with name: TELEGRAM_BOT_ID
         status: ${{ job.status }} # don't change
         event: ${{ github.event_name }} # don't change
         actor: ${{ github.actor }} # don't change
