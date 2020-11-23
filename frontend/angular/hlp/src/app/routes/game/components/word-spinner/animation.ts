@@ -4,10 +4,10 @@ const DURATION1 = '1.0s';
 export const vsAnimation: AnimationTriggerMetadata = trigger('vsAnimation', [
   transition('true <=> false', [
     style({
-      transform: 'translateY(var(--translateY)) rotate(0deg)'
+      transform: 'rotate(0deg)'
     }),
     animate(DURATION1, style({
-      transform: 'translateY(var(--translateY)) rotate(360deg)'
+      transform: 'rotate(360deg)'
     }))
   ]),
 ]);

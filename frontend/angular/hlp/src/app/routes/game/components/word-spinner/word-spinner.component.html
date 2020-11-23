@@ -8,6 +8,15 @@
       <h1>{{ element1.word }}</h1>
     </div>
   </div>
+
+  <div class="vs" [@vsAnimation]="rotateVs" mat-icon-button isRoundButton>
+    <mat-icon *ngIf="!isWaitingOpponents" class="mat-icon" svgIcon="vs_icon"></mat-icon>
+    <!-- <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" *ngIf="!isWaitingOpponents" class="mat-icon">
+      <use xlink:href="/assets/vs.svg"></use>
+    </svg> -->
+    <mat-spinner *ngIf="isWaitingOpponents" class="mat-icon center"></mat-spinner>
+  </div>
+
   <div class="bot" [ngClass]="botCardClass" [@cardAnimation]="element2.status"
     (@cardAnimation.start)="onAnimationStart($event)" (@cardAnimation.done)="onAnimationListDone($event)"
     (click)="answer(2)">
@@ -18,8 +27,5 @@
       <h1>{{ element2.word }}</h1>
     </div>
   </div>
-  <div class="vs" [@vsAnimation]="rotateVs" mat-icon-button isRoundButton>
-    <mat-icon *ngIf="!isWaitingOpponents" class="mat-icon" svgIcon="vs_icon"></mat-icon>
-    <mat-spinner *ngIf="isWaitingOpponents" class="mat-icon center"></mat-spinner>
-  </div>
+
 </div>

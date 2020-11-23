@@ -8,12 +8,9 @@ $card_width: 85vw;
 $card_width_desktop: 60vw;
 
 $card_heigth: 45%;
-$vs_heigth: 20%;
-$bottom_card_Y: #{math.round((100% / $card_heigth) * ($vs_heigth / 2%)) * 1%};
-$vs_Y: #{- (100% / $vs_heigth) * ($card_heigth)};
+$vs_heigth: #{95% - ($card_heigth * 2)};
 
 :host {
-  // width: 98vw;
   display: flex;
   height: 100%;
   justify-content: center;
@@ -36,7 +33,6 @@ $vs_Y: #{- (100% / $vs_heigth) * ($card_heigth)};
   }
   .bot {
     height: $card_heigth;
-    transform: translateY($bottom_card_Y);
     background-color: $lower-color;
   }
 
@@ -50,16 +46,16 @@ $vs_Y: #{- (100% / $vs_heigth) * ($card_heigth)};
 
   .not-moving {
     @include mat-elevation-transition;
-    @include mat-elevation(4);
+    @include mat-elevation(1);
   }
 
   .moving {
     @include mat-elevation-transition;
-    @include mat-elevation(20, black, 1.6);
+    @include mat-elevation(6, black, 1.6);
   }
 
   .selected {
-    @include mat-elevation(20, black, 1.6);
+    @include mat-elevation(6, black, 1.6);
   }
 
   div {
@@ -85,21 +81,30 @@ $vs_Y: #{- (100% / $vs_heigth) * ($card_heigth)};
     }
   }
 
+  .ratio--width-to-height {
+    height: 100%;
+    width: auto;
+  }
+
   .vs {
-    height: 20%;
-    --translateY: #{$vs_Y};
-    transform: translateY(var(--translateY));
+    // position: relative;
+    height: #{$vs_heigth};
     text-align: center;
     pointer-events: none;
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
     .mat-icon {
+      align-self: center;
       border-radius: 50%;
       background: black;
-      width: 6vh;
-      height: 6vh;
+      width: 4vh;
+      height: 4vh;
     }
     .center {
       margin: auto;
     }
+    z-index: 40;
   }
 }
 
