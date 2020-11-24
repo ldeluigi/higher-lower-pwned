@@ -20,7 +20,7 @@ router.post("/",
       .trim()
       .isLength({ min: 4, max: 30 }),
     body("password")
-      .isAlphanumeric()
+      .isAscii()
       .trim()
       .isLength({ min: 8, max: 1024 }),
     body("email")
@@ -95,7 +95,7 @@ router.put("/:id",
     .isAlphanumeric(),
   body("password")
     .optional({ nullable: true })
-    .isAlphanumeric()
+    .isAscii()
     .trim()
     .isLength({ min: 8, max: 1024 }),
   body("oldPassword")

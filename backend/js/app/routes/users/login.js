@@ -12,7 +12,7 @@ router.post("/login",
       .isAlphanumeric()
       .trim(),
     body("password")
-      .isAlphanumeric()
+      .isAscii()
       .trim()
       .isLength({ min: 8, max: 1024 })
   ],
