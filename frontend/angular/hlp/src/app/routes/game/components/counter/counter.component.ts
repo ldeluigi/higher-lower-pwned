@@ -86,7 +86,7 @@ export class CounterComponent implements OnInit, OnDestroy {
         });
       }
     } else if (this.gameManagerService.currentGameMode === ROYALE) {
-        // TODO royale animation
+      // TODO royale animation
     }
   }
 
@@ -215,7 +215,7 @@ export class CounterComponent implements OnInit, OnDestroy {
       return 'Oh no...';
     }
     if (this.counter < 200) {
-      return 'Better than nothing';
+      return 'Better than nothing...';
     }
     if (this.counter < 1000) {
       return 'Pretty good.';

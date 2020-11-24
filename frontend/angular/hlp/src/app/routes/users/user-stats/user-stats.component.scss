@@ -15,6 +15,7 @@ canvas {
 }
 
 div.inputs {
+  padding: $default-padding;
   margin-bottom: $default-margin;
   background: $white-bg;
   display: flex;
@@ -23,6 +24,24 @@ div.inputs {
 
 .input {
   margin: $default-margin;
+}
+
+mat-form-field {
+  position: initial;
+}
+
+:host ::ng-deep {
+  .mat-form-field-wrapper {
+    padding-bottom: unset;
+    position: initial;
+  }
+  .mat-form-field-underline {
+    position: initial;
+    width: auto;
+  }
+  .mat-form-field-subscript-wrapper {
+    display: none;
+  }
 }
 
 @include tablet {

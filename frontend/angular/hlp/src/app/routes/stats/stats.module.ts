@@ -6,6 +6,7 @@ import { ModeSelectorComponent } from './mode-selector/mode-selector.component';
 import { StatisticRoutingModule } from './stats-routing.module';
 import { StatsComponent } from './stats/stats.component';
 import { ViewSelectorComponent } from './view-selector/view-selector.component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -16,10 +17,11 @@ import { ViewSelectorComponent } from './view-selector/view-selector.component';
     StatsComponent,
     LayoutComponent,
     ViewSelectorComponent,
-    ModeSelectorComponent
+    ModeSelectorComponent,
   ],
   imports: [
     StatisticRoutingModule,
+    MatSelectModule,
     SharedModule
   ]
 })

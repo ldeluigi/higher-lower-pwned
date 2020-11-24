@@ -18,16 +18,12 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
   private statsSub: Subscription | undefined;
   mode = 'arcade';
 
-  limit = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^[0-9]*$'),
-    Validators.max(1000)
-  ]);
   period: string | undefined;
   displayedColumns = ['position', 'username', 'score', 'date'];
   dataSource = new MatTableDataSource<LbItem>([]);
 
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
+  selected = 10;
 
   constructor(
     private leaderboardService: GameStatsService,
@@ -51,14 +47,15 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
     this.statsSub?.unsubscribe();
   }
 
-  updateLeaderboard(limit?: number, period?: string): void {
+  updateLeaderboard(period?: string): void {
     if (period !== undefined) {
       this.period = period;
     }
-    if (this.limit.invalid) {
-      this.leaderboardService.refreshLeaderboard(undefined, this.period, this.mode);
-      return;
-    }
-    this.leaderboardService.refreshLeaderboard(this.limit.value, this.period, this.mode);
+    this.leaderboardService.refreshLeaderboard(this.selected, this.period, this.mode);
+  }
+
+  updateLimit(limit: number): void {
+    this.selected = limit;
+    this.updateLeaderboard(this.period);
   }
 }

@@ -15,6 +15,11 @@ $icon-dimension: 40px;
   margin-left: $icon-dimension;
 }
 
+.container {
+  background-color: transparent;
+  box-shadow: none;
+}
+
 mat-card mat-card {
   display: grid;
   place-content: center;
@@ -32,10 +37,18 @@ mat-card-title {
   place-content: center;
 }
 
+.mat-card > :last-child {
+  margin-bottom: auto;
+}
+
 @include tablet {
   .container {
     display: grid;
     grid-template-columns: auto auto;
+  }
+
+  mat-card mat-card {
+    margin: $default-margin;
   }
 }
 
@@ -43,5 +56,9 @@ mat-card-title {
   .container {
     display: grid;
     grid-template-columns: auto auto;
+  }
+
+  mat-card mat-card {
+    margin: 2 * $default-margin;
   }
 }

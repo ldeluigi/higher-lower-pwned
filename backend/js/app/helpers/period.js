@@ -6,40 +6,49 @@ function minMaxDate(handleMin) {
   return [minDay, today];
 }
 
+const defaultPeriods = {
+  day: "day",
+  week: "week",
+  month: "month",
+  year: "year",
+};
+
 const periods = {
-  day: minMaxDate((a) => new Date(a.getTime()).setDate(a.getUTCDate() - 1)),
-  week: minMaxDate((a) => new Date(a.getTime()).setDate(a.getUTCDate() - 7)),
-  month: minMaxDate((a) => new Date(a.getTime()).setMonth(a.getMonth() - 1)),
+  day: minMaxDate((a) =>
+    subtractPeriodNTimesFromDate(a, defaultPeriods.day, 1)
+  ),
+  week: minMaxDate((a) =>
+    subtractPeriodNTimesFromDate(a, defaultPeriods.week, 1)
+  ),
+  month: minMaxDate((a) =>
+    subtractPeriodNTimesFromDate(a, defaultPeriods.month, 1)
+  ),
   year: minMaxDate((a) =>
-    new Date(a.getTime()).setFullYear(a.getFullYear() - 1)
+    subtractPeriodNTimesFromDate(a, defaultPeriods.year, 1)
   ),
 };
 
-function subtractPeriodNTimesFromToday(period, times) {
-  if (!Object.keys(periods).includes(period)) throw new Error("Invalid Period");
+function subtractPeriodNTimesFromDate(date, period, times) {
+  if (!Object.keys(defaultPeriods).includes(period))
+    throw new Error("Invalid Period");
   if (times <= 0) throw new Error("Invalid times");
   times--;
-  let currentDate = new Date();
   //console.log(currentDate.getDay());
   let p = {
-    day: new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate() - times
-    ),
+    day: new Date(date.getFullYear(), date.getMonth(), date.getDate() - times),
     week: new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate() - currentDate.getDay() - 7 * times
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate() - date.getDay() - 7 * times
     ),
-    month: new Date(currentDate.getFullYear(), currentDate.getMonth() - times),
-    year: new Date(currentDate.getFullYear() - times, 0),
+    month: new Date(date.getFullYear(), date.getMonth() - times),
+    year: new Date(date.getFullYear() - times, 0),
   };
-  // p.day.setDate(currentDate.getUTCDate() - 1 * times);
-  // p.week.setDate(currentDate.getUTCDate() - 7 * times);
-  // p.month.setMonth(currentDate.getMonth() - 1 * times);
-  // p.year.setFullYear(currentDate.getFullYear() - 1 * times);
   return p[period];
+}
+
+function subtractPeriodNTimesFromToday(period, times) {
+  subtractPeriodNTimesFromDate(new Date(), period, times);
 }
 
 function periodInDays(period) {

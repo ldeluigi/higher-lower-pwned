@@ -26,10 +26,6 @@ export class UserInfoComponent implements OnInit {
     usersTools.userInfo.subscribe((info) => (this.userInfo = info));
   }
 
-  private log(message: string): void {
-    this.snackBar.open(message, 'ok', { duration: 3000 });
-  }
-
   ngOnInit(): void {
     this.updateUserInfo();
   }

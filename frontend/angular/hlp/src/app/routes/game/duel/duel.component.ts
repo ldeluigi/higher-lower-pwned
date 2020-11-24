@@ -69,6 +69,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
       || this.gameManager.currentGameStatus === GameStatus.WAITING_START;
   }
 
+
   get canRestart(): boolean {
     return this.gameManager.currentGameStatus === GameStatus.END
       || this.gameManager.currentGameStatus === GameStatus.LOST;
@@ -85,12 +86,13 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
 
   start(): void {
     this.gameManager.startGame(DUEL)
-    .subscribe(isStart => {
-      if (!isStart) {
-        this.gameManager.quit();
-        console.log('game not started!');
-      }
-    });
+      .subscribe(isStart => {
+        if (!isStart) {
+          this.gameManager.quit();
+          // TODO Log game not started
+          console.log('game not started!');
+        }
+      });
   }
 
   quit(): void {

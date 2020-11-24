@@ -4,16 +4,16 @@
       class="input"
       (period)="updateUserStats($event)"
     ></app-period-buttons>
-    <mat-form-field class="input">
+    <mat-form-field appearance="fill" class="input">
       <mat-label>period number</mat-label>
-      <input
-        matInput
-        (keyup)="updateUserStats()"
-        [formControl]="limit"
-        input="number"
-        placeholder="Ex. 10, max 30"
-        #input
-      />
+      <mat-select [(value)]="selected"
+        (selectionChange)="updateLimit($event.value)">
+        <mat-option value="1">1</mat-option>
+        <mat-option value="5">5</mat-option>
+        <mat-option value="10">10</mat-option>
+        <mat-option value="15">15</mat-option>
+        <mat-option value="30">30</mat-option>
+      </mat-select>
     </mat-form-field>
     <button class="input" mat-mini-fab aria-label="chart button" (click)="toggle()">
       <div *ngIf="showingChart; then assessment; else show_chart"></div>

@@ -64,7 +64,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
     return cgs !== GameStatus.IDLE;
   }
 
-  log(message: string, type: string = 'ok'): void {
+  log(message: string, type: string = 'OK'): void {
     this.snackBar.open(message, type, { duration: 5000 });
   }
 
@@ -76,13 +76,13 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
 
   start(): void {
     this.gameManagerService.startGame(ROYALE)
-    .subscribe(isStart => {
-      if (!isStart) {
-        this.gameManagerService.quit();
-        // TODO Log game not started
-        console.log('game not started!');
-      }
-    });
+      .subscribe(isStart => {
+        if (!isStart) {
+          this.gameManagerService.quit();
+          // TODO Log game not started
+          console.log('game not started!');
+        }
+      });
   }
 
   quit(): void {
