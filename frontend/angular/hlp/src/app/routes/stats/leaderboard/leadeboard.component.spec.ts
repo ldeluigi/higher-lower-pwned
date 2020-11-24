@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LeadeboardComponent } from './leadeboard.component';
 import { MatSelectModule } from '@angular/material/select';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('LeadeboardComponent', () => {
@@ -12,6 +13,7 @@ describe('LeadeboardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        NoopAnimationsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         MatSelectModule,
