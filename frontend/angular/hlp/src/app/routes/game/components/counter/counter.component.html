@@ -4,7 +4,7 @@
       {{ name | uppercase }}
     </span>
   </div>
-  <div class="container" [@endGameAnimation]="animationState" (@endGameAnimation.done)="onArcadeEndGameAnimation($event)">
+  <div class="container" [@endGameAnimation]="animationState" (@endGameAnimation.done)="onAnimationEnd($event)">
     <div class="score">
       <span *ngIf="endGameMessate.length > 0; then endGame else score"></span>
       <ng-template #endGame>

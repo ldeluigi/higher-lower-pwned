@@ -9,12 +9,9 @@
     </div>
   </div>
 
-  <div class="vs" [@vsAnimation]="rotateVs" mat-icon-button isRoundButton>
-    <mat-icon *ngIf="!isWaitingOpponents" class="mat-icon" svgIcon="vs_icon"></mat-icon>
-    <!-- <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" *ngIf="!isWaitingOpponents" class="mat-icon">
-      <use xlink:href="/assets/vs.svg"></use>
-    </svg> -->
-    <mat-spinner *ngIf="isWaitingOpponents" class="mat-icon center"></mat-spinner>
+  <div class="vs" mat-icon-button isRoundButton>
+    <mat-icon [@vsAnimation]="rotateVs" *ngIf="!isWaitingOpponents" class="mat-icon" svgIcon="vs_icon"></mat-icon>
+    <mat-spinner *ngIf="isWaitingOpponents" class="center"></mat-spinner>
   </div>
 
   <div class="bot" [ngClass]="botCardClass" [@cardAnimation]="element2.status"

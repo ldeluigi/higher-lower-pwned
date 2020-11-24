@@ -97,9 +97,9 @@ $vs_heigth: #{95% - ($card_heigth * 2)};
     .mat-icon {
       align-self: center;
       border-radius: 50%;
-      background: black;
-      width: 4vh;
-      height: 4vh;
+      width: 8vh;
+      height: 8vh;
+      background-color: $white-bg;
     }
     .center {
       margin: auto;

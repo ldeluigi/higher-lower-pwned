@@ -1,4 +1,15 @@
 <div class="counter-container">
-  <app-counter class="child" [user]="true"></app-counter>
-  <app-counter class="child" [user]="false"></app-counter>
+  <app-counter
+    class="child"
+    [user]="true"
+    [animationState]="this.userAnimation"
+    (animationStateChange)="this.userAnimation=$event"
+
+  ></app-counter>
+  <app-counter
+    class="child"
+    [user]="false"
+    [animationState]="this.opponentAnimation"
+    (animationStateChange)="this.opponentAnimation=$event"
+  ></app-counter>
 </div>

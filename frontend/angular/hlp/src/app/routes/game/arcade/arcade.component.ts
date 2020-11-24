@@ -23,11 +23,12 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   private gameSubs: Subscription | undefined;
 
   constructor(
-    // private gameSocket: ArcadeSocketService,
     private snackBar: MatSnackBar,
     private socketService: GameSocketService,
     private gameManagerService: GameManagerService
-  ) { }
+  ) {
+    gameManagerService.setCurrentGameMode(ARCADE);
+  }
 
   get playing(): boolean {
     const cgs = this.gameManagerService.currentGameStatus;

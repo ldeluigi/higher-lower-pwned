@@ -29,6 +29,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
   ) {
     super();
     this.name = this.accountService.userValue?.username || 'YOU';
+    gameManager.setCurrentGameMode(DUEL);
   }
 
   ngOnInit(): void {
