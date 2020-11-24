@@ -11,7 +11,7 @@
 
   <div class="vs" mat-icon-button isRoundButton>
     <mat-icon [@vsAnimation]="rotateVs" *ngIf="!isWaitingOpponents" class="mat-icon" svgIcon="vs_icon"></mat-icon>
-    <mat-spinner *ngIf="isWaitingOpponents" class="mat-icon center"></mat-spinner>
+    <mat-spinner *ngIf="isWaitingOpponents" class="center"></mat-spinner>
   </div>
 
   <div class="bot" [ngClass]="botCardClass" [@cardAnimation]="element2.status"

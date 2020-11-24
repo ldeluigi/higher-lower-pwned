@@ -7,28 +7,27 @@
 <div class="center-column" @fadeIn>
   <div class="autoscroll">
     <h2 class="mat-h2 subtitle">
-      This is a frustratingly addictive game! Choose among ARCADE, DUEL or BATTLE ROYALE mode and challenge yourself and
-      your friends to be the best at guessing what password is the most popular! Keep in mind that this is only a game
-      but you should avoid using any of these password for your accounts, your privacy and security is very important!
+      WARNING: This is a frustratingly addictive game!
+      You should avoid using any of these passwords for
+      your accounts, your privacy and security is very important!
     </h2>
   </div>
 
   <div class="in-line">
     <a mat-icon-button routerLink="/game/arcade" matTooltip="You against time!" matTooltipPosition="left"
-      routerLinkActive="active" class="start-button mode-button" aria-labelledby="arcade-button-text">
+      routerLinkActive="active" class="mode-button" aria-labelledby="arcade-button-text">
       <mat-icon svgIcon="arcade_menu_icon"></mat-icon>
       <span id="arcade-button-text" class="mode-text">ARCADE</span>
     </a>
     <a mat-icon-button routerLink="/game/duel" matTooltip="You against one opponent, but look out for time!"
-      matTooltipPosition="right" routerLinkActive="active" class="start-button-pvp mode-button"
-      aria-labelledby="duel-button-text">
+      matTooltipPosition="right" routerLinkActive="active" class="mode-button" aria-labelledby="duel-button-text">
       <mat-icon svgIcon="duel_menu_icon"></mat-icon>
       <span id="duel-button-text" class="mode-text">DUEL</span>
     </a>
   </div>
   <a mat-icon-button isRoundButton routerLink="/game/royale"
     matTooltip="You against 99 opponents, each with their own timer!" matTooltipPosition="right"
-    routerLinkActive="active" class="start-button-royale mode-button" aria-labelledby="royale-button-text">
+    routerLinkActive="active" class="mode-button" aria-labelledby="royale-button-text">
     <mat-icon svgIcon="royale_menu_icon"></mat-icon>
     <span id="royale-button-text" class="mode-text">BATTLE ROYALE</span>
   </a>
