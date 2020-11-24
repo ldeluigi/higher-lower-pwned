@@ -69,7 +69,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
       || this.gameManager.currentGameStatus === GameStatus.WAITING_START;
   }
 
-  log(message: string, type: string = 'ok'): void {
+  log(message: string, type: string = 'OK'): void {
     this.snackBar.open(message, type, { duration: 5000 });
   }
 
@@ -80,13 +80,13 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
 
   start(): void {
     this.gameManager.startGame(DUEL)
-    .subscribe(isStart => {
-      if (!isStart) {
-        this.gameManager.quit();
-        // TODO Log game not started
-        console.log('game not started!');
-      }
-    });
+      .subscribe(isStart => {
+        if (!isStart) {
+          this.gameManager.quit();
+          // TODO Log game not started
+          console.log('game not started!');
+        }
+      });
   }
 
   disconnect(): void {
