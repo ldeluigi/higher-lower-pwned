@@ -18,6 +18,7 @@
     <button class="start" mat-button (click)="start()">START</button>
   </div>
   <div *ngIf="canQuit">
-    <button mat-button (click)="disconnect()">QUIT</button>
+    <button mat-button routerLink="/home" routerLinkActive="active">HOME</button>
+    <button mat-button *ngIf="canRestart" (click)="quit(); this.start()">NEW GAME</button>
   </div>
 </div>

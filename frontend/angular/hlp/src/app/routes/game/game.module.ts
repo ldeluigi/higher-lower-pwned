@@ -16,10 +16,7 @@ import { DuelComponent } from './duel/duel.component';
 import { GameRoutingModule } from './game-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { RoyaleComponent } from './royale/royale.component';
-
-
-
-
+import { GameEndGameAnimationComponent } from './components/game-end-game-animation/game-end-game-animation.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +27,8 @@ import { RoyaleComponent } from './royale/royale.component';
     RoyaleComponent,
     PlayerListComponent,
     DuelCounterComponent,
-    DuelComponent
+    DuelComponent,
+    GameEndGameAnimationComponent
     ],
   imports: [
     CommonModule,

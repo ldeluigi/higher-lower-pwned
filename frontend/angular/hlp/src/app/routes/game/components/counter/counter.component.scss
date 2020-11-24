@@ -68,6 +68,11 @@ $width-desktop: 60%;
   }
 }
 
+.textDuel {
+  font-size: 6vw;
+  vertical-align: bottom;
+}
+
 // for desktop layout
 @include desktop {
   .counter-container {
@@ -80,5 +85,10 @@ $width-desktop: 60%;
       font-size: $text-size;
       height: $text-size;
     }
+  }
+
+  .textDuel {
+    font-size: 4vw;
+    vertical-align: bottom;
   }
 }

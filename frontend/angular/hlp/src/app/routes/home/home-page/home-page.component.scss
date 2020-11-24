@@ -249,6 +249,7 @@ $autoscroll-duration: 20s;
     -webkit-transform: translateX(-$autoscroll-width);
   }
 }
+
 @keyframes autoscroll {
   0% {
     -moz-transform: translateX(150%); /* Firefox bug fix */

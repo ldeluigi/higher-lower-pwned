@@ -1,0 +1,66 @@
+@import "../../../../styles/abstracts/mixins";
+@import "../../../../styles/colors.scss";
+@import "~@angular/material/theming";
+
+$autoscroll-width: 100%;
+$autoscroll-duration: 3s;
+
+.fontBig {
+  position: fixed;
+  display: inline;
+  font-size: 15vw;
+  font-weight: 800;
+  height: auto;
+  min-height: 10vh;
+  color: black;
+  top: 55vh;
+  width: 100vw;
+  text-align: center;
+  z-index: 300;
+  transform:  scaleY(2);
+}
+
+.autoscroll {
+  overflow-y: visible;
+  overflow-x: visible;
+  white-space: nowrap;
+}
+
+.autoscroll p,
+.autoscroll h2,
+.autoscroll h3 {
+  /* Apply animation to this element */
+  -moz-animation: autoscroll $autoscroll-duration linear 2;
+  -webkit-animation: autoscroll $autoscroll-duration linear 2;
+  animation: autoscroll $autoscroll-duration linear 2;
+}
+
+/* Move it (define the animation) */
+@-moz-keyframes autoscroll {
+  0% {
+    -moz-transform: translateX(150%);
+  }
+  100% {
+    -moz-transform: translateX(-$autoscroll-width);
+  }
+}
+@-webkit-keyframes autoscroll {
+  0% {
+    -webkit-transform: translateX(150%);
+  }
+  100% {
+    -webkit-transform: translateX(-$autoscroll-width);
+  }
+}
+@keyframes autoscroll {
+  0% {
+    -moz-transform: translateX(150%); /* Firefox bug fix */
+    -webkit-transform: translateX(150%); /* Firefox bug fix */
+    transform: translateX(150%);
+  }
+  100% {
+    -moz-transform: translateX(-$autoscroll-width); /* Firefox bug fix */
+    -webkit-transform: translateX(-$autoscroll-width); /* Firefox bug fix */
+    transform: translateX(-$autoscroll-width);
+  }
+}
