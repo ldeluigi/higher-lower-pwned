@@ -1,8 +1,17 @@
-<app-period-buttons (period)="updateLeaderboard(undefined, $event)"></app-period-buttons>
-<mat-form-field class="input">
-  <mat-label>Limit</mat-label>
-  <input matInput (keyup)="updateLeaderboard()" [formControl]="limit" input="number" placeholder="Ex. 50, max 1000" #input>
-</mat-form-field>
+<div class="inputs">
+  <app-period-buttons class="input" (period)="updateLeaderboard($event)"></app-period-buttons>
+  <mat-form-field appearance="fill" class="input">
+    <mat-label>limit</mat-label>
+    <mat-select [(value)]="selected"
+      (selectionChange)="updateLimit($event.value)">
+      <mat-option value="1">1</mat-option>
+      <mat-option value="5">5</mat-option>
+      <mat-option value="10">10</mat-option>
+      <mat-option value="15">15</mat-option>
+      <mat-option value="30">30</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
 

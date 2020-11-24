@@ -1,5 +1,6 @@
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/colors.scss";
+@import "../../../styles/abstracts/mixins";
 
 table {
   width: 100%;
@@ -7,4 +8,38 @@ table {
 
 .input {
   padding-left: $default-padding;
+}
+
+div.inputs {
+  padding: $default-padding;
+  margin-bottom: $default-margin;
+  background: $white-bg;
+  display: flex;
+  place-content: center;
+}
+
+:host ::ng-deep {
+  .mat-form-field-wrapper {
+    padding-bottom: unset;
+    position: initial;
+  }
+  .mat-form-field-underline {
+    position: initial;
+    width: auto;
+  }
+  .mat-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+@include tablet {
+  .input {
+    margin: auto;
+  }
+}
+
+@include desktop {
+  .input {
+    margin: auto;
+  }
 }
