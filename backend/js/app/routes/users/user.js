@@ -34,6 +34,9 @@ router.post("/",
       return res.status(400).json({ errors: errors.array() });
     }
     let body = req.body;
+    if (req.body.username) {
+      req.body.username = req.body.username.toLowerCase();
+    }
     let salt = pwd.genRandomString(16);
     let output = pwd.hash(body.password, salt);
     try {

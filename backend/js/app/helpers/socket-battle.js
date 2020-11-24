@@ -276,7 +276,7 @@ function authenticationMiddleware(socket, next) {
  */
 async function onStart(io, socket, code, modeName, matchmaking, socketRoomPrefix, maxLobbySpace) {
   let playerID = socket.id;
-  if (matchmaking.isInRoom(playerID)) {
+  if (matchmaking.isInRoom(playerID, socket.userData.id)) {
     emitError(socket, code, "Already in matchmaking.");
     return;
   }

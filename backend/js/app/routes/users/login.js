@@ -22,6 +22,9 @@ router.post("/login",
       return res.status(400).json({ errors: errors.array() });
     }
     try {
+      if (req.body.username) {
+        req.body.username = req.body.username.toLowerCase();
+      }
       let userQuery = await user.findOne({ username: req.body.username });
       if (userQuery === null) {
         return res.status(404).json({ errors: ["Wrong credentials."] });
