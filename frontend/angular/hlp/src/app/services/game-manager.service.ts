@@ -71,7 +71,7 @@ export class GameManagerService {
 
   private resetGame(): void {
     this.gameSub?.unsubscribe();
-    this.currentGameMode = undefined;
+    // this.currentGameMode = undefined;
     this.disconnect();
   }
 
