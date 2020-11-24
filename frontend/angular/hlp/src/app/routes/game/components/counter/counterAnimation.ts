@@ -75,20 +75,16 @@ export const endGameAnimation: AnimationTriggerMetadata = trigger('endGameAnimat
   state('win', winStyle),
   state('lose', loseStyle),
   transition('none => win', [
-    query('.container', [
       style({
         position: 'relative',
       }),
       animate(DURATION, winStyle)
-    ])
   ]),
   transition('none => lose', [
-    query('.container', [
       style({
         position: 'relative',
       }),
       animate(DURATION, loseStyle)
-    ])
   ]),
 
   // DUEL
