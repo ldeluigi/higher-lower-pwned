@@ -16,8 +16,22 @@ const loseStyle = style({
   width: 'max-content'
 });
 
+const duelWinStyle = style ({
+  position: 'relative',
+  transform: 'translateY(30vh) scale(1.1)',
+  'background-color': 'white',
+  'z-index': '100',
+  margin: 'auto',
+  width: 'max-content'
+});
+
+const duelLoseStyle = style ({
+  'background-color': 'grey'
+});
+
 const DURATION1 = '2.0s';
 export const endGameAnimation: AnimationTriggerMetadata = trigger('endGameAnimation', [
+  // ARCADE
   state('none', style({})),
   state('win', winStyle),
   state('lose', loseStyle),
@@ -32,5 +46,18 @@ export const endGameAnimation: AnimationTriggerMetadata = trigger('endGameAnimat
       position: 'relative',
     }),
     animate(DURATION1, loseStyle)
+  ]),
+
+  // DUEL
+  state('duelWin', duelWinStyle),
+  state('duelLose', duelLoseStyle),
+  transition('none => duelWin', [
+    style({
+      position: 'relative',
+    }),
+    animate(DURATION1, duelWinStyle)
+  ]),
+  transition('none => duelLose', [
+    animate(DURATION1, duelLoseStyle)
   ]),
 ]);

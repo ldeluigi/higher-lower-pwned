@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { interval, Subscription } from 'rxjs';
 import { GameManagerService } from 'src/app/services/game-manager.service';
@@ -23,11 +23,12 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   private gameSubs: Subscription | undefined;
 
   constructor(
-    // private gameSocket: ArcadeSocketService,
     private snackBar: MatSnackBar,
     private socketService: GameSocketService,
     private gameManagerService: GameManagerService
-  ) { }
+  ) {
+    gameManagerService.setCurrentGameMode(ARCADE);
+  }
 
   get playing(): boolean {
     const cgs = this.gameManagerService.currentGameStatus;

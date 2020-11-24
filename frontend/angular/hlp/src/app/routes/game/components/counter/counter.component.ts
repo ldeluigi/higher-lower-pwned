@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { Subscription } from 'rxjs';
 import { filter, first, take, takeUntil, takeWhile } from 'rxjs/operators';
@@ -8,7 +8,8 @@ import { GameSocketService } from '../../../../services/game-socket.service';
 import { PlayerIdName } from '../../model/player-join';
 import { GameStatus } from '../../utils/gameStatus';
 import { rollNumber, slowDigitWord } from '../../utils/wordAnimation';
-import { endGameAnimation } from './arcadeAnimation';
+import { endGameAnimation } from './counterAnimation';
+import { ARCADE, DUEL, ROYALE } from '../../model/const';
 
 @Component({
   selector: 'app-counter',
@@ -26,13 +27,14 @@ export class CounterComponent implements OnInit, OnDestroy {
   private timeoutValue: number | undefined;
   @Input() user: boolean | undefined;
   @Input() animation: boolean | undefined;
-  animationState = 'none';
+  @Input() animationState = 'none';
+  @Output() animationStateChange = new EventEmitter<string>();
   name: string | undefined;
   private id: string | undefined;
 
   private counterSub: Subscription | undefined;
   private gameSub: Subscription | undefined;
-  private gameStarted = false;
+  private currentGameMode = '';
 
   constructor(
     private accountService: AccountService,
@@ -56,29 +58,35 @@ export class CounterComponent implements OnInit, OnDestroy {
     this.animationState = 'none';
     this.endGameMessate = '';
     clearTimeout(this.timeoutValue);
-    if (this.user === undefined) {
+    if (this.gameManagerService.currentGameMode === ARCADE) {
+      this.currentGameMode = ARCADE;
       this.setupArcadeAnimation();
       this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
-    } else if (this.user && this.user === true) {
-      this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
-      this.socketService.playerObservable.pipe(take(2)).subscribe(pd => this.addPlayerData(pd));
-    } else {
-      this.counterSub = this.socketService.gameDataUpdate.subscribe(gd => {
-        if (this.id !== undefined) {
-          const ID: string = this.id;
-          const otherPlayer = gd.users.find(u => u.id.includes(ID));
-          if (otherPlayer && otherPlayer.score) {
-            this.updateScore(otherPlayer.score);
+    } else if (this.gameManagerService.currentGameMode === DUEL) {
+      this.currentGameMode = DUEL;
+      if (this.user) {
+        this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+        this.socketService.playerObservable.pipe(take(2)).subscribe(pd => this.addPlayerData(pd));
+      } else {
+        this.counterSub = this.socketService.gameDataUpdate.subscribe(gd => {
+          if (this.id !== undefined) {
+            const ID: string = this.id;
+            const otherPlayer = gd.users.find(u => u.id.includes(ID));
+            if (otherPlayer && otherPlayer.score) {
+              this.updateScore(otherPlayer.score);
+            }
           }
-        }
-      });
-      this.socketService.opponentsObservable.pipe(first()).subscribe(nps => {
-        if (nps.length === 0) { // no one is waiting
-          this.socketService.playerObservable.pipe(take(2)).subscribe(ed => this.addEnemyData(ed));
-        } else { // some one is waiting
-          nps.forEach(ed => this.addEnemyData(ed));
-        }
-      });
+        });
+        this.socketService.opponentsObservable.pipe(first()).subscribe(nps => {
+          if (nps.length === 0) { // no one is waiting
+            this.socketService.playerObservable.pipe(take(2)).subscribe(ed => this.addEnemyData(ed));
+          } else { // some one is waiting
+            nps.forEach(ed => this.addEnemyData(ed));
+          }
+        });
+      }
+    } else if (this.gameManagerService.currentGameMode === ROYALE) {
+        // TODO royale animation
     }
   }
 
@@ -90,7 +98,6 @@ export class CounterComponent implements OnInit, OnDestroy {
           first()
         )
         .subscribe(ns => {
-          console.log(ns);
           if (ns === GameStatus.END) {
             if (this.counter > 0) {
               this.animationState = 'win';
@@ -101,6 +108,7 @@ export class CounterComponent implements OnInit, OnDestroy {
         });
     }
   }
+
 
   private addEnemyData(p: PlayerIdName): void {
     if (!p.id.includes(this.socketService.socketId)) {
@@ -126,7 +134,17 @@ export class CounterComponent implements OnInit, OnDestroy {
     this.gameSub?.unsubscribe();
   }
 
-  onArcadeEndGameAnimation(event: AnimationEvent): void {
+  onAnimationEnd(event: AnimationEvent): void {
+    if (this.currentGameMode === ARCADE) {
+      this.onArcadeEndGameAnimation(event);
+    } else if (this.currentGameMode === DUEL) {
+      this.onDuelEndGameAnimation(event);
+    } else if (this.currentGameMode === ROYALE) {
+
+    }
+  }
+
+  private onArcadeEndGameAnimation(event: AnimationEvent): void {
     if (this.gameManagerService.currentGameStatus !== GameStatus.END) {
       return;
     }
@@ -138,6 +156,23 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (event.toState === 'lose') {
       this.counterSub?.add(
         slowDigitWord(this.scoreToMessage(), 2000, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
+    }
+  }
+
+  private onDuelEndGameAnimation(event: AnimationEvent): void {
+    if (this.gameManagerService.currentGameStatus !== GameStatus.END) {
+      return;
+    }
+    if (event.toState === 'duelWin') {
+      this.counterSub?.add(
+        slowDigitWord('YOU WIN!', 2000, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
+    } else if (event.toState === 'duelLose') {
+      this.counterSub?.add(
+        slowDigitWord('YOU LOSE...', 2000, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }

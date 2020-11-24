@@ -24,6 +24,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
     private gameManagerService: GameManagerService
   ) {
     super();
+    gameManagerService.setCurrentGameMode(ROYALE);
   }
 
   ngOnInit(): void {

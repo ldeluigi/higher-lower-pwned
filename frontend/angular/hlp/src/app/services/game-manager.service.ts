@@ -16,7 +16,7 @@ import { GameSocketService } from './game-socket.service';
 })
 export class GameManagerService {
 
-  private currentGameMode: string | undefined;
+  currentGameMode: string | undefined;
   private gameSub: Subscription | undefined;
   private gameStatusSubject: BehaviorSubject<GameStatus> = new BehaviorSubject<GameStatus>(GameStatus.IDLE);
   gameStatusObservable: Observable<GameStatus> = this.gameStatusSubject.asObservable();
@@ -47,6 +47,10 @@ export class GameManagerService {
 
   disconnect(): void {
     this.socketService.disconnect();
+  }
+
+  setCurrentGameMode(gameMode: string): void {
+    this.currentGameMode = gameMode;
   }
 
   // start game
