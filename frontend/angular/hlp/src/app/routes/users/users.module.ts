@@ -8,9 +8,10 @@ import { UserScoresComponent } from './user-scores/user-scores.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserStatsComponent } from './user-stats/user-stats.component';
 import { UsersRoutingModule } from './users-routing.module';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatExpansionModule,
     MatMenuModule,
     MatCheckboxModule,
+    MatSelectModule,
   ],
   schemas: [],
 })

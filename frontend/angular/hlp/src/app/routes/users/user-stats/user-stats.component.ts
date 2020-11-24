@@ -66,14 +66,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     },
   ];
 
-  limit = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^[0-9]*$'),
-    Validators.max(30),
-    Validators.min(1),
-  ]);
 
-  private actualLimitValue = 10;
+  selected = 10;
 
   dataSource = new MatTableDataSource<HistoryItem>([]);
   private defaultColumns = [
@@ -131,25 +125,25 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         const old1 = new Date(
           currentYear,
           0,
-          daysOfTheYear(now) - (this.actualLimitValue - 1)
+          daysOfTheYear(now) - (this.selected - 1)
         );
         return { period: daysOfTheYear(old1), year: old1.getFullYear() };
       case 'week':
         const old2 = new Date(
           currentYear,
           0,
-          daysOfTheYear(now) - now.getDay() - (this.actualLimitValue - 1) * 7
+          daysOfTheYear(now) - now.getDay() - (this.selected - 1) * 7
         );
         return { period: daysOfTheYear(old2), year: old2.getFullYear() };
       case 'month':
         const old3 = new Date(
           currentYear,
-          now.getMonth() - (this.actualLimitValue - 1),
+          now.getMonth() - (this.selected - 1),
           1
         );
         return { period: old3.getMonth(), year: old3.getFullYear() };
       case 'year':
-        const old4 = new Date(currentYear - (this.actualLimitValue - 1), 0, 1);
+        const old4 = new Date(currentYear - (this.selected - 1), 0, 1);
         return { period: old4.getFullYear(), year: old4.getFullYear() };
       default:
         throw new Error('Illegal period');
@@ -167,7 +161,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
         const start = this.periodBegin();
         const periods = periodIterator(
           start.period,
-          this.actualLimitValue,
+          this.selected,
           start.year,
           this.actualPeriod
         );
@@ -292,11 +286,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       this.actualPeriod = period;
     }
     this.updateStatsLayout();
-    if (this.limit.invalid) {
-      this.usersTools.loadData(this.actualPeriod, undefined).pipe(first()).subscribe();
-    } else {
-      this.usersTools.loadData(this.actualPeriod, this.limit.value).pipe(first()).subscribe();
-    }
+    this.usersTools.loadData(this.actualPeriod, this.selected).pipe(first()).subscribe();
   }
 
   timeC(millisecond: number): string {
@@ -305,5 +295,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   toggle(): void {
     this.showingChart = !this.showingChart;
+  }
+
+  updateLimit(limit: number) {
+    this.updateUserStats(this.actualPeriod);
   }
 }
