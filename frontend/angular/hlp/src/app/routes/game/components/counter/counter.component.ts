@@ -123,6 +123,7 @@ export class CounterComponent implements OnInit, OnDestroy {
             }
           }
         });
+
     }
   }
 

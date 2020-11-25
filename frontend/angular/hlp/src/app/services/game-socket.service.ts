@@ -108,6 +108,7 @@ export class GameSocketService {
   disconnect(): void {
     this.stopConnection = true;
     this.socket?.emit('quit');
+    console.log('EMIT QUIT!');
     this.socket?.disconnect();
     this.socket?.removeAllListeners();
     this.socket = undefined;

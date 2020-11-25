@@ -43,12 +43,18 @@
 }
 
 .divStart {
-  display: flex;
-  margin: $default-margin auto;
-  align-self: center;
-  button {
-    width: 40%;
-    margin: $default-margin auto;
+  div {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    align-self: center;
+    .postGame {
+      width: 40%;
+      margin: auto;
+    }
+  }
+  .start {
+    margin: 10vh auto;
   }
 }
 

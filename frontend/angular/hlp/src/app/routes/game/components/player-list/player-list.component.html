@@ -1,29 +1,18 @@
 <div class="container">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- Position Column -->
-    <ng-container matColumnDef="Rank">
-      <th mat-header-cell *matHeaderCellDef [class]="'header'"> Rank </th>
-      <td mat-cell *matCellDef="let element" [class]="'rank-' + (dataSource.data.indexOf(element))"> {{ dataSource.data.indexOf(element) + 1 }} </td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="Name">
-      <th mat-header-cell *matHeaderCellDef [class]="'header'"> Name </th>
-      <td mat-cell *matCellDef="let element" [class]="playerStatus(element) + ' name'">
-        <div>
-          {{ element.name }}
-        </div>
-        {{ element.score }}
-      </td>
-    </ng-container>
-
-    Score Column
-    <ng-container matColumnDef="Score">
-      <th mat-header-cell *matHeaderCellDef [class]="'score score-header'"> Score </th>
-      <td mat-cell *matCellDef="let element" [class]="'score'"> {{ element.score }} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+  <div class="positionList" [appTransitionGroup]="'flip-list'">
+    <h2 mat-h2 [ngClass]="item.haveLost ? 'lost': 'in-game'" *ngFor="let item of items; let i = index" appTransitionGroupItem>
+      <mat-icon aria-hidden="false" aria-label="Example home icon" *ngIf="item.arrow">{{ item.arrow }}</mat-icon>
+      <span class="position">{{ i + 1 }}</span>
+    </h2>
+  </div>
+  <div class="nameList" [appTransitionGroup]="'flip-list'">
+    <h2 mat-h2 [ngClass]="item.haveLost ? 'lost': 'in-game' + ' ' + item.isPlayer ? 'player' : ''" *ngFor="let item of items; let i = index" appTransitionGroupItem>
+      {{ item.name }}
+    </h2>
+  </div>
+  <div class="scoreList" [appTransitionGroup]="'flip-list'">
+    <h2 mat-h2 [ngClass]="item.haveLost ? 'lost': 'in-game'" *ngFor="let item of items; let i = index" appTransitionGroupItem>
+      <span class="score">{{ item.score }}</span>
+    </h2>
+  </div>
 </div>
