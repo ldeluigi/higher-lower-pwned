@@ -74,7 +74,8 @@ jobs:
           username: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
           password: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
       
-      - run: docker context create aci aci-context \
+      - run: |
+          docker context create aci aci-context \
             --subscription-id ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }} \
             --resource-group ${{ secrets.RESOURCE_GROUP }} \
             --location 'west eu'
