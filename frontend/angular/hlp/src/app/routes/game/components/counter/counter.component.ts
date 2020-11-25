@@ -87,6 +87,18 @@ export class CounterComponent implements OnInit, OnDestroy {
       }
     } else if (this.gameManagerService.currentGameMode === ROYALE) {
       // TODO royale animation
+      this.currentGameMode = ROYALE;
+      if (this.accountService.userValue?.username) {
+        this.name = this.accountService.userValue.username;
+      } else {
+        this.socketService.playerObservable
+          .pipe(takeWhile(t => t.id.includes(this.socketService.socketId)))
+          .subscribe(p => {
+            if (p.id.includes(this.socketService.socketId)) {
+              this.name = p.name;
+            }
+          });
+      }
     }
   }
 
