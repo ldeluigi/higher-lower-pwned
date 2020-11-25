@@ -11,11 +11,6 @@ import { NavBarComponent } from './layout/nav-bar/nav-bar.component';
 import { HomeModule } from './routes/home/home.module';
 import { SharedModule } from './shared/shared.module';
 
-
-
-
-
-
 @NgModule({
   declarations: [
     AppComponent,

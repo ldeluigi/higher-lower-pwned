@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
@@ -9,17 +9,17 @@ import { GameStatus } from '../../utils/gameStatus';
   templateUrl: './duel-counter.component.html',
   styleUrls: ['./duel-counter.component.scss']
 })
-export class DuelCounterComponent implements OnInit {
+export class DuelCounterComponent implements OnInit, OnDestroy {
 
   @Input() player1Name: string | undefined = undefined;
   @Input() player2Name: string | undefined = undefined;
   @Input() player1Score!: number;
   @Input() player2Score!: number;
 
+  private sub!: Subscription;
   private waitFor: GameStatus = GameStatus.END;
   private userScore = 0;
   private opponentScore = 0;
-  private gameSub: Subscription | undefined;
   userAnimation = 'none';
   opponentAnimation = 'none';
 
@@ -28,12 +28,12 @@ export class DuelCounterComponent implements OnInit {
       private gameManagerService: GameManagerService
     ) { }
 
-  ngOnInit(): void {
-    this.setupAnimation();
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
-  private setupAnimation(): void {
-    this.socketService.gameDataUpdate.subscribe(data => {
+  ngOnInit(): void {
+    this.sub = this.socketService.gameDataUpdate.subscribe(data => {
       data.users.forEach(u => {
         if (u.id.includes(this.socketService.socketId)) {
           if (u.score) {
@@ -47,29 +47,34 @@ export class DuelCounterComponent implements OnInit {
       });
     });
 
-    this.gameManagerService.gameStatusObservable.subscribe(s => {
-      // verificare lo stato e resettare gli score quando una partita nuova comincia
-      if (s === GameStatus.END && this.waitFor === GameStatus.END) {
-        this.waitFor = GameStatus.IDLE;
-        // TODO end game animation
-        if (this.userScore > this.opponentScore) {
-          // TODO user wins
-          this.userAnimation = 'duelWin';
-          this.opponentAnimation = 'duelLose';
-        } else if (this.userScore < this.opponentScore) {
-          // TODO oppoenent wins
-          this.userAnimation = 'duelLose';
-          this.opponentAnimation = 'duelWin';
-        } else {
-          // TODO draw
+    this.sub.add(
+      this.gameManagerService.gameStatusObservable.subscribe(s => {
+        if (s === GameStatus.END && this.waitFor === GameStatus.END) {
+          this.waitFor = GameStatus.IDLE;
+          if (this.userScore > this.opponentScore) {
+            console.log('WIN');
+            this.userAnimation = 'duelUserWin';
+            this.opponentAnimation = 'duelOppLose';
+          } else if (this.userScore < this.opponentScore) {
+            console.log('LOSE');
+            this.userAnimation = 'duelUserLose';
+            this.opponentAnimation = 'duelOppWin';
+          } else {
+            // TODO draw
+            console.log('DRAW');
+            this.userAnimation = 'draw';
+            this.opponentAnimation = 'draw';
+          }
+        } else if (s === GameStatus.IDLE && this.waitFor === GameStatus.IDLE
+          || this.waitFor === GameStatus.WAITING_START) {
+          this.waitFor = GameStatus.END;
+          // TODO internal score reset
+          this.userScore = 0;
+          this.opponentScore = 0;
+        } else if (s === GameStatus.PLAYING) {
+          this.waitFor = GameStatus.END;
         }
-      } else if (s === GameStatus.IDLE && this.waitFor === GameStatus.IDLE) {
-        this.waitFor = GameStatus.END;
-        // TODO internal score reset
-        this.userScore = 0;
-        this.opponentScore = 0;
-        this.gameSub?.unsubscribe();
-      }
-    });
+      })
+    );
   }
 }

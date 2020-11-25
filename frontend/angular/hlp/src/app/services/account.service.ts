@@ -35,7 +35,7 @@ export class AccountService implements OnDestroy {
   }
 
   private log(message: string): void {
-    this.snackBar.open(message, 'ok', { duration: 3000 });
+    this.snackBar.open(message, 'OK', { duration: 3000 });
   }
 
   public get userValue(): User | null {
@@ -76,7 +76,7 @@ export class AccountService implements OnDestroy {
   }
 
   async updateEmail(newEmail: string): Promise<void> {
-    const data = {email: newEmail};
+    const data = { email: newEmail };
     await this.update(data);
     return;
   }
@@ -95,7 +95,7 @@ export class AccountService implements OnDestroy {
     }
     this.http.put(`${this.apiURL.restApiUrl}/users/${user.id}`, data)
       .pipe(map(_ => {
-        this.log('Data update correctly');
+        this.log('Data updated correctly');
         return;
       })).pipe(first()).subscribe();
   }

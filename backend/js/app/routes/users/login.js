@@ -10,9 +10,10 @@ router.post("/login",
     body("username")
       .notEmpty()
       .isAlphanumeric()
-      .trim(),
+      .trim()
+      .customSanitizer(value => value.toLowerCase()),
     body("password")
-      .isAlphanumeric()
+      .isAscii()
       .trim()
       .isLength({ min: 8, max: 1024 })
   ],

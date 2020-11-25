@@ -34,7 +34,7 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   private counterSub: Subscription | undefined;
   private gameSub: Subscription | undefined;
-  private currentGameMode = '';
+  currentGameMode = '';
 
   constructor(
     private accountService: AccountService,
@@ -86,7 +86,7 @@ export class CounterComponent implements OnInit, OnDestroy {
         });
       }
     } else if (this.gameManagerService.currentGameMode === ROYALE) {
-        // TODO royale animation
+      // TODO royale animation
     }
   }
 
@@ -165,14 +165,38 @@ export class CounterComponent implements OnInit, OnDestroy {
     if (this.gameManagerService.currentGameStatus !== GameStatus.END) {
       return;
     }
-    if (event.toState === 'duelWin') {
-      this.counterSub?.add(
-        slowDigitWord('YOU WIN!', 2000, s => this.endGameMessate = s)
-      );
+    if (event.toState === 'duelUserWin') {
+      if (this.user === true) {
+        this.counterSub?.add(
+          slowDigitWord('YOU WIN!', 2000, s => this.endGameMessate = s)
+        );
+      }
       this.startTimeoutReset();
-    } else if (event.toState === 'duelLose') {
+    } else if (event.toState === 'duelUserLose') {
+      if (this.user === true) {
+        // opponent wins
+        this.counterSub?.add(
+          slowDigitWord('YOU LOSE!', 2000, s => this.endGameMessate = s)
+        );
+      }
+      this.startTimeoutReset();
+    } else if (event.toState === 'duelOppWin') {
+      if (this.user === false) {
+        this.counterSub?.add(
+          slowDigitWord('WINNER!', 2000, s => this.endGameMessate = s)
+        );
+      }
+      this.startTimeoutReset();
+    } else if (event.toState === 'duelOppLose') {
+      if (this.user === false) {
+        // this.counterSub?.add(
+        //   slowDigitWord('...', 2000, s => this.endGameMessate = s)
+        // );
+      }
+      this.startTimeoutReset();
+    } else if (event.toState === 'draw') {
       this.counterSub?.add(
-        slowDigitWord('YOU LOSE...', 2000, s => this.endGameMessate = s)
+        slowDigitWord('DRAW', 2000, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
@@ -182,6 +206,7 @@ export class CounterComponent implements OnInit, OnDestroy {
     this.timeoutValue = setTimeout(() => {
       this.endGameMessate = '';
       this.animationState = 'none';
+      this.animationStateChange?.emit('none');
     }, value);
   }
 
@@ -190,7 +215,7 @@ export class CounterComponent implements OnInit, OnDestroy {
       return 'Oh no...';
     }
     if (this.counter < 200) {
-      return 'Better than nothing';
+      return 'Better than nothing...';
     }
     if (this.counter < 1000) {
       return 'Pretty good.';
