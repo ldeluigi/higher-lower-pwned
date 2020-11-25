@@ -53,32 +53,3 @@ jobs:
     needs: [build]
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
-    env:
-      DOCKER_REGISTRY_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-      VERSION_TAG: ${{ github.sha }}
-    steps:
-      # checkout the repo
-      - name: "Checkout GitHub Action"
-        uses: actions/checkout@master
-
-      - name: "Login via Azure CLI"
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - run: curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh
-      
-      - uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-          password: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
-      
-      - run: |
-          docker context create aci aci-context \
-            --subscription-id ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }} \
-            --resource-group ${{ secrets.RESOURCE_GROUP }} \
-            --location 'west eu'
-          docker context use aci-context
-          docker prune --dry-run
-          docker-compose -f docker-compose.ci.yml --project-name pwned.game push
