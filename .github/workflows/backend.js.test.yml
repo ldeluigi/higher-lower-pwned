@@ -72,7 +72,7 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker context use pwnedgame.azurecr.io
+            docker context ls
             docker compose up --project-name pwned.game
             
         - name: Clean unused images
