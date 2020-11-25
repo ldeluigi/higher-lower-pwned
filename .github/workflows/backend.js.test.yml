@@ -10,6 +10,7 @@ on:
       - "backend/**"
   pull_request:
     branches: ["*"]
+  workflow_dispatch:
 
 jobs:
   build:
