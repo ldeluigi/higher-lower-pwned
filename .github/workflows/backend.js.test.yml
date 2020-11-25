@@ -52,6 +52,9 @@ jobs:
     needs: [build]
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
+    env:
+      DOCKER_REGISTRY_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      VERSION_TAG: ${{ github.sha }} 
     steps:
         # checkout the repo
         - name: 'Checkout GitHub Action'
@@ -69,17 +72,8 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker build backend/js -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/pwned.game-backend:${{ github.sha }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/pwned.game-backend:${{ github.sha }}
-
-        - name: 'Deploy to Azure Container Instances'
-          uses: 'azure/aci-deploy@v1'
-          with:
-            resource-group: ${{ secrets.RESOURCE_GROUP }}
-            dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/pwned.game-backend:${{ github.sha }}
-            registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-            registry-username: ${{ secrets.REGISTRY_USERNAME }}
-            registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-            name: pwned.game-backend
-            location: 'west eu'
+            docker context use pwnedgame.azurecr.io
+            docker compose up --project-name pwned.game
+            
+        - name: Clean unused images
+          run: docker --context pwnedgame.azurecr.io prune --dry-run
