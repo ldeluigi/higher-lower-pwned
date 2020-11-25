@@ -36,6 +36,9 @@ export class CounterComponent implements OnInit, OnDestroy {
   private gameSub: Subscription | undefined;
   currentGameMode = '';
 
+  // Royale
+  imWinning = false;
+
   constructor(
     private accountService: AccountService,
     private socketService: GameSocketService,
@@ -86,7 +89,40 @@ export class CounterComponent implements OnInit, OnDestroy {
         });
       }
     } else if (this.gameManagerService.currentGameMode === ROYALE) {
-      // TODO royale animation
+      this.currentGameMode = ROYALE;
+      this.setupRoyaleAnimation();
+      this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+    }
+  }
+
+  private setupRoyaleAnimation(): void {
+    if (this.animation === true) {
+
+      this.socketService.gameDataUpdate
+        .pipe(
+          takeWhile(x => !x.users.every(p => p.lost))
+        ).subscribe(users => {
+          if (users.users[0].score) {
+            this.imWinning =
+              users.users.reduce((e1, e2) => (e2.score) ? Math.max(e1, e2.score) : 0, 0)
+              === users.users.find(u => u.id === this.socketService.socketId)?.score;
+          }
+        });
+
+      this.gameManagerService.gameStatusObservable
+        .pipe(
+          filter(x => x === GameStatus.END),
+          first()
+        )
+        .subscribe(ns => {
+          if (ns === GameStatus.END) {
+            if (this.imWinning) {
+              this.animationState = 'win';
+            } else {
+              this.animationState = 'lose';
+            }
+          }
+        });
     }
   }
 
