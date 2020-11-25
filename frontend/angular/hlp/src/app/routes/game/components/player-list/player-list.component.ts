@@ -9,6 +9,7 @@ import { PlayerIdName } from '../../model/player-join';
 import { GameStatus } from '../../utils/gameStatus';
 
 export interface Player {
+  isPlayer: boolean;
   name: string;
   id: string;
   score: number;
@@ -81,7 +82,8 @@ export class PlayerListComponent implements OnInit, OnDestroy {
         haveLost: false,
         timeout: 0,
         arrow: undefined,
-        position: -1
+        position: -1,
+        isPlayer: np.id.includes(this.socketService.socketId)
       };
       pl.push(newPlayer);
       this.tempData = pl;
