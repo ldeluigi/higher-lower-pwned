@@ -66,15 +66,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: "Build and push image"
-        uses: azure/docker-login@v1
+      - run: curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh
+      
+      - uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
           password: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
-      - run: |
-          curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh
-          docker context create aci aci-context \
+      
+      - run: docker context create aci aci-context \
             --subscription-id ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }} \
             --resource-group ${{ secrets.RESOURCE_GROUP }} \
             --location 'west eu'
