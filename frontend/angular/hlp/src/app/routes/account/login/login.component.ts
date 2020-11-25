@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           // console.log(error);
-          this.error = error.join('. ');
+          this.error = 'Wrong Username or Password';
         },
       );
   }

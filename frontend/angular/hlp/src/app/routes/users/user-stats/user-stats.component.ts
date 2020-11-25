@@ -297,7 +297,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
     this.showingChart = !this.showingChart;
   }
 
-  updateLimit(limit: number) {
+  updateLimit(limit: number): void {
     this.updateUserStats(this.actualPeriod);
   }
 }

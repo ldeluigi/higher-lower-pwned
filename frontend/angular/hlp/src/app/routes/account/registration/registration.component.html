@@ -22,9 +22,17 @@
           <input type="email" matInput placeholder="Email" formControlName="email" />
         </mat-form-field>
       </p>
-      <p *ngIf="error" class="error">
-        {{ error }}
-      </p>
+      <div *ngIf="usernameError || passwordError ||  emailError" class="error">
+        <p *ngIf="usernameError">
+          {{ usernameError }}
+        </p>
+        <p *ngIf="passwordError">
+          {{ passwordError }}
+        </p>
+        <p *ngIf="emailError">
+          {{ emailError }}
+        </p>
+      </div>
       <div class="button">
         <button type="submit" mat-button>Register</button>
       </div>
