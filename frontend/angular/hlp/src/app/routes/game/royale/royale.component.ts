@@ -55,6 +55,11 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
       || this.gameManagerService.currentGameStatus === GameStatus.END;
   }
 
+  get canRestart(): boolean {
+    return this.gameManagerService.currentGameStatus === GameStatus.END
+      || this.gameManagerService.currentGameStatus === GameStatus.LOST;
+  }
+
   get canStartANewGame(): boolean {
     return this.gameManagerService.currentGameStatus === GameStatus.IDLE;
   }
@@ -72,6 +77,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
     this.quit();
     this.gameSub?.unsubscribe();
     this.gameManagerService.disconnect();
+    this.subTimer?.unsubscribe();
   }
 
   start(): void {
@@ -87,6 +93,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
 
   quit(): void {
     this.gameManagerService.quit();
+    this.subTimer?.unsubscribe();
   }
 
   repeat(): void {

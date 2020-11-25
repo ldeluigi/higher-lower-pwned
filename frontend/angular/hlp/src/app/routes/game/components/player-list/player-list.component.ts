@@ -15,6 +15,8 @@ export interface Player {
   haveLost: boolean;
   timeout: number;
   guesses: number;
+  arrow: string | undefined;
+  position: number;
 }
 
 @Component({
@@ -24,9 +26,14 @@ export interface Player {
 })
 export class PlayerListComponent implements OnInit, OnDestroy {
 
-  dataSource = new MatTableDataSource<Player>([]);
+  readonly ARROW_UP = 'keyboard_arrow_up';
+  readonly ARROW_DOWN = 'keyboard_arrow_down';
+  readonly ARROW_RIGHT = undefined;
+
+  tempData: Player[] = [];
   displayedColumns = ['Rank', 'Name'];
   private dataSub: Subscription | undefined;
+  items: Player[] = [];
 
   constructor(
     private socketService: GameSocketService,
@@ -48,7 +55,8 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   }
 
   private setup(): void {
-    this.dataSource.data = [];
+    this.tempData = [];
+    this.items = this.tempData;
     this.socketService.opponentsObservable.pipe(first()).subscribe(ps => {
       // add all players already in the room
       ps.forEach(p => this.addPlayer(p));
@@ -63,7 +71,7 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   }
 
   private addPlayer(np: PlayerIdName): void {
-    const pl = this.dataSource.data;
+    const pl = this.tempData;
     if (pl.every(p => !p.id.includes(np.id))) {
       const newPlayer: Player = {
         id: np.id,
@@ -71,17 +79,19 @@ export class PlayerListComponent implements OnInit, OnDestroy {
         score: 0,
         guesses: 0,
         haveLost: false,
-        timeout: 0
+        timeout: 0,
+        arrow: undefined,
+        position: -1
       };
       pl.push(newPlayer);
-      this.dataSource.data = pl;
+      this.tempData = pl;
+      this.items = this.tempData;
     }
   }
 
   private updateData(data: MultiplayerGameUpdate): void {
-    const list = this.dataSource.data;
     data.users.forEach(user => {
-      const localUser = list.find(u => u.id === user.id);
+      const localUser = this.tempData.find(u => u.id === user.id);
       if (localUser) {
         localUser.haveLost = user.lost;
         if (user.score) {
@@ -90,7 +100,7 @@ export class PlayerListComponent implements OnInit, OnDestroy {
         localUser.guesses = user.guesses;
       }
     });
-    this.dataSource.data = list.sort((p1, p2) => {
+    this.updateItems([...this.tempData].sort((p1, p2) => {
       if (p1.score === p2.score) {
         if (p1.guesses === p2.guesses) {
           if (p1.timeout === p2.timeout) {
@@ -104,7 +114,7 @@ export class PlayerListComponent implements OnInit, OnDestroy {
       } else {
         return p2.score - p1.score;
       }
-    });
+    }));
   }
 
   ngOnDestroy(): void {
@@ -113,27 +123,44 @@ export class PlayerListComponent implements OnInit, OnDestroy {
 
   // based on player name
   removePlayer(player: Player): void {
-    this.dataSource.data = this.dataSource.data.filter(p => p.name !== player.name);
+    this.tempData = this.tempData.filter(p => p.name !== player.name);
+    this.updateItems(this.tempData);
   }
 
   set list(players: Player[]) {
-    this.dataSource.data = players;
+    this.tempData = players;
   }
   get list(): Player[] {
-    return this.dataSource.data;
+    return this.tempData;
   }
 
   clear(): void {
-    this.dataSource.data = [];
+    this.tempData = [];
+    this.items = this.tempData;
   }
 
   playerStatus(player: Player): string {
     if (player.haveLost) {
       return 'lost';
-    } else if (this.dataSource.data.filter(p => !p.haveLost).some(p => p.guesses > player.guesses)) {
+    } else if (this.tempData.filter(p => !p.haveLost).some(p => p.guesses > player.guesses)) {
       return 'behind';
     } else {
       return 'in-game';
     }
+  }
+
+  private updateItems(newList: Player[]): void {
+    console.log(newList, this.items);
+    this.items.forEach((e, index) => e.position = index);
+    newList.forEach((elem, index) => {
+      const old = this.items.find(e => e.id === elem.id);
+      console.log(elem, old);
+      if (old) {
+        elem.arrow = old.position === index ? this.ARROW_RIGHT :
+        (old.position < index ? this.ARROW_DOWN : this.ARROW_UP);
+      }
+      elem.position = index;
+    });
+    this.items = newList;
   }
 }

@@ -34,11 +34,15 @@
     width: 60%;
     margin: auto;
     align-self: center;
-    button {
+    .postGame {
       width: 40%;
       margin: auto;
     }
+    .start {
+      margin: 10vh auto;
+    }
   }
+
 }
 
 .commands {

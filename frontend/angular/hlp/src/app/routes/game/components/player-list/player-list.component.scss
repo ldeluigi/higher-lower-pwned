@@ -45,8 +45,19 @@ $score-font-size: 120%;
 $rank-font-size: $name-font-size + $score-font-size;
 
 .container {
-  height: 30vh;
+  position: absolute;
+  height: 15vh;
   overflow: auto;
+  bottom: 1vh;
+  width: 60%;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  ul {
+    li {
+      text-align: center;
+    }
+  }
 }
 
 table {
@@ -82,19 +93,33 @@ table {
   }
 }
 
-.in-game {
-  background-color: $player-ingame-color;
-}
+// .in-game {
+//   background-color: $player-ingame-color;
+// }
 
 .behind {
   background-color: $behind-player-color;
 }
 
-.lost {
-  background-color: $losing-player-color;
-  color: $default-text-color;
+// .lost {
+//   background-color: $losing-player-color;
+//   color: $default-text-color;
 
-  mat-card-subtitle {
-    color: $default-text-color;
-  }
+//   mat-card-subtitle {
+//     color: $default-text-color;
+//   }
+// }
+
+// NEW
+
+.in-game {
+  color: $default-text-color;
+}
+
+.lost {
+  color: white;
+}
+
+.flip-list-move {
+  transition: transform 1s;
 }
