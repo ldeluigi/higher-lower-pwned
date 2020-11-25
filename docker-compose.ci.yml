@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: hlp-backend
+    image: ${DOCKER_REGISTRY_SERVER:?err}/hlp-backend:${VERSION_TAG:-latest}
     build: backend/js/
     networks:
       - hlp-network
@@ -20,7 +20,7 @@ services:
       - mongo
 
   nginx:
-    image: hlp-nginx
+    image: ${DOCKER_REGISTRY_SERVER:?err}/hlp-nginx:${VERSION_TAG:-latest}
     build:
       context: .
       dockerfile: nginx/Dockerfile
@@ -32,7 +32,7 @@ services:
       - backend
 
   mongo:
-    image: hlp-db
+    image: ${DOCKER_REGISTRY_SERVER:?err}/hlp-db:${VERSION_TAG:-latest}
     build: backend/mongo/
     networks:
       - hlp-network
