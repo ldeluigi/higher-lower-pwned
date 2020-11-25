@@ -32,11 +32,11 @@ export class TransitionGroupDirective implements OnInit, AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void {
-    console.log('view init', this.items);
+    // console.log('view init', this.items);
     this.refreshPosition('prevPos');
 
     this.items.changes.subscribe(items => {
-      console.log('...');
+      // console.log('...');
       items.forEach((item: { prevPos: any; newPos: any; }) => {
         item.prevPos = item.newPos || item.prevPos;
       });
@@ -47,7 +47,7 @@ export class TransitionGroupDirective implements OnInit, AfterViewInit {
         items.forEach(this.applyTranslation);
 
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
         // force reflow to put everything in position
       const offSet = document.body.offsetHeight;

@@ -97,17 +97,18 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   private setupRoyaleAnimation(): void {
     if (this.animation === true) {
-
-      this.socketService.gameDataUpdate
-        .pipe(
-          takeWhile(x => !x.users.every(p => p.lost))
-        ).subscribe(users => {
-          if (users.users[0].score) {
-            this.imWinning =
-              users.users.reduce((e1, e2) => (e2.score) ? Math.max(e1, e2.score) : 0, 0)
-              === users.users.find(u => u.id === this.socketService.socketId)?.score;
-          }
-        });
+      this.counterSub?.add(
+        this.socketService.gameDataUpdate.subscribe(users => {
+            if (users.users[0].score) {
+              const scoreMax = Math.max(...users.users.map(e => e.score || 0.5));
+              const myScore = users.users.find(p => p.id.includes(this.socketService.socketId))?.score;
+              if (myScore) {
+                this.imWinning = myScore >= scoreMax;
+                console.log(myScore, scoreMax);
+              }
+            }
+          })
+      );
 
       this.gameManagerService.gameStatusObservable
         .pipe(
@@ -121,6 +122,7 @@ export class CounterComponent implements OnInit, OnDestroy {
             } else {
               this.animationState = 'lose';
             }
+            console.log(this.animationState);
           }
         });
 
@@ -177,7 +179,24 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (this.currentGameMode === DUEL) {
       this.onDuelEndGameAnimation(event);
     } else if (this.currentGameMode === ROYALE) {
+      this.onRoyaleEndGameAnimation(event);
+    }
+  }
 
+  private onRoyaleEndGameAnimation(event: AnimationEvent): void {
+    if (this.gameManagerService.currentGameStatus !== GameStatus.END) {
+      return;
+    }
+    if (event.toState === 'win') {
+      this.counterSub?.add(
+        slowDigitWord(this.scoreToMessageRoyale(true), 2000, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
+    } else if (event.toState === 'lose') {
+      this.counterSub?.add(
+        slowDigitWord(this.scoreToMessageRoyale(false), 2000, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
     }
   }
 
@@ -276,5 +295,37 @@ export class CounterComponent implements OnInit, OnDestroy {
       return 'How did you do that?';
     }
     return 'WOOOOOOHOOOOO!!!';
+  }
+
+  private scoreToMessageRoyale(haveWin: boolean): string {
+    if (haveWin) {
+      if (this.counter === 0) {
+        return 'Well...';
+      }
+      if (this.counter < 500) {
+        return 'Lucky dude.';
+      }
+      if (this.counter < 1000) {
+        return 'You win.';
+      }
+      if (this.counter < 5000) {
+        return 'You deserve it!';
+      }
+      return 'WOOOOOOHOOOOO!!!';
+    } else {
+      if (this.counter === 0) {
+        return 'Oh no...';
+      }
+      if (this.counter < 500) {
+        return 'Not enough...';
+      }
+      if (this.counter < 1000) {
+        return 'Unluky.';
+      }
+      if (this.counter < 5000) {
+        return 'How they do that?';
+      }
+      return 'WOOOOOOHOOOOO!!!';
+    }
   }
 }

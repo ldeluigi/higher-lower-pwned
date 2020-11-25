@@ -152,11 +152,11 @@ export class PlayerListComponent implements OnInit, OnDestroy {
   }
 
   private updateItems(newList: Player[]): void {
-    console.log(newList, this.items);
+    // console.log(newList, this.items);
     this.items.forEach((e, index) => e.position = index);
     newList.forEach((elem, index) => {
       const old = this.items.find(e => e.id === elem.id);
-      console.log(elem, old);
+      // console.log(elem, old);
       if (old) {
         elem.arrow = old.position === index ? this.ARROW_RIGHT :
         (old.position < index ? this.ARROW_DOWN : this.ARROW_UP);
