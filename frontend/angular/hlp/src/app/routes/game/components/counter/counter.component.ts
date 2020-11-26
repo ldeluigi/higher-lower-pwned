@@ -68,9 +68,11 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (this.gameManagerService.currentGameMode === DUEL) {
       this.currentGameMode = DUEL;
       if (this.user) {
+        // case scores of the user
         this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
         this.socketService.playerObservable.pipe(take(2)).subscribe(pd => this.addPlayerData(pd));
       } else {
+        // case scores of the opponent
         this.counterSub = this.socketService.gameDataUpdate.subscribe(gd => {
           if (this.id !== undefined) {
             const ID: string = this.id;
@@ -147,7 +149,6 @@ export class CounterComponent implements OnInit, OnDestroy {
         });
     }
   }
-
 
   private addEnemyData(p: PlayerIdName): void {
     if (!p.id.includes(this.socketService.socketId)) {
@@ -258,13 +259,15 @@ export class CounterComponent implements OnInit, OnDestroy {
     }
   }
 
-  private startTimeoutReset(value: number = 7000): void {
+  private startTimeoutReset(value: number = 700000): void {
     this.timeoutValue = setTimeout(() => {
       this.endGameMessate = '';
       this.animationState = 'none';
       this.animationStateChange?.emit('none');
     }, value);
   }
+
+  // End game messages
 
   private scoreToMessage(): string {
     if (this.counter === 0) {
