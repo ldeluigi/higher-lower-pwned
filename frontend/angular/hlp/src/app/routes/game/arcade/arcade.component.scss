@@ -41,8 +41,27 @@
   }
 }
 
+.divStart {
+  @include game-manager-button();
+}
+
+@include tablet {
+  .divStart {
+    width: 70%;
+    .postGame {
+      width: 40%;
+    }
+  }
+}
+
 // for desktop layout
 @include desktop {
+  .divStart {
+    width: 60%;
+    .postGame {
+      width: 40%;
+    }
+  }
 }
 
 button {

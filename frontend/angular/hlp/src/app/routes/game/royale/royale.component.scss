@@ -44,17 +44,7 @@
 
 .divStart {
   div {
-    display: flex;
-    width: 60%;
-    margin: auto;
-    align-self: center;
-    .postGame {
-      width: 40%;
-      margin: auto;
-    }
-  }
-  .start {
-    margin: 10vh auto;
+    @include game-manager-button();
   }
 }
 
@@ -63,9 +53,28 @@
   overflow: scroll;
 }
 
+@include tablet {
+  .divStart {
+    div {
+      width: 70%;
+      .postGame {
+        width: 40%;
+      }
+    }
+  }
+}
+
 @include desktop {
   .timer {
     width: 30%;
+  }
+  .divStart {
+    div {
+      width: 60%;
+      .postGame {
+        width: 40%;
+      }
+    }
   }
 }
 

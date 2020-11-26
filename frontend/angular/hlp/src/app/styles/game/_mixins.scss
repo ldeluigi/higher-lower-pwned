@@ -3,3 +3,23 @@
   width: 90%;
   margin: 0 auto;
 }
+
+/*
+ * Use this mixin in game mode to have a consistent
+ * layout for the game button
+ * - 'start'
+ * - 'home', 'new game'
+ */
+@mixin game-manager-button() {
+  display: flex;
+  width: 95%;
+  margin: auto;
+  align-self: center;
+  .postGame {
+    width: 50%;
+    margin: auto;
+  }
+  .start {
+    margin: 9vh auto;
+  }
+}
