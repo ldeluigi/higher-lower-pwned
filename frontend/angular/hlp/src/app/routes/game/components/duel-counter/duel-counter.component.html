@@ -1,10 +1,13 @@
 <div class="counter-container">
+  <span class="child">YOU</span>
+  <span class="child">OPPONENT</span>
+</div>
+<div class="counter-container">
   <app-counter
     class="child"
     [user]="true"
     [animationState]="this.userAnimation"
     (animationStateChange)="this.userAnimation=$event"
-
   ></app-counter>
   <app-counter
     class="child"
