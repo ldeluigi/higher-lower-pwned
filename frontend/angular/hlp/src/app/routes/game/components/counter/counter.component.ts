@@ -22,6 +22,9 @@ import { ARCADE, DUEL, ROYALE } from '../../model/gameModes';
 
 export class CounterComponent implements OnInit, OnDestroy {
 
+  readonly END_GAME_TIMER = 7000;
+  readonly WORD_ANIMATION_TIME = 2000;
+
   counter = 0;
   endGameMessate = '';
   private timeoutValue: number | undefined;
@@ -190,12 +193,12 @@ export class CounterComponent implements OnInit, OnDestroy {
     }
     if (event.toState === 'win') {
       this.counterSub?.add(
-        slowDigitWord(this.scoreToMessageRoyale(true), 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessageRoyale(true), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     } else if (event.toState === 'lose') {
       this.counterSub?.add(
-        slowDigitWord(this.scoreToMessageRoyale(false), 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessageRoyale(false), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
@@ -207,12 +210,12 @@ export class CounterComponent implements OnInit, OnDestroy {
     }
     if (event.toState === 'win') {
       this.counterSub?.add(
-        slowDigitWord(this.scoreToMessage(), 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessage(), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     } else if (event.toState === 'lose') {
       this.counterSub?.add(
-        slowDigitWord(this.scoreToMessage(), 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessage(), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
@@ -225,7 +228,7 @@ export class CounterComponent implements OnInit, OnDestroy {
     if (event.toState === 'duelUserWin') {
       if (this.user === true) {
         this.counterSub?.add(
-          slowDigitWord('YOU WIN!', 2000, s => this.endGameMessate = s)
+          slowDigitWord('YOU WIN!', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         );
       }
       this.startTimeoutReset();
@@ -233,33 +236,33 @@ export class CounterComponent implements OnInit, OnDestroy {
       if (this.user === true) {
         // opponent wins
         this.counterSub?.add(
-          slowDigitWord('YOU LOSE!', 2000, s => this.endGameMessate = s)
+          slowDigitWord('YOU LOSE!', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         );
       }
       this.startTimeoutReset();
     } else if (event.toState === 'duelOppWin') {
       if (this.user === false) {
         this.counterSub?.add(
-          slowDigitWord('WINNER!', 2000, s => this.endGameMessate = s)
+          slowDigitWord('WINNER!', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         );
       }
       this.startTimeoutReset();
     } else if (event.toState === 'duelOppLose') {
       if (this.user === false) {
         // this.counterSub?.add(
-        //   slowDigitWord('...', 2000, s => this.endGameMessate = s)
+        //   slowDigitWord('...', WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         // );
       }
       this.startTimeoutReset();
     } else if (event.toState === 'draw') {
       this.counterSub?.add(
-        slowDigitWord('DRAW', 2000, s => this.endGameMessate = s)
+        slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
   }
 
-  private startTimeoutReset(value: number = 700000): void {
+  private startTimeoutReset(value: number = this.END_GAME_TIMER): void {
     this.timeoutValue = setTimeout(() => {
       this.endGameMessate = '';
       this.animationState = 'none';
