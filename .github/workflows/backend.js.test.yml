@@ -51,7 +51,7 @@ jobs:
     if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     env:
-      DOCKER_REGISTRY_SERVER: ${{ secrets.RESOURCE_LOGIN_SERVER }}
+      DOCKER_REGISTRY_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
     steps:
        - uses: azure/login@v1
          name: Login to Azure
@@ -62,5 +62,5 @@ jobs:
          name: Login to Azure Container Registry
          with:
            registry: ${{ env.DOCKER_REGISTRY_SERVER }}
-           username: ${{ secrets.RESOURCE_LOGIN_USERNAME }}
-           password: ${{ secrets.RESOURCE_LOGIN_PASSWORD }}
+           username: ${{ secrets.REGISTRY_LOGIN_USERNAME }}
+           password: ${{ secrets.REGISTRY_LOGIN_PASSWORD }}
