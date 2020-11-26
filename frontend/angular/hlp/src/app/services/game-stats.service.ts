@@ -6,6 +6,7 @@ import { addParamsToHttp } from '../helper/httpUtils';
 import { LbItem } from '../model/lbItem';
 import { Response } from '../model/serverResponse';
 import { Stats } from '../model/stats';
+import { ARCADE } from '../routes/game/model/gameModes';
 import { ApiURLService } from './api-url.service';
 
 @Injectable({
@@ -47,7 +48,7 @@ export class GameStatsService {
       });
   }
 
-  public refreshLeaderboard(limit?: number, period?: string, mode: string = 'arcade'): void {
+  public refreshLeaderboard(limit?: number, period?: string, mode: string = ARCADE): void {
     const params = addParamsToHttp(new HttpParams(), [
       { name: 'limit', param: limit?.toString() },
       { name: 'period', param: period }

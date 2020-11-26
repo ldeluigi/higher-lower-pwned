@@ -1,16 +1,4 @@
-import { GameData, NextDuelGuess } from '../model/nextguess';
-
-enum GameType {
-  NextGuess,  // next guess, with word update
-  Update,     // A guess update with no new word
-  EndGame     // All player have lost
-}
-
-enum GameMode {
-  Arcade = 'arcade',
-  Duel = 'duel',
-  BattleRoyale = 'royale'
-}
+import { GameData, NextMultiplayerGuess } from '../model/gameDTO';
 
 function currentGuess(data: GameData): number {
   return Math.min(...data.data.filter(e => e.lost && !e.lost).map(e => e.guesses)) || Math.max(...data.data.map(e => e.guesses));
@@ -20,12 +8,12 @@ function extractId(ids: string[], myId: string): string | undefined {
   return ids.find(e => e.includes(myId));
 }
 
-function getDataFromId(myId: string, data: GameData): NextDuelGuess {
+function getDataFromId(myId: string, data: GameData): NextMultiplayerGuess {
   const myIndex = data.ids.indexOf(extractId(data.ids, myId) || '');
   if (myIndex >= 0) {
     return data.data[myIndex];
   }
-  return {} as NextDuelGuess;
+  return {} as NextMultiplayerGuess;
 }
 
 function havePlayerLost(playerId: string, data: GameData): boolean {
@@ -33,40 +21,14 @@ function havePlayerLost(playerId: string, data: GameData): boolean {
   return player.lost !== undefined && player.lost;
 }
 
-function haveLost(guess: NextDuelGuess): boolean {
-  return guess.lost !== undefined ? guess.lost : false;
-}
-
-function gameIsEnd(data: GameData): boolean {
+function multiplayerGameIsEnd(data: GameData): boolean {
   return data.data.every(p => p.lost !== undefined && p.lost);
-}
-
-function gameDataType(data: GameData, currW2: string | undefined): GameType {
-  if (data.data[0].value2 || data.data.every(p => p.lost === true)) {
-    return GameType.EndGame;
-  }
-  if (currW2) {
-    return data.data.some(p => p.lost !== undefined && p.password1 === currW2) ? GameType.NextGuess : GameType.Update;
-  }
-  return data.data.some(p => p.lost !== undefined) ? GameType.NextGuess : GameType.Update;
-}
-
-function playerInGame(data: GameData): number {
-  if (gameDataType(data, undefined) === GameType.Update) {
-    return -1;
-  }
-  return data.data.filter(p => !haveLost(p)).length;
 }
 
 export {
   currentGuess as currentGuessNumber,
   getDataFromId,
   havePlayerLost,
-  haveLost,
-  gameIsEnd,
-  gameDataType,
-  playerInGame,
-  GameType as GameDataType,
-  GameMode,
+  multiplayerGameIsEnd as gameIsEnd,
   extractId,
 };

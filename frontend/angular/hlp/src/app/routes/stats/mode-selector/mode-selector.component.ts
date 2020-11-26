@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ARCADE, DUEL, ROYALE } from '../../game/model/gameModes';
 
 @Component({
   selector: 'app-mode-selector',
@@ -14,11 +15,11 @@ export class ModeSelectorComponent {
 
   isSelected(mode: string): boolean {
     switch (mode) {
-      case 'arcade':
+      case ARCADE:
         return new RegExp('\/arcade').test(this.router.url);
-      case 'duel':
+      case DUEL:
         return new RegExp('\/duel').test(this.router.url);
-      case 'royale':
+      case ROYALE:
         return new RegExp('\/royale').test(this.router.url);
       default:
         return new RegExp('\/global').test(this.router.url);

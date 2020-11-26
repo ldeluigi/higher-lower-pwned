@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { first, takeWhile } from 'rxjs/operators';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
-import { MultiplayerGameUpdate } from '../../model/nextguess';
+import { MultiplayerGameUpdate } from '../../model/gameDTO';
 import { PlayerIdName } from '../../model/player-join';
 import { GameStatus } from '../../utils/gameStatus';
 

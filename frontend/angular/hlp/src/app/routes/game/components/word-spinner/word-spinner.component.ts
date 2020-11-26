@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { debounceTime, filter, map, takeWhile } from 'rxjs/operators';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
-import { EndGame, GameSetup, NextCard } from '../../model/animation';
+import { EndGame, GameSetup, NextCard } from '../../model/word-spinnerDTO';
 import { FlowManager } from '../../utils/gameFlowHelper';
 import { GameStatus } from '../../utils/gameStatus';
 import { rollNumber, rollWord } from '../../utils/wordAnimation';

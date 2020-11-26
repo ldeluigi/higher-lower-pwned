@@ -9,7 +9,7 @@ import { PlayerIdName } from '../../model/player-join';
 import { GameStatus } from '../../utils/gameStatus';
 import { rollNumber, slowDigitWord } from '../../utils/wordAnimation';
 import { endGameAnimation } from './counterAnimation';
-import { ARCADE, DUEL, ROYALE } from '../../model/const';
+import { ARCADE, DUEL, ROYALE } from '../../model/gameModes';
 
 @Component({
   selector: 'app-counter',

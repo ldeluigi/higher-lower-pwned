@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
-import { DUEL } from '../model/const';
+import { DUEL } from '../model/gameModes';
 import { GameStatus } from '../utils/gameStatus';
 import { ProgressBarHelper } from '../utils/progressBarHelper';
 
