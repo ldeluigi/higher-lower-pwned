@@ -6,11 +6,7 @@
 </div>
 
 <div *ngIf="displayTimer" class="timer">
-  <div>time left: {{ timeLeft | date: "s:S" }} s</div>
-  <mat-progress-bar
-    mode="determinate"
-    [value]="progressbarValue"
-  ></mat-progress-bar>
+  <app-progress-timer [progressbarValue]="progressbarValue" [timeLeft]="timeLeft"></app-progress-timer>
 </div>
 
 <div class="divStart">

@@ -16,6 +16,7 @@ import { DuelComponent } from './duel/duel.component';
 import { GameRoutingModule } from './game-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { RoyaleComponent } from './royale/royale.component';
+import { ProgressTimerComponent } from './components/progress-timer/progress-timer.component';
 import { TransitionGroupDirective, TransitionGroupItemDirective } from './components/transition-group/transition-group.component';
 
 @NgModule({
@@ -28,6 +29,7 @@ import { TransitionGroupDirective, TransitionGroupItemDirective } from './compon
     PlayerListComponent,
     DuelCounterComponent,
     DuelComponent,
+    ProgressTimerComponent,
     TransitionGroupItemDirective,
     TransitionGroupDirective
     ],

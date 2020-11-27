@@ -5,13 +5,7 @@
   <app-word-spinner *ngIf="inGame"></app-word-spinner>
 </div>
 <div class="container" *ngIf="displayTimer">
-  <div>
-    time left: {{ timeLeft | date: "s:S" }} s
-  </div>
-  <mat-progress-bar
-    mode="determinate"
-    [value]="progressbarValue"
-  ></mat-progress-bar>
+  <app-progress-timer [progressbarValue]="progressbarValue" [timeLeft]="timeLeft"></app-progress-timer>
 </div>
 <div class="divStart">
   <div *ngIf="canStart">
