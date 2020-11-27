@@ -36,10 +36,12 @@ export class RegistrationComponent implements OnInit {
         Validators.required,
         Validators.minLength(this.minUsernameLength),
         Validators.maxLength(this.maxUsernameLength),
+        Validators.pattern(RegExp(/^\w+$/))
       ])],
       password: ['', Validators.compose([
         Validators.required,
         Validators.minLength(this.minPasswordLength),
+        Validators.pattern(/^[\x00-\x7F]+$/)
       ])],
       email: ['', Validators.compose([
         Validators.required,
@@ -70,8 +72,10 @@ export class RegistrationComponent implements OnInit {
         if (this.f.username.errors !== null) {
           if (this.f.username.errors.required) {
             this.usernameError = 'username required';
-          } else {
+          } else if (this.f.username.errors.minLength || this.f.username.errors.maxLength) {
             this.usernameError = 'username must be ' + this.minUsernameLength + '-' + this.maxUsernameLength + ' chars';
+          } else {
+            this.usernameError = 'username must be alpha-numeric';
           }
         } else {
           this.usernameError = 'invalid username';
@@ -81,8 +85,10 @@ export class RegistrationComponent implements OnInit {
         if (this.f.password.errors !== null) {
           if (this.f.password.errors.required) {
             this.passwordError = 'password required';
-          } else {
+          } else if (this.f.password.errors.minLength) {
             this.passwordError = 'password must be more than ' + this.minPasswordLength + ' chars';
+          } else {
+            this.usernameError = 'password must be ascii char';
           }
         } else {
           this.passwordError = 'invalid password';
