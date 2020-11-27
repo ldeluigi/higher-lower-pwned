@@ -4,11 +4,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { LogLevel } from '../model/logLevel';
 import { Response } from '../model/serverResponse';
 import { TokenRefresh } from '../model/tokenRefresh';
 import { User } from '../model/user';
 import { UserRegistration, UserRegistrationResponse } from '../model/UserRegistration';
 import { ApiURLService } from './api-url.service';
+import { LogService } from './log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,7 @@ export class AccountService implements OnDestroy {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private snackBar: MatSnackBar,
+    private logService: LogService,
     private apiURL: ApiURLService
   ) {
     this.userSubject = new BehaviorSubject<User | null>(this.extractUser());
@@ -32,10 +34,6 @@ export class AccountService implements OnDestroy {
     if (this.userValue !== null) {
       this.logout();
     }
-  }
-
-  private log(message: string): void {
-    this.snackBar.open(message, 'OK', { duration: 3000 });
   }
 
   public get userValue(): User | null {
@@ -56,7 +54,7 @@ export class AccountService implements OnDestroy {
       .pipe(map(u => {
         localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
         this.userSubject.next(u.data);
-        this.log('Logged in properly');
+        this.logService.messageSnackBar('Logged in properly');
         return u.data;
       }));
   }
@@ -65,8 +63,11 @@ export class AccountService implements OnDestroy {
     // remove user from local storage and set current user to null
     localStorage.removeItem(this.userLocalStorage);
     this.userSubject.next(null);
-    // TODO navigate function in the router
-    this.log(message || 'Logged out properly');
+    if (message) { // User is logout for some unkown reason
+      this.logService.infoSnackBar(message);
+    } else { // User ask for logout
+      this.logService.messageSnackBar('Logged out properly');
+    }
     this.router.navigate(['/']);
   }
 
@@ -91,11 +92,12 @@ export class AccountService implements OnDestroy {
   private async update(data: any): Promise<void> {
     const user = this.extractUser();
     if (user === null) {
+      this.logService.log('No user logged while try to update user info', LogLevel.Error);
       throw Error('Invalid user');
     }
     this.http.put(`${this.apiURL.restApiUrl}/users/${user.id}`, data)
       .pipe(map(_ => {
-        this.log('Data updated correctly');
+        this.logService.messageSnackBar('Data updated correctly');
         return;
       })).pipe(first()).subscribe();
   }
@@ -103,9 +105,9 @@ export class AccountService implements OnDestroy {
   refreshToken(): Observable<TokenRefresh> {
     const user: User | null = this.userValue;
     if (user === null) {
+      this.logService.log('No user logged while try to refresh token', LogLevel.Error);
       return throwError('No user logged');
     }
-    // console.log(`${environment.apiUrl}/users/refresh`, user);
     return this.http.post<Response<TokenRefresh>>(`${this.apiURL.restApiUrl}/users/refresh`, { token: user.token, refresh: user.refresh })
       .pipe(map(a => {
         user.token = a.data.token;
@@ -115,12 +117,10 @@ export class AccountService implements OnDestroy {
       }));
   }
 
-  /**
-   * // TODO implement
-   */
   deleteUser(): Observable<User> {
     const user: User | null = this.userValue;
     if (user === null) {
+      this.logService.log('No user logged while try to delete user', LogLevel.Error);
       return throwError('No user logged');
     }
     return this.http.delete<Response<User>>(`${this.apiURL.restApiUrl}/users/${user.id}`)
