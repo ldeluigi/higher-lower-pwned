@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { timeConversion } from '../../../helper/timeConversion';
 import { Stats } from '../../../model/stats';
 import { GameStatsService } from '../../../services/game-stats.service';
+import { ARCADE } from '../../game/model/gameModes';
 
 export interface Stat {
   name: string;
@@ -19,7 +20,7 @@ export interface Stat {
 })
 export class StatsComponent implements OnInit, OnDestroy {
   private sub: Subscription | undefined;
-  mode = 'arcade';
+  mode = ARCADE;
   displayedColumns: string[] = ['name', 'avg', 'max'];
   myStats: Stat[] = [];
 

@@ -68,7 +68,7 @@ $width-desktop: 60%;
   }
 }
 
-.textDuel {
+.message {
   font-size: 6vw;
   vertical-align: bottom;
 }
@@ -81,14 +81,15 @@ $width-desktop: 60%;
   .container {
     min-width: $width-desktop / 2;
     .score {
-      $text-size: 8vh; // TODO use also vw maybe a min function
-      font-size: $text-size;
-      height: $text-size;
+      font-size: 6vh;
+      height: 8vh;
     }
   }
 
-  .textDuel {
-    font-size: 4vw;
-    vertical-align: bottom;
+  .message {
+    font-size: 6vh;
+    height: 8vh;
   }
 }
+
+

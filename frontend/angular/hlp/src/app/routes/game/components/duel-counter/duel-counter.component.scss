@@ -14,8 +14,16 @@
   }
 }
 
+span {
+  text-align: center;
+}
+
 @include desktop {
   .counter-container {
     width: 60vw;
   }
+}
+
+* {
+  color: $default-text-color;
 }

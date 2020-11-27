@@ -51,6 +51,7 @@ export class DuelCounterComponent implements OnInit, OnDestroy {
       this.gameManagerService.gameStatusObservable.subscribe(s => {
         if (s === GameStatus.END && this.waitFor === GameStatus.END) {
           this.waitFor = GameStatus.IDLE;
+          console.log('Duel-counter call animation');
           if (this.userScore > this.opponentScore) {
             console.log('WIN');
             this.userAnimation = 'duelUserWin';
@@ -60,15 +61,13 @@ export class DuelCounterComponent implements OnInit, OnDestroy {
             this.userAnimation = 'duelUserLose';
             this.opponentAnimation = 'duelOppWin';
           } else {
-            // TODO draw
             console.log('DRAW');
             this.userAnimation = 'draw';
             this.opponentAnimation = 'draw';
           }
-        } else if (s === GameStatus.IDLE && this.waitFor === GameStatus.IDLE
+        } else if ((s === GameStatus.IDLE && this.waitFor === GameStatus.IDLE)
           || this.waitFor === GameStatus.WAITING_START) {
           this.waitFor = GameStatus.END;
-          // TODO internal score reset
           this.userScore = 0;
           this.opponentScore = 0;
         } else if (s === GameStatus.PLAYING) {

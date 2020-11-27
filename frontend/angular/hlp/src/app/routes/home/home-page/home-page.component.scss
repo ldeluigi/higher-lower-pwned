@@ -262,3 +262,5 @@ $autoscroll-duration: 20s;
     transform: translateX(-$autoscroll-width);
   }
 }
+
+@include scrollBar;

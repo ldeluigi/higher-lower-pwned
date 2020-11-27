@@ -30,14 +30,7 @@
 
 .divStart {
   div {
-    display: flex;
-    width: 60%;
-    margin: auto;
-    align-self: center;
-    button {
-      width: 40%;
-      margin: auto;
-    }
+    @include game-manager-button();
   }
 }
 
@@ -70,8 +63,27 @@
   }
 }
 
-@include desktop {
+@include tablet {
+  .divStart {
+    div {
+      width: 70%;
+      .postGame {
+        width: 40%;
+      }
+    }
+  }
+}
 
+
+@include desktop {
+  .divStart {
+    div {
+      width: 60%;
+      .postGame {
+        width: 40%;
+      }
+    }
+  }
 }
 
 button {

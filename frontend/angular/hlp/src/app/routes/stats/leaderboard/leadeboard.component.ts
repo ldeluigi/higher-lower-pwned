@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { LbItem } from 'src/app/model/lbItem';
 import { GameStatsService } from '../../../services/game-stats.service';
+import { ARCADE } from '../../game/model/gameModes';
 
 @Component({
   selector: 'app-leadeboard',
@@ -16,7 +17,7 @@ import { GameStatsService } from '../../../services/game-stats.service';
 export class LeadeboardComponent implements OnInit, OnDestroy {
 
   private statsSub: Subscription | undefined;
-  mode = 'arcade';
+  mode = ARCADE;
 
   period: string | undefined;
   displayedColumns = ['position', 'username', 'score', 'date'];

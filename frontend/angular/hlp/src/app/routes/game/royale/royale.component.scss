@@ -43,12 +43,8 @@
 }
 
 .divStart {
-  display: flex;
-  margin: $default-margin auto;
-  align-self: center;
-  button {
-    width: 40%;
-    margin: $default-margin auto;
+  div {
+    @include game-manager-button();
   }
 }
 
@@ -57,9 +53,28 @@
   overflow: scroll;
 }
 
+@include tablet {
+  .divStart {
+    div {
+      width: 70%;
+      .postGame {
+        width: 40%;
+      }
+    }
+  }
+}
+
 @include desktop {
   .timer {
     width: 30%;
+  }
+  .divStart {
+    div {
+      width: 60%;
+      .postGame {
+        width: 40%;
+      }
+    }
   }
 }
 

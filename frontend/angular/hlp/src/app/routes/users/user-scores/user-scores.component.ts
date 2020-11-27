@@ -7,6 +7,7 @@ import { Observable, Subscription } from 'rxjs';
 import { RequestScore } from 'src/app/model/users/scores/requestScore';
 import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScore';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { ARCADE, DUEL, ROYALE } from '../../game/model/gameModes';
 
 @Component({
   selector: 'app-user-scores',
@@ -36,9 +37,9 @@ export class UserScoresComponent implements OnInit, OnDestroy {
   displayedColumns = this.defaultColumns;
   dataSource = new MatTableDataSource<CoreUserScores>([]);
   total = 0;
-  duelString = 'duel';
-  arcadeString = 'arcade';
-  royaleString = 'royale';
+  duelString = DUEL;
+  arcadeString = ARCADE;
+  royaleString = ROYALE;
   selected = this.arcadeString;
   pageSizeOptions: number[] = [10, 20, 50];
   pageSize: number = this.pageSizeOptions[0];

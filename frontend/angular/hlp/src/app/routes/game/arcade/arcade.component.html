@@ -13,12 +13,8 @@
   </div>
 </ng-template>
 <ng-template #gameIsNotOn>
-  <div class="flex">
-    <div class="endGameDummy"></div>
-    <div class="endGameButton">
-      <button mat-button routerLink="/home" routerLinkActive="active">HOME</button>
-      <button mat-button (click)="replay()">PLAY AGAIN</button>
-    </div>
-    <div class="endGameDummy"></div>
+  <div class="divStart">
+      <button class="postGame"  mat-button routerLink="/home" routerLinkActive="active">HOME</button>
+      <button class="postGame"  mat-button (click)="replay()">PLAY AGAIN</button>
   </div>
 </ng-template>

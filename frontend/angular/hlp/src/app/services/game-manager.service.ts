@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject, Observable, pipe, Subject, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { ARCADE, DUEL, ROYALE } from '../routes/game/model/const';
-import { Guess } from '../routes/game/model/nextguess';
-import { SocketArcade } from '../routes/game/SocketArcade';
-import { SocketDuel } from '../routes/game/SocketDuel';
-import { SocketRoyale } from '../routes/game/SocketRoyale';
+import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
+import { Guess } from '../routes/game/model/gameDTO';
 import { GameStatus } from '../routes/game/utils/gameStatus';
 import { ApiURLService } from './api-url.service';
 import { GameSocketService } from './game-socket.service';
@@ -92,7 +88,7 @@ export class GameManagerService {
         })
       );
       this.gameSub.add(
-        this.socketService.gameEndObservable.subscribe(ge => { // game is ended I have lost
+        this.socketService.gameEndObservable.subscribe(_ => { // game is ended I have lost
           this.gameStatusSubject.next(GameStatus.END);
           this.disconnect();
         })
@@ -116,7 +112,7 @@ export class GameManagerService {
       );
 
       this.gameSub.add(
-        this.socketService.gameEndObservable.subscribe(ge => { // game is ended I have lost
+        this.socketService.gameEndObservable.subscribe(_ => { // game is ended I have lost
           this.gameStatusSubject.next(GameStatus.END);
           this.disconnect();
         })

@@ -3,10 +3,9 @@ import { Socket } from 'ngx-socket-io';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
-import { ARCADE, DUEL, ROYALE } from '../routes/game/model/const';
+import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
 import { OnError } from '../routes/game/model/error';
-import { GameEnd } from '../routes/game/model/gameEnd';
-import { GameData, Guess, MultiplayerGameUpdate, NextDuelGuess, NextGuess, UpdatePlayersInfo } from '../routes/game/model/nextguess';
+import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess, UpdatePlayersInfo, GameEnd } from '../routes/game/model/gameDTO';
 import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
 import { SocketArcade } from '../routes/game/SocketArcade';
 import { SocketDuel } from '../routes/game/SocketDuel';
@@ -44,9 +43,9 @@ export class GameSocketService {
   /// Emit the score of the user
   userScoreObservable!: Observable<number>;
 
-  private nextBattleGuessSubject!: Subject<NextDuelGuess>;
+  private nextBattleGuessSubject!: Subject<NextMultiplayerGuess>;
   /// Emit event only in DUEL and ROYALE mode
-  nextBattleGuessObservable!: Observable<NextDuelGuess>;
+  nextBattleGuessObservable!: Observable<NextMultiplayerGuess>;
 
   private gameEndSubject!: Subject<GameEnd>;
   /// Emit the last state
@@ -80,7 +79,7 @@ export class GameSocketService {
     this.simpleNextGuessSubject = new Subject<Guess>();
     this.simpleNextGuessObservable = this.simpleNextGuessSubject.asObservable();
 
-    this.nextBattleGuessSubject = new Subject<NextDuelGuess>();
+    this.nextBattleGuessSubject = new Subject<NextMultiplayerGuess>();
     this.nextBattleGuessObservable = this.nextBattleGuessSubject.asObservable();
 
     this.timerSubject = new Subject<number>();
@@ -108,6 +107,7 @@ export class GameSocketService {
   disconnect(): void {
     this.stopConnection = true;
     this.socket?.emit('quit');
+    console.log('EMIT QUIT!');
     this.socket?.disconnect();
     this.socket?.removeAllListeners();
     this.socket = undefined;

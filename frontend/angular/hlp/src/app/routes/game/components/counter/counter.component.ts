@@ -9,7 +9,7 @@ import { PlayerIdName } from '../../model/player-join';
 import { GameStatus } from '../../utils/gameStatus';
 import { rollNumber, slowDigitWord } from '../../utils/wordAnimation';
 import { endGameAnimation } from './counterAnimation';
-import { ARCADE, DUEL, ROYALE } from '../../model/const';
+import { ARCADE, DUEL, ROYALE } from '../../model/gameModes';
 
 @Component({
   selector: 'app-counter',
@@ -21,6 +21,9 @@ import { ARCADE, DUEL, ROYALE } from '../../model/const';
 })
 
 export class CounterComponent implements OnInit, OnDestroy {
+
+  readonly END_GAME_TIMER = 7000;
+  readonly WORD_ANIMATION_TIME = 2000;
 
   counter = 0;
   endGameMessate = '';
@@ -35,6 +38,9 @@ export class CounterComponent implements OnInit, OnDestroy {
   private counterSub: Subscription | undefined;
   private gameSub: Subscription | undefined;
   currentGameMode = '';
+
+  // Royale
+  imWinning = false;
 
   constructor(
     private accountService: AccountService,
@@ -65,9 +71,11 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (this.gameManagerService.currentGameMode === DUEL) {
       this.currentGameMode = DUEL;
       if (this.user) {
+        // case scores of the user
         this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
         this.socketService.playerObservable.pipe(take(2)).subscribe(pd => this.addPlayerData(pd));
       } else {
+        // case scores of the opponent
         this.counterSub = this.socketService.gameDataUpdate.subscribe(gd => {
           if (this.id !== undefined) {
             const ID: string = this.id;
@@ -86,7 +94,43 @@ export class CounterComponent implements OnInit, OnDestroy {
         });
       }
     } else if (this.gameManagerService.currentGameMode === ROYALE) {
-      // TODO royale animation
+      this.currentGameMode = ROYALE;
+      this.setupRoyaleAnimation();
+      this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+    }
+  }
+
+  private setupRoyaleAnimation(): void {
+    if (this.animation === true) {
+      this.counterSub?.add(
+        this.socketService.gameDataUpdate.subscribe(users => {
+            if (users.users[0].score) {
+              const scoreMax = Math.max(...users.users.map(e => e.score || 0.5));
+              const myScore = users.users.find(p => p.id.includes(this.socketService.socketId))?.score;
+              if (myScore) {
+                this.imWinning = myScore >= scoreMax;
+                console.log(myScore, scoreMax);
+              }
+            }
+          })
+      );
+
+      this.gameManagerService.gameStatusObservable
+        .pipe(
+          filter(x => x === GameStatus.END),
+          first()
+        )
+        .subscribe(ns => {
+          if (ns === GameStatus.END) {
+            if (this.imWinning) {
+              this.animationState = 'win';
+            } else {
+              this.animationState = 'lose';
+            }
+            console.log(this.animationState);
+          }
+        });
+
     }
   }
 
@@ -108,7 +152,6 @@ export class CounterComponent implements OnInit, OnDestroy {
         });
     }
   }
-
 
   private addEnemyData(p: PlayerIdName): void {
     if (!p.id.includes(this.socketService.socketId)) {
@@ -140,7 +183,24 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (this.currentGameMode === DUEL) {
       this.onDuelEndGameAnimation(event);
     } else if (this.currentGameMode === ROYALE) {
+      this.onRoyaleEndGameAnimation(event);
+    }
+  }
 
+  private onRoyaleEndGameAnimation(event: AnimationEvent): void {
+    if (this.gameManagerService.currentGameStatus !== GameStatus.END) {
+      return;
+    }
+    if (event.toState === 'win') {
+      this.counterSub?.add(
+        slowDigitWord(this.scoreToMessageRoyale(true), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
+    } else if (event.toState === 'lose') {
+      this.counterSub?.add(
+        slowDigitWord(this.scoreToMessageRoyale(false), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
     }
   }
 
@@ -150,12 +210,12 @@ export class CounterComponent implements OnInit, OnDestroy {
     }
     if (event.toState === 'win') {
       this.counterSub?.add(
-        slowDigitWord(this.scoreToMessage(), 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessage(), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     } else if (event.toState === 'lose') {
       this.counterSub?.add(
-        slowDigitWord(this.scoreToMessage(), 2000, s => this.endGameMessate = s)
+        slowDigitWord(this.scoreToMessage(), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
@@ -168,7 +228,7 @@ export class CounterComponent implements OnInit, OnDestroy {
     if (event.toState === 'duelUserWin') {
       if (this.user === true) {
         this.counterSub?.add(
-          slowDigitWord('YOU WIN!', 2000, s => this.endGameMessate = s)
+          slowDigitWord('YOU WIN!', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         );
       }
       this.startTimeoutReset();
@@ -176,39 +236,41 @@ export class CounterComponent implements OnInit, OnDestroy {
       if (this.user === true) {
         // opponent wins
         this.counterSub?.add(
-          slowDigitWord('YOU LOSE!', 2000, s => this.endGameMessate = s)
+          slowDigitWord('YOU LOSE!', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         );
       }
       this.startTimeoutReset();
     } else if (event.toState === 'duelOppWin') {
       if (this.user === false) {
         this.counterSub?.add(
-          slowDigitWord('WINNER!', 2000, s => this.endGameMessate = s)
+          slowDigitWord('WINNER!', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         );
       }
       this.startTimeoutReset();
     } else if (event.toState === 'duelOppLose') {
       if (this.user === false) {
         // this.counterSub?.add(
-        //   slowDigitWord('...', 2000, s => this.endGameMessate = s)
+        //   slowDigitWord('...', WORD_ANIMATION_TIME, s => this.endGameMessate = s)
         // );
       }
       this.startTimeoutReset();
     } else if (event.toState === 'draw') {
       this.counterSub?.add(
-        slowDigitWord('DRAW', 2000, s => this.endGameMessate = s)
+        slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
   }
 
-  private startTimeoutReset(value: number = 7000): void {
+  private startTimeoutReset(value: number = this.END_GAME_TIMER): void {
     this.timeoutValue = setTimeout(() => {
       this.endGameMessate = '';
       this.animationState = 'none';
       this.animationStateChange?.emit('none');
     }, value);
   }
+
+  // End game messages
 
   private scoreToMessage(): string {
     if (this.counter === 0) {
@@ -239,5 +301,37 @@ export class CounterComponent implements OnInit, OnDestroy {
       return 'How did you do that?';
     }
     return 'WOOOOOOHOOOOO!!!';
+  }
+
+  private scoreToMessageRoyale(haveWin: boolean): string {
+    if (haveWin) {
+      if (this.counter === 0) {
+        return 'Well...';
+      }
+      if (this.counter < 500) {
+        return 'Lucky dude.';
+      }
+      if (this.counter < 1000) {
+        return 'You win.';
+      }
+      if (this.counter < 5000) {
+        return 'You deserve it!';
+      }
+      return 'WOOOOOOHOOOOO!!!';
+    } else {
+      if (this.counter === 0) {
+        return 'Oh no...';
+      }
+      if (this.counter < 500) {
+        return 'Not enough...';
+      }
+      if (this.counter < 1000) {
+        return 'Unluky.';
+      }
+      if (this.counter < 5000) {
+        return 'How they do that?';
+      }
+      return 'WOOOOOOHOOOOO!!!';
+    }
   }
 }
