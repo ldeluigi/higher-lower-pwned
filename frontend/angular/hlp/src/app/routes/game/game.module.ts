@@ -17,6 +17,7 @@ import { GameRoutingModule } from './game-routing.module';
 import { LayoutComponent } from './layout/layout.component';
 import { RoyaleComponent } from './royale/royale.component';
 import { GameEndGameAnimationComponent } from './components/game-end-game-animation/game-end-game-animation.component';
+import { ProgressTimerComponent } from './components/progress-timer/progress-timer.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { GameEndGameAnimationComponent } from './components/game-end-game-animat
     PlayerListComponent,
     DuelCounterComponent,
     DuelComponent,
-    GameEndGameAnimationComponent
+    GameEndGameAnimationComponent,
+    ProgressTimerComponent
     ],
   imports: [
     CommonModule,

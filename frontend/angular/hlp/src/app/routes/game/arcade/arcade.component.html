@@ -7,7 +7,8 @@
 <div *ngIf="playing; then gameIsOn; else gameIsNotOn"></div>
 <ng-template #gameIsOn>
   <div class="progressBar">
-    <div>{{ timeLeft | date: "s:S" }} s</div>
+    <app-progress-timer [progressbarValue]="progressbarValue" [timeLeft]="timeLeft"></app-progress-timer>
+    <div>{{ timeLeft | date: "s.S" }} s</div>
     <mat-progress-bar mode="determinate" [value]="progressbarValue"></mat-progress-bar>
   </div>
 </ng-template>
