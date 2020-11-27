@@ -16,7 +16,7 @@
 
   <div
     *ngIf="canExit || isWaitingStart">
-    <button class="postGame" mat-button (click)="quit()">EXIT</button>
+    <button class="postGame" mat-button routerLink="/home" routerLinkActive="active">HOME</button>
     <button class="postGame" mat-button *ngIf="canRestart" (click)="quit(); this.start()">NEW GAME</button>
   </div>
 </div>
