@@ -6,6 +6,7 @@ import { Guess } from '../routes/game/model/gameDTO';
 import { GameStatus } from '../routes/game/utils/gameStatus';
 import { ApiURLService } from './api-url.service';
 import { GameSocketService } from './game-socket.service';
+import { LogService } from './log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,7 @@ export class GameManagerService {
   nextGuessObservable = this.nextGuessSubject.asObservable();
 
   constructor(
-    private socketService: GameSocketService,
-    private apiURL: ApiURLService
+    private socketService: GameSocketService
   ) { }
 
   get currentGameStatus(): GameStatus {
@@ -67,7 +67,6 @@ export class GameManagerService {
 
   private resetGame(): void {
     this.gameSub?.unsubscribe();
-    // this.currentGameMode = undefined;
     this.disconnect();
   }
 
@@ -95,7 +94,6 @@ export class GameManagerService {
       );
     } else {                                            // DUEL and ROYALE mode
       this.gameStatusSubject.next(GameStatus.WAITING_START);
-
       this.gameSub.add(
         this.socketService.nextBattleGuessObservable.subscribe(ng => {
           if (this.currentGameStatus === GameStatus.WAITING_N_GUESS) {
