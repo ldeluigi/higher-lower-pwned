@@ -33,11 +33,11 @@ export class LogService {
   }
 
   messageSnackBar(message: string, duration: number = 3000): void {
-    this.snackBar.open(message, undefined, { duration });
+    this.snackBar.open(message, undefined, { duration, panelClass: 'snackBarMessage' });
   }
 
   infoSnackBar(message: string, duration: number = 10000): void {
-    this.snackBar.open(message, 'OK', { duration });
+    this.snackBar.open(message, 'OK', { duration, panelClass: 'snackBarInfo' });
   }
 
   errorSnackBar(error: OnError | string, duration: number = 3000): void {
@@ -48,6 +48,6 @@ export class LogService {
     } else {
       value = error.toString();
     }
-    this.snackBar.open(value, undefined, { duration });
+    this.snackBar.open(value, undefined, { duration, panelClass: 'snackBarError' });
   }
 }

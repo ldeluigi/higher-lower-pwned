@@ -51,3 +51,18 @@ div.mat-expansion-panel-body {
 .mat-tooltip {
   font-size: 2vh;
 }
+
+.snackBarMessage {
+  background-color: $default-msg-color;
+  color: $default-text-color;
+  text-align: center;
+}
+
+.snackBarInfo {
+  background-color: $default-info-color;
+  color: $default-text-color;
+}
+
+.snackBarError {
+  background-color: $default-error-color;
+}
