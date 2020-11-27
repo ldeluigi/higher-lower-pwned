@@ -8,8 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProgressTimerComponent implements OnInit {
 
-  @Input() progressbarValue: number = 100;
-  @Input() timeLeft: number = 0;
+  @Input() progressbarValue = 100;
+  @Input() timeLeft = 0;
 
   constructor() { }
 
