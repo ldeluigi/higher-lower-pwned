@@ -387,6 +387,7 @@ async function currentGuessFromQuery(gameQuery) {
     }
     if (playingNumber == 0) {
       res.value2 = gameQuery.valueP2;
+      res.won = game.victory;
     }
     return res;
   });
