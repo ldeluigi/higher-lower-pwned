@@ -98,16 +98,20 @@ module.exports = {
   },
   // -----------------------------------------------------------------------------------------------------------
   nextTimeout: async function (gameID) {
+    await this.currentGuess(gameID);
     let gameQuery = await findGame(gameID);
     if (gameQuery === null) throw new Error("Game not found.");
     let now = Date.now();
     let minGuesses = computeMinGuesses(gameQuery, true);
-    let filteredGames = gameQuery.games.filter(e => {
-      let timeout = e.guesses > minGuesses ?
-        Number.MAX_SAFE_INTEGER :
-        e.expiration.getTime() - now;
-      return timeout > 0 && !e.lost;
-    });
+    let filteredGames = gameQuery.games
+      .filter(e => !e.lost)
+      .map(e => {
+        let timeout = e.guesses > minGuesses ?
+          Number.MAX_SAFE_INTEGER :
+          e.expiration.getTime() - now;
+        return timeout;
+      })
+      .filter(t => t > 0);
     return filteredGames.length > 0 ? Math.min(...filteredGames) : 0;
   },
   // -----------------------------------------------------------------------------------------------------------
