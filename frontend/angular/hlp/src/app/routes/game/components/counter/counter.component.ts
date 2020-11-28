@@ -83,10 +83,14 @@ export class CounterComponent implements OnInit, OnDestroy {
             if (otherPlayer && otherPlayer.score) {
               this.updateScore(otherPlayer.score);
             }
+            if (otherPlayer === undefined) {
+              // other player is no longer present in the room
+              this.name = undefined;
+            }
           }
         });
         this.socketService.opponentsObservable.pipe(first()).subscribe(nps => {
-          if (nps.length === 0) { // no one is waiting
+          if (nps.length === 0) { // no one is waiting, so I wait for my + enemy data so I take 2
             this.socketService.playerObservable.pipe(take(2)).subscribe(ed => this.addEnemyData(ed));
           } else { // some one is waiting
             nps.forEach(ed => this.addEnemyData(ed));
