@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: hlp-backend
+    image: ${DOCKER_REGISTRY_SERVER:?err}/hlp-backend:${VERSION_TAG:-latest}
     build: backend/js/
     networks:
       - hlp-network
@@ -20,7 +20,7 @@ services:
       - mongo
 
   nginx:
-    image: hlp-nginx
+    image: ${DOCKER_REGISTRY_SERVER:?err}/hlp-nginx:${VERSION_TAG:-latest}
     build:
       context: .
       dockerfile: nginx/Dockerfile
@@ -32,14 +32,13 @@ services:
       - backend
 
   mongo:
-    image: hlp-db
+    image: ${DOCKER_REGISTRY_SERVER:?err}/hlp-db:${VERSION_TAG:-latest}
     build: backend/mongo/
     networks:
       - hlp-network
     volumes:
       - hlp-mongo-db-data:/data/db/ # Not working on windows unless you do the workaround
-      - ./backend/mongo/data/log/:/var/log/mongodb/
-      - ./backend/mongo/dbshell:/home/mongodb/:ro
+      - hlp-mongo-log-data:/var/log/mongodb/
     environment:
       MONGO_INITDB_USERNAME: ${MONGO_DB_USERNAME:?err}
       MONGO_INITDB_PASSWORD: ${MONGO_DB_PASSWORD}
@@ -52,3 +51,4 @@ networks:
 
 volumes:
   hlp-mongo-db-data:
+  hlp-mongo-log-data:
