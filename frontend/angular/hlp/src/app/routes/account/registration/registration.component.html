@@ -5,12 +5,14 @@
       <p>
         <mat-form-field>
           <input type="text" matInput placeholder="Username" formControlName="username" />
+          <mat-hint *ngIf="usernameError"> {{ usernameError }} </mat-hint>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field>
           <mat-label>Password</mat-label>
           <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" />
+          <mat-hint *ngIf="passwordError"> {{ passwordError }} </mat-hint>
           <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
             [attr.aria-pressed]="hide">
             <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
@@ -20,19 +22,9 @@
       <p>
         <mat-form-field>
           <input type="email" matInput placeholder="Email" formControlName="email" />
+          <mat-hint *ngIf="emailError"> {{ emailError }} </mat-hint>
         </mat-form-field>
       </p>
-      <div *ngIf="usernameError || passwordError ||  emailError" class="error">
-        <p *ngIf="usernameError">
-          {{ usernameError }}
-        </p>
-        <p *ngIf="passwordError">
-          {{ passwordError }}
-        </p>
-        <p *ngIf="emailError">
-          {{ emailError }}
-        </p>
-      </div>
       <div class="button">
         <button type="submit" mat-button>Register</button>
       </div>

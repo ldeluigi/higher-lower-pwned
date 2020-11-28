@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AccountService } from '../../../services/account.service';
+import { LogService } from '../../../services/log.service';
 
 @Component({
   selector: 'app-login',
@@ -15,12 +16,11 @@ export class LoginComponent implements OnInit {
   submitted = false;
   returnUrl = '';
 
-  @Input() error: string | null = null;
-
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private logService: LogService,
     private accountService: AccountService
   ) {
     this.form = this.formBuilder.group({
@@ -45,11 +45,9 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.error = '';
 
     // stop here if form is invalid
     if (this.form.invalid) {
-      this.error = 'Missing ';
       const errors: string[] = [];
       if (this.f.username.invalid) {
         errors.push('username');
@@ -58,7 +56,7 @@ export class LoginComponent implements OnInit {
         errors.push('password');
       }
       if (errors.length > 0) {
-        this.error = 'Missing ' + errors.join(' and ') + '.';
+        this.logService.errorSnackBar('Missing ' + errors.join(' and ') + '.');
       }
       return;
     }
@@ -72,7 +70,7 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           // console.log(error);
-          this.error = 'Wrong Username or Password';
+          this.logService.errorSnackBar('Wrong Username or Password');
         },
       );
   }

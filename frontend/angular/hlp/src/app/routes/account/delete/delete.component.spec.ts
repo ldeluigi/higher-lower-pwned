@@ -11,12 +11,12 @@ describe('DeleteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ 
+      imports: [
         RouterTestingModule,
         HttpClientTestingModule,
         MatSnackBarModule,
         MatDialogModule,
-      ],      
+      ],
       providers: [
         {
           provide: MatDialogRef,

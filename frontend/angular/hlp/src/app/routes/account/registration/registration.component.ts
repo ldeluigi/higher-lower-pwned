@@ -72,7 +72,7 @@ export class RegistrationComponent implements OnInit {
         if (this.f.username.errors !== null) {
           if (this.f.username.errors.required) {
             this.usernameError = 'username required';
-          } else if (this.f.username.errors.minLength || this.f.username.errors.maxLength) {
+          } else if (this.f.username.errors.minLength !== null || this.f.username.errors.maxLength !== null) {
             this.usernameError = 'username must be ' + this.minUsernameLength + '-' + this.maxUsernameLength + ' chars';
           } else {
             this.usernameError = 'username must be alpha-numeric';
@@ -85,10 +85,10 @@ export class RegistrationComponent implements OnInit {
         if (this.f.password.errors !== null) {
           if (this.f.password.errors.required) {
             this.passwordError = 'password required';
-          } else if (this.f.password.errors.minLength) {
+          } else if (this.f.password.errors.minLength !== null) {
             this.passwordError = 'password must be more than ' + this.minPasswordLength + ' chars';
           } else {
-            this.usernameError = 'password must be ascii char';
+            this.passwordError = 'password must be ascii char';
           }
         } else {
           this.passwordError = 'invalid password';
