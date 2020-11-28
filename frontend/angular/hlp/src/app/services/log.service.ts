@@ -20,7 +20,7 @@ export class LogService {
     }
   }
 
-  log(message: string, severity: LogLevel, withDate: boolean = false): void {
+  log(message: string, severity: LogLevel, data: any | undefined = undefined, withDate: boolean = false): void {
     if (this.isProduction && severity > this.maxLogInProduction) {
       // skip this log in production
       return;
@@ -30,6 +30,7 @@ export class LogService {
       value = `${new Date()} - `;
     }
     value = value.concat(`[${severity.toString()}]: ${message}`);
+    console.log(value, data);
   }
 
   messageSnackBar(message: string, duration: number = 3000): void {

@@ -96,10 +96,10 @@ export class GameManagerService {
       this.gameStatusSubject.next(GameStatus.WAITING_START);
       this.gameSub.add(
         this.socketService.nextBattleGuessObservable.subscribe(ng => {
-          if (this.currentGameStatus === GameStatus.WAITING_N_GUESS) {
-              if (ng.lost && ng.lost) {
-                this.gameStatusSubject.next(GameStatus.LOST);
-              } else if (ng.score) {
+          if (ng.lost && ng.lost) {
+            this.gameStatusSubject.next(GameStatus.LOST);
+          } else if (this.currentGameStatus === GameStatus.WAITING_N_GUESS) {
+              if (ng.score) {
                 this.gameStatusSubject.next(GameStatus.PLAYING);
               }
           } else if (this.currentGameStatus === GameStatus.WAITING_START) {

@@ -191,7 +191,7 @@ export class GameSocketService {
    * New guess 'guess'
    */
   private guess = (guess: NextGuess | GameData) => {
-    this.logService.log('Socket guess ' + guess, LogLevel.Info);
+    this.logService.log('Socket guess ', LogLevel.Info, guess);
     const guessAsNextGuess = guess as NextGuess;  // contiene solo il guess
     const guessAsGameData = guess as GameData;    // contiene una lista di valori
     if (guessAsNextGuess.password1) {                   // Case arcade

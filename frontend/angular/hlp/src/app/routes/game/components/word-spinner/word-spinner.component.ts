@@ -24,7 +24,6 @@ export interface Card {
   styleUrls: ['./word-spinner.component.scss'],
   animations: [
     vsAnimation,
-    // wordAnimation,
     cardAnimation,
   ]
 })
