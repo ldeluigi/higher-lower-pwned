@@ -10,7 +10,7 @@ import { EndGame, GameSetup, NextCard } from '../../model/word-spinnerDTO';
 import { FlowManager } from '../../utils/gameFlowHelper';
 import { GameStatus } from '../../utils/gameStatus';
 import { rollNumber, rollWord } from '../../utils/wordAnimation';
-import { cardAnimation, vsAnimation, wordAnimation } from './animation';
+import { cardAnimation, vsAnimation } from './animation';
 
 export interface Card {
   word: string;
@@ -24,7 +24,7 @@ export interface Card {
   styleUrls: ['./word-spinner.component.scss'],
   animations: [
     vsAnimation,
-    wordAnimation,
+    // wordAnimation,
     cardAnimation,
   ]
 })
@@ -170,7 +170,7 @@ export class WordSpinnerComponent {
   }
 
   gameSetup(setup: GameSetup): void {
-    // console.log('game set up');
+    console.log('game set up', this.element1.status, this.element2.status);
     this.moving = false;
     this.inAnimation = true;
     this.element1 = {
@@ -211,8 +211,6 @@ export class WordSpinnerComponent {
     this.inAnimation = true;
     rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString())
       .then(() => {
-        /** qui si possono mettere effetti di fine partita, come su mobile */
-
         this.element1.status = 'dummy';
         this.element2.status = 'dummy';
       });

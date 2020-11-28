@@ -116,10 +116,10 @@ $vs_heigth: #{95% - ($card_heigth * 2)};
   .words {
     .top {
       background-color: $lower-color;
-      transition: 1.1s;
+      transition-duration: 1.1s;
     }
     .bot {
-      transition: 1.1s;
+      transition-duration: 1.1s;
     }
     .top:hover {
       cursor: pointer;
