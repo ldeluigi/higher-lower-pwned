@@ -2,6 +2,7 @@
   <div class="inputs">
     <app-period-buttons
       class="input"
+      id="firstLane"
       (period)="updateUserStats($event)"
     ></app-period-buttons>
     <mat-form-field appearance="fill" class="input">
@@ -43,7 +44,7 @@
       <ng-container matColumnDef="day">
         <th mat-header-cell *matHeaderCellDef>Day</th>
         <td mat-cell *matCellDef="let element">
-          {{ element | historyItemToStartDate: 'day' | date:'dd/M/yy' }}
+          {{ element | historyItemToStartDate: 'day' | date:'dd/M' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="month">
@@ -61,31 +62,31 @@
       <ng-container matColumnDef="startDate">
         <th mat-header-cell *matHeaderCellDef> From </th>
         <td mat-cell *matCellDef="let element">
-          {{ element | historyItemToStartDate: actualPeriod | date:'dd/M/yy' }}
+          {{ element | historyItemToStartDate: actualPeriod | date:'dd' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="endDate">
         <th mat-header-cell *matHeaderCellDef> To </th>
         <td mat-cell *matCellDef="let element">
-          {{ element | historyItemToEndDate: actualPeriod | date:'dd/M/yy' }}
+          {{ element | historyItemToEndDate: actualPeriod | date:'dd/M' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="avgScore">
         <th mat-header-cell *matHeaderCellDef>Avg. score</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.avgScore | number }}
+          {{ element.avgScore | number | number : '1.0-0'}}
         </td>
       </ng-container>
       <ng-container matColumnDef="avgGuesses">
         <th mat-header-cell *matHeaderCellDef>Avg. guesses</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.avgGuesses | number }}
+          {{ element.avgGuesses | number | number : '1.1-2' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="avgPlaysPerDay">
-        <th mat-header-cell *matHeaderCellDef>Avg. plays per day</th>
+        <th mat-header-cell *matHeaderCellDef>Avg. plays/day</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.avgPlaysPerDay | number }}
+          {{ element.avgPlaysPerDay | number | number : '1.1-2' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="avgDuration">

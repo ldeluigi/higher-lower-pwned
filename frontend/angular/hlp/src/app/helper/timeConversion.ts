@@ -24,11 +24,11 @@ function timeConversion(milliseconds: number): string {
   const mm = absoluteMilliseconds;
 
   if (h > 0) {
-    return h + ':' + m + ':' + s;
+    return h + 'h ' + m + 'm';
   } else if (m > 0) {
-    return m + ':' + s + '.' + mm;
+    return m + 'm ' + s + 's';
   } else {
-    return s + '.' + mm;
+    return s + '.' + mm + 's';
   }
 }
 

@@ -24,7 +24,7 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<LbItem>([]);
 
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
-  selected = 10;
+  selected = 1000;
 
   constructor(
     private leaderboardService: GameStatsService,

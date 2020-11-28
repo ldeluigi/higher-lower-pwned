@@ -1,6 +1,6 @@
-<div class="inputs">
+<!--div class="inputs"-->
   <app-period-buttons class="input" (period)="updateLeaderboard($event)"></app-period-buttons>
-  <mat-form-field appearance="fill" class="input">
+  <!--mat-form-field appearance="fill" class="input">
     <mat-label>limit</mat-label>
     <mat-select [(value)]="selected"
       (selectionChange)="updateLimit($event.value)">
@@ -10,8 +10,8 @@
       <mat-option value="15">15</mat-option>
       <mat-option value="30">30</mat-option>
     </mat-select>
-  </mat-form-field>
-</div>
+  </mat-form-field-->
+<!--/div-->
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
 

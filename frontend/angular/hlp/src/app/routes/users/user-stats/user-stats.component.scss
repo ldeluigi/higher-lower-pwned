@@ -7,6 +7,10 @@
 
 table {
   width: 100%;
+  th.mat-header-cell,
+  td.mat-cell {
+    text-align: center;
+  }
 }
 
 canvas {
@@ -18,12 +22,17 @@ div.inputs {
   padding: $default-padding;
   margin-bottom: $default-margin;
   background: $white-bg;
-  display: flex;
+  display: grid;
   place-content: center;
 }
 
 .input {
-  margin: $default-margin;
+  margin: auto;
+}
+
+#firstLane {
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 mat-form-field {
@@ -45,13 +54,13 @@ mat-form-field {
 }
 
 @include tablet {
-  .input {
-    margin: auto;
+  div.inputs {
+    display: flex;
   }
 }
 
 @include desktop {
-  .input {
-    margin: auto;
+  div.inputs {
+    display: flex;
   }
 }
