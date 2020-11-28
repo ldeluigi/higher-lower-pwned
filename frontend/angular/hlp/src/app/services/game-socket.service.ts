@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
 import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
-import { OnError } from '../routes/game/model/error';
+import { errorToString, OnError } from '../routes/game/model/error';
 import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess, UpdatePlayersInfo, GameEnd } from '../routes/game/model/gameDTO';
 import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
 import { SocketArcade } from '../routes/game/SocketArcade';
@@ -13,6 +13,8 @@ import { SocketRoyale } from '../routes/game/SocketRoyale';
 import { extractId, getDataFromId } from '../routes/game/utils/gameHelper';
 import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
+import { LogService } from './log.service';
+import { LogLevel } from '../model/logLevel';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +67,8 @@ export class GameSocketService {
 
   constructor(
     private accountService: AccountService,
-    private apiURL: ApiURLService
+    private apiURL: ApiURLService,
+    private logService: LogService
   ) {
     this.playersSubject = new Subject<PlayerIdName>();
     this.playerObservable = this.playersSubject.asObservable();
@@ -107,7 +110,7 @@ export class GameSocketService {
   disconnect(): void {
     this.stopConnection = true;
     this.socket?.emit('quit');
-    console.log('EMIT QUIT!');
+    this.logService.log('EMIT QUIT!', LogLevel.Info);
     this.socket?.disconnect();
     this.socket?.removeAllListeners();
     this.socket = undefined;
@@ -165,7 +168,7 @@ export class GameSocketService {
       }
       socket.fromOneTimeEvent('disconnect')
       .then(_ => {
-        console.log('disconect'); // TODO remove
+        this.logService.log('Socket disconected.', LogLevel.Info);
         this.connectionOpen = false;
       });
       socket.connect();
@@ -175,7 +178,7 @@ export class GameSocketService {
           this.disconnect();
           return;
         }
-        console.log('connect!'); // TODO remove
+        this.logService.log('Socket connect.', LogLevel.Info);
         this.connectionSubject?.next(true);
         this.connectionSubject = undefined;
       });
@@ -188,7 +191,7 @@ export class GameSocketService {
    * New guess 'guess'
    */
   private guess = (guess: NextGuess | GameData) => {
-    console.log('socket guess', guess);
+    this.logService.log('Socket guess ' + guess, LogLevel.Info);
     const guessAsNextGuess = guess as NextGuess;  // contiene solo il guess
     const guessAsGameData = guess as GameData;    // contiene una lista di valori
     if (guessAsNextGuess.password1) {                   // Case arcade
@@ -235,7 +238,10 @@ export class GameSocketService {
    * Error 'on-error'
    * // TODO gestire l'errore
    */
-  private onError = (error: OnError) => console.log(error);
+  private onError = (error: OnError) => {
+    this.logService.log(errorToString(error), LogLevel.Error);
+    this.logService.errorSnackBar(error);
+  }
 
   /**
    * Player-join 'player-join'
@@ -251,7 +257,6 @@ export class GameSocketService {
    * GameEnd: 'game-end'
    */
   private gameEnd = (data: GameEnd) => {
-    // console.log('socket game end', data);
     this.gameEndSubject.next(data);
   }
 
@@ -259,7 +264,7 @@ export class GameSocketService {
    *  Error in connection of any type.
    */
   private error = (e: string) => {
-    // console.log('>error: ', e, this.accountService);
+    this.logService.log('Socket error ' + e, LogLevel.Error);
     if (this.connectionTry > 2) {
       this.accountService.logout('Can\'t connecto to the server.'); // TODO cambiare con un error service
       return;
@@ -273,14 +278,11 @@ export class GameSocketService {
             this.socket = this.newSocket(this.gameMode);
             this.setUpSocketObservable(this.socket);
             this.connect(this.socket);
-          } else {
-            // TODO gestire l'errore
-          }
+          } else {}
         },
-        e2 => this.accountService.logout('Can\'t connet to the service, login again and retry ' + e2)
+        e2 => this.logService.errorSnackBar(`Can't connect with your account, please login again and retry. ` + e2)
       );
     } else {
-      // console.log('Connection lost');
       this.errorSubject.next({ code: -1, description: 'Connection lost' });
     }
   }
