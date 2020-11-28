@@ -8,8 +8,6 @@
 <ng-template #gameIsOn>
   <div class="progressBar">
     <app-progress-timer [progressbarValue]="progressbarValue" [timeLeft]="timeLeft"></app-progress-timer>
-    <div>{{ timeLeft | date: "s.S" }} s</div>
-    <mat-progress-bar mode="determinate" [value]="progressbarValue"></mat-progress-bar>
   </div>
 </ng-template>
 <ng-template #gameIsNotOn>
