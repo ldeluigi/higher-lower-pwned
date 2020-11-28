@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { LogLevel } from 'src/app/model/logLevel';
 import { AccountService } from 'src/app/services/account.service';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { LogService } from 'src/app/services/log.service';
+import { errorToString } from '../model/error';
 import { DUEL } from '../model/gameModes';
 import { GameStatus } from '../utils/gameStatus';
 import { ProgressBarHelper } from '../utils/progressBarHelper';
@@ -22,7 +24,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
   opponentName = 'OPPONENT';
   opponentLost = false;
   constructor(
-    private snackBar: MatSnackBar,
+    private logService: LogService,
     private accountService: AccountService,
     private gameSocket: GameSocketService,
     private gameManager: GameManagerService
@@ -48,7 +50,10 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
       }
     }));
 
-    this.gameSub.add(this.gameSocket.errorObservable.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`)));
+    this.gameSub.add(this.gameSocket.errorObservable.subscribe(err => {
+      this.logService.errorSnackBar(err);
+      this.logService.log(errorToString(err), LogLevel.Error);
+    }));
   }
 
   get inGame(): boolean {
@@ -69,14 +74,9 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
       || this.gameManager.currentGameStatus === GameStatus.WAITING_START;
   }
 
-
   get canRestart(): boolean {
     return this.gameManager.currentGameStatus === GameStatus.END
       || this.gameManager.currentGameStatus === GameStatus.LOST;
-  }
-
-  log(message: string, type: string = 'ok'): void {
-    this.snackBar.open(message, type, { duration: 5000 });
   }
 
   ngOnDestroy(): void {
@@ -89,8 +89,8 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
       .subscribe(isStart => {
         if (!isStart) {
           this.gameManager.quit();
-          // TODO Log game not started
-          console.log('game not started!');
+          this.logService.log('game not started!', LogLevel.Error);
+          this.logService.errorSnackBar('Can\'t start the game.');
         }
       });
   }
