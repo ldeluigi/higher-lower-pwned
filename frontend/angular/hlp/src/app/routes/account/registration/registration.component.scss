@@ -1,4 +1,5 @@
 @import "../../../styles/colors.scss";
+@import "../../../styles/dimensions.scss";
 
 :host {
   display: flex;
@@ -16,6 +17,7 @@ form {
 }
 
 .mat-form-field {
+  margin: 2 * $default-margin 0;
   width: 100%;
 }
 
@@ -41,5 +43,11 @@ mat-card-content {
 :host ::ng-deep {
   p {
     margin: 0px;
+  }
+  .mat-form-field.mat-form-field-invalid .mat-form-field-label {
+    color: $default-hint-color;
+  }
+  .mat-hint {
+    color: $default-error-color;
   }
 }
