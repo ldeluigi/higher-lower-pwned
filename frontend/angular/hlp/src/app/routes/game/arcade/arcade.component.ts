@@ -42,7 +42,6 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     this.gameManagerService.quit();
   }
 
-
   ngOnInit(): void {
     this.setup();
     this.start();
