@@ -48,7 +48,7 @@ function subtractPeriodNTimesFromDate(date, period, times) {
 }
 
 function subtractPeriodNTimesFromToday(period, times) {
-  subtractPeriodNTimesFromDate(new Date(), period, times);
+  return subtractPeriodNTimesFromDate(new Date(), period, times);
 }
 
 function periodInDays(period) {
