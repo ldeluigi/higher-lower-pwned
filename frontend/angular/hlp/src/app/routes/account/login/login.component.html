@@ -4,12 +4,12 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="Username" formControlName="username" (input)="this.error = ''" />
+          <input type="text" matInput placeholder="Username" formControlName="username"/>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field>
-          <input type="password" matInput placeholder="Password" formControlName="password" (input)="this.error = ''" />
+          <input type="password" matInput placeholder="Password" formControlName="password"/>
         </mat-form-field>
       </p>
       <div class="button">
