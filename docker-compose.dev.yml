@@ -26,14 +26,13 @@ services:
       - mongo
 
   mongo:
-    image: mongo:4
+    image: hlp-db
+    build: backend/mongo/
     networks:
       - hlp-network-dev
     ports:
       - 27017:27017
     volumes:
-      - ./backend/mongo/mongod.conf:/etc/mongod.conf:ro
-      - ./backend/mongo/setup/:/docker-entrypoint-initdb.d/:ro
       - hlp-mongo-db-data:/data/db/ # Not working on windows unless you do the workaround
       - ./backend/mongo/data/log/:/var/log/mongodb/
       - ./backend/mongo/dbshell:/home/mongodb/
@@ -43,7 +42,6 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
       MONGO_INITDB_ROOT_USERNAME: root # admin username
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD} # admin password
-    command: ["-f", "/etc/mongod.conf"]
 
 networks:
   hlp-network-dev:
