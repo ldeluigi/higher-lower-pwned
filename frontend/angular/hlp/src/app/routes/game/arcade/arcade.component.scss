@@ -23,24 +23,6 @@
   margin: auto;
 }
 
-.flex {
-  display: flex;
-  margin-top: $default-margin;
-  .endGameDummy {
-    width: 20%;
-  }
-
-  .endGameButton {
-    width: 60%;
-    margin: auto;
-    display: flex;
-    button {
-      margin: auto;
-      margin-top: 5%;
-    }
-  }
-}
-
 .divStart {
   @include game-manager-button();
 }
