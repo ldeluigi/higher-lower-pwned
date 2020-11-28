@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { UserInfo } from 'src/app/model/userInfo';
 import { DialogData, UpdateComponent } from 'src/app/routes/account/update/update.component';
+import { DeleteComponent } from 'src/app/routes/account/delete/delete.component';
 import { AccountService } from 'src/app/services/account.service';
 import { UserDataService } from '../../../services/user-data.service';
 
@@ -50,12 +51,6 @@ export class UserInfoComponent implements OnInit {
   }
 
   delete(): void {
-    this.accountService
-      .deleteUser()
-      .pipe(first())
-      .subscribe(u => {
-        // TODO add some graphic message for the user.
-        this.router.navigate(['/home']);
-      });
+    this.dialog.open(DeleteComponent);
   }
 }

@@ -1,0 +1,10 @@
+@import "../../../styles/colors.scss";
+
+.delete {
+  background-color: $default-error-color;
+  color: $default-text-color;
+}
+
+.noThanks {
+  margin-left: auto;
+}
