@@ -10,6 +10,7 @@ import { GameStatus } from '../../utils/gameStatus';
 import { rollNumber, slowDigitWord } from '../../utils/wordAnimation';
 import { endGameAnimation } from './counterAnimation';
 import { ARCADE, DUEL, ROYALE } from '../../model/gameModes';
+import { DRAW, LOSE, WON } from '../../model/gameDTO';
 
 @Component({
   selector: 'app-counter',
@@ -119,20 +120,16 @@ export class CounterComponent implements OnInit, OnDestroy {
           })
       );
 
-      this.gameManagerService.gameStatusObservable
-        .pipe(
-          filter(x => x === GameStatus.END),
-          first()
-        )
-        .subscribe(ns => {
-          if (ns === GameStatus.END) {
-            if (this.imWinning) {
+      this.socketService.gameEndObservable
+        .subscribe(ge => {
+            if (ge.gameEndStatus === WON) {
               this.animationState = 'win';
-            } else {
+            } else if (ge.gameEndStatus === LOSE) {
               this.animationState = 'lose';
+            } else if (ge.gameEndStatus === DRAW) {
+              this.animationState = 'draw';
             }
-            console.log(this.animationState);
-          }
+            console.log(this.animationState); // TODO use log service
         });
 
     }
@@ -140,19 +137,14 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   private setupArcadeAnimation(): void {
     if (this.animation === true) {
-      this.gameManagerService.gameStatusObservable
-        .pipe(
-          filter(x => x === GameStatus.END),
-          first()
-        )
+      this.socketService.gameEndObservable
         .subscribe(ns => {
-          if (ns === GameStatus.END) {
-            if (this.counter > 0) {
+            this.counter = ns.score;
+            if (ns.score > 0) {
               this.animationState = 'win';
             } else {
               this.animationState = 'lose';
             }
-          }
         });
     }
   }
@@ -259,6 +251,7 @@ export class CounterComponent implements OnInit, OnDestroy {
       }
       this.startTimeoutReset();
     } else if (event.toState === 'draw') {
+      console.log('end draw anim');
       this.counterSub?.add(
         slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );

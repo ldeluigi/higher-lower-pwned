@@ -73,6 +73,14 @@ $width-desktop: 60%;
   vertical-align: bottom;
 }
 
+// for tablet layout
+@include tablet {
+  .message {
+    font-size: 5vh;
+    height: 7vh;
+  }
+}
+
 // for desktop layout
 @include desktop {
   .counter-container {

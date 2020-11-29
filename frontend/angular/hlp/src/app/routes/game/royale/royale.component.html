@@ -1,8 +1,8 @@
 <div class="score">
   <app-counter [user]='true' [animation]='true'></app-counter>
 </div>
-<div class="wrapper" *ngIf="inGame">
-  <app-word-spinner></app-word-spinner>
+<div class="wrapper">
+  <app-word-spinner *ngIf="inGame"></app-word-spinner>
 </div>
 
 <div *ngIf="displayTimer" class="timer">

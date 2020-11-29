@@ -67,7 +67,6 @@ const drawStyle = style({
   width: 'max-content',
 });
 
-
 const DURATION = '2.0s';
 export const endGameAnimation: AnimationTriggerMetadata = trigger('endGameAnimation', [
   // ARCADE
