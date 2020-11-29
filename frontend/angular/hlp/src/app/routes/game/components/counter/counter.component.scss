@@ -95,7 +95,7 @@ $width-desktop: 60%;
   }
 
   .message {
-    font-size: 6vh;
+    font-size: min(4.5vw, 6vh);
     height: 8vh;
   }
 }

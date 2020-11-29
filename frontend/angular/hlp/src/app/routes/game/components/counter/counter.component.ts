@@ -23,7 +23,7 @@ import { DRAW, LOSE, WON } from '../../model/gameDTO';
 
 export class CounterComponent implements OnInit, OnDestroy {
 
-  readonly END_GAME_TIMER = 7000;
+  readonly END_GAME_TIMER = 70000;
   readonly WORD_ANIMATION_TIME = 2000;
 
   counter = 0;
