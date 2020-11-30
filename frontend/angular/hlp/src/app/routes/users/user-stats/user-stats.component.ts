@@ -153,11 +153,11 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.usersTools.data.subscribe((data) => {
       const array = data?.history || [];
-      // console.log('array', array);
+      console.log('array', array);
       this.dataSource.data = array;
       const scores: HistoryItem[] = [];
       const label: Array<string> = [];
-      if (array.length > 0) {
+      if (array.length > 0 && array[0].periodNumber !== null) {
         const start = this.periodBegin();
         const periods = periodIterator(
           start.period,
@@ -234,6 +234,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
                   this.datePipe.transform(startDate, Const.FORMAT_YEAR) as string
                 );
                 break;
+              default:
+                throw new Error('Illegal period');
             }
           } else {
             if (periods[periods.length - 1] === e) {
@@ -244,6 +246,10 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           // save lastElement
           lastElement = element;
         });
+      } else if (array.length > 0 && array[0].periodNumber === null){
+        console.log(array[0]);
+        scores.push(array[0]);
+        label.push('all the time');
       }
       // console.log('scores:', scores, 'label:', label);
       let lastIndex = scores.length;

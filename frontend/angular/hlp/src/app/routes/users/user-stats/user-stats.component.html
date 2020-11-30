@@ -59,6 +59,12 @@
           {{ element | historyItemToStartDate: 'year' | date:'yyyy' }}
         </td>
       </ng-container>
+      <ng-container matColumnDef="forever" >
+        <th mat-header-cell *matHeaderCellDef>period</th>
+        <td mat-cell *matCellDef="let element">
+          always
+        </td>
+      </ng-container>
       <ng-container matColumnDef="startDate">
         <th mat-header-cell *matHeaderCellDef> From </th>
         <td mat-cell *matCellDef="let element">
@@ -74,7 +80,7 @@
       <ng-container matColumnDef="avgScore">
         <th mat-header-cell *matHeaderCellDef>Avg. score</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.avgScore | number | number : '1.0-0'}}
+          {{ element.avgScore | number }}
         </td>
       </ng-container>
       <ng-container matColumnDef="avgGuesses">
