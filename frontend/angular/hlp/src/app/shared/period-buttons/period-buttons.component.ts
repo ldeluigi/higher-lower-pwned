@@ -16,7 +16,7 @@ export class PeriodButtonsComponent implements OnInit {
   convertPeriod(periodValue: string): string {
     if (this.periods.includes(periodValue)){
       if (periodValue === 'always') {
-        return 'forever'
+        return 'forever';
       }
       return periodValue;
     } else {
