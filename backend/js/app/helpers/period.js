@@ -11,6 +11,7 @@ const defaultPeriods = {
   week: "week",
   month: "month",
   year: "year",
+  forever: "forever",
 };
 
 const periods = {
@@ -25,6 +26,9 @@ const periods = {
   ),
   year: minMaxDate((a) =>
     subtractPeriodNTimesFromDate(a, defaultPeriods.year, 1)
+  ),
+  forever: minMaxDate((a) =>
+    subtractPeriodNTimesFromDate(a, defaultPeriods.forever, 1)
   ),
 };
 
@@ -43,6 +47,7 @@ function subtractPeriodNTimesFromDate(date, period, times) {
     ),
     month: new Date(date.getFullYear(), date.getMonth() - times),
     year: new Date(date.getFullYear() - times, 0),
+    forever: new Date(0),
   };
   return p[period];
 }
