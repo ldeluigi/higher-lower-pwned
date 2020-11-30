@@ -113,29 +113,6 @@ class PlayerCollection {
 //--------------------------- Helper functions ------------------------------
 
 /**
- * @param {{lost: Boolean}} element the element containing lost
- */
-function notLost(element) {
-  return !element.lost;
-}
-
-/**
- * @param {Array<{lost: Boolean}>} array the array of data containing lost
- */
-function someoneNotLost(array) {
-  return array.filter(notLost).length > 0;
-}
-
-/**
- * Finds the lowest timeout between the given data
- * @param {Array<{lost: Boolean, timeout: Number}>} array the array of data containing lost and timeout
- */
-function minTimeoutBetweenNotLost(array) {
-  if (array.length <= 0) throw new Error("The array is empty.");
-  return Math.min(...array.filter(notLost).map(e => e.timeout));
-}
-
-/**
  * Creates a user object loading the username from the DB.
  * @param {String} userID
  */
@@ -224,22 +201,21 @@ function myRooms(socket, roomPrefix) {
  * @param {*} io socket.io namespace
  * @param {*} socket socket.io current socket
  * @param {String} myRoomName current room name (taken from socket)
- * @param {*} currentGuessData data taken from current guess
+ * @param {Number} nextTimeout data taken from current guess
  */
-function timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, currentGuessData) {
-  if (someoneNotLost(currentGuessData)) {
-    let nextTimeout = minTimeoutBetweenNotLost(currentGuessData);
-    if (nextTimeout > 0) {
-      setTimeout(async function () {
-        try {
-          let currentGuess = await battle.currentGuess(socket.id);
-          io.to(myRoomName).emit("guess", currentGuess);
-          if (someoneNotLost(currentGuess.data)) {
-            timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, currentGuess.data);
-          }
-        } catch (err) { }
-      }, nextTimeout + 1);
-    }
+function timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, nextTimeout) {
+  if (nextTimeout > 0) {
+    console.log("DEBUG: set timeout from now - " + nextTimeout + "ms")
+    setTimeout(async function () {
+      console.log("DEBUG: timeout!")
+      try {
+        const _nextTimeout = await battle.nextTimeout(socket.id);
+        io.to(myRoomName).emit("guess", await battle.currentGuess(socket.id));
+        timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, _nextTimeout);
+      } catch (err) { }
+    }, nextTimeout + 5);
+  } else {
+    console.log("DEBUG: stopped timeout!", nextTimeout)
   }
 }
 
@@ -306,7 +282,8 @@ async function onStart(io, socket, code, modeName, matchmaking, socketRoomPrefix
             [socket.userData.id, ...op.userIDs], modeName);
           let cg = await battle.currentGuess(socket.id);
           emitGuess(io.to(socketRoomName), cg);
-          timeoutForNextPlayerThatCouldLose(io, socket, socketRoomName, cg.data);
+          timeoutForNextPlayerThatCouldLose(io, socket, socketRoomName,
+            await battle.nextTimeout(socket.id));
         }
       }, socket, code + 1);
     }

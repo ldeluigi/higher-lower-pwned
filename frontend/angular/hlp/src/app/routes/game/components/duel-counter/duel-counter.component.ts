@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { DRAW, LOSE, WON } from '../../model/gameDTO';
 import { GameStatus } from '../../utils/gameStatus';
 
 @Component({
@@ -48,23 +49,29 @@ export class DuelCounterComponent implements OnInit, OnDestroy {
     });
 
     this.sub.add(
-      this.gameManagerService.gameStatusObservable.subscribe(s => {
-        if (s === GameStatus.END && this.waitFor === GameStatus.END) {
-          this.waitFor = GameStatus.IDLE;
-          console.log('Duel-counter call animation');
-          if (this.userScore > this.opponentScore) {
-            console.log('WIN');
-            this.userAnimation = 'duelUserWin';
-            this.opponentAnimation = 'duelOppLose';
-          } else if (this.userScore < this.opponentScore) {
-            console.log('LOSE');
-            this.userAnimation = 'duelUserLose';
-            this.opponentAnimation = 'duelOppWin';
-          } else {
+      this.socketService.gameEndObservable
+        .subscribe(eg => {
+          console.log('Duel-counter call animation NEW'); // TODO use logService
+          if (eg.gameEndStatus === DRAW) {
             console.log('DRAW');
             this.userAnimation = 'draw';
             this.opponentAnimation = 'draw';
+          } else if (eg.gameEndStatus === WON) {
+            console.log('WON');
+            this.userAnimation = 'duelUserWin';
+            this.opponentAnimation = 'duelOppLose';
+          } else if (eg.gameEndStatus === LOSE) {
+            console.log('LOSE');
+            this.userAnimation = 'duelUserLose';
+            this.opponentAnimation = 'duelOppWin';
           }
+        })
+    );
+
+    this.sub.add(
+      this.gameManagerService.gameStatusObservable.subscribe(s => {
+        if (s === GameStatus.END && this.waitFor === GameStatus.END) {
+          this.waitFor = GameStatus.IDLE;
         } else if ((s === GameStatus.IDLE && this.waitFor === GameStatus.IDLE)
           || this.waitFor === GameStatus.WAITING_START) {
           this.waitFor = GameStatus.END;

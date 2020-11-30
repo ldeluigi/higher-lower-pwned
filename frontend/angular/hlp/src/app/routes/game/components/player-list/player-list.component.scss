@@ -41,7 +41,9 @@ $div-player-backgroud-color: rgba(0, 0, 255, 0.3);
   }
 
   .lost {
-    color: black;
+    span {
+      color: black;
+    }
   }
 }
 
@@ -52,10 +54,6 @@ $div-player-backgroud-color: rgba(0, 0, 255, 0.3);
   .in-game {
     color: $default-text-color;
   }
-
-  .lost {
-    color: black;
-  }
 }
 
 .scoreList {
@@ -64,10 +62,6 @@ $div-player-backgroud-color: rgba(0, 0, 255, 0.3);
 
   .in-game {
     color: $default-text-color;
-  }
-
-  .lost {
-    color: black;
   }
 }
 

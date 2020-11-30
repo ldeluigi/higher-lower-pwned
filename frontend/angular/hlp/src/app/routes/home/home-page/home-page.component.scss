@@ -36,6 +36,7 @@
   width: 85%;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 
   .title-piece {
     text-shadow: -1px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,

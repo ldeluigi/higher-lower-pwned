@@ -39,6 +39,17 @@ interface GameData {
   data: NextMultiplayerGuess[];
 }
 
+interface GameEndDTO {
+  guesses: number;
+  password1: string;
+  password2: string;
+  score: number;
+  duration: number;
+  value1: number;
+  value2: number;
+  won: boolean;
+}
+
 interface GameEnd {
   guesses: number;
   password1: string;
@@ -47,7 +58,12 @@ interface GameEnd {
   duration: number;
   value1: number;
   value2: number;
+  gameEndStatus: string;
 }
+
+const WON = 'WON';
+const LOSE = 'LOSE';
+const DRAW = 'DRAW';
 
 export {
   Guess,
@@ -57,5 +73,9 @@ export {
   GameUpdate as MultiplayerGameUpdate,
   UpdatePlayersInfo,
   GameData,
-  GameEnd
+  GameEndDTO,
+  GameEnd,
+  WON,
+  LOSE,
+  DRAW
 };

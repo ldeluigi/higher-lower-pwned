@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
 import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
 import { errorToString, OnError } from '../routes/game/model/error';
-import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess, UpdatePlayersInfo, GameEnd } from '../routes/game/model/gameDTO';
+import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess, UpdatePlayersInfo, GameEndDTO, GameEnd, DRAW, LOSE, WON } from '../routes/game/model/gameDTO';
 import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
 import { SocketArcade } from '../routes/game/SocketArcade';
 import { SocketDuel } from '../routes/game/SocketDuel';
@@ -192,6 +192,7 @@ export class GameSocketService {
    */
   private guess = (guess: NextGuess | GameData) => {
     this.logService.log('Socket guess ', LogLevel.Info, guess);
+    console.log('guess', guess);
     const guessAsNextGuess = guess as NextGuess;  // contiene solo il guess
     const guessAsGameData = guess as GameData;    // contiene una lista di valori
     if (guessAsNextGuess.password1) {                   // Case arcade
@@ -226,7 +227,15 @@ export class GameSocketService {
           this.timerSubject.next(myData.timeout);             // update timer
         }
         if (gameData.every(d => d.lost === true)) {           // every one have lost
-          this.gameEndSubject.next(myData as GameEnd);
+          const ges = gameData.map(e => e as GameEndDTO);
+          const myDataEndGame = myData as GameEnd;
+          if (ges.filter(e => e.won).length > 1) {
+            myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? DRAW : LOSE;
+          } else {
+            myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? WON : LOSE;
+          }
+          this.gameEndSubject.next(myDataEndGame);
+          this.logService.log('End game message sent!', LogLevel.Debug, myData as GameEndDTO);
         } else {
           this.nextBattleGuessSubject.next(myData);                 // update next guess
         }
@@ -236,7 +245,6 @@ export class GameSocketService {
 
   /**
    * Error 'on-error'
-   * // TODO gestire l'errore
    */
   private onError = (error: OnError) => {
     this.logService.log(errorToString(error), LogLevel.Error);
@@ -257,6 +265,7 @@ export class GameSocketService {
    * GameEnd: 'game-end'
    */
   private gameEnd = (data: GameEnd) => {
+    this.logService.log('Recive game end message from socket', LogLevel.Debug);
     this.gameEndSubject.next(data);
   }
 
@@ -266,7 +275,7 @@ export class GameSocketService {
   private error = (e: string) => {
     this.logService.log('Socket error ' + e, LogLevel.Error);
     if (this.connectionTry > 2) {
-      this.accountService.logout('Can\'t connecto to the server.'); // TODO cambiare con un error service
+      this.accountService.logout('Can\'t connecto to the server.');
       return;
     }
     if (this.accountService.userValue !== null && e.indexOf('jwt') >= 0) {
