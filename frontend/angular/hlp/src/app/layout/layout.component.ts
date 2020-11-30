@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
 
@@ -9,6 +10,7 @@ import { AccountService } from 'src/app/services/account.service';
 })
 export class LayoutComponent implements OnInit, OnDestroy {
 
+  @ViewChild('sidenav') sidenav!: MatSidenav;
   private sub: Subscription | undefined;
   userLogged = false;
 
@@ -33,5 +35,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
   get menuText(): string {
     const userValue =  this.accountService.userValue;
     return userValue === null ? 'Menu' : userValue.username;
+  }
+
+  onSwipeRight(): void {
+    this.sidenav.toggle(true);
+  }
+
+  onSwipeLeft(): void {
+    this.sidenav.toggle(false);
   }
 }
