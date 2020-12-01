@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {MatIconRegistry} from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
 
 @Component({
   selector: 'app-links',
@@ -14,8 +14,12 @@ export class LinksComponent implements OnInit {
     private domSanitizer: DomSanitizer
   ) {
     this.matIconRegistry.addSvgIcon(
-      'insta',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/insta.svg')
+      'instagram',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/instagram.svg')
+    );
+    this.matIconRegistry.addSvgIcon(
+      'get-from-google-play',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/google-play-badge.svg')
     );
   }
 
