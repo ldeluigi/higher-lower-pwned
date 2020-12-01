@@ -4,11 +4,7 @@
 @import "./app/styles/dimensions.scss";
 @import "./app/styles/colors.scss";
 
-@include mat-core($roboto-custom-typography);
-
-// * {
-//   @include angular-material-typography($roboto-custom-typography);
-// }
+@include mat-core($custom-typography);
 
 html {
   min-height: 100%;
@@ -18,7 +14,6 @@ html {
 body {
   height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   background: linear-gradient(-45deg, #e63427, #dd2a51, #27b0e2, #23d5bd);
   background-size: 500% 100%;
   animation: gradient 60s ease infinite;
