@@ -20,7 +20,7 @@ export class LogService {
     }
   }
 
-  log(message: string, severity: LogLevel, data: any | undefined = undefined, withDate: boolean = false): void {
+  log(message: string, severity: LogLevel, data?: any, withDate: boolean = false): void {
     if (this.isProduction && severity > this.maxLogInProduction) {
       // skip this log in production
       return;

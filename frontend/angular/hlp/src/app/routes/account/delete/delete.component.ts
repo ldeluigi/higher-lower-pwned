@@ -28,7 +28,7 @@ export class DeleteComponent {
     this.accountService
     .deleteUser()
     .pipe(first())
-    .subscribe(_u => {
+    .subscribe(u => {
       this.onNoClick();
       this.logService.messageSnackBar('deleted ' + user);
       this.router.navigate(['/home']);

@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
 import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
 import { errorToString, OnError } from '../routes/game/model/error';
-import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess, UpdatePlayersInfo, GameEndDTO, GameEnd, DRAW, LOSE, WON } from '../routes/game/model/gameDTO';
+import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess,
+   UpdatePlayersInfo, GameEndDTO, GameEnd, DRAW, LOSE, WON } from '../routes/game/model/gameDTO';
 import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
 import { SocketArcade } from '../routes/game/SocketArcade';
 import { SocketDuel } from '../routes/game/SocketDuel';
@@ -228,7 +229,7 @@ export class GameSocketService {
         if (gameData.every(d => d.lost === true)) {           // every one have lost
           const ges = gameData.map(e => e as GameEndDTO);
           const myDataEndGame = myData as GameEnd;
-          this.logService.log("GameEndDTO: " + ges, LogLevel.Debug);
+          this.logService.log('GameEndDTO: ' + ges, LogLevel.Debug);
           if (ges.filter(e => e.won).length > 1) {
             myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? DRAW : LOSE;
           } else {
