@@ -99,23 +99,16 @@ export class CounterComponent implements OnInit, OnDestroy {
       this.currentGameMode = ROYALE;
       this.setupRoyaleAnimation();
       this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+      this.socketService.playerObservable.pipe(
+        filter(p => p.id.includes(this.socketService.socketId),
+        first()
+        )
+      ).subscribe(ed => this.name = ed.name);
     }
   }
 
   private setupRoyaleAnimation(): void {
     if (this.animation === true) {
-      // this.counterSub?.add(
-      //   this.socketService.gameDataUpdate.subscribe(users => {
-      //       if (users.users[0].score) {
-      //         const scoreMax = Math.max(...users.users.map(e => e.score || 0.5));
-      //         const myScore = users.users.find(p => p.id.includes(this.socketService.socketId))?.score;
-      //         if (myScore) {
-      //           this.imWinning = myScore >= scoreMax;
-      //           console.log(myScore, scoreMax);
-      //         }
-      //       }
-      //     })
-      // );
 
       this.socketService.gameEndObservable
         .subscribe(ge => {
