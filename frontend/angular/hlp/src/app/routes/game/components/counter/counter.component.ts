@@ -23,7 +23,7 @@ import { DRAW, LOSE, WON } from '../../model/gameDTO';
 
 export class CounterComponent implements OnInit, OnDestroy {
 
-  readonly END_GAME_TIMER = 70000;
+  readonly END_GAME_TIMER = 7000;
   readonly WORD_ANIMATION_TIME = 2000;
 
   counter = 0;
@@ -39,9 +39,6 @@ export class CounterComponent implements OnInit, OnDestroy {
   private counterSub: Subscription | undefined;
   private gameSub: Subscription | undefined;
   currentGameMode = '';
-
-  // Royale
-  imWinning = false;
 
   constructor(
     private accountService: AccountService,
@@ -107,18 +104,18 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   private setupRoyaleAnimation(): void {
     if (this.animation === true) {
-      this.counterSub?.add(
-        this.socketService.gameDataUpdate.subscribe(users => {
-            if (users.users[0].score) {
-              const scoreMax = Math.max(...users.users.map(e => e.score || 0.5));
-              const myScore = users.users.find(p => p.id.includes(this.socketService.socketId))?.score;
-              if (myScore) {
-                this.imWinning = myScore >= scoreMax;
-                console.log(myScore, scoreMax);
-              }
-            }
-          })
-      );
+      // this.counterSub?.add(
+      //   this.socketService.gameDataUpdate.subscribe(users => {
+      //       if (users.users[0].score) {
+      //         const scoreMax = Math.max(...users.users.map(e => e.score || 0.5));
+      //         const myScore = users.users.find(p => p.id.includes(this.socketService.socketId))?.score;
+      //         if (myScore) {
+      //           this.imWinning = myScore >= scoreMax;
+      //           console.log(myScore, scoreMax);
+      //         }
+      //       }
+      //     })
+      // );
 
       this.socketService.gameEndObservable
         .subscribe(ge => {
@@ -127,9 +124,9 @@ export class CounterComponent implements OnInit, OnDestroy {
             } else if (ge.gameEndStatus === LOSE) {
               this.animationState = 'lose';
             } else if (ge.gameEndStatus === DRAW) {
-              this.animationState = 'draw';
+              this.animationState = 'royaleDraw';
             }
-            console.log(this.animationState); // TODO use log service
+            console.log('Set animation to : ', this.animationState); // TODO use log service
         });
 
     }
@@ -195,6 +192,12 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (event.toState === 'lose') {
       this.counterSub?.add(
         slowDigitWord(this.scoreToMessageRoyale(false), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
+    } else if (event.toState === 'royaleDraw') {
+      console.log('end royaleDraw anim');
+      this.counterSub?.add(
+        slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }

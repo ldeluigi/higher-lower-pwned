@@ -229,6 +229,7 @@ export class GameSocketService {
         if (gameData.every(d => d.lost === true)) {           // every one have lost
           const ges = gameData.map(e => e as GameEndDTO);
           const myDataEndGame = myData as GameEnd;
+          console.log(ges);
           if (ges.filter(e => e.won).length > 1) {
             myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? DRAW : LOSE;
           } else {
