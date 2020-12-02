@@ -15,8 +15,8 @@ describe('UserScoresComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
         RouterTestingModule,
+        HttpClientTestingModule,
         MatSnackBarModule,
         MatDialogModule,
         MatMenuModule,
