@@ -153,7 +153,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.usersTools.data.subscribe((data) => {
       const array = data?.history || [];
-      console.log('array', array);
       this.dataSource.data = array;
       const scores: HistoryItem[] = [];
       const label: Array<string> = [];
@@ -247,7 +246,6 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           lastElement = element;
         });
       } else if (array.length > 0 && array[0].periodNumber === null){
-        console.log(array[0]);
         scores.push(array[0]);
         label.push('all the time');
       }

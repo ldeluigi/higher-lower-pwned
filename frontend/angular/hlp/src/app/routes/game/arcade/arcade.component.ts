@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { interval, Subscription } from 'rxjs';
+import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { LogService } from 'src/app/services/log.service';
 import { ARCADE } from '../model/gameModes';
 import { GameStatus } from '../utils/gameStatus';
 
@@ -25,6 +27,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   constructor(
     private snackBar: MatSnackBar,
     private socketService: GameSocketService,
+    private logService: LogService,
     private gameManagerService: GameManagerService
   ) {
     gameManagerService.setCurrentGameMode(ARCADE);
@@ -66,8 +69,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       .subscribe(isStart => {
         if (!isStart) {
           this.gameManagerService.quit();
-          // TODO Log game not started
-          console.log('game not started!');
+          this.logService.log('game not started!', LogLevel.Error); // TODO is it an error?
         }
       });
   }

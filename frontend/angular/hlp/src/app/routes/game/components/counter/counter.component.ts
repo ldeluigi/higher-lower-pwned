@@ -11,6 +11,8 @@ import { rollNumber, slowDigitWord } from '../../utils/wordAnimation';
 import { endGameAnimation } from './counterAnimation';
 import { ARCADE, DUEL, ROYALE } from '../../model/gameModes';
 import { DRAW, LOSE, WON } from '../../model/gameDTO';
+import { LogService } from 'src/app/services/log.service';
+import { LogLevel } from 'src/app/model/logLevel';
 
 @Component({
   selector: 'app-counter',
@@ -43,6 +45,7 @@ export class CounterComponent implements OnInit, OnDestroy {
   constructor(
     private accountService: AccountService,
     private socketService: GameSocketService,
+    private logService: LogService,
     private gameManagerService: GameManagerService
   ) { }
 
@@ -119,7 +122,7 @@ export class CounterComponent implements OnInit, OnDestroy {
             } else if (ge.gameEndStatus === DRAW) {
               this.animationState = 'royaleDraw';
             }
-            console.log('Set animation to : ', this.animationState); // TODO use log service
+            this.logService.log('Set animation to : ' + this.animationState, LogLevel.Debug); // TODO is it a debug?
         });
 
     }
@@ -188,7 +191,7 @@ export class CounterComponent implements OnInit, OnDestroy {
       );
       this.startTimeoutReset();
     } else if (event.toState === 'royaleDraw') {
-      console.log('end royaleDraw anim');
+      this.logService.log('end royaleDraw anim', LogLevel.Debug); // TODO is it a debug?
       this.counterSub?.add(
         slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
@@ -247,7 +250,7 @@ export class CounterComponent implements OnInit, OnDestroy {
       }
       this.startTimeoutReset();
     } else if (event.toState === 'draw') {
-      console.log('end draw anim');
+      this.logService.log('end draw anim', LogLevel.Debug); // TODO is it debug?
       this.counterSub?.add(
         slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );

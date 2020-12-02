@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { LogService } from 'src/app/services/log.service';
 import { ROYALE } from '../model/gameModes';
 import { GameStatus } from '../utils/gameStatus';
 import { ProgressBarHelper } from '../utils/progressBarHelper';
@@ -21,6 +23,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
   constructor(
     private snackBar: MatSnackBar,
     private socketService: GameSocketService,
+    private logService: LogService,
     private gameManagerService: GameManagerService
   ) {
     super();
@@ -85,8 +88,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
       .subscribe(isStart => {
         if (!isStart) {
           this.gameManagerService.quit();
-          // TODO Log game not started
-          console.log('game not started!');
+          this.logService.log('game not started!', LogLevel.Error); // TODO check if Error
         }
       });
   }

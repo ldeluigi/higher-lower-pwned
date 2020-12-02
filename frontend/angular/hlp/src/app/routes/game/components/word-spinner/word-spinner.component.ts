@@ -4,8 +4,10 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { debounceTime, filter, map, takeWhile } from 'rxjs/operators';
+import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { LogService } from 'src/app/services/log.service';
 import { EndGame, GameSetup, NextCard } from '../../model/word-spinnerDTO';
 import { FlowManager } from '../../utils/gameFlowHelper';
 import { GameStatus } from '../../utils/gameStatus';
@@ -61,6 +63,7 @@ export class WordSpinnerComponent {
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
     private socketService: GameSocketService,
+    private logService: LogService,
     private gameManagerService: GameManagerService
 
   ) {
@@ -169,7 +172,7 @@ export class WordSpinnerComponent {
   }
 
   gameSetup(setup: GameSetup): void {
-    console.log('game set up', this.element1.status, this.element2.status);
+    this.logService.log('game set up', LogLevel.Debug, [this.element1.status, this.element2.status]);
     this.moving = false;
     this.inAnimation = true;
     this.element1 = {

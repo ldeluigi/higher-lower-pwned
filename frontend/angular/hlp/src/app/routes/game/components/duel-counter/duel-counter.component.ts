@@ -1,7 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { LogService } from 'src/app/services/log.service';
 import { DRAW, LOSE, WON } from '../../model/gameDTO';
 import { GameStatus } from '../../utils/gameStatus';
 
@@ -26,6 +28,7 @@ export class DuelCounterComponent implements OnInit, OnDestroy {
 
   constructor(
       private socketService: GameSocketService,
+      private logService: LogService,
       private gameManagerService: GameManagerService
     ) { }
 
@@ -51,17 +54,17 @@ export class DuelCounterComponent implements OnInit, OnDestroy {
     this.sub.add(
       this.socketService.gameEndObservable
         .subscribe(eg => {
-          console.log('Duel-counter call animation NEW'); // TODO use logService
+          this.logService.log('Duel-counter call animation NEW', LogLevel.Debug);
           if (eg.gameEndStatus === DRAW) {
-            console.log('DRAW');
+            this.logService.log('DRAW', LogLevel.Debug);
             this.userAnimation = 'draw';
             this.opponentAnimation = 'draw';
           } else if (eg.gameEndStatus === WON) {
-            console.log('WON');
+            this.logService.log('WON', LogLevel.Debug);
             this.userAnimation = 'duelUserWin';
             this.opponentAnimation = 'duelOppLose';
           } else if (eg.gameEndStatus === LOSE) {
-            console.log('LOSE');
+            this.logService.log('LOSE', LogLevel.Debug);
             this.userAnimation = 'duelUserLose';
             this.opponentAnimation = 'duelOppWin';
           }

@@ -8,6 +8,8 @@ import { RequestScore } from 'src/app/model/users/scores/requestScore';
 import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScore';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ARCADE, DUEL, ROYALE } from '../../game/model/gameModes';
+import { LogService } from 'src/app/services/log.service';
+import { LogLevel } from 'src/app/model/logLevel';
 
 @Component({
   selector: 'app-user-scores',
@@ -54,6 +56,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private accountService: AccountService,
+    private logService: LogService,
     private scoreService: UserScoresService
   ) {
   }
@@ -136,7 +139,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   private updateData(obs: Observable<UserScores>): void {
     this.sub = obs.subscribe((data) => {
-      console.log(data);
+      this.logService.log(data+"", LogLevel.Debug);
       this.dataSource.data = data.data;
       this.total = data.meta.total;
       this.pageSize = data.meta.size;
