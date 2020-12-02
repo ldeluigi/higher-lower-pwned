@@ -45,10 +45,10 @@ export class UserScoresComponent implements OnInit, OnDestroy {
   pageSize: number = this.pageSizeOptions[0];
   currentPage = 0;
   sort = false;
-  private filter: RequestScore = { // todo
+  private filter: RequestScore = {
     limit: this.pageSize,
     page: this.currentPage,
-    sortbyDate: this.sort // todo
+    sortbyDate: this.sort
   };
 
   constructor(
