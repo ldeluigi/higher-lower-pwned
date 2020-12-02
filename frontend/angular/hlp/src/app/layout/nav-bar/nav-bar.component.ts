@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
 
@@ -16,7 +16,6 @@ export class NavBarComponent implements OnInit, OnDestroy {
   constructor(
     private accountService: AccountService
   ) { }
-
   ngOnInit(): void {
     this.sub = this.accountService.user.subscribe(user => {
       this.userLogged = user !== null;
