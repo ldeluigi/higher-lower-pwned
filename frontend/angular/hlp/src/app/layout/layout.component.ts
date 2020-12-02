@@ -36,12 +36,4 @@ export class LayoutComponent implements OnInit, OnDestroy {
     const userValue =  this.accountService.userValue;
     return userValue === null ? 'Menu' : userValue.username;
   }
-
-  onSwipeRight(): void {
-    this.sidenav.toggle(true);
-  }
-
-  onSwipeLeft(): void {
-    this.sidenav.toggle(false);
-  }
 }
