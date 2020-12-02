@@ -28,8 +28,7 @@ export class DeleteComponent {
     this.accountService
     .deleteUser()
     .pipe(first())
-    .subscribe(u => {
-      // TODO add some graphic message for the user.
+    .subscribe(_u => {
       this.onNoClick();
       this.logService.messageSnackBar('deleted ' + user);
       this.router.navigate(['/home']);
