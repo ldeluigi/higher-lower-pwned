@@ -10,8 +10,6 @@
   margin: 5vh auto 0 auto;
   text-align: justify;
   text-justify: inter-word;
-  overflow-y: auto;
-  height: 90%;
 }
 
 a,
@@ -27,6 +25,6 @@ span {
 
 @include desktop {
   #info {
-    width: 40%;
+    width: 50%;
   }
 }
