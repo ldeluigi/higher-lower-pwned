@@ -7,11 +7,9 @@ const token = require("../../../../model/token.model");
 const pwd = require("../../../../utils/password");
 const jwtTools = require("../../../../utils/jwt");
 
-
-
 describe("scores arcade API", function () {
   it("should GET arcade user score after login", async (done) => {
-    const mock = jest.spyOn(user.schema, 'findOne');
+    const mock = jest.spyOn(user.schema, "findOne");
     const userMock = {
       username: "testusername",
       _id: "testid",
@@ -20,7 +18,7 @@ describe("scores arcade API", function () {
       salt: "testpasswordsalt",
       createdAt: new Date(),
       lastLogin: new Date(),
-      save: async function () { }
+      save: async function () {},
     };
 
     const fakeScores = [
@@ -30,40 +28,45 @@ describe("scores arcade API", function () {
         end: new Date("2020-08-26T20:26:20.202Z"),
         guesses: 100,
         start: new Date("2020-08-26T20:22:20.202Z"),
-        user: userMock._id
-      }
+        user: userMock._id,
+      },
     ];
 
     mock.mockImplementation((input) => Promise.resolve(userMock));
-    const mock2 = jest.spyOn(token.schema, 'create');
+    const mock2 = jest.spyOn(token.schema, "create");
     mock2.mockImplementation((input) => {
       input._id = "createdID";
-      return Promise.resolve(input)
+      return Promise.resolve(input);
     });
     let response = await request.post("/users/login").send({
       username: "testusername",
-      password: "testpassword"
+      password: "testpassword",
     });
     let result = response.body.data;
 
-    const mock3 = jest.spyOn(score.schema, 'aggregate');
+    const mock3 = jest.spyOn(score.schema, "aggregate");
     mock3.mockImplementation((input) => {
-      return Promise.resolve([{
-        totalCount: [{ count: 1 }],
-        totalData: fakeScores
-      }]);
+      return Promise.resolve([
+        {
+          totalCount: [{ count: 1 }],
+          totalData: fakeScores,
+        },
+      ]);
     });
 
-    const payload = { limit: 30 }
-    response = await request.get("/users/testid/scores/arcade").query(payload).set("Authorization", "Bearer " + result.token);
+    const payload = { limit: 30 };
+    response = await request
+      .get("/users/testid/scores/arcade")
+      .query(payload)
+      .set("Authorization", "Bearer " + result.token);
 
-    console.log(response.body)
+    // console.log(response.body)
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("data");
     expect(response.body.meta).toEqual({
       total: 1,
       page: 0,
-      size: 30
+      size: 30,
     });
     expect(response.body.data).toEqual([
       {
@@ -71,7 +74,7 @@ describe("scores arcade API", function () {
         guesses: fakeScores[0].guesses,
         date: fakeScores[0].end.toISOString(),
         duration: fakeScores[0].end.getTime() - fakeScores[0].start.getTime(),
-      }
+      },
     ]);
 
     mock.mockRestore();

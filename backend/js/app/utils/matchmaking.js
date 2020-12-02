@@ -11,14 +11,15 @@ class MatchMaking {
     this.room = new Room();
   }
   isInRoom(userID, objUserID) {
-    console.log(objUserID, Array.from(this.room.users.values())
-      .map(x => x.userID))
-    return Array.from(this.room.users.keys()).includes(userID) ||
+    // console.log(objUserID, Array.from(this.room.users.values())
+    //.map(x => x.userID))
+    return (
+      Array.from(this.room.users.keys()).includes(userID) ||
       (objUserID &&
         Array.from(this.room.users.values())
-          .map(x => x.userID)
-          .includes(objUserID)
-      );
+          .map((x) => x.userID)
+          .includes(objUserID))
+    );
   }
   isOpen() {
     return this.room.open;
@@ -38,13 +39,13 @@ class MatchMaking {
     return true;
   }
   getOpponents(userID) {
-    return Array.from(this.room.users.entries()).filter(x => x[0] != userID);
+    return Array.from(this.room.users.entries()).filter((x) => x[0] != userID);
   }
   /**
    * @param {(id: String, obj) => void} callback
    */
   foreachPlayerIn(callback) {
-    Array.from(this.room.users.entries()).forEach(t => callback(t[0], t[1]));
+    Array.from(this.room.users.entries()).forEach((t) => callback(t[0], t[1]));
   }
   closeRoom() {
     this.room.open = false;
@@ -52,10 +53,9 @@ class MatchMaking {
   roomName() {
     return this.room.num;
   }
-
 }
 
 module.exports = {
   MatchMaking,
-  Room
-}
+  Room,
+};
