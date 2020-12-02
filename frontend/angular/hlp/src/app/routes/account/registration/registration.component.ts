@@ -6,7 +6,9 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { LogLevel } from 'src/app/model/logLevel';
 import { AccountService } from 'src/app/services/account.service';
+import { LogService } from 'src/app/services/log.service';
 import { UserRegistration } from '../../../model/UserRegistration';
 
 @Component({
@@ -28,6 +30,7 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private logService: LogService,
     private accountService: AccountService,
     private formBuilder: FormBuilder
   ) {
@@ -118,12 +121,14 @@ export class RegistrationComponent implements OnInit {
       .pipe(first())
       .subscribe(
         (data) => {
+          this.logService.messageSnackBar(user.username + " registered: it's time to login and play.");
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
-          const inputError = error.map((elem: { param: string; }) => elem.param).join(' ,');
+          this.logService.log(error, LogLevel.Debug);
+          const inputError = error.join(' ,');
           if (inputError.length > 0) {
-            this.usernameError = 'Invalid ' + inputError + '.';
+            this.logService.errorSnackBar(inputError + '.');
           }
         }
       );
