@@ -105,8 +105,10 @@ export class WordSpinnerComponent {
     this.sub.add(this.gameManagerService.gameStatusObservable.subscribe(nv => {
       if (this.gameHelper.newState(nv)) {
         this.resetCard();
-        this.sub.unsubscribe();
-        this.setup();
+        // this.sub.unsubscribe();
+        // this.setup();
+        this.currentFirstPassword = undefined;
+        this.first = true;
       }
     }));
 
@@ -193,8 +195,9 @@ export class WordSpinnerComponent {
     }
     this.moving = true;
     this.inAnimation = true;
-    rollNumber(next.oldScore, 600, (n) => this.element2.score = n.toString())
-      .then(() => {
+    rollNumber(next.oldScore, 600, (n) => this.element2.score = n.toString(),
+      undefined,
+      () => {
         this.rollVS();
         this.newElement = {
           word: next.newWord,
@@ -211,11 +214,12 @@ export class WordSpinnerComponent {
   end(end: EndGame): void {
     this.moving = false;
     this.inAnimation = true;
-    rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString())
-      .then(() => {
-        this.element1.status = 'dummy';
-        this.element2.status = 'dummy';
-      });
+    rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString(),
+    undefined,
+    () => {
+      this.element1.status = 'dummy';
+      this.element2.status = 'dummy';
+    });
   }
 
   onAnimationListDone(event: AnimationEvent): void {

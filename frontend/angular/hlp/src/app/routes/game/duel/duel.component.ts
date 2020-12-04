@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { LogLevel } from 'src/app/model/logLevel';
 import { AccountService } from 'src/app/services/account.service';
 import { GameManagerService } from 'src/app/services/game-manager.service';
@@ -27,7 +29,9 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
     private logService: LogService,
     private accountService: AccountService,
     private gameSocket: GameSocketService,
-    private gameManager: GameManagerService
+    private gameManager: GameManagerService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     super();
     this.name = this.accountService.userValue?.username || 'YOU';
@@ -54,6 +58,12 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
       this.logService.errorSnackBar(err);
       this.logService.log(errorToString(err), LogLevel.Error);
     }));
+
+    this.route.data.pipe(first()).subscribe(elem => {
+      if (elem.start) {
+        this.start();
+      }
+    });
   }
 
   get inGame(): boolean {
@@ -93,6 +103,13 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
           this.logService.errorSnackBar('Can\'t start the game.');
         }
       });
+  }
+
+  restart(): void {
+    this.quit();
+    setTimeout(() => {
+      this.start();
+    }, 100);
   }
 
   quit(): void {

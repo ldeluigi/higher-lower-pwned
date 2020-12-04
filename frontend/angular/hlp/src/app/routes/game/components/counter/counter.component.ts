@@ -64,6 +64,8 @@ export class CounterComponent implements OnInit, OnDestroy {
   private setUp(): void {
     this.animationState = 'none';
     this.endGameMessate = '';
+    this.animationStateChange.emit('none');
+    this.counter = 0;
     clearTimeout(this.timeoutValue);
     if (this.gameManagerService.currentGameMode === ARCADE) {
       this.currentGameMode = ARCADE;
@@ -158,7 +160,7 @@ export class CounterComponent implements OnInit, OnDestroy {
   }
 
   private updateScore(newScore: number): void {
-    rollNumber(newScore, 600, c => this.counter = c, this.counter);
+    this.counterSub?.add(rollNumber(newScore, 600, c => this.counter = c, this.counter));
   }
 
   ngOnDestroy(): void {
@@ -167,6 +169,9 @@ export class CounterComponent implements OnInit, OnDestroy {
   }
 
   onAnimationEnd(event: AnimationEvent): void {
+    if (this.animationState === 'none') {
+      return;
+    }
     if (this.currentGameMode === ARCADE) {
       this.onArcadeEndGameAnimation(event);
     } else if (this.currentGameMode === DUEL) {
@@ -263,6 +268,7 @@ export class CounterComponent implements OnInit, OnDestroy {
       this.endGameMessate = '';
       this.animationState = 'none';
       this.animationStateChange?.emit('none');
+      this.counterSub?.unsubscribe();
     }, value);
   }
 
