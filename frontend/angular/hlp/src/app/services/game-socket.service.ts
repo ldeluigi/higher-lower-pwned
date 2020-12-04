@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { first } from 'rxjs/operators';
+import { debounce, debounceTime, first } from 'rxjs/operators';
 import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
 import { errorToString, OnError } from '../routes/game/model/error';
 import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess,
@@ -22,41 +22,41 @@ import { LogLevel } from '../model/logLevel';
 })
 export class GameSocketService {
 
-  private playersSubject!: Subject<PlayerIdName>;
+  private playersSubject: Subject<PlayerIdName>;
   /// Identify player join event in multiplayer mode.
-  playerObservable!: Observable<PlayerIdName>;
+  playerObservable: Observable<PlayerIdName>;
 
-  private gameDataSubject!: Subject<MultiplayerGameUpdate>;
+  private gameDataSubject: Subject<MultiplayerGameUpdate>;
   /// Emit event on game data update (only for multiplayer mode)
-  gameDataUpdate!: Observable<MultiplayerGameUpdate>;
+  gameDataUpdate: Observable<MultiplayerGameUpdate>;
 
-  private opponentsSubject!: Subject<PlayerIdName[]>;
+  private opponentsSubject: Subject<PlayerIdName[]>;
   /// Emit event when opponents list is available (only for multiplayer mode)
-  opponentsObservable!: Observable<PlayerIdName[]>;
+  opponentsObservable: Observable<PlayerIdName[]>;
 
-  private simpleNextGuessSubject!: Subject<Guess>;
+  private simpleNextGuessSubject: Subject<Guess>;
   /// Emit next guess, valid for every mode (contain only, psw1, psw2, and val1)
-  simpleNextGuessObservable!: Observable<Guess>;
+  simpleNextGuessObservable: Observable<Guess>;
 
-  private timerSubject!: Subject<number>;
+  private timerSubject: Subject<number>;
   /// Emit the timer value for the current player every time a new timer is recived
-  timerObservable!: Observable<number>;
+  timerObservable: Observable<number>;
 
-  private userScoreSubject!: Subject<number>;
+  private userScoreSubject: Subject<number>;
   /// Emit the score of the user
-  userScoreObservable!: Observable<number>;
+  userScoreObservable: Observable<number>;
 
-  private nextBattleGuessSubject!: Subject<NextMultiplayerGuess>;
+  private nextBattleGuessSubject: Subject<NextMultiplayerGuess>;
   /// Emit event only in DUEL and ROYALE mode
-  nextBattleGuessObservable!: Observable<NextMultiplayerGuess>;
+  nextBattleGuessObservable: Observable<NextMultiplayerGuess>;
 
-  private gameEndSubject!: Subject<GameEnd>;
+  private gameEndSubject: Subject<GameEnd>;
   /// Emit the last state
-  gameEndObservable!: Observable<GameEnd>;
+  gameEndObservable: Observable<GameEnd>;
 
-  private errorSubject!: Subject<OnError>;
+  private errorSubject: Subject<OnError>;
   /// Emit errors from the server
-  errorObservable!: Observable<OnError>;
+  errorObservable: Observable<OnError>;
 
   private socket: Socket | undefined;
 
@@ -96,7 +96,7 @@ export class GameSocketService {
     this.errorObservable = this.errorSubject.asObservable();
 
     this.gameEndSubject = new Subject<GameEnd>();
-    this.gameEndObservable = this.gameEndSubject.asObservable();
+    this.gameEndObservable = this.gameEndSubject.asObservable().pipe(debounceTime(100));
   }
 
   private setUpSocketObservable(socket: Socket): void {
@@ -108,10 +108,14 @@ export class GameSocketService {
     socket.on('error', this.error);
   }
 
-  disconnect(): void {
-    this.stopConnection = true;
+  quit(): void {
     this.socket?.emit('quit');
     this.logService.log('EMIT QUIT!', LogLevel.Info);
+  }
+
+  disconnect(): void {
+    this.stopConnection = true;
+    this.gameMode = '';
     this.socket?.disconnect();
     this.socket?.removeAllListeners();
     this.socket = undefined;
@@ -121,7 +125,11 @@ export class GameSocketService {
     return this.socket?.ioSocket.io.engine.id;
   }
 
-  private newSocket(gameMode: string): Socket {
+  private getSocket(gameMode: string): Socket {
+    if (gameMode === this.gameMode && this.socket && this.connectionOpen) {
+      return this.socket;
+    }
+    this.disconnect();
     let socket: Socket;
     this.gameMode = gameMode;
     switch (gameMode) {
@@ -137,6 +145,7 @@ export class GameSocketService {
       default:
         throw new Error(`Illegal argument [${gameMode}]`);
     }
+    this.setUpSocketObservable(socket);
     return socket;
   }
 
@@ -146,9 +155,10 @@ export class GameSocketService {
    */
   setup(gameMode: string): Observable<boolean> {
     this.connectionTry = 0;
-    this.socket?.disconnect();
-    this.socket = this.newSocket(gameMode);
-    this.setUpSocketObservable(this.socket);
+    this.socket = this.getSocket(gameMode);
+    if (this.connectionOpen) {
+      return of(true);
+    }
     return this.connect(this.socket);
   }
 
@@ -193,18 +203,20 @@ export class GameSocketService {
    */
   private guess = (guess: NextGuess | GameData) => {
     this.logService.log('Socket guess ', LogLevel.Info, guess);
-    const guessAsNextGuess = guess as NextGuess;  // contiene solo il guess
-    const guessAsGameData = guess as GameData;    // contiene una lista di valori
-    if (guessAsNextGuess.password1) {                   // Case arcade
-      this.simpleNextGuessSubject.next(guessAsNextGuess);       // call next guess
+    const guessAsNextGuess = guess as NextGuess;            // contiene solo il guess
+    const guessAsGameData = guess as GameData;              // contiene una lista di valori
+    if (guessAsNextGuess.password1) {                       // Case arcade
+      this.simpleNextGuessSubject.next(guessAsNextGuess);   // call next guess
       if (guessAsNextGuess.score) {
         const playerScore = guessAsNextGuess.score;
-        this.userScoreSubject.next(playerScore);          // update score
+        this.userScoreSubject.next(playerScore);            // update score
       }
       if (guessAsNextGuess.timeout) {
-        this.timerSubject.next(guessAsNextGuess.timeout); // update timeout value
+        this.timerSubject.next(guessAsNextGuess.timeout);   // update timeout value
       }
-    } else if (guessAsGameData.ids) {                  // Case multiplayer
+
+    // Case multiplayer
+    } else if (guessAsGameData.ids) {
       const gameData = guessAsGameData.data;
       const playersInfo: UpdatePlayersInfo[] = [];
       guessAsGameData.ids.forEach((elem, index) => {
@@ -216,7 +228,9 @@ export class GameSocketService {
           score: cgd.score
         });
       });
-      this.gameDataSubject.next({users: playersInfo });     // update players status
+
+      this.gameDataSubject.next({users: playersInfo });       // update players status
+
       const myId = extractId(guessAsGameData.ids, this.socketId);
       if (myId) {
         const myData = getDataFromId(this.socketId, guessAsGameData);
@@ -229,7 +243,6 @@ export class GameSocketService {
         if (gameData.every(d => d.lost === true)) {           // every one have lost
           const ges = gameData.map(e => e as GameEndDTO);
           const myDataEndGame = myData as GameEnd;
-          this.logService.log('GameEndDTO: ' + ges, LogLevel.Debug);
           if (ges.filter(e => e.won).length > 1) {
             myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? DRAW : LOSE;
           } else {
@@ -285,7 +298,7 @@ export class GameSocketService {
         (_) => {
           if (this.socket) {
             // this.socket.disconnect();
-            this.socket = this.newSocket(this.gameMode);
+            this.socket = this.getSocket(this.gameMode);
             this.setUpSocketObservable(this.socket);
             this.connect(this.socket);
           } else {}

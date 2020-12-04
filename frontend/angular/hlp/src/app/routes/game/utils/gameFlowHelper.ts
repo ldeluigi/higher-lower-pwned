@@ -15,7 +15,7 @@ export class FlowManager {
     if (state === GameStatus.PLAYING && this.gameIsStarted === false) {
       this.gameIsStarted = true;
       return false;
-    } else if (state === GameStatus.END || state === GameStatus.LOST && this.gameIsStarted) {
+    } else if (state === GameStatus.END || (state === GameStatus.LOST && this.gameIsStarted)) {
       this.gameIsEnded = true;
     } else if (state === GameStatus.IDLE && this.gameIsEnded) {
       this.gameIsStarted = false;

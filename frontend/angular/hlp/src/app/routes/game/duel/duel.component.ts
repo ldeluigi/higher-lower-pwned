@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 import { LogLevel } from 'src/app/model/logLevel';
 import { AccountService } from 'src/app/services/account.service';
 import { GameManagerService } from 'src/app/services/game-manager.service';
@@ -45,7 +46,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
       if (ns !== GameStatus.PLAYING) {
         this.subTimer?.unsubscribe();
       }
-      if (ns === GameStatus.LOST) {
+      if (ns === GameStatus.LOST || ns === GameStatus.WAITING_START) {
         this.progressBarMax = 0;
       }
     }));
@@ -81,6 +82,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
 
   ngOnDestroy(): void {
     this.quit();
+    this.gameManager.disconnect();
     this.gameSub?.unsubscribe();
   }
 
@@ -88,11 +90,18 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
     this.gameManager.startGame(DUEL)
       .subscribe(isStart => {
         if (!isStart) {
-          this.gameManager.quit();
+          // this.gameManager.quit();
           this.logService.log('game not started!', LogLevel.Error);
           this.logService.errorSnackBar('Can\'t start the game.');
         }
       });
+  }
+
+  restart(): void {
+    this.quit();
+    setTimeout(() => {
+      this.start();
+    }, 300);
   }
 
   quit(): void {

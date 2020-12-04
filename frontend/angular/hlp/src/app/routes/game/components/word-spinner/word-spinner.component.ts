@@ -1,9 +1,10 @@
 import { AnimationEvent } from '@angular/animations';
-import { Component, EventEmitter } from '@angular/core';
+import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
+import { Component, EventEmitter, OnDestroy } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { debounceTime, filter, map, takeWhile } from 'rxjs/operators';
+import { debounceTime, filter, first, map, takeUntil, takeWhile } from 'rxjs/operators';
 import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
@@ -29,8 +30,9 @@ export interface Card {
     cardAnimation,
   ]
 })
-export class WordSpinnerComponent {
-  private sub!: Subscription;
+export class WordSpinnerComponent implements OnDestroy {
+  private sub: Subscription;
+  private gameSub: Subscription | undefined;
   private gameHelper = new FlowManager();
   moving = false;
   private answered = false;
@@ -71,7 +73,18 @@ export class WordSpinnerComponent {
       'vs_icon',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/vs.svg')
     );
-    this.setup();
+
+    this.sub = this.gameManagerService.gameStatusObservable
+      .subscribe(nv => {
+        if (nv === GameStatus.WAITING_START) {
+          this.setup();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+    this.gameSub?.unsubscribe();
   }
 
   private resetCard(): void {
@@ -81,10 +94,19 @@ export class WordSpinnerComponent {
   }
 
   private setup(): void {
+    console.log('Make a setup!');
+    this.inAnimation = false;
+    this.resetCard();
     this.currentFirstPassword = undefined;
     this.first = true;
-    this.sub = this.gameManagerService.nextGuessObservable
-      .pipe(filter(p => p.password1 !== this.currentFirstPassword))
+    this.gameSub?.unsubscribe();
+    this.gameSub = this.gameManagerService.nextGuessObservable
+      .pipe(
+        takeUntil(this.gameManagerService.gameStatusObservable.pipe(
+          filter(status => status === GameStatus.END || status === GameStatus.IDLE)
+        )),
+        filter(p => p.password1 !== this.currentFirstPassword)
+      )
       .subscribe(ng => {
         this.currentFirstPassword = ng.password1;
         // console.log('recived in word-spinner', ng);
@@ -92,25 +114,30 @@ export class WordSpinnerComponent {
           this.first = false;
           this.gameSetup({ word1: ng.password1, word2: ng.password2, score1: ng.value1 });
         } else if (ng.password1 === this.element1.word) {
-          // console.log('next guess word spinner skipped', ng);
+          console.log('next guess word spinner skipped', ng);
           // nothing
         } else {
-          // console.log('next guess word spinner next', ng);
+          console.log('next guess word spinner next', ng, this);
           this.next({ oldScore: ng.value1, newWord: ng.password2 });
         }
       });
-    this.sub.add(this.socketService.gameEndObservable.subscribe(ge => {
-      this.end({ oldScore: ge.value2 });
-    }));
-    this.sub.add(this.gameManagerService.gameStatusObservable.subscribe(nv => {
-      if (this.gameHelper.newState(nv)) {
-        this.resetCard();
-        this.sub.unsubscribe();
-        this.setup();
-      }
-    }));
 
-    this.sub.add(
+    // wait for end game message until we are in game
+    this.gameSub.add(
+      this.gameManagerService.gameEndObservable
+        .pipe(
+          // takeUntil(this.gameManagerService.gameStatusObservable.pipe(
+          //   filter(status => status === GameStatus.IDLE)
+          // )),
+          first()
+        )
+        .subscribe(ge => {
+          console.log('word-spinner recive end game message');
+          this.end({ oldScore: ge.value2 });
+        })
+    );
+
+    this.gameSub.add(
       this.answerEmitter.pipe(debounceTime(100)).subscribe(wn => {
         if (this.gameManagerService.currentGameStatus === GameStatus.PLAYING && !this.answered && !this.inAnimation) {
           this.answered = true;
@@ -172,7 +199,7 @@ export class WordSpinnerComponent {
   }
 
   gameSetup(setup: GameSetup): void {
-    this.logService.log('game set up', LogLevel.Debug, [this.element1.status, this.element2.status]);
+    this.logService.log('game set up', LogLevel.Debug, [this.element1.status, this.element2.status], true);
     this.moving = false;
     this.inAnimation = true;
     this.element1 = {
@@ -193,29 +220,36 @@ export class WordSpinnerComponent {
     }
     this.moving = true;
     this.inAnimation = true;
-    rollNumber(next.oldScore, 600, (n) => this.element2.score = n.toString())
-      .then(() => {
-        this.rollVS();
-        this.newElement = {
-          word: next.newWord,
-          score: this.emptyScore,
-          status: 'second'
-        };
-
-        this.element2.score = next.oldScore.toString();
-        this.element2.status = 'first';
-        this.element1.status = 'out';
-      });
+    this.gameSub?.add(
+      rollNumber(next.oldScore, 600,
+        (n) => this.element2.score = n.toString(),
+        undefined,
+        () => {
+          this.rollVS();
+          this.newElement = {
+            word: next.newWord,
+            score: this.emptyScore,
+            status: 'second'
+          };
+          this.element2.score = next.oldScore.toString();
+          this.element2.status = 'first';
+          this.element1.status = 'out';
+        })
+    );
   }
 
   end(end: EndGame): void {
     this.moving = false;
     this.inAnimation = true;
-    rollNumber(end.oldScore, 600, (n) => this.element2.score = n.toString())
-      .then(() => {
-        this.element1.status = 'dummy';
-        this.element2.status = 'dummy';
-      });
+    this.gameSub?.add(
+      rollNumber(end.oldScore, 600,
+        (n) => this.element2.score = n.toString(),
+        undefined,
+        () => {
+          this.element1.status = 'dummy';
+          this.element2.status = 'dummy';
+        })
+    );
   }
 
   onAnimationListDone(event: AnimationEvent): void {
@@ -232,7 +266,7 @@ export class WordSpinnerComponent {
       // console.log(this.element2.status);
       this.element2.score = this.emptyScore;
     } else if (event.fromState === 'first' && event.toState === 'second') {
-      rollWord(this.newElement.word, 300, w => this.element2.word = w);
+      this.gameSub?.add(rollWord(this.newElement.word, 300, w => this.element2.word = w));
       this.inAnimation = false;
     }
 

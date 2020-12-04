@@ -1,8 +1,8 @@
 export enum GameStatus {
-  IDLE,
-  WAITING_START,
-  PLAYING,
-  WAITING_N_GUESS,
-  LOST,
-  END
+  IDLE = 'IDLE',
+  WAITING_START = 'WAITING_START',
+  PLAYING = 'PLAYING',
+  WAITING_N_GUESS = 'WAITING_N_GUESS',
+  LOST = 'LOST',
+  END = 'END'
 }

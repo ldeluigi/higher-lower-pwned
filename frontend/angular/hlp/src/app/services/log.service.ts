@@ -27,7 +27,7 @@ export class LogService {
     }
     let value = '';
     if (withDate) {
-      value = `${new Date()} - `;
+      value = `${new Date().getMilliseconds()} - `;
     }
     value = value.concat(`[${severity.toString()}]: ${message}`);
     console.log(value, data);
