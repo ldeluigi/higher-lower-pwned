@@ -23,7 +23,7 @@ function emailTransport() {
   ) {
     return null;
   } else {
-    // console.log("EMAIL_DEBUG: " + process.env.EMAIL_DEBUG)
+    console.log("EMAIL_DEBUG: " + process.env.EMAIL_DEBUG);
     throw new Error(
       "Service not configured error. Write your own code to manage your email account with nodemailer"
     );
