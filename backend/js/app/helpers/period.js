@@ -39,14 +39,18 @@ function subtractPeriodNTimesFromDate(date, period, times) {
   times--;
   //console.log(currentDate.getDay());
   let p = {
-    day: new Date(date.getFullYear(), date.getMonth(), date.getDate() - times),
-    week: new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() - date.getDay() - 7 * times
+    day: new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate() - times
     ),
-    month: new Date(date.getFullYear(), date.getMonth() - times),
-    year: new Date(date.getFullYear() - times, 0),
+    week: new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate() - date.getUTCDay() - 7 * times
+    ),
+    month: new Date(date.getUTCFullYear(), date.getUTCMonth() - times),
+    year: new Date(date.getUTCFullYear() - times, 0),
     forever: new Date(0),
   };
   return p[period];
