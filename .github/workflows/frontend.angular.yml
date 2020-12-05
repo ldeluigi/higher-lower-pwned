@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
     env:
-      _: _
+      HOST_PORT: 80
     needs: [build]
     steps:
       - name: Login to ACR
