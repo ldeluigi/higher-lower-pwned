@@ -30,7 +30,11 @@ export class LogService {
       value = `${new Date()} - `;
     }
     value = value.concat(`[${severity.toString()}]: ${message}`);
-    console.log(value, data);
+    if (data) {
+      console.log(value, data);
+    } else {
+      console.log(value);
+    }
   }
 
   messageSnackBar(message: string, duration: number = 3000): void {
