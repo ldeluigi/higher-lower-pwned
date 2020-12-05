@@ -64,9 +64,8 @@ export class RegistrationComponent implements OnInit {
     return this.form.controls;
   }
 
-
-
   onSubmit(): void {
+    this.logService.log('Call submit', LogLevel.Info);
     this.usernameError = '';
     this.passwordError = '';
     this.emailError = '';
@@ -121,7 +120,7 @@ export class RegistrationComponent implements OnInit {
       .pipe(first())
       .subscribe(
         (data) => {
-          this.logService.messageSnackBar(user.username + " registered: it's time to login and play.");
+          this.logService.messageSnackBar(user.username + 'registered: it\'s time to login and play.');
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
