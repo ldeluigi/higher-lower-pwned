@@ -54,5 +54,18 @@ jobs:
       _: _
     needs: [build]
     steps:
-      - run: echo "ok"
-    
+      - name: Login to ACR
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY_NAME }}
+          username: ${{ secrets.DOCKER_REGISTRY_CLIENT_ID }}
+          password: ${{ secrets.DOCKER_REGISTRY_CLIENT_SECRET }}
+
+      - name: Build Production Images
+        run: docker-compose build nginx
+
+      - name: Tag Images for ACR
+        run: docker tag hlp-nginx ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-nginx
+
+      - name: Upload Images to ACR
+        run: docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-nginx
