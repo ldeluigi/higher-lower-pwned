@@ -10,7 +10,7 @@ function getLazyTransporter() {
     if (transport) {
       lazyTransporter = nodemailer.createTransport(transport);
     } else {
-      console.log("Email sender is unset");
+      console.log("WARN: Mail credentials not set. Emails won't be delivered.");
       lazyTransporter = {
         sendMail: function (options, callback) {
           // console.log("EMAIL DEBUGGER SEND_MAIL: (" + JSON.stringify(options) + ")");

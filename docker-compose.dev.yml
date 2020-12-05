@@ -13,7 +13,7 @@ services:
     environment:
       NODE_ENV: development
       BACKEND_PORT: 8080
-      JWT_SECRET: ${JWT_SECRET:?}
+      JWT_SECRET: ${JWT_SECRET:?err}
       MONGO_DB_NAME: ${MONGO_DB_NAME}
       MONGO_DB_USERNAME: ${MONGO_DB_USERNAME}
       MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
@@ -26,14 +26,14 @@ services:
       - mongo
 
   mongo:
-    image: hlp-db
+    image: hlp-db-dev
     build: backend/mongo/
     networks:
       - hlp-network-dev
     ports:
       - 27017:27017
     volumes:
-      - hlp-mongo-db-data:/data/db/ # Not working on windows unless you do the workaround
+      - hlp-mongo-db-data:/data/db/ # Not working on windows as folder unless you do the workaround
       - ./backend/mongo/data/log/:/var/log/mongodb/
       - ./backend/mongo/dbshell:/home/mongodb/
     environment:

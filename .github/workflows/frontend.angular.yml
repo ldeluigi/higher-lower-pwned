@@ -13,6 +13,7 @@ on:
 
 jobs:
   build:
+    name: Build & Test Angular Frontend
     runs-on: ubuntu-latest
 
     strategy:
@@ -44,3 +45,27 @@ jobs:
       - name: Test
         working-directory: frontend/angular/hlp
         run: npm run-script test-prod
+  
+  deploy:
+    name: Deploy Angular Frontend
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
+    env:
+      _: _
+    needs: [build]
+    steps:
+      - name: Login to ACR
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY_NAME }}
+          username: ${{ secrets.DOCKER_REGISTRY_CLIENT_ID }}
+          password: ${{ secrets.DOCKER_REGISTRY_CLIENT_SECRET }}
+
+      - name: Build Production Images
+        run: docker-compose build nginx
+
+      - name: Tag Images for ACR
+        run: docker tag hlp-nginx ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-nginx
+
+      - name: Upload Images to ACR
+        run: docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-nginx
