@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Build & Test NodeJs Backend
     runs-on: ubuntu-latest
 
     strategy:
@@ -46,7 +47,7 @@ jobs:
         run: npm test
 
   deploy:
-    name: Deploy Angular Frontend
+    name: Deploy NodeJs Backend & MongoDB
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
     needs: [build]
