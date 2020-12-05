@@ -7,6 +7,7 @@ on:
       - "backend/**"
   pull_request:
     branches: ["*"]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -44,22 +45,32 @@ jobs:
         working-directory: backend/js
         run: npm test
 
-#  publish:
-#    name: Publish Docker Images
-#    needs: [build]
-#    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master')
-#    runs-on: ubuntu-latest
-#    env:
-#      DOCKER_REGISTRY_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-#    steps:
-#       - uses: azure/login@v1
-#         name: Login to Azure
-#         with:
-#           creds: ${{ secrets.AZURE_CREDENTIALS }}
-#
-#       - uses: docker/login-action@v1
-#         name: Login to Azure Container Registry
-#         with:
-#           registry: ${{ env.DOCKER_REGISTRY_SERVER }}
-#           username: ${{ secrets.REGISTRY_LOGIN_USERNAME }}
-#           password: ${{ secrets.REGISTRY_LOGIN_PASSWORD }}
+  deploy:
+    name: Deploy Angular Frontend
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to ACR
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY_NAME }}
+          username: ${{ secrets.DOCKER_REGISTRY_CLIENT_ID }}
+          password: ${{ secrets.DOCKER_REGISTRY_CLIENT_SECRET }}
+
+      - name: Build Production Images
+        run: |
+          docker-compose build mongo
+          docker-compose build backend 
+
+      - name: Tag Images for ACR
+        run: |
+          docker tag hlp-db ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-db
+          docker tag hlp-backend ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-backend
+
+      - name: Upload Images to ACR
+        run: |
+          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-db
+          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-backend
