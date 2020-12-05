@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-// Shared Module
 import { SharedModule } from '../../shared/shared.module';
 import { AccountRoutingModule } from './account-routing.module';
 import { LayoutComponent } from './layout/layout.component';
