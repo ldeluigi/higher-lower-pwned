@@ -3,8 +3,14 @@ const mongoose = require("mongoose");
 const server = require("./config/server").server;
 const passwords = require("./app/game/passwords");
 
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 (async () => {
   try {
+    console.log("Waiting 20 seconds for MongoDB");
+    await timeout(30 * 1000);
     await mongoose.connect(config.mongoose.url, config.mongoose.options)
     console.log("Connected to MongoDB");
     await passwords.setup();
