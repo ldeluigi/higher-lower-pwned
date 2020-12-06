@@ -8,6 +8,7 @@ on:
     branches: ["*"]
     paths:
       - "frontend/angular/**"
+      - "nginx/**"
   pull_request:
     branches: ["*"]
   workflow_dispatch:
