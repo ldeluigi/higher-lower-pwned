@@ -67,7 +67,7 @@ router.get("/stats",
           },
           {
             $group: {
-              _id: {
+              _id: queryPeriod === "forever" ? null : {
                 periodNumber: periodGroupDB,
                 year: "$year"
               },
@@ -120,6 +120,7 @@ const mapFromPeriodToDBPeriod = {
   week: "$week",
   month: "$month",
   year: "$year",
+  forever: "$forever"
 };
 
 module.exports = router;
