@@ -1,4 +1,6 @@
 #!/bin/bash
+chmod 775 -R /data/db
+
 mongo -- "$MONGO_INITDB_DATABASE" <<-EOJS
     var rootUser = '$MONGO_INITDB_ROOT_USERNAME';
     var rootPassword = '$MONGO_INITDB_ROOT_PASSWORD';
