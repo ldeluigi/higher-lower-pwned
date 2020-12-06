@@ -34,7 +34,7 @@ module.exports = {
   port: process.env.BACKEND_PORT || 8080,
   jwtSecret: process.env.JWT_SECRET || "DEFAULT",
   mongoose: {
-    url: "mongodb://mongo:27017/" + process.env.MONGO_DB_NAME || "mongodb",
+    url: "mongodb://mongo:8080/" + process.env.MONGO_DB_NAME || "mongodb",
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,

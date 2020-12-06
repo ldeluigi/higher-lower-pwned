@@ -30,8 +30,6 @@ services:
     build: backend/mongo/
     networks:
       - hlp-network-dev
-    ports:
-      - 27017:27017
     volumes:
       - hlp-mongo-db-data:/data/db/ # Not working on windows as folder unless you do the workaround
       - ./backend/mongo/data/log/:/var/log/mongodb/

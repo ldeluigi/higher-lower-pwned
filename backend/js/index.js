@@ -9,8 +9,8 @@ function timeout(ms) {
 
 (async () => {
   try {
-    console.log("Waiting 20 seconds for MongoDB");
-    await timeout(30 * 1000);
+    console.log("Waiting 10 seconds for MongoDB");
+    await timeout(10 * 1000);
     await mongoose.connect(config.mongoose.url, config.mongoose.options)
     console.log("Connected to MongoDB");
     await passwords.setup();
