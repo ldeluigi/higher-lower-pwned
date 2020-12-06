@@ -124,10 +124,10 @@ export class RegistrationComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
-          this.logService.log(error, LogLevel.Debug);
+          this.logService.log("registration error:", LogLevel.Debug, error);
           const inputError = error.join(' ,');
           if (inputError.length > 0) {
-            this.logService.errorSnackBar(inputError + '.');
+            this.logService.errorSnackBar(inputError);
           }
         }
       );

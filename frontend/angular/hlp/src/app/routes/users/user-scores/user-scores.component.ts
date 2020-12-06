@@ -139,7 +139,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   private updateData(obs: Observable<UserScores>): void {
     this.sub = obs.subscribe((data) => {
-      this.logService.log(data + '', LogLevel.Debug);
+      this.logService.log("user-scores: ", LogLevel.Debug, data);
       this.dataSource.data = data.data;
       this.total = data.meta.total;
       this.pageSize = data.meta.size;

@@ -29,6 +29,9 @@ export class LogService {
     if (withDate) {
       value = `${new Date()} - `;
     }
+    if (typeof data === 'object' && data !== null){
+      data = JSON.stringify(data);
+    }
     value = value.concat(`[${severity.toString()}]: ${message}`);
     if (data) {
       console.log(value, data);
