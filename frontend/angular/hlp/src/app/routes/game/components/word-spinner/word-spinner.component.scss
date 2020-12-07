@@ -61,6 +61,7 @@ $vs_heigth: #{95% - ($card_heigth * 2)};
   div {
     border-radius: #{$card-border-radius};
     width: $card_width;
+    outline:none;
     h1 {
       font-size: 120%;
       font-weight: 500;
