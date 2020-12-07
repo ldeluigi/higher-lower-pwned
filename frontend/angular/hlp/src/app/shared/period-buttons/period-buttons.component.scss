@@ -2,7 +2,7 @@
 @import "../../styles/abstracts/mixins";
 
 .group {
-  padding: $default-padding;
+  padding: $default-padding 0;
   border: transparent;
   grid-template-columns: auto auto;
   display: grid;
