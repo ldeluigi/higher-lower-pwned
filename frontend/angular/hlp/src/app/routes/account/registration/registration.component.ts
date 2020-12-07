@@ -120,7 +120,7 @@ export class RegistrationComponent implements OnInit {
       .pipe(first())
       .subscribe(
         (_) => {
-          this.logService.messageSnackBar(user.username + 'registered: it\'s time to login and play.');
+          this.logService.messageSnackBar(user.username + ' registered: it\'s time to login and play.');
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
