@@ -156,7 +156,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
       this.dataSource.data = array;
       const scores: HistoryItem[] = [];
       const label: Array<string> = [];
-      if (array.length > 0 && array[0].periodNumber !== null) {
+      if (array.length > 0 && array[0].periodNumber !== undefined) {
         const start = this.periodBegin();
         const periods = periodIterator(
           start.period,
@@ -245,7 +245,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           // save lastElement
           lastElement = element;
         });
-      } else if (array.length > 0 && array[0].periodNumber === null){
+      } else if (array.length > 0 && array[0].periodNumber === undefined){
         scores.push(array[0]);
         label.push('all the time');
       }
