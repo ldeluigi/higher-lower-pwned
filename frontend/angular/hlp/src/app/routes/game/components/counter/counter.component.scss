@@ -95,6 +95,8 @@ $width-desktop: 60%;
     .score {
       font-size: 6vh;
       height: 8vh;
+      line-height: 8vh;
+      margin: min(#{2vh}, #{2vw});
     }
   }
 
