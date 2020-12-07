@@ -63,8 +63,8 @@ function periodIterator(
         p = Math.ceil((daysOfTheYear(date) - daysOfTheYear(new Date(yearStart, 0, 1)))  / 7);
         break;
       case 'month':
-        date = new Date(yearStart, startPeriod + index + 1, 1);
-        p = date.getMonth();
+        date = new Date(yearStart, startPeriod + index, 1);
+        p = date.getMonth() + 1;
         break;
       case 'year':
         if (startPeriod === yearStart) {
