@@ -314,7 +314,7 @@ export class CounterComponent implements OnInit, OnDestroy {
         return 'Lucky dude.';
       }
       if (this.counter < 1000) {
-        return 'You win.';
+        return 'You won!';
       }
       if (this.counter < 5000) {
         return 'You deserve it!';

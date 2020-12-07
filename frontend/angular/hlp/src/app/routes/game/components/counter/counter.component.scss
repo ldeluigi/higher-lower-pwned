@@ -4,7 +4,8 @@
 @import "../../../../styles/game/variables";
 
 $margin-top: 4vh;
-$text-size: 8vh;
+$text-size: min(8vh, 15vw);
+$small-text-size: min(6vh, 10vw);
 $width: 75%;
 $width-desktop: 60%;
 
@@ -55,16 +56,19 @@ $width-desktop: 60%;
   border-radius: #{$card-border-radius};
   min-width: $width / 2;
   .score {
+    font-size: $text-size;
     color: $label-text;
     line-height: $text-size;
     text-align: center;
-    font-size: $text-size;
     height: $text-size;
     font-weight: 400;
     $shadow-margin: 5;
     text-shadow: counter-multiple-text-shadow(5, $higher-color);
     margin: min(#{2vh}, #{2vw});
     animation: counter-animation 5s infinite;
+  }
+  #long-score {
+    font-size: $small-text-size;
   }
 }
 
@@ -97,6 +101,10 @@ $width-desktop: 60%;
   .message {
     font-size: min(4.5vw, 6vh);
     height: 8vh;
+  }
+
+  #long-score {
+    font-size: $text-size;
   }
 }
 

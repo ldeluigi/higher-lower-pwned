@@ -13,7 +13,9 @@
         </span>
       </ng-template>
       <ng-template #score>
-        {{ counter }}
+        <span [attr.id]="(counter > 999 && currentGameMode === 'DUEL') ? 'long-score' : ''">
+          {{ counter }}
+        </span>
       </ng-template>
     </div>
   </div>
