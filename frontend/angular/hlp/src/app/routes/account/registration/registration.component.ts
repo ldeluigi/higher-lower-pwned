@@ -119,15 +119,17 @@ export class RegistrationComponent implements OnInit {
       .register(user)
       .pipe(first())
       .subscribe(
-        (data) => {
+        (_) => {
           this.logService.messageSnackBar(user.username + 'registered: it\'s time to login and play.');
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
-          this.logService.log("registration error:", LogLevel.Debug, error);
-          const inputError = error.join(' ,');
-          if (inputError.length > 0) {
-            this.logService.errorSnackBar(inputError);
+          this.logService.log('registration error:', LogLevel.Debug, error);
+          if (error.constructor.name === 'Array') {
+            const inputError = error.join(' ,');
+            if (inputError.length > 0) {
+              this.logService.errorSnackBar(inputError);
+            }
           }
         }
       );
