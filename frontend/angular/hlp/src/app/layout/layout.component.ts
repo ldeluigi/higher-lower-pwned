@@ -22,7 +22,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keyup', ['$event'])
   public onKeyUp(eventData: KeyboardEvent): void {
-    if (eventData.key === 'Enter' || eventData.key === ' ') {
+    if (eventData.key === ' ') {
       this.keyService.distributeKeyPress(eventData);
     }
   }

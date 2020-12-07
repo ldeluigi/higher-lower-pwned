@@ -47,7 +47,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.keySub = this.keyService.keyEventObs.subscribe(e => {
-      if (e.key === 'Enter' || e.key === ' ') {
+      if (e.key === ' ') {
         this.router.navigate(['/game/arcade']);
       }
     });
