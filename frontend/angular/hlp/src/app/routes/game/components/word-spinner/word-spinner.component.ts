@@ -1,5 +1,5 @@
 import { AnimationEvent } from '@angular/animations';
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnDestroy } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { debounceTime, filter, map, takeWhile } from 'rxjs/operators';
 import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { KeyPressDistributionService } from 'src/app/services/key-press-distribution.service';
 import { LogService } from 'src/app/services/log.service';
 import { EndGame, GameSetup, NextCard } from '../../model/word-spinnerDTO';
 import { FlowManager } from '../../utils/gameFlowHelper';
@@ -29,8 +30,9 @@ export interface Card {
     cardAnimation,
   ]
 })
-export class WordSpinnerComponent {
+export class WordSpinnerComponent implements OnDestroy {
   private sub!: Subscription;
+  private keySub: Subscription;
   private gameHelper = new FlowManager();
   moving = false;
   private answered = false;
@@ -64,7 +66,8 @@ export class WordSpinnerComponent {
     private domSanitizer: DomSanitizer,
     private socketService: GameSocketService,
     private logService: LogService,
-    private gameManagerService: GameManagerService
+    private gameManagerService: GameManagerService,
+    private keyService: KeyPressDistributionService
 
   ) {
     this.matIconRegistry.addSvgIcon(
@@ -72,6 +75,18 @@ export class WordSpinnerComponent {
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/vs.svg')
     );
     this.setup();
+    this.keySub = keyService.keyEventObs.subscribe(e => {
+      if (e.key === 'ArrowUp') {
+        this.answer(1);
+      } else if (e.key === 'ArrowDown') {
+        this.answer(2);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+    this.keySub.unsubscribe();
   }
 
   private resetCard(): void {

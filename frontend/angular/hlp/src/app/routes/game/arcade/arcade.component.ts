@@ -4,6 +4,7 @@ import { interval, Subscription } from 'rxjs';
 import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { KeyPressDistributionService } from 'src/app/services/key-press-distribution.service';
 import { LogService } from 'src/app/services/log.service';
 import { ARCADE } from '../model/gameModes';
 import { GameStatus } from '../utils/gameStatus';
@@ -25,12 +26,12 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   private gameSubs: Subscription | undefined;
 
   constructor(
-    private snackBar: MatSnackBar,
     private socketService: GameSocketService,
     private logService: LogService,
     private gameManagerService: GameManagerService
   ) {
     gameManagerService.setCurrentGameMode(ARCADE);
+
   }
 
   get playing(): boolean {
