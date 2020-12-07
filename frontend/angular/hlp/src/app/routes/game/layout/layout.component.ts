@@ -29,7 +29,7 @@ export class LayoutComponent {
   ) {
   }
 
-  @HostListener('window:keydown', ['$event'])
+  @HostListener('window:keyup', ['$event'])
   public onKeyUp(eventData: KeyboardEvent): void {
     if (this.validKey.some(k => k === eventData.key)) {
       this.keyService.distributeKeyPress(eventData);

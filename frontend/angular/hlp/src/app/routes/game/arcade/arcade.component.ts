@@ -24,14 +24,15 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   timeLeft = 0;
   private timerSub: Subscription | undefined;
   private gameSubs: Subscription | undefined;
+  private keySub!: Subscription;
 
   constructor(
     private socketService: GameSocketService,
     private logService: LogService,
-    private gameManagerService: GameManagerService
+    private gameManagerService: GameManagerService,
+    private keyService: KeyPressDistributionService
   ) {
     gameManagerService.setCurrentGameMode(ARCADE);
-
   }
 
   get playing(): boolean {
@@ -44,11 +45,19 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     this.gameSubs?.unsubscribe();
     // this.gameSocket.disconnect();
     this.gameManagerService.quit();
+    this.keySub.unsubscribe();
   }
 
   ngOnInit(): void {
     this.setup();
     this.start();
+    this.keySub = this.keyService.keyEventObs.subscribe(e => {
+      if (!this.playing) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          this.replay();
+        }
+      }
+    });
   }
 
   replay(): void {

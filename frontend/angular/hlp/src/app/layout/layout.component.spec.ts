@@ -4,7 +4,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LayoutComponent } from './layout.component';
-
+import { MatIconModule } from '@angular/material/icon';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LayoutComponent', () => {
   let component: LayoutComponent;
@@ -17,9 +20,14 @@ describe('LayoutComponent', () => {
         HttpClientTestingModule,
         MatSnackBarModule,
         MatDialogModule,
-
+        MatIconModule,
+        MatSidenavModule,
+        BrowserAnimationsModule
       ],
-      declarations: [ LayoutComponent ]
+      declarations: [
+        LayoutComponent,
+        NavBarComponent
+       ]
     })
     .compileComponents();
   }));

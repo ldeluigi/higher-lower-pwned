@@ -68,7 +68,6 @@ export class WordSpinnerComponent implements OnDestroy {
     private logService: LogService,
     private gameManagerService: GameManagerService,
     private keyService: KeyPressDistributionService
-
   ) {
     this.matIconRegistry.addSvgIcon(
       'vs_icon',
