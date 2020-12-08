@@ -9,10 +9,10 @@
 </div>
 <div class="divStart">
   <div *ngIf="canStart">
-    <button class="start" mat-button (click)="start()">START</button>
+    <button class="start" mat-button (click)="start()">{{'Start' | uppercase}}</button>
   </div>
   <div *ngIf="canQuit">
-    <button class="postGame" mat-button routerLink="/home" routerLinkActive="active">HOME</button>
-    <button class="postGame" mat-button *ngIf="canRestart" (click)="restart()">NEW GAME</button>
+    <button class="postGame" mat-button routerLink="/home" routerLinkActive="active">{{'Home' | uppercase}}</button>
+    <button class="postGame" mat-button *ngIf="canRestart" (click)="restart()">{{'New Game' | uppercase}}</button>
   </div>
 </div>

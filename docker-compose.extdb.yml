@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  backend:
+    image: hlp-backend
+    build: backend/js/
+    networks:
+      - hlp-network
+    environment:
+      NODE_ENV: production
+      BACKEND_PORT: 8080
+      JWT_SECRET: ${JWT_SECRET:?err}
+      MONGO_DB_URL: ${MONGO_DB_URL:?err}
+      MONGO_DB_NAME: ${MONGO_DB_NAME:?err}
+      MONGO_DB_USERNAME: ${MONGO_DB_USERNAME:?err}
+      MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD:?err}
+      MAILER_EMAIL: ${MAILER_EMAIL}
+      MAILER_PASSWORD: ${MAILER_PASSWORD}
+      EMAIL_DEBUG: ${EMAIL_DEBUG:-false}
+    restart: always
+
+  nginx:
+    image: hlp-nginx
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - ${HOST_PORT}:80
+    networks:
+      - hlp-network
+    depends_on:
+      - backend
+
+networks:
+  hlp-network:

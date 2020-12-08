@@ -124,7 +124,7 @@ export class CounterComponent implements OnInit, OnDestroy {
             } else if (ge.gameEndStatus === DRAW) {
               this.animationState = 'royaleDraw';
             }
-            this.logService.log('Set animation to : ' + this.animationState, LogLevel.Debug); // TODO is it a debug?
+            this.logService.log('Set animation to : ' + this.animationState, LogLevel.Debug);
         });
 
     }
@@ -196,7 +196,6 @@ export class CounterComponent implements OnInit, OnDestroy {
       );
       this.startTimeoutReset();
     } else if (event.toState === 'royaleDraw') {
-      this.logService.log('end royaleDraw anim', LogLevel.Debug); // TODO is it a debug?
       this.counterSub?.add(
         slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
@@ -255,7 +254,6 @@ export class CounterComponent implements OnInit, OnDestroy {
       }
       this.startTimeoutReset();
     } else if (event.toState === 'draw') {
-      this.logService.log('end draw anim', LogLevel.Debug); // TODO is it debug?
       this.counterSub?.add(
         slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
