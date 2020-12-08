@@ -1,4 +1,4 @@
-const e = require("express");
+const db = require("mongoose");
 const passwords = require("./passwords");
 const battleSchema = require('../model/battle.model').schema;
 const scoreSchema = require('../model/score.model').schema;
@@ -43,7 +43,9 @@ module.exports = {
         }
       }
     }
+    const session = await db.startSession();
     try {
+      session.startTransaction();
       let gameQuery = await battleSchema.findOne({
         games: {
           $elemMatch: {
@@ -62,11 +64,14 @@ module.exports = {
 
           }
         }
-      });
-      if (gameQuery === null) await battleSchema.create(newGame);
+      }).session(session);
+      if (gameQuery === null) await battleSchema.create([newGame], { session: session });
       else throw new Error("Someone is already playing.");
+      await session.commitTransaction();
     } catch (err) {
       throw new Error("Could not create a new game. (" + err.message + ")");
+    } finally {
+      session.endSession();
     }
   },
   // -----------------------------------------------------------------------------------------------------------
@@ -116,8 +121,10 @@ module.exports = {
   },
   // -----------------------------------------------------------------------------------------------------------
   quitGame: async function (gameID) {
+    const session = await db.startSession();
     try {
-      let gameQuery = await findGame(gameID);
+      session.startTransaction();
+      let gameQuery = await findGame(gameID, session);
       if (gameQuery === null) throw new Error("Game not found.");
       let now = Date.now();
       let index = findGameIndex(gameQuery, gameID);
@@ -136,12 +143,13 @@ module.exports = {
         }
         return res;
       })(gameQuery.games[index]);
-
-      await scoreSchema.create(score);
+      let res;
+      await scoreSchema.create([score], { session: session });
       if (lastOne) {
         try {
           await gameQuery.remove();
-          return null;
+          await session.commitTransaction();
+          res = null;
         } catch (err) {
           throw new Error("Could not delete game data. (" + err.message + ")");
         }
@@ -149,18 +157,22 @@ module.exports = {
         try {
           gameQuery.games.splice(index, 1);
           await gameQuery.save();
-          return await currentGuessFromQuery(gameQuery);
+          res = await currentGuessFromQuery(gameQuery);
         } catch (err) {
           throw new Error("Could not delete player from game data. (" + err.message + ")");
         }
       }
+      await session.commitTransaction();
+      return res;
     } catch (err) {
       throw new Error("Could not create score data. (" + err.message + ")");
+    } finally {
+      session.endSession();
     }
-    return null;
   },
   // -----------------------------------------------------------------------------------------------------------
   deleteUser: async function (userID) {
+    // TODO transaction?
     if (userID) {
       let gameQuery = await battleSchema.findOne({
         games: {
@@ -182,8 +194,10 @@ module.exports = {
     if (guess !== 1 && guess !== 2) {
       throw new Error("Guess must be 1 or 2");
     }
+    const session = await db.startSession();
     try {
-      let gameQuery = await findGame(gameID);
+      session.startTransaction();
+      let gameQuery = await findGame(gameID, session);
       if (gameQuery === null) throw new Error("Game not found.");
       let index = findGameIndex(gameQuery, gameID);
       let now = new Date();
@@ -238,8 +252,11 @@ module.exports = {
       } catch (err) {
         throw new Error("Could not alter game data. (" + err.message + ")");
       }
+      await session.commitTransaction();
     } catch (err) {
       throw new Error("Could not retrieve game data. (" + err.message + ")");
+    } finally {
+      session.endSession();
     }
     return true;
   }
@@ -261,7 +278,16 @@ function computeMinGuesses(gameQuery, defaultToMaxNumber = false) {
   return Math.min(...v);
 }
 
-async function findGame(gameID) {
+async function findGame(gameID, session) {
+  if (session) {
+    return await battleSchema.findOne({
+      games: {
+        $elemMatch: {
+          gameID: gameID
+        }
+      }
+    }).session(session);
+  }
   return await battleSchema.findOne({
     games: {
       $elemMatch: {

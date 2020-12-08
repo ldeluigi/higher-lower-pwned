@@ -5,4 +5,4 @@ COPY mongod.conf /etc/mongod.conf
 COPY setup/ /docker-entrypoint-initdb.d/
 
 # Specifies the configuration file.
-CMD ["-f", "/etc/mongod.conf"]
+CMD ["-f", "/etc/mongod.conf", "--replSet", "rs0"]
