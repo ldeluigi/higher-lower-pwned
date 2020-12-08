@@ -114,7 +114,10 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Production mode
 
-To run the entire project in production mode just type `docker-compose up -d` in the root folder of the repository.
+To run the entire project in production mode just type `docker-compose up -d` in the root folder of the repository. This is a **simulation** of a production environment on your local machine.
+On Windows, MongoDB `/data/db` folder can't be mounted on a volume shared with the host machine. To achieve persistency of data, either user docker native modules or an external database.
+In order to use an external MongoDB database configure it properly (see the configuration file of the project) and use the `docker-compose.extdb.yml` compose file, after having defined the
+environment variable `MONGODB_URL`.
 
 **Note:** Only requests to `/api` or `/socket` path are forwarded to the server by Nginx.
 
