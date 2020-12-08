@@ -26,7 +26,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
     private logService: LogService,
     private gameManagerService: GameManagerService
   ) {
-    super();
+    super(30000);
     gameManagerService.setCurrentGameMode(ROYALE);
   }
 
@@ -39,6 +39,9 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
     this.gameSub.add(this.gameManagerService.gameStatusObservable.subscribe(ns => {
       if (ns !== GameStatus.PLAYING) {
         this.subTimer?.unsubscribe();
+      }
+      if (ns === GameStatus.LOST) {
+        this.resetProgressBarValue();
       }
     }));
     this.gameSub.add(this.socketService.errorObservable.subscribe(err => this.logService.errorSnackBar(err)));

@@ -33,7 +33,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
     private route: ActivatedRoute,
     private router: Router
   ) {
-    super();
+    super(30000);
     this.name = this.accountService.userValue?.username || 'YOU';
     gameManager.setCurrentGameMode(DUEL);
   }
@@ -50,7 +50,7 @@ export class DuelComponent extends ProgressBarHelper implements OnInit, OnDestro
         this.subTimer?.unsubscribe();
       }
       if (ns === GameStatus.LOST) {
-        this.progressBarMax = 0;
+        this.resetProgressBarValue();
       }
     }));
 
