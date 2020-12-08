@@ -145,6 +145,7 @@ module.exports = {
       await scoreSchema.create([score]);
       if (lastOne) {
         try {
+          console.log("Deleting game: ", gameQuery);
           await gameQuery.remove();
           res = null;
         } catch (err) {
@@ -152,7 +153,10 @@ module.exports = {
         }
       } else {
         try {
+          console.log("Current players before delete: ", gameQuery.games.length);
           gameQuery.games.splice(index, 1);
+          console.log("Current players after delete: ", gameQuery.games.length);
+          console.log("My index: ", index);
           await gameQuery.save();
           battleSchema.findById(gameQuery._id._id)
             .then(ngq => ngq.remove())
