@@ -121,10 +121,8 @@ module.exports = {
   },
   // -----------------------------------------------------------------------------------------------------------
   quitGame: async function (gameID) {
-    const session = await db.startSession();
     try {
-      session.startTransaction();
-      let gameQuery = await findGame(gameID, session);
+      let gameQuery = await findGame(gameID);
       if (gameQuery === null) throw new Error("Game not found.");
       let now = Date.now();
       let index = findGameIndex(gameQuery, gameID);
@@ -144,11 +142,10 @@ module.exports = {
         return res;
       })(gameQuery.games[index]);
       let res;
-      await scoreSchema.create([score], { session: session });
+      await scoreSchema.create([score]);
       if (lastOne) {
         try {
           await gameQuery.remove();
-          await session.commitTransaction();
           res = null;
         } catch (err) {
           throw new Error("Could not delete game data. (" + err.message + ")");
@@ -157,17 +154,17 @@ module.exports = {
         try {
           gameQuery.games.splice(index, 1);
           await gameQuery.save();
+          battleSchema.findById(gameQuery._id._id)
+            .then(ngq => ngq.remove())
+            .catch(_ => {});
           res = await currentGuessFromQuery(gameQuery);
         } catch (err) {
           throw new Error("Could not delete player from game data. (" + err.message + ")");
         }
       }
-      await session.commitTransaction();
       return res;
     } catch (err) {
       throw new Error("Could not create score data. (" + err.message + ")");
-    } finally {
-      session.endSession();
     }
   },
   // -----------------------------------------------------------------------------------------------------------
@@ -341,7 +338,7 @@ function checkVictories(gameQuery) {
         }
       });
     } else if (everyoneExpired) {
-      let maxExpiration = Math.max(gameQuery.games.filter(e => !e.lost).map(e => {
+      let maxExpiration = Math.max(...gameQuery.games.filter(e => !e.lost).map(e => {
         return e.expiration.getTime();
       }));
       gameQuery.games.forEach(e => {
@@ -419,7 +416,7 @@ async function currentGuessFromQuery(gameQuery) {
       value1: gameQuery.valueP1,
       password2: gameQuery.currentP2,
       guesses: game.guesses,
-      duration: Date.now() - gameQuery.start.getTime()
+      duration: nowInMillis - gameQuery.start.getTime()
     };
     if (!someoneIsBehind) {
       let timeout = game.guesses > minGuesses ?
