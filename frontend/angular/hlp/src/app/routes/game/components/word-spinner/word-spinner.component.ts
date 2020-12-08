@@ -188,7 +188,7 @@ export class WordSpinnerComponent implements OnDestroy {
   }
 
   gameSetup(setup: GameSetup): void {
-    this.logService.log('game set up', LogLevel.Debug, [this.element1.status, this.element2.status]);
+    this.logService.log('game set up', LogLevel.Debug, false, this.element1.status, this.element2.status);
     this.moving = false;
     this.inAnimation = true;
     this.element1 = {

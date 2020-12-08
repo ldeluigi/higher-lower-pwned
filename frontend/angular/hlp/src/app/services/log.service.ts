@@ -20,7 +20,8 @@ export class LogService {
     }
   }
 
-  log(message: string, severity: LogLevel, data?: any, withDate: boolean = false): void {
+  // tslint:disable-next-line: no-any
+  log(message: string, severity: LogLevel, withDate: boolean = false, ...data: any[]): void {
     if (this.isProduction && severity > this.maxLogInProduction) {
       // skip this log in production
       return;
@@ -29,12 +30,9 @@ export class LogService {
     if (withDate) {
       value = `${new Date()} - `;
     }
-    if (typeof data === 'object' && data !== null){
-      data = JSON.stringify(data);
-    }
     value = value.concat(`[${severity.toString()}]: ${message}`);
     if (data) {
-      console.log(value, data);
+      console.log(value, ...data);
     } else {
       console.log(value);
     }

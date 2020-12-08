@@ -192,7 +192,7 @@ export class GameSocketService {
    * New guess 'guess'
    */
   private guess = (guess: NextGuess | GameData) => {
-    this.logService.log('Socket guess ', LogLevel.Info, guess);
+    this.logService.log('Socket guess ', LogLevel.Info, false, guess);
     const guessAsNextGuess = guess as NextGuess;  // contiene solo il guess
     const guessAsGameData = guess as GameData;    // contiene una lista di valori
     if (guessAsNextGuess.password1) {                   // Case arcade
@@ -236,7 +236,7 @@ export class GameSocketService {
             myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? WON : LOSE;
           }
           this.gameEndSubject.next(myDataEndGame);
-          this.logService.log('End game message sent!', LogLevel.Debug, myData as GameEndDTO);
+          this.logService.log('End game message sent!', LogLevel.Debug, false, myData as GameEndDTO);
         } else {
           this.nextBattleGuessSubject.next(myData);                 // update next guess
         }
