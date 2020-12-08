@@ -121,8 +121,10 @@ module.exports = {
   },
   // -----------------------------------------------------------------------------------------------------------
   quitGame: async function (gameID) {
+    const session = await db.startSession();
     try {
-      let gameQuery = await findGame(gameID);
+      session.startTransaction();
+      let gameQuery = await findGame(gameID, session);
       if (gameQuery === null) throw new Error("Game not found.");
       let now = Date.now();
       let index = findGameIndex(gameQuery, gameID);
@@ -142,26 +144,38 @@ module.exports = {
         return res;
       })(gameQuery.games[index]);
       let res;
-      await scoreSchema.create([score]);
+      await scoreSchema.create([score], { session: session });
       if (lastOne) {
         try {
           console.log("Deleting game: ", gameQuery);
           await gameQuery.remove();
+          await session.commitTransaction();
           res = null;
         } catch (err) {
           throw new Error("Could not delete game data. (" + err.message + ")");
         }
       } else {
         try {
-          console.log("Current players before delete: ", gameQuery.games.length);
+          const id = (gameQuery._id && gameQuery._id._id || undefined);
           gameQuery.games.splice(index, 1);
-          console.log("Current players after delete: ", gameQuery.games.length);
-          console.log("My index: ", index);
           await gameQuery.save();
-          battleSchema.findById(gameQuery._id._id)
-            .then(ngq => ngq.remove())
-            .catch(_ => {});
-          res = await currentGuessFromQuery(gameQuery);
+          await session.commitTransaction();
+          session.startTransaction();
+          if (id) {
+            res = await battleSchema.findById(id)
+              .then(ngq => {
+                if (ngq.games.length == 0) {
+                  ngq.remove();
+                  session.commitTransaction();
+                } else {
+                  session.commitTransaction();
+                  return currentGuessFromQuery(gameQuery);
+                }
+              })
+              .catch(_ => {});
+          } else {
+            res = currentGuessFromQuery(gameQuery);
+          }
         } catch (err) {
           throw new Error("Could not delete player from game data. (" + err.message + ")");
         }
@@ -169,6 +183,8 @@ module.exports = {
       return res;
     } catch (err) {
       throw new Error("Could not create score data. (" + err.message + ")");
+    } finally {
+      session.endSession();
     }
   },
   // -----------------------------------------------------------------------------------------------------------
