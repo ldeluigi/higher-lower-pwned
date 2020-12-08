@@ -46,12 +46,12 @@ export class LogService {
     this.formatStringAndOpen(message, 'OK', { duration, panelClass: 'snackBarInfo' });
   }
 
-  private formatStringAndOpen(message: string, action?: string, config?: MatSnackBarConfig) {
-    message = message.charAt(0).toUpperCase() + message.slice(1)
+  private formatStringAndOpen(message: string, action?: string, config?: MatSnackBarConfig): void {
+    message = message.charAt(0).toUpperCase() + message.slice(1);
     this.snackBar.open(message, action, config);
   }
 
-  errorSnackBar(error: OnError | string, duration: number = 3000): void {
+  errorSnackBar(error: OnError | string, duration: number = 10000): void {
     const oe = error as OnError;
     let value = '';
     if (oe.code) {
