@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 import { LogLevel } from '../model/logLevel';
 import { OnError } from '../routes/game/model/error';
@@ -41,11 +41,16 @@ export class LogService {
   }
 
   messageSnackBar(message: string, duration: number = 3000): void {
-    this.snackBar.open(message, undefined, { duration, panelClass: 'snackBarMessage' });
+    this.formatStringAndOpen(message, undefined, { duration, panelClass: 'snackBarMessage' });
   }
 
   infoSnackBar(message: string, duration: number = 10000): void {
-    this.snackBar.open(message, 'OK', { duration, panelClass: 'snackBarInfo' });
+    this.formatStringAndOpen(message, 'OK', { duration, panelClass: 'snackBarInfo' });
+  }
+
+  private formatStringAndOpen(message: string, action?: string, config?: MatSnackBarConfig) {
+    message = message.charAt(0).toUpperCase() + message.slice(1)
+    this.snackBar.open(message, action, config);
   }
 
   errorSnackBar(error: OnError | string, duration: number = 3000): void {
@@ -56,6 +61,6 @@ export class LogService {
     } else {
       value = error.toString();
     }
-    this.snackBar.open(value, undefined, { duration, panelClass: 'snackBarError' });
+    this.formatStringAndOpen(value, undefined, { duration, panelClass: 'snackBarError' });
   }
 }
