@@ -3,8 +3,6 @@ const supertest = require("supertest");
 const request = supertest(app);
 const user = require("../../model/user.model");
 const token = require("../../model/token.model");
-const battle = require("../../model/battle.model");
-const arcade = require("../../model/game.model");
 const pwd = require("../../utils/password");
 const score = require("../../model/score.model");
 
@@ -140,14 +138,6 @@ describe("user API", function () {
       input._id = "createdID";
       return Promise.resolve(input)
     });
-    const mock3 = jest.spyOn(battle.schema, 'findOne');
-    mock3.mockImplementation((input) => {
-      return Promise.resolve(null)
-    });
-    const mock4 = jest.spyOn(arcade.schema, 'findOne');
-    mock4.mockImplementation((input) => {
-      return Promise.resolve(null)
-    });
     const mock5 = jest.spyOn(score.schema, 'deleteMany');
     mock5.mockImplementation((input) => {
       return Promise.resolve(null)
@@ -171,8 +161,6 @@ describe("user API", function () {
     mock.mockRestore();
     mock1.mockRestore();
     mock2.mockRestore();
-    mock3.mockRestore();
-    mock4.mockRestore();
     mock5.mockRestore();
     mock6.mockRestore();
     done();

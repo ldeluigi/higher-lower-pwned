@@ -156,7 +156,7 @@ function joinRoom(socket, matchmaking, socketRoomName, userObject) {
  */
 async function tryOrEmitError(func, socket, code) {
   try {
-    await func();
+    func();
   } catch (err) {
     emitError(socket, code, err.message);
   }
@@ -214,7 +214,7 @@ function timeoutForNextPlayerThatCouldLose(
         const _nextTimeout = await battle.nextTimeout(socket.id);
         io.to(myRoomName).emit("guess", await battle.currentGuess(socket.id));
         timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, _nextTimeout);
-      } catch (err) {}
+      } catch (err) { }
     }, nextTimeout + 5);
   } else {
     //console.log("DEBUG: stopped timeout!", nextTimeout)
@@ -266,7 +266,7 @@ async function onStart(
     emitError(socket, code, "Already in matchmaking.");
     return;
   }
-  if (await battle.isPlaying(playerID, socket.userData.id)) {
+  if (battle.isPlaying(playerID, socket.userData.id)) {
     emitError(socket, code, "Already playing.");
     return;
   }
@@ -363,7 +363,7 @@ async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
       if (matchmaking.isInRoom(socket.id)) {
         matchmaking.leaveRoom(socket.id);
       }
-      let isPlaying = await battle.isPlaying(socket.id);
+      let isPlaying = battle.isPlaying(socket.id);
       if (isPlaying) {
         let myRoomName = myRooms(socket, socketRoomPrefix)[0];
         let nextGuess = await battle.quitGame(socket.id);

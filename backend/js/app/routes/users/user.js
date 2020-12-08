@@ -167,8 +167,8 @@ router.delete("/:id",
       if (userQuery === null) {
         return res.status(404).json({ errors: ["User not found."] });
       }
-      await battle.deleteUser(userQuery._id);
-      await arcade.deleteUser(userQuery._id);
+      await battle.deleteUser(userQuery._id.toString());
+      await arcade.deleteUser(userQuery._id.toString());
       await scoreSchema.deleteMany({
         user: userQuery._id
       });

@@ -7,8 +7,6 @@ const sio = require("socket.io");
 const ioBack = require("./arcade.io");
 const arcade = require("../game/arcade");
 const passwordsSetup = require("../game/passwords").setup;
-
-const gameSchema = require("../model/game.model").schema;
 const scoreSchema = require("../model/score.model").schema;
 
 var serverListen;
@@ -60,22 +58,6 @@ afterEach((done) => {
 
 describe("arcade socket.io API", function () {
   it("should start a game without jwt", (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve(null));
-    const mock2 = jest.spyOn(gameSchema, 'create');
-    mock2.mockImplementation((input) => {
-      mock.mockImplementation((input) => Promise.resolve({
-        expiration: new Date("03-05-2020"),
-        currentP1: "a",
-        currentP2: "b",
-        valueP1: 1,
-        valueP2: 2,
-        score: 8,
-        guesses: 2,
-        start: new Date("02-05-2020")
-      }));
-      return Promise.resolve(null);
-    });
     socket.on("on-error", (msg) => {
       done.fail(new Error(msg.description));
     });
@@ -86,8 +68,6 @@ describe("arcade socket.io API", function () {
       expect(answer).toHaveProperty("timeout");
       expect(answer).toHaveProperty("score");
       expect(answer).toHaveProperty("guesses");
-      mock2.mockRestore();
-      mock.mockRestore();
       done();
     });
     socket.emit("start");
