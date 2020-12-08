@@ -147,6 +147,7 @@ module.exports = {
       await scoreSchema.create([score], { session: session });
       if (lastOne) {
         try {
+          console.log("Deleting game: ", gameQuery);
           await gameQuery.remove();
           await session.commitTransaction();
           res = null;
@@ -155,7 +156,10 @@ module.exports = {
         }
       } else {
         try {
+          console.log("Current players before delete: ", gameQuery.games.length);
           gameQuery.games.splice(index, 1);
+          console.log("Current players after delete: ", gameQuery.games.length);
+          console.log("My index: ", index);
           await gameQuery.save();
           res = await currentGuessFromQuery(gameQuery);
         } catch (err) {
