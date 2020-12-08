@@ -78,9 +78,6 @@ export class UpdateComponent implements OnInit, OnDestroy {
   onEmailSubmit(): void {
     this.submittedEmail = true;
 
-    // reset alerts on submit
-    // this.alertService.clear();TODO do an allertService
-
     // stop here if form is invalid
     if (this.formEmail.invalid) {
       return;
@@ -93,7 +90,6 @@ export class UpdateComponent implements OnInit, OnDestroy {
     this.loadingEmail = true;
     this.accountService.updateEmail(this.formEmail.controls.email.value)
       .then(() => {
-          // TODO close
           this.dialogRef.close();
         })
         .catch((error: Error) => {
@@ -104,9 +100,6 @@ export class UpdateComponent implements OnInit, OnDestroy {
 
   onPasswordSubmit(): void {
     this.submittedPwd = true;
-
-    // reset alerts on submit
-    // this.alertService.clear();TODO do an allertService
 
     const newPass = this.formPwd.controls.password.value;
     const newPassConfirm = this.formPwd.controls.confirmPassword.value;

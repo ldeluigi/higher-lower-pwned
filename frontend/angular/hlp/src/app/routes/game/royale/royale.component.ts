@@ -41,8 +41,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
         this.subTimer?.unsubscribe();
       }
     }));
-    // TODO find a good way to manage errors
-    this.gameSub.add(this.socketService.errorObservable.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`)));
+    this.gameSub.add(this.socketService.errorObservable.subscribe(err => this.logService.errorSnackBar(err)));
   }
 
   get displayTimer(): boolean {
@@ -88,7 +87,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
       .subscribe(isStart => {
         if (!isStart) {
           this.gameManagerService.quit();
-          this.logService.log('game not started!', LogLevel.Error); // TODO check if Error
+          this.logService.errorSnackBar('Can\'t start the game');
         }
       });
   }

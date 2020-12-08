@@ -79,7 +79,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       .subscribe(isStart => {
         if (!isStart) {
           this.gameManagerService.quit();
-          this.logService.log('game not started!', LogLevel.Error); // TODO is it an error?
+          this.logService.errorSnackBar('Can\'t start the game');
         }
       });
   }
