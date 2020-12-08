@@ -62,6 +62,8 @@ async function countLines(fileName) {
 }
 
 async function readOneCSVLine(fileName, lineIndex) {
+  // TODO make this synchronous
+  // TODO make all the call chain until this synchronous too
   const readInterface = readline.createInterface({
     input: fs.createReadStream(fileName),
   });
