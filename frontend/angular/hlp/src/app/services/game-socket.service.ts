@@ -5,8 +5,10 @@ import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
 import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
 import { errorToString, OnError } from '../routes/game/model/error';
-import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess,
-   UpdatePlayersInfo, GameEndDTO, GameEnd, DRAW, LOSE, WON } from '../routes/game/model/gameDTO';
+import {
+  GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess,
+  UpdatePlayersInfo, GameEndDTO, GameEnd, DRAW, LOSE, WON
+} from '../routes/game/model/gameDTO';
 import { PlayerIdName, PlayerJoin, PlayerLeave } from '../routes/game/model/player-join';
 import { SocketArcade } from '../routes/game/SocketArcade';
 import { SocketDuel } from '../routes/game/SocketDuel';
@@ -103,7 +105,7 @@ export class GameSocketService {
     this.gameEndObservable = this.gameEndSubject.asObservable();
 
     this.playerLeaveSubject = new Subject<PlayerLeave>();
-    this.playerLeaveObservable = this.playersSubject.asObservable();
+    this.playerLeaveObservable = this.playerLeaveSubject.asObservable();
   }
 
   private setUpSocketObservable(socket: Socket): void {
@@ -176,21 +178,21 @@ export class GameSocketService {
         socket.ioSocket.io.opts.query = {};
       }
       socket.fromOneTimeEvent('disconnect')
-      .then(_ => {
-        this.logService.log('Socket disconected.', LogLevel.Info);
-        this.connectionOpen = false;
-      });
+        .then(_ => {
+          this.logService.log('Socket disconected.', LogLevel.Info);
+          this.connectionOpen = false;
+        });
       socket.connect();
       socket.fromOneTimeEvent('connect')
-      .then(() => {
-        if (this.stopConnection) {
-          this.disconnect();
-          return;
-        }
-        this.logService.log('Socket connect.', LogLevel.Info);
-        this.connectionSubject?.next(true);
-        this.connectionSubject = undefined;
-      });
+        .then(() => {
+          if (this.stopConnection) {
+            this.disconnect();
+            return;
+          }
+          this.logService.log('Socket connect.', LogLevel.Info);
+          this.connectionSubject?.next(true);
+          this.connectionSubject = undefined;
+        });
       this.connectionOpen = true;
     }
     return this.connectionSubject.asObservable();
@@ -224,7 +226,7 @@ export class GameSocketService {
           score: cgd.score
         });
       });
-      this.gameDataSubject.next({users: playersInfo });     // update players status
+      this.gameDataSubject.next({ users: playersInfo });     // update players status
       const myId = extractId(guessAsGameData.ids, this.socketId);
       if (myId) {
         const myData = getDataFromId(this.socketId, guessAsGameData);
@@ -263,7 +265,10 @@ export class GameSocketService {
   /**
    * Player-join 'player-join'
    */
-  private playerJoin = (data: PlayerJoin) => this.playersSubject.next(data);
+  private playerJoin = (data: PlayerJoin) => {
+    console.log("PLAYER JOIN", data)
+    this.playersSubject.next(data);
+  }
 
   /**
    *
@@ -301,7 +306,7 @@ export class GameSocketService {
             this.socket = this.newSocket(this.gameMode);
             this.setUpSocketObservable(this.socket);
             this.connect(this.socket);
-          } else {}
+          } else { }
         },
         e2 => this.logService.errorSnackBar(`Can't connect with your account, please login again and retry. ` + e2)
       );
