@@ -39,7 +39,7 @@ export class RegistrationComponent implements OnInit {
         Validators.required,
         Validators.minLength(this.minUsernameLength),
         Validators.maxLength(this.maxUsernameLength),
-        Validators.pattern(RegExp(/^\w+$/))
+        Validators.pattern(RegExp(/^[a-zA-Z0-9]+$/))
       ])],
       password: ['', Validators.compose([
         Validators.required,
@@ -74,7 +74,7 @@ export class RegistrationComponent implements OnInit {
         if (this.f.username.errors !== null) {
           if (this.f.username.errors.required) {
             this.usernameError = 'username required';
-          } else if (this.f.username.errors.minLength !== null || this.f.username.errors.maxLength !== null) {
+          } else if (this.f.username.errors.minLength !== undefined || this.f.username.errors.maxLength !== undefined) {
             this.usernameError = 'username must be ' + this.minUsernameLength + '-' + this.maxUsernameLength + ' chars';
           } else {
             this.usernameError = 'username must be alpha-numeric';
@@ -126,6 +126,9 @@ export class RegistrationComponent implements OnInit {
         (error) => {
           this.logService.log('registration error:', LogLevel.Debug, error);
           if (error.constructor.name === 'Array') {
+            if (typeof error[0] === 'object' && error[0] !== null) {
+              error = error.map((obj: { msg: String, param: String; }) => obj.msg + " in " + obj.param);
+            }
             const inputError = error.join(' ,');
             if (inputError.length > 0) {
               this.logService.errorSnackBar(inputError);
