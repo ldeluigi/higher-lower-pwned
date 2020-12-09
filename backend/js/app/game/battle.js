@@ -14,15 +14,15 @@ module.exports = {
    * @param {String[]} userIDs
    * @param {String} modeName
    */
-  newGame: async function (gameIDs, userIDs, modeName = "royale") {
+  newGame: function (gameIDs, userIDs, modeName = "royale") {
     if (gameIDs.length != userIDs.length) {
       throw new Error("Invalid argument. Game IDs should be as many as user IDs.");
     }
     if (hasDuplicates(gameIDs) || hasDuplicates(userIDs.filter(e => e !== undefined && e !== null))) {
       throw new Error("Someone is trying to play with themselves.");
     }
-    let p1 = await passwords.pickPasswordAndValue();
-    let p2 = await passwords.pickPasswordAndValue();
+    let p1 = passwords.pickPasswordAndValueSync();
+    let p2 = passwords.pickPasswordAndValueSync();
     let gameStart = new Date();
     let newGame = new Battle(
       gameStart,
@@ -61,19 +61,19 @@ module.exports = {
   /**
    * @param {String} gameID
    */
-  currentGuess: async function (gameID) {
+  currentGuess: function (gameID) {
     try {
       let gameQuery = battles.findOneByGame(gameID);
-      return await currentGuessFromQuery(gameQuery);
+      return currentGuessFromQuery(gameQuery);
     } catch (err) {
       throw new Error("Could not fetch game data. (" + err.message + ")");
     }
   },
   // -----------------------------------------------------------------------------------------------------------
-  nextTimeout: async function (gameID) {
+  nextTimeout: function (gameID) {
     let gameQuery = battles.findOneByGame(gameID);
     if (gameQuery === null) throw new Error("Game not found.");
-    await currentGuessFromQuery(gameQuery);
+    currentGuessFromQuery(gameQuery);
     let now = Date.now();
     let minGuesses = gameQuery.computeMinGuesses(true);
     let filteredGames = gameQuery.games
@@ -116,7 +116,7 @@ module.exports = {
       } else {
         try {
           gameQuery.games.splice(index, 1);
-          res = await currentGuessFromQuery(gameQuery);
+          res = currentGuessFromQuery(gameQuery);
         } catch (err) {
           throw new Error("Could not delete player from game data. (" + err.message + ")");
         }
@@ -143,7 +143,7 @@ module.exports = {
     }
   },
   // -----------------------------------------------------------------------------------------------------------
-  submitGuess: async function (gameID, guess) {
+  submitGuess: function (gameID, guess) {
     if (guess !== 1 && guess !== 2) {
       throw new Error("Guess must be 1 or 2");
     }
@@ -189,7 +189,7 @@ module.exports = {
         gameQuery.checkVictories();
         if (
           gameQuery.games.filter(g => !g.lost).length > 0) {
-          await loadNewPassword(gameQuery);
+          loadNewPassword(gameQuery);
         }
       } else if (game.guesses == minGuesses) {
         guessHandler();
@@ -218,10 +218,10 @@ function hasDuplicates(array) {
 /**
  * @param {Battle} gameQuery
  */
-async function loadNewPassword(gameQuery) {
+function loadNewPassword(gameQuery) {
   gameQuery.currentP1 = gameQuery.currentP2;
   gameQuery.valueP1 = gameQuery.valueP2;
-  let newP = await passwords.pickPasswordAndValue();
+  let newP = passwords.pickPasswordAndValueSync();
   gameQuery.currentP2 = newP.password;
   gameQuery.valueP2 = newP.value;
 }
@@ -229,7 +229,7 @@ async function loadNewPassword(gameQuery) {
 /**
  * @param {Battle} gameQuery
  */
-async function currentGuessFromQuery(gameQuery) {
+function currentGuessFromQuery(gameQuery) {
   if (gameQuery === null) throw new Error("Game not found.");
   let mustLoadNewPasswords = false;
   let nowInMillis = Date.now();
@@ -299,7 +299,7 @@ async function currentGuessFromQuery(gameQuery) {
     return res;
   });
   if (mustLoadNewPasswords) {
-    await loadNewPassword(gameQuery);
+    loadNewPassword(gameQuery);
   }
   return {
     ids: gameQuery.games.map(e => e.gameID),

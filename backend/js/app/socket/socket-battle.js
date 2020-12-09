@@ -211,8 +211,8 @@ function timeoutForNextPlayerThatCouldLose(
     setTimeout(async function () {
       // console.log("DEBUG: timeout!")
       try {
-        const _nextTimeout = await battle.nextTimeout(socket.id);
-        io.to(myRoomName).emit("guess", await battle.currentGuess(socket.id));
+        const _nextTimeout = battle.nextTimeout(socket.id);
+        io.to(myRoomName).emit("guess", battle.currentGuess(socket.id));
         timeoutForNextPlayerThatCouldLose(io, socket, myRoomName, _nextTimeout);
       } catch (err) { }
     }, nextTimeout + 5);
@@ -276,38 +276,32 @@ async function onStart(
   if (matchmaking.isOpen()) {
     let socketRoomName = socketRoomPrefix + myRoomName;
     if (joinRoom(socket, matchmaking, socketRoomName, userObject)) {
-      await tryOrEmitError(
-        async () => {
-          let opponents = matchmaking.getOpponents(socket.id);
-          io.to(socketRoomName).emit(
-            "player-join",
-            new SimplePlayer(socket.id, userObject.name).joinDto(
-              opponents.length + 1,
-              maxLobbySpace
-            )
-          );
-          sendOpponents(socket, opponents);
-          if (opponents.length + 1 >= maxLobbySpace) {
-            matchmaking.closeRoom();
-            let op = new PlayerCollection(opponents);
-            await battle.newGame(
-              [socket.id, ...op.playerIDs],
-              [socket.userData.id, ...op.userIDs],
-              modeName
-            );
-            let cg = await battle.currentGuess(socket.id);
-            emitGuess(io.to(socketRoomName), cg);
-            timeoutForNextPlayerThatCouldLose(
-              io,
-              socket,
-              socketRoomName,
-              await battle.nextTimeout(socket.id)
-            );
-          }
-        },
-        socket,
-        code + 1
+      let opponents = matchmaking.getOpponents(socket.id);
+      io.to(socketRoomName).emit(
+        "player-join",
+        new SimplePlayer(socket.id, userObject.name).joinDto(
+          opponents.length + 1,
+          maxLobbySpace
+        )
       );
+      sendOpponents(socket, opponents);
+      if (opponents.length + 1 >= maxLobbySpace) {
+        matchmaking.closeRoom();
+        let op = new PlayerCollection(opponents);
+        battle.newGame(
+          [socket.id, ...op.playerIDs],
+          [socket.userData.id, ...op.userIDs],
+          modeName
+        );
+        let cg = battle.currentGuess(socket.id);
+        emitGuess(io.to(socketRoomName), cg);
+        timeoutForNextPlayerThatCouldLose(
+          io,
+          socket,
+          socketRoomName,
+          battle.nextTimeout(socket.id)
+        );
+      }
     }
   } else {
     matchmaking.resetRoom();
@@ -339,15 +333,9 @@ async function onStart(
  * @param {*} socket
  * @param {Number} code
  */
-async function onRepeat(io, socket, code) {
-  await tryOrEmitError(
-    async () => {
-      let cg = await battle.currentGuess(socket.id);
-      emitGuess(socket, cg);
-    },
-    socket,
-    code
-  );
+function onRepeat(io, socket, code) {
+  let cg = battle.currentGuess(socket.id);
+  emitGuess(socket, cg);
 }
 
 /**
@@ -387,26 +375,14 @@ async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
  * @param {{ higher: number; }} answer
  * @param {string} socketRoomPrefix
  */
-async function onAnswer(io, socket, code, answer, socketRoomPrefix) {
+function onAnswer(io, socket, code, answer, socketRoomPrefix) {
   if (answer.higher === 1 || answer.higher === 2) {
-    await tryOrEmitError(
-      async () => {
-        let submitted = await battle.submitGuess(socket.id, answer.higher);
-        let myRoomName = myRooms(socket, socketRoomPrefix)[0];
-        if (submitted) {
-          tryOrEmitError(
-            async () => {
-              let cg = await battle.currentGuess(socket.id);
-              emitGuess(io.to(myRoomName), cg);
-            },
-            socket,
-            code
-          );
-        }
-      },
-      socket,
-      code + 1
-    );
+    let submitted = battle.submitGuess(socket.id, answer.higher);
+    let myRoomName = myRooms(socket, socketRoomPrefix)[0];
+    if (submitted) {
+      let cg = battle.currentGuess(socket.id);
+      emitGuess(io.to(myRoomName), cg);
+    }
   } else {
     emitError(socket, code + 2, "Answer must be 1 (lower) or 2 (higher).");
   }
@@ -436,11 +412,11 @@ module.exports = {
               maxLobbySpace
             );
           });
-          socket.on("repeat", async () => {
-            await onRepeat(io, socket, 200);
+          socket.on("repeat", () => {
+            onRepeat(io, socket, 200);
           });
-          socket.on("answer", async (answer) => {
-            await onAnswer(io, socket, 300, answer, lobbyRoomPrefix);
+          socket.on("answer", (answer) => {
+            onAnswer(io, socket, 300, answer, lobbyRoomPrefix);
           });
           socket.on("quit", async (_) => {
             await onQuit(io, socket, 400, matchmaking, lobbyRoomPrefix);

@@ -46,6 +46,26 @@ module.exports = {
       }
     }
     throw new Error("Picked a number that exceeded maximum number of passwords available (" + max + ").");
+  },
+
+  pickPasswordAndValueSync: function (wish) {
+    let max = fileMap.map(f => f.lines).reduce((a, b) => a + b, 0);
+    let pick = wish === undefined ? Math.floor(Math.random() * max) : wish;
+    let pickIndex = pick;
+    for (let i = 0; i < fileMap.length; i++) {
+      if (pick < fileMap[i].lines) {
+        let microcsv = readCSVLineSync(fileMap[i].path, pick);
+        let split = microcsv.split(',');
+        return {
+          index: pickIndex,
+          password: split[0],
+          value: parseInt(split[2])
+        }
+      } else {
+        pick -= fileMap[i].lines;
+      }
+    }
+    throw new Error("Picked a number that exceeded maximum number of passwords available (" + max + ").");
   }
 };
 
@@ -61,9 +81,15 @@ async function countLines(fileName) {
   return i;
 }
 
+function readCSVLineSync(fileName, lineNumber) {
+  const data = fs.readFileSync(fileName, "utf8");
+  if (data) {
+    return data.split(/\r?\n/).filter(line => line.length > 1)[lineNumber + 1];
+  }
+  throw new Error('Can\'t open file ' + fileName);
+}
+
 async function readOneCSVLine(fileName, lineIndex) {
-  // TODO make this synchronous
-  // TODO make all the call chain until this synchronous too
   const readInterface = readline.createInterface({
     input: fs.createReadStream(fileName),
   });
