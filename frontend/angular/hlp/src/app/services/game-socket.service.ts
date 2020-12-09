@@ -18,6 +18,7 @@ import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
 import { LogLevel } from '../model/logLevel';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -75,7 +76,8 @@ export class GameSocketService {
   constructor(
     private accountService: AccountService,
     private apiURL: ApiURLService,
-    private logService: LogService
+    private logService: LogService,
+    private router: Router,
   ) {
     this.playersSubject = new Subject<PlayerIdName>();
     this.playerObservable = this.playersSubject.asObservable();
@@ -239,7 +241,7 @@ export class GameSocketService {
         if (gameData.every(d => d.lost === true)) {           // every one have lost
           const ges = gameData.map(e => e as GameEndDTO);
           const myDataEndGame = myData as GameEnd;
-          this.logService.log('GameEndDTO: ' + ges, LogLevel.Debug);
+          this.logService.log('GameEndDTO: ', LogLevel.Debug, false, ges);
           if (ges.filter(e => e.won).length > 1) {
             myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? DRAW : LOSE;
           } else {
@@ -260,15 +262,13 @@ export class GameSocketService {
   private onError = (error: OnError) => {
     this.logService.log(errorToString(error), LogLevel.Error);
     this.logService.errorSnackBar(error);
+    this.router.navigate(['/home']);
   }
 
   /**
    * Player-join 'player-join'
    */
-  private playerJoin = (data: PlayerJoin) => {
-    console.log("PLAYER JOIN", data)
-    this.playersSubject.next(data);
-  }
+  private playerJoin = (data: PlayerJoin) => this.playersSubject.next(data);
 
   /**
    *

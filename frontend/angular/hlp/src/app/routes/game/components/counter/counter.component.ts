@@ -52,9 +52,9 @@ export class CounterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.gameSub = this.gameManagerService.gameStatusObservable.subscribe(nv => {
       if (nv === GameStatus.IDLE) {
+        this.counterSub?.unsubscribe();
         this.counter = 0;
         this.name = undefined;
-        this.counterSub?.unsubscribe();
         this.setUp();
       }
     });
@@ -114,7 +114,6 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   private setupRoyaleAnimation(): void {
     if (this.animation === true) {
-
       this.socketService.gameEndObservable
         .subscribe(ge => {
             if (ge.gameEndStatus === WON) {
@@ -267,6 +266,7 @@ export class CounterComponent implements OnInit, OnDestroy {
       this.animationState = 'none';
       this.animationStateChange?.emit('none');
       this.counterSub?.unsubscribe();
+      this.counterSub = undefined;
     }, value);
   }
 
