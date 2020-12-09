@@ -1,10 +1,12 @@
 @import "../../../styles/stats/mixins";
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/dimensions.scss";
+@import "../../../styles/stats/mixins";
 
 @include nav-bar;
 @include underNavBarContainer;
 @include tableFormatter;
+@include loadingSpinnerFormatter;
 
 table {
   margin-top: 2 * $default-margin;

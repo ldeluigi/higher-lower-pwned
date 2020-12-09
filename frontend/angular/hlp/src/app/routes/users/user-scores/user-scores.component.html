@@ -42,6 +42,12 @@
 </div>
 <div class="container">
   <div class="mat-elevation-z8" class="tableContainer">
+    <div *ngIf="isLoading" class="loading">
+      <mat-progress-spinner
+        color="primary"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="score">
         <th mat-header-cell *matHeaderCellDef>Score</th>
@@ -82,7 +88,7 @@
     <!-- Paginator column -->
     <ng-container matColumnDef="paginator">
       <td mat-footer-cell *matFooterCellDef colspan="3">
-        <mat-paginator 
+        <mat-paginator
           [length]="total"
           [pageSize]="pageSize"
           [pageSizeOptions]="pageSizeOptions"
