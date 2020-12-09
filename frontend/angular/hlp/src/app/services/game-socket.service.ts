@@ -7,7 +7,7 @@ import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
 import { errorToString, OnError } from '../routes/game/model/error';
 import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess,
    UpdatePlayersInfo, GameEndDTO, GameEnd, DRAW, LOSE, WON } from '../routes/game/model/gameDTO';
-import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
+import { PlayerIdName, PlayerJoin, PlayerLeave } from '../routes/game/model/player-join';
 import { SocketArcade } from '../routes/game/SocketArcade';
 import { SocketDuel } from '../routes/game/SocketDuel';
 import { SocketRoyale } from '../routes/game/SocketRoyale';
@@ -58,6 +58,10 @@ export class GameSocketService {
   /// Emit errors from the server
   errorObservable!: Observable<OnError>;
 
+  private playerLeaveSubject: Subject<PlayerLeave>;
+  /// Emit the id of any player that leave a game (duel or royale)
+  playerLeaveObservable: Observable<PlayerLeave>;
+
   private socket: Socket | undefined;
 
   private connectionTry = 0;
@@ -97,6 +101,9 @@ export class GameSocketService {
 
     this.gameEndSubject = new Subject<GameEnd>();
     this.gameEndObservable = this.gameEndSubject.asObservable();
+
+    this.playerLeaveSubject = new Subject<PlayerLeave>();
+    this.playerLeaveObservable = this.playersSubject.asObservable();
   }
 
   private setUpSocketObservable(socket: Socket): void {
@@ -105,6 +112,7 @@ export class GameSocketService {
     socket.on('waiting-opponents', this.opponents);
     socket.on('player-join', this.playerJoin);
     socket.on('game-end', this.gameEnd);
+    socket.on('player-leave', this.playerLeave);
     socket.on('error', this.error);
   }
 
@@ -256,6 +264,11 @@ export class GameSocketService {
    * Player-join 'player-join'
    */
   private playerJoin = (data: PlayerJoin) => this.playersSubject.next(data);
+
+  /**
+   *
+   */
+  private playerLeave = (data: PlayerLeave) => this.playerLeaveSubject.next(data);
 
   /**
    * Opponents: list with all players 'opponents'
