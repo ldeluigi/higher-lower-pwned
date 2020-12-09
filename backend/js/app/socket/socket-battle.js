@@ -360,7 +360,7 @@ async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
         }
       }
       myRooms(socket, socketRoomPrefix).forEach((room) => {
-        socket.leave(room);
+        socket.to(room).emit("player-leave", { id: socket.id });
       });
     },
     socket,
@@ -424,6 +424,9 @@ module.exports = {
           socket.on("disconnecting", async (reason) => {
             await onQuit(io, socket, 500, matchmaking, lobbyRoomPrefix);
           });
+          // socket.on("disconnect", async (reason) => {
+          //   await onQuit(io, socket, 500, matchmaking, lobbyRoomPrefix);
+          // });
         });
         console.log(
           "Mounted socket.io " + namespace + " module to " + namespace
