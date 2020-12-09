@@ -51,13 +51,25 @@ div.mat-expansion-panel-body {
   background-color: $default-msg-color;
   color: $default-text-color;
   text-align: center;
+  .mat-simple-snackbar-action {
+    color: $dark-text-color;
+  }
 }
 
 .snackBarInfo {
   background-color: $default-info-color;
   color: $default-text-color;
+  text-align: center;
+  .mat-simple-snackbar-action {
+    color: $dark-text-color;
+  }
 }
 
 .snackBarError {
   background-color: $default-error-color;
+  color: $default-text-color;
+  text-align: center;
+  .mat-simple-snackbar-action {
+    font-weight: bolder;
+  }
 }

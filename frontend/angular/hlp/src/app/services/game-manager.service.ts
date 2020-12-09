@@ -91,8 +91,8 @@ export class GameManagerService {
       );
       this.gameSub.add(
         this.socketService.gameEndObservable.subscribe(ge => { // game is ended I have lost
-          if (this.accountService.userValue === null && ge.score === 0 && this.currentGameMode === ARCADE) {
-            this.logService.recommendALink('Eih! Do you want to learn how to play?', '/info/how-to-play');
+          if (this.accountService.userValue === null && ge.guesses <= 1 && this.currentGameMode === ARCADE) {
+            this.logService.recommendALink('Do you want to learn how to play?', '/info/how-to-play');
           } else {
             console.log(this.accountService.userValue, ge.score, this.currentGameMode);
           }
@@ -107,9 +107,9 @@ export class GameManagerService {
           if (ng.lost && ng.lost) {
             this.gameStatusSubject.next(GameStatus.LOST);
           } else if (this.currentGameStatus === GameStatus.WAITING_N_GUESS) {
-              if (ng.score) {
-                this.gameStatusSubject.next(GameStatus.PLAYING);
-              }
+            if (ng.score) {
+              this.gameStatusSubject.next(GameStatus.PLAYING);
+            }
           } else if (this.currentGameStatus === GameStatus.WAITING_START) {
             this.gameStatusSubject.next(GameStatus.PLAYING);
           }

@@ -1,14 +1,14 @@
 // default
 $default-text-color: aliceblue;
-$dark-text-color: rgb(224, 224, 224);
+$dark-text-color: rgb(32, 30, 30);
 $higher-color: #ff2147;
 $lower-color: #add8e6;
 $ui-color: #c7ffff;
 $white-bg: rgb(230, 230, 230);
 $black-bg: rgba(29, 29, 29, 0.829);
-$default-error-color: rgb(179, 0, 0);
-$default-msg-color: rgb(0, 136, 255);
-$default-info-color: #2b28ff;
+$default-error-color: rgb(190, 47, 47);
+$default-msg-color: rgb(151, 157, 163);
+$default-info-color: rgba(87, 149, 231, 0.847);
 
 $player-ingame-color: rgba(0, 128, 0, 0.3);
 $player-lost-color: grey;
@@ -20,3 +20,30 @@ $label-bg: rgba(255, 255, 255, 0.212);
 $label-text: rgba(0, 0, 0, 0.7);
 
 $default-hint-color: rgba(0, 0, 0, 0.54);
+
+@function home-multiple-text-shadow($n, $color, $x: 1, $y: 1) {
+  $value: "0 1px #{$color}";
+  @for $i from 2 through $n {
+    $value: "#{$value} , #{ $i * $x }px #{ $i *$y }px 2px "+lighten($color, $i);
+  }
+
+  @return unquote($value);
+}
+
+@keyframes home-animation {
+  0% {
+    text-shadow: home-multiple-text-shadow(10, $higher-color, 0, -1);
+  }
+  25% {
+    text-shadow: home-multiple-text-shadow(10, $black-bg, 0, -1);
+  }
+  50% {
+    text-shadow: home-multiple-text-shadow(10, $lower-color, 0, -1);
+  }
+  75% {
+    text-shadow: home-multiple-text-shadow(10, $black-bg, 0, -1);
+  }
+  100% {
+    text-shadow: home-multiple-text-shadow(10, $higher-color, 0, -1);
+  }
+}

@@ -1,4 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { LinksComponent } from './links.component';
 
 
@@ -8,7 +10,13 @@ describe('LinksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LinksComponent ]
+      imports: [
+        HttpClientTestingModule,
+        MatIconModule,
+      ],
+      declarations: [
+        LinksComponent,
+      ]
     })
     .compileComponents();
   }));
