@@ -65,7 +65,7 @@ export class LogService {
     this.formatStringAndOpen(value, undefined, { duration, panelClass: 'snackBarError' });
   }
 
-  recommendALink(message: string, url: string, duration: number = 6000, config?: MatSnackBarConfig): void {
+  recommendALink(message: string, url: string, duration: number = 6000): void {
     message = message.charAt(0).toUpperCase() + message.slice(1);
     this.snackBar.open(message, 'CLick here', { duration, panelClass: 'snackBarInfo' })
       .onAction()

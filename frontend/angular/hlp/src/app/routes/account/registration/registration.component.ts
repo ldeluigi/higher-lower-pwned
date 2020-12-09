@@ -127,7 +127,7 @@ export class RegistrationComponent implements OnInit {
           this.logService.log('registration error:', LogLevel.Debug, error);
           if (error.constructor.name === 'Array') {
             if (typeof error[0] === 'object' && error[0] !== null) {
-              error = error.map((obj: { msg: String, param: String; }) => obj.msg + " in " + obj.param);
+              error = error.map((obj: { msg: string, param: string; }) => `${obj.msg} in ${obj.param}`);
             }
             const inputError = error.join(' ,');
             if (inputError.length > 0) {
