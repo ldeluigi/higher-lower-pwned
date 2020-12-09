@@ -16,6 +16,7 @@ import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
 import { LogLevel } from '../model/logLevel';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +74,8 @@ export class GameSocketService {
   constructor(
     private accountService: AccountService,
     private apiURL: ApiURLService,
-    private logService: LogService
+    private logService: LogService,
+    private router: Router,
   ) {
     this.playersSubject = new Subject<PlayerIdName>();
     this.playerObservable = this.playersSubject.asObservable();
@@ -258,6 +260,7 @@ export class GameSocketService {
   private onError = (error: OnError) => {
     this.logService.log(errorToString(error), LogLevel.Error);
     this.logService.errorSnackBar(error);
+    this.router.navigate(['/home']);
   }
 
   /**

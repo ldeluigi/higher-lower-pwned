@@ -38,7 +38,7 @@ export class CounterComponent implements OnInit, OnDestroy {
   name: string | undefined;
   private id: string | undefined;
 
-  private counterSub: Subscription | undefined;
+  private counterSub: Subscription = new Subscription();
   private gameSub: Subscription | undefined;
   currentGameMode = '';
 
@@ -52,9 +52,9 @@ export class CounterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.gameSub = this.gameManagerService.gameStatusObservable.subscribe(nv => {
       if (nv === GameStatus.IDLE) {
+        this.counterSub?.unsubscribe();
         this.counter = 0;
         this.name = undefined;
-        this.counterSub?.unsubscribe();
         this.setUp();
       }
     });
@@ -70,16 +70,16 @@ export class CounterComponent implements OnInit, OnDestroy {
     if (this.gameManagerService.currentGameMode === ARCADE) {
       this.currentGameMode = ARCADE;
       this.setupArcadeAnimation();
-      this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+      this.counterSub.add(this.socketService.userScoreObservable.subscribe(n => this.updateScore(n)));
     } else if (this.gameManagerService.currentGameMode === DUEL) {
       this.currentGameMode = DUEL;
       if (this.user) {
         // case scores of the user
-        this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+        this.counterSub.add(this.socketService.userScoreObservable.subscribe(n => this.updateScore(n)));
         this.socketService.playerObservable.pipe(take(2)).subscribe(pd => this.addPlayerData(pd));
       } else {
         // case scores of the opponent
-        this.counterSub = this.socketService.gameDataUpdate.subscribe(gd => {
+        this.counterSub.add(this.socketService.gameDataUpdate.subscribe(gd => {
           if (this.id !== undefined) {
             const ID: string = this.id;
             const otherPlayer = gd.users.find(u => u.id.includes(ID));
@@ -91,7 +91,7 @@ export class CounterComponent implements OnInit, OnDestroy {
               this.name = undefined;
             }
           }
-        });
+        }));
         this.socketService.opponentsObservable.pipe(first()).subscribe(nps => {
           if (nps.length === 0) { // no one is waiting, so I wait for my + enemy data so I take 2
             this.socketService.playerObservable.pipe(take(2)).subscribe(ed => this.addEnemyData(ed));
@@ -103,7 +103,7 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (this.gameManagerService.currentGameMode === ROYALE) {
       this.currentGameMode = ROYALE;
       this.setupRoyaleAnimation();
-      this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+      this.counterSub.add(this.socketService.userScoreObservable.subscribe(n => this.updateScore(n)));
       this.socketService.playerObservable.pipe(
         filter(p => p.id.includes(this.socketService.socketId),
         first()
