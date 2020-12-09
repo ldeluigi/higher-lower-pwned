@@ -93,8 +93,6 @@ export class GameManagerService {
         this.socketService.gameEndObservable.subscribe(ge => { // game is ended I have lost
           if (this.accountService.userValue === null && ge.guesses <= 1 && this.currentGameMode === ARCADE) {
             this.logService.recommendALink('Do you want to learn how to play?', '/info/how-to-play');
-          } else {
-            console.log(this.accountService.userValue, ge.score, this.currentGameMode);
           }
           this.gameStatusSubject.next(GameStatus.END);
           this.disconnect();
