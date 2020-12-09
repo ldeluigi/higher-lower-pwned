@@ -5,6 +5,10 @@
 
 @include underNavBarContainer();
 
+.tableContainer {
+  overflow-x: auto;
+}
+
 table {
   width: 100%;
   th.mat-header-cell,
