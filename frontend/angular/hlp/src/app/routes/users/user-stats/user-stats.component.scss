@@ -5,6 +5,7 @@
 
 @include underNavBarContainer;
 @include tableFormatter;
+@include loadingSpinnerFormatter;
 
 canvas {
   background: $white-bg;

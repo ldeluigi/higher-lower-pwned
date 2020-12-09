@@ -25,6 +25,7 @@ export const GRAPH_EMPTY_PERIODS = '...';
 export class UserStatsComponent implements OnInit, OnDestroy {
   expanded = true;
   showingChart = true;
+  isLoading = true;
 
   lineChartType: ChartType = 'bar';
   lineChartData: Array<object> = [];
@@ -152,6 +153,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub = this.usersTools.data.subscribe((data) => {
+      this.isLoading = false;
       const array = data?.history || [];
       this.dataSource.data = array;
       const scores: HistoryItem[] = [];
@@ -286,6 +288,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   updateUserStats(period?: string): void {
+    this.isLoading = true;
     if (period) {
       this.actualPeriod = period;
     }
