@@ -4,6 +4,7 @@
 @import "../../../styles/stats/mixins";
 
 @include tableFormatter;
+@include loadingSpinnerFormatter;
 
 div.inputs {
   padding: $default-padding;
