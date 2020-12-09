@@ -5,9 +5,7 @@ const cio = require("socket.io-client");
 const http = require("http");
 const sio = require("socket.io");
 const ioBack = require("./arcade.io");
-const arcade = require("../game/arcade");
 const passwordsSetup = require("../game/passwords").setup;
-const scoreSchema = require("../model/score.model").schema;
 
 var serverListen;
 var serverAddress;
@@ -25,8 +23,9 @@ beforeAll(async (done) => {
 
 afterAll((done) => {
   ioServer.close();
-  serverListen.close();
-  done();
+  serverListen.close(() => {
+    done();
+  });
 });
 
 
