@@ -90,6 +90,18 @@
     overflow-x: auto;
   }
 
+  @include tablet {
+    .tableContainer {
+      overflow-x: visible;
+    }
+  }
+
+  @include desktop {
+    .tableContainer {
+      overflow-x: visible;
+    }
+  }
+
   table {
     width: 100%;
     .mat-header-cell,
