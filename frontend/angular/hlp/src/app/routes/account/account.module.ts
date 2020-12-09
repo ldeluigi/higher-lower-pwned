@@ -7,9 +7,6 @@ import { RegistrationComponent } from './registration/registration.component';
 import { UpdateComponent } from './update/update.component';
 import { DeleteComponent } from './delete/delete.component';
 
-
-
-
 @NgModule({
   declarations: [
     LoginComponent,

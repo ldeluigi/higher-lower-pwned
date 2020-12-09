@@ -4,6 +4,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DeleteComponent } from './delete.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('DeleteComponent', () => {
   let component: DeleteComponent;
@@ -12,10 +15,13 @@ describe('DeleteComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         MatSnackBarModule,
         MatDialogModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
       ],
       providers: [
         {

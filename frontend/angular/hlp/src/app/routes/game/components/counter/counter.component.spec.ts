@@ -20,7 +20,10 @@ describe('CounterComponent', () => {
         MatDialogModule,
         BrowserAnimationsModule
       ],
-      declarations: [ CounterComponent ]
+      declarations: [
+        CounterComponent,
+
+      ]
     })
     .compileComponents();
   }));

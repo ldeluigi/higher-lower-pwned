@@ -4,6 +4,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CounterComponent } from '../counter/counter.component';
 import { DuelCounterComponent } from './duel-counter.component';
 
 
@@ -20,7 +21,10 @@ describe('DuelCounterComponent', () => {
         MatDialogModule,
         BrowserAnimationsModule
       ],
-      declarations: [ DuelCounterComponent ]
+      declarations: [
+        DuelCounterComponent,
+        CounterComponent,
+      ]
     })
     .compileComponents();
   }));
