@@ -3,19 +3,8 @@
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/stats/mixins";
 
-@include underNavBarContainer();
-
-.tableContainer {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  th.mat-header-cell,
-  td.mat-cell {
-    text-align: center;
-  }
-}
+@include underNavBarContainer;
+@include tableFormatter;
 
 canvas {
   background: $white-bg;

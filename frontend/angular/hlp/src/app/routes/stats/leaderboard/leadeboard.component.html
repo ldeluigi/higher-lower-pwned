@@ -13,37 +13,38 @@
   </mat-form-field-->
 <!--/div-->
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
+  <div class="tableContainer">
+    <table mat-table [dataSource]="dataSource">
 
-    <!-- position Column -->
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> Rank </th>
-      <td mat-cell *matCellDef="let element"> {{dataSource.data.indexOf(element) + 1}} </td>
-    </ng-container>
+      <!-- position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef> Rank </th>
+        <td mat-cell *matCellDef="let element"> {{dataSource.data.indexOf(element) + 1}} </td>
+      </ng-container>
 
-    <!-- Player Column -->
-    <ng-container matColumnDef="username">
-      <th mat-header-cell *matHeaderCellDef> Player </th>
-      <td mat-cell *matCellDef="let element">
-        {{element.username}}
-      </td>
-    </ng-container>
+      <!-- Player Column -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef> Player </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.username}}
+        </td>
+      </ng-container>
 
-    <!-- Score Column -->
-    <ng-container matColumnDef="score">
-      <th mat-header-cell *matHeaderCellDef> Score </th>
-      <td mat-cell *matCellDef="let element"> {{element.score}} </td>
-    </ng-container>
+      <!-- Score Column -->
+      <ng-container matColumnDef="score">
+        <th mat-header-cell *matHeaderCellDef> Score </th>
+        <td mat-cell *matCellDef="let element"> {{element.score}} </td>
+      </ng-container>
 
-    <!-- Date Column -->
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.date | date:'dd/MM/yy'}} </td>
-    </ng-container>
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.date | date:'dd/MM/yy'}} </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
   <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
 </div>

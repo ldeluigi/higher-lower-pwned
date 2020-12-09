@@ -84,3 +84,27 @@
     }
   }
 }
+
+@mixin tableFormatter {
+  .tableContainer {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    .mat-header-cell,
+    .mat-cell {
+      text-align: center;
+    }
+    .mat-header-cell:first-of-type,
+    .mat-cell:first-of-type,
+    .mat-footer-cell:first-of-type {
+      padding-left: 1%;
+    }
+    .mat-header-cell:last-of-type,
+    .mat-cell:last-of-type,
+    .mat-footer-cell:last-of-type {
+      padding-right: 1%;
+    }
+  }
+}
