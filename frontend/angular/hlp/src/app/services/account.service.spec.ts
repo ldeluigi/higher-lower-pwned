@@ -4,7 +4,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AccountService } from './account.service';
 
-
 describe('AccountService', () => {
   let service: AccountService;
 
