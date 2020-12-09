@@ -69,7 +69,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.accountService.userValue === null) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/account/login']);
     } else {
       this.select(this.selected);
     }
