@@ -10,6 +10,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { ModeSelectorComponent } from '../mode-selector/mode-selector.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 
 describe('LeadeboardComponent', () => {
   let component: LeadeboardComponent;
@@ -25,9 +27,11 @@ describe('LeadeboardComponent', () => {
         MatPaginatorModule,
         MatButtonToggleModule,
         MatProgressSpinnerModule,
-        MatIconModule
+        MatIconModule,
+        MatTableModule,
+        MatButtonModule,
       ],
-      declarations: [ 
+      declarations: [
         LeadeboardComponent,
         PeriodButtonsComponent,
         ModeSelectorComponent
