@@ -12,7 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { LoginComponent } from '../../account/login/login.component';
 
 describe('UserScoresComponent', () => {
   let component: UserScoresComponent;
@@ -21,7 +21,7 @@ describe('UserScoresComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([{ path: 'account/login', component: LoginComponent }]),
         HttpClientTestingModule,
         MatSnackBarModule,
         MatDialogModule,
