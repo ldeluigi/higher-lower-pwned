@@ -17,7 +17,7 @@ export class LogService {
   constructor(
     private snackBar: MatSnackBar,
     private router: Router
-    ) {
+  ) {
     if (environment.production) {
       this.isProduction = true;
     }
@@ -67,7 +67,7 @@ export class LogService {
 
   recommendALink(message: string, url: string, duration: number = 6000): void {
     message = message.charAt(0).toUpperCase() + message.slice(1);
-    this.snackBar.open(message, 'CLick here', { duration, panelClass: 'snackBarInfo' })
+    this.snackBar.open(message, 'CLick Here', { duration, panelClass: 'snackBarInfo' })
       .onAction()
       .pipe(take(1))
       .subscribe(() => {
