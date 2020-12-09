@@ -6,6 +6,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { UserScoresComponent } from './user-scores.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { PeriodButtonsComponent } from 'src/app/shared/period-buttons/period-buttons.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('UserScoresComponent', () => {
@@ -21,10 +27,15 @@ describe('UserScoresComponent', () => {
         MatDialogModule,
         MatMenuModule,
         MatCheckboxModule,
+        MatIconModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        BrowserAnimationsModule
       ],
-      declarations: [ UserScoresComponent ]
+      declarations: [UserScoresComponent, PeriodButtonsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
