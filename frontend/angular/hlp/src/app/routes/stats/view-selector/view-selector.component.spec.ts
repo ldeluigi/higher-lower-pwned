@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ModeSelectorComponent } from '../mode-selector/mode-selector.component';
 import { ViewSelectorComponent } from './view-selector.component';
 
 
@@ -12,7 +13,10 @@ describe('ViewSelectorComponent', () => {
       imports: [
         RouterTestingModule,
       ],
-      declarations: [ ViewSelectorComponent ]
+      declarations: [ 
+        ViewSelectorComponent,
+        ModeSelectorComponent
+      ]
     })
     .compileComponents();
   }));

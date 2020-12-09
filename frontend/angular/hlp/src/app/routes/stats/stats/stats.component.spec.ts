@@ -1,8 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PeriodButtonsComponent } from 'src/app/shared/period-buttons/period-buttons.component';
 import { StatsComponent } from './stats.component';
 
 
@@ -16,10 +20,15 @@ describe('StatsComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         MatSnackBarModule,
-        MatDialogModule
-
+        MatDialogModule,
+        MatTableModule,
+        MatButtonToggleModule,
+        MatIconModule
       ],
-      declarations: [ StatsComponent ]
+      declarations: [ 
+        StatsComponent,
+        PeriodButtonsComponent,
+      ]
     })
     .compileComponents();
   }));

@@ -3,8 +3,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LeadeboardComponent } from './leadeboard.component';
 import { MatSelectModule } from '@angular/material/select';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { PeriodButtonsComponent } from 'src/app/shared/period-buttons/period-buttons.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { ModeSelectorComponent } from '../mode-selector/mode-selector.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LeadeboardComponent', () => {
   let component: LeadeboardComponent;
@@ -13,12 +18,20 @@ describe('LeadeboardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        NoopAnimationsModule,
+        BrowserAnimationsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         MatSelectModule,
+        MatPaginatorModule,
+        MatButtonToggleModule,
+        MatProgressSpinnerModule,
+        MatIconModule
       ],
-      declarations: [ LeadeboardComponent ]
+      declarations: [ 
+        LeadeboardComponent,
+        PeriodButtonsComponent,
+        ModeSelectorComponent
+      ]
     })
     .compileComponents();
   }));
