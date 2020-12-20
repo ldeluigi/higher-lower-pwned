@@ -11,7 +11,8 @@ on:
       - "nginx/**"
   pull_request:
     branches: ["*"]
-  workflow_dispatch:
+  schedule:
+    - cron: 15 8 1 * *
 
 jobs:
   build:
@@ -51,7 +52,7 @@ jobs:
   deploy:
     name: Deploy Angular Frontend
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
     needs: [build]
     steps:
       - uses: actions/checkout@v2
