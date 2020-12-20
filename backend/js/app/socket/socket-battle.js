@@ -345,27 +345,22 @@ function onRepeat(io, socket, code) {
  * @param {MatchMaking} matchmaking
  * @param {string} socketRoomPrefix
  */
-async function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
-  await tryOrEmitError(
-    async () => {
-      if (matchmaking.isInRoom(socket.id)) {
-        matchmaking.leaveRoom(socket.id);
-      }
-      let isPlaying = battle.isPlaying(socket.id);
-      if (isPlaying) {
-        let myRoomName = myRooms(socket, socketRoomPrefix)[0];
-        let nextGuess = await battle.quitGame(socket.id);
-        if (nextGuess !== null) {
-          emitGuess(socket.to(myRoomName), nextGuess);
-        }
-      }
-      myRooms(socket, socketRoomPrefix).forEach((room) => {
-        socket.to(room).emit("player-leave", { id: socket.id });
-      });
-    },
-    socket,
-    code
-  );
+function onQuit(io, socket, code, matchmaking, socketRoomPrefix) {
+  if (matchmaking.isInRoom(socket.id)) {
+    matchmaking.leaveRoom(socket.id);
+  }
+  let isPlaying = battle.isPlaying(socket.id);
+  if (isPlaying) {
+    let myRoomName = myRooms(socket, socketRoomPrefix)[0];
+    let nextGuess = battle.quitGame(socket.id);
+    if (nextGuess !== null) {
+      emitGuess(socket.to(myRoomName), nextGuess);
+    }
+  }
+  myRooms(socket, socketRoomPrefix).forEach((room) => {
+    socket.to(room).emit("player-leave", { id: socket.id });
+  });
+
 }
 
 /**
@@ -419,10 +414,10 @@ module.exports = {
             onAnswer(io, socket, 300, answer, lobbyRoomPrefix);
           });
           socket.on("quit", async (_) => {
-            await onQuit(io, socket, 400, matchmaking, lobbyRoomPrefix);
+            onQuit(io, socket, 400, matchmaking, lobbyRoomPrefix);
           });
           socket.on("disconnecting", async (reason) => {
-            await onQuit(io, socket, 500, matchmaking, lobbyRoomPrefix);
+            onQuit(io, socket, 500, matchmaking, lobbyRoomPrefix);
           });
           // socket.on("disconnect", async (reason) => {
           //   await onQuit(io, socket, 500, matchmaking, lobbyRoomPrefix);

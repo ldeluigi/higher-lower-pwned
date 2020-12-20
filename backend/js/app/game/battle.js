@@ -88,7 +88,7 @@ module.exports = {
     return filteredGames.length > 0 ? Math.min(...filteredGames) : 0;
   },
   // -----------------------------------------------------------------------------------------------------------
-  quitGame: async function (gameID) {
+  quitGame: function (gameID) {
     try {
       let gameQuery = battles.findOneByGame(gameID);
       if (gameQuery === null) throw new Error("Game not found.");
@@ -121,7 +121,7 @@ module.exports = {
           throw new Error("Could not delete player from game data. (" + err.message + ")");
         }
       }
-      await scoreSchema.create([score]);
+      scoreSchema.create([score]).then(_ => { });
       return res;
     } catch (err) {
       throw new Error("Could not create score data. (" + err.message + ")");
