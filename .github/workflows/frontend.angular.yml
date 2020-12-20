@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Login to ACR
+      - name: Login to DCR
         uses: docker/login-action@v1
         with:
           registry: ${{ secrets.DOCKER_REGISTRY_NAME }}
@@ -67,8 +67,8 @@ jobs:
       - name: Build Production Images
         run: docker-compose build nginx
 
-      - name: Tag Images for ACR
+      - name: Tag Images for DCR
         run: docker tag hlp-nginx ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-nginx
 
-      - name: Upload Images to ACR
+      - name: Upload Images to DCR
         run: docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-nginx
