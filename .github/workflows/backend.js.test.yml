@@ -55,7 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Login to ACR
+      - name: Login to DCR
         uses: docker/login-action@v1
         with:
           registry: ${{ secrets.DOCKER_REGISTRY_NAME }}
@@ -67,12 +67,12 @@ jobs:
           docker-compose build mongo
           docker-compose build backend 
 
-      - name: Tag Images for ACR
+      - name: Tag Images for DCR
         run: |
           docker tag hlp-db ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-db
           docker tag hlp-backend ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-backend
 
-      - name: Upload Images to ACR
+      - name: Upload Images to DCR
         run: |
           docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-db
           docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-backend
