@@ -93,6 +93,10 @@ If you want to contribute to the main client made with Angular you can write you
 
 Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+#### Update dependencies
+
+In order to update the dependencies without accidentally changing the Angular major version, use `ng update @angular/cli@^10 @angular/core@^10`.
+
 #### Manual tests
 
 To test the angular client by hand usually you just need to run `ng serve`, but if you want to make the client available to every machine on your local network, making the angular host similar to a server, you need:
