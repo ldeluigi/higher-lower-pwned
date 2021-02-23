@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LeadeboardComponent } from './leadeboard.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -17,7 +17,7 @@ describe('LeadeboardComponent', () => {
   let component: LeadeboardComponent;
   let fixture: ComponentFixture<LeadeboardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
