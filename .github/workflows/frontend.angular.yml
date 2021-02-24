@@ -36,7 +36,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
@@ -48,7 +48,7 @@ jobs:
       - name: Test
         working-directory: frontend/angular/hlp
         run: npm run-script test-prod
-  
+
   deploy:
     name: Deploy Angular Frontend
     runs-on: ubuntu-latest
