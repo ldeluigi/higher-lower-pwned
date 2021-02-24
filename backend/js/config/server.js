@@ -1,17 +1,27 @@
 const express = require("express");
-const socket = require("socket.io");
+const socket = require("socket.io")
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const corsSettings = {
+  origin: function (origin, callback) {
+    callback(null /* No Errors */, true /* Allow */)
+  },
+  credentials: true
+};
+
+const socketIOSettings = {
+  allowEIO3: true,
+  cors: corsSettings
+};
 const app = express();
 const server = new (require("http").Server)(app);
 const socketArcadeApi = require("../app/socket/arcade.io");
 const socketDuelApi = require("../app/socket/duel.io");
 const socketRoyaleApi = require("../app/socket/royale.io");
-const io = socketRoyaleApi(socketDuelApi(socketArcadeApi(socket(server))));
+const io = socketRoyaleApi(socketDuelApi(socketArcadeApi(socket(server, socketIOSettings))));
 
 const route = require("../app/routes");
 
-app.use(cors());
+app.use(cors(corsSettings));
 
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
