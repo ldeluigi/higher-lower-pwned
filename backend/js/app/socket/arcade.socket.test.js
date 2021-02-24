@@ -1,37 +1,38 @@
 const app = require("../../config/server").express;
 const supertest = require("supertest");
 const request = supertest(app);
-const cio = require("socket.io-client");
+const ioClient = require("socket.io-client");
 const http = require("http");
-const sio = require("socket.io");
-const ioBack = require("./arcade.io");
+const ioBack = require("socket.io");
+const arcade = require("./arcade.io");
 const passwordsSetup = require("../game/passwords").setup;
+const ScoreSchema = require("../model/score.model").schema;
 
-var serverListen;
+var httpServer;
 var serverAddress;
 var ioServer;
 var socket;
 
 beforeAll(async (done) => {
+  jest.spyOn(ScoreSchema.prototype, 'save').mockImplementationOnce(() => Promise.resolve())
   await passwordsSetup();
-  serverListen = http.createServer().listen();
-  serverAddress = serverListen.address();
-  ioServer = ioBack(sio(serverListen));
-  done();
+  httpServer = http.createServer().listen();
+  serverAddress = httpServer.address();
+  ioServer = arcade(ioBack(httpServer));
+  setTimeout(done, 100)
 });
 
 
-afterAll((done) => {
-  ioServer.close();
-  serverListen.close(() => {
-    done();
-  });
+afterAll(async (done) => {
+  await ioServer.close();
+  await httpServer.close();
+  done();
 });
 
 
 beforeEach((done) => {
   // Setup
-  socket = cio.connect(
+  socket = ioClient.connect(
     `http://[${serverAddress.address}]:${serverAddress.port}/socket/arcade`,
     {
       "reconnection delay": 0,
@@ -46,17 +47,17 @@ beforeEach((done) => {
 });
 
 
-afterEach((done) => {
+afterEach(async (done) => {
   // Cleanup
   if (socket.connected) {
-    socket.disconnect();
+    await socket.close();
   }
   done();
 });
 
 
 describe("arcade socket.io API", function () {
-  it("should start a game without jwt", (done) => {
+  it("should start a game without jwt", async (done) => {
     socket.on("on-error", (msg) => {
       done.fail(new Error(msg.description));
     });
