@@ -11,7 +11,7 @@
     "test": "jest",
     "start": "node index.js",
     "start-dev": "nodemon index.js --legacy-watch",
-    "update-psw": "node backend/js/app/game/passwords/update_passwords.js"
+    "update-psw": "node app/game/passwords/update_passwords.js"
   },
   "author": "Luca Deluigi",
   "contributors": [
