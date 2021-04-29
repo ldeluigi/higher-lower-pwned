@@ -6,13 +6,18 @@ const https = require('https');
 const fsPromises = fs.promises;
 const csv = require('async-csv');
 
-const folder = "./";
+const folder = __dirname;
 const debug = false;
-const readBufferLimit = 180;
+const readBufferLimit = 10;
+const forceUpdate = true;
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 (async () => {
   try {
+    console.log("Started...");
     await main();
+    console.log("Done.");
   } catch (e) {
     console.error(e);
   }
@@ -21,7 +26,7 @@ const readBufferLimit = 180;
 async function main() {
   try {
     let files = await fsPromises.readdir(folder);
-    for await (const file of files) {
+    for (const file of files) {
       // Make one pass and make the file complete
       var filePath = path.join(folder, file);
       if (filePath.endsWith(".txt")) {
@@ -41,7 +46,7 @@ async function startUpdating(f) {
   }
   let asCSV = f.replace(new RegExp("\.txt$"), ".csv");
   let skipMap = new Map();
-  if (true == fs.existsSync(asCSV)) {
+  if (!forceUpdate && true == fs.existsSync(asCSV)) {
     let csvRes = await csv.parse(await fsPromises.readFile(asCSV));
     csvRes.shift();
     skipMap = csvRes.reduce((map, obj) => {
@@ -82,6 +87,7 @@ async function startUpdating(f) {
           if (debug)
             console.log(result);
         }
+        delay(100);
         readBuffer = [];
         readCount = 0;
       }
@@ -106,7 +112,8 @@ function downloadPasswordData(password) {
       hostname: 'api.pwnedpasswords.com',
       port: 443,
       path: '/range/' + shaBeginning,
-      method: 'GET'
+      method: 'GET',
+      timeout: 60 * 1000
     };
     const req = https.request(options, res => {
       let str = '';
