@@ -8,9 +8,9 @@ module.exports = {
   createJWT: async function (userID, username) {
     let jwtID = pwd.genRandomString(32);
     let jwtContent = {
-      id: userID,
+      sub: userID,
       username: username,
-      refresh: jwtID
+      jti: jwtID
     };
     let token = jwt.sign(jwtContent, config.jwtSecret, { expiresIn: "10m", algorithm: "HS256" });
     let refresh = pwd.genRandomString(64);
