@@ -11,7 +11,8 @@ on:
       - "frontend/angular/**"
       - "nginx/**"
   pull_request:
-    branches: ["*"]
+    branches:
+      - "**"
   schedule:
     - cron: 15 8 1 * *
 
