@@ -5,7 +5,8 @@ name: Angular CI
 
 on:
   push:
-    branches: ["*"]
+    branches:
+      - "**"
     paths:
       - "frontend/angular/**"
       - "nginx/**"
