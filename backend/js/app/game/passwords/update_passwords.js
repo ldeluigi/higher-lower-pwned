@@ -26,11 +26,12 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function main() {
   const multibar = new cliProgress.MultiBar({
-    format: '{bar} | {filename} | {percentage}% | Duration: {duration_formatted} | ETA: {eta_formatted}',
+    format: '{bar} | {filename} | {percentage}% | Duration: {duration_formatted} | ETA: {eta_formatted} | {value}/{total}',
     etaAsynchronousUpdate: true,
     etaBuffer: 10000,
-    fps: 1,
-    notTTYSchedule: 10000
+    notTTYSchedule: 60000,
+    noTTYOutput: true,
+    fps: 1
   }, cliProgress.Presets.shades_classic);
   try {
     let files = (await fsPromises.readdir(folder)).filter(f => f.endsWith(".txt"));
