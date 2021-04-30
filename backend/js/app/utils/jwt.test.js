@@ -15,7 +15,8 @@ describe("createJWT", function () {
     expect(result).toHaveProperty("refresh");
     let token = result.token;
     let tokenPayload = jwt.verify(token, config.jwtSecret);
-    expect(tokenPayload.id).toBe("testid");
+    expect(tokenPayload).toHaveProperty("jti");
+    expect(tokenPayload.sub).toBe("testid");
     expect(tokenPayload.username).toBe("testusername");
     mock.mockRestore();
     done();

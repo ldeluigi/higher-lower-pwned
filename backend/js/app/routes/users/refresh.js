@@ -36,11 +36,11 @@ router.post(
         });
       }
       let tokenPayload = jwtTools.checkJWT(token, true);
-      if (tokenPayload.refresh != tokenQuery.jwtRef) {
+      if (tokenPayload.jti != tokenQuery.jwtRef) {
         return res.status(400).json({ errors: ["Invalid token references."] });
       }
       await tokenSchema.deleteOne({ _id: tokenQuery._id });
-      let userQuery = await userSchema.findById(tokenPayload.id);
+      let userQuery = await userSchema.findById(tokenPayload.sub);
       if (userQuery === null) {
         return res.status(400).json({ errors: ["User invalid. Token generation aborted."] });
       }
