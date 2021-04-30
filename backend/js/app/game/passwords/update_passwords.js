@@ -5,42 +5,59 @@ const crypto = require('crypto');
 const https = require('https');
 const fsPromises = fs.promises;
 const csv = require('async-csv');
+const cliProgress = require('cli-progress');
 
 const folder = __dirname;
 const debug = false;
-const readBufferLimit = 10;
+const readBufferLimit = 100;
 const forceUpdate = true;
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 (async () => {
   try {
-    console.log("Started...", new Date());
+    console.log("Started...");
     await main();
-    console.log("Done.", new Date());
+    console.log("Done.");
   } catch (e) {
     console.error(e);
   }
 })();
 
 async function main() {
+  const multibar = new cliProgress.MultiBar({
+    format: '{bar} | {filename} | {percentage}% | Duration: {duration_formatted} | ETA: {eta_formatted}',
+    etaAsynchronousUpdate: true,
+    etaBuffer: 10000,
+    fps: 1,
+    notTTYSchedule: 10000
+  }, cliProgress.Presets.shades_classic);
   try {
-    let files = await fsPromises.readdir(folder);
-    for (const file of files) {
+    let files = (await fsPromises.readdir(folder)).filter(f => f.endsWith(".txt"));
+    let bars = files.map(f => multibar.create(fs.readFileSync(path.join(folder, f)).length, 0, { filename: f }));
+    for (const [i, file] of files.entries()) {
+      let bar = bars[i];
       // Make one pass and make the file complete
       var filePath = path.join(folder, file);
-      if (filePath.endsWith(".txt")) {
-        await startUpdating(filePath);
+      try {
+        await startUpdating(filePath, n => bar.increment(n));
+      } catch (err) {
+        bar.stop()
+        console.error(err);
+        break;
       }
+      bar.stop()
     }
+    multibar.stop();
   } catch (err) {
+    multibar.stop();
     console.error("Could not list the directory.", err);
     throw err;
   }
 }
 
 
-async function startUpdating(f) {
+async function startUpdating(f, parseCalback = n => {}) {
   if (!f.endsWith(".txt")) {
     throw new Error("Provided non txt file!");
   }
@@ -92,6 +109,7 @@ async function startUpdating(f) {
         readCount = 0;
       }
     }
+    parseCalback(line.length + 1);
   }
   for await (const result of readBuffer.map(s => downloadPasswordData(s))) {
     await fsPromises.appendFile(asCSV,
