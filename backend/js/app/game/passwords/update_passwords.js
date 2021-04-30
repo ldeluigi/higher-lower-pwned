@@ -15,9 +15,9 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 (async () => {
   try {
-    console.log("Started...");
+    console.log("Started...", new Date());
     await main();
-    console.log("Done.");
+    console.log("Done.", new Date());
   } catch (e) {
     console.error(e);
   }
@@ -103,7 +103,7 @@ async function startUpdating(f) {
   }
 }
 
-function downloadPasswordData(password) {
+function downloadPasswordData(password, retry = 3) {
   return new Promise((resolve, reject) => {
     let pSHA1 = sha1(password).toUpperCase();
     let shaBeginning = pSHA1.substr(0, 5);
@@ -150,6 +150,11 @@ function downloadPasswordData(password) {
       reject(error);
     });
     req.end();
+  }).catch(reason => {
+    if (retry > 0) {
+      return downloadPasswordData(password, retry - 1);
+    }
+    throw new Error(password + ':::' + reason);
   });
 }
 
