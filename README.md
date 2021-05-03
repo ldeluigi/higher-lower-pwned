@@ -66,7 +66,7 @@ Currently supported mail services:
 
 First you need to install server dependencies with `npm install`, run inside the server folder `backend/js`.  
 To develop a server, run the docker compose file for **Development mode** with:  
-`docker-compose -f docker-compose.dev.yml up -d` from the root folder.
+`docker compose -f docker-compose.dev.yml up -d` from the root folder.
 Docker should create these containers:
 
 - `mongo` that manages the database
@@ -118,7 +118,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Production mode
 
-To run the entire project in production mode just type `docker-compose up -d` in the root folder of the repository. This is a **simulation** of a production environment on your local machine.
+To run the entire project in production mode just type `docker compose up -d` in the root folder of the repository. This is a **simulation** of a production environment on your local machine.
 On Windows, MongoDB `/data/db` folder can't be mounted on a volume shared with the host machine. To achieve persistency of data, either user docker native modules or an external database.
 In order to use an external MongoDB database configure it properly (see the configuration file of the project) and use the `docker-compose.extdb.yml` compose file, after having defined the
 environment variable `MONGO_DB_URL`.
@@ -127,6 +127,6 @@ environment variable `MONGO_DB_URL`.
 
 ## Stopping containers
 
-To properly stop running containers use `docker-compose [-f ...] down`.
-To stop and **clean volumes** use `docker-compose [-f ...] down -v`.  
+To properly stop running containers use `docker compose [-f ...] down`.
+To stop and **clean volumes** use `docker compose [-f ...] down -v`.  
 **Note:** _Volumes left inside docker storage could fill up the space on the host machine!_
