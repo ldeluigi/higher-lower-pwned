@@ -25,7 +25,7 @@ module.exports = {
         if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
         }
-        if (req.auth.id != req.params.userid) {
+        if (req.auth.sub != req.params.userid) {
           return res.status(403).json({ errors: ["User not authorized."] });
         }
         try {

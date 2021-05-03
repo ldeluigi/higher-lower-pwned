@@ -5,43 +5,66 @@ const crypto = require('crypto');
 const https = require('https');
 const fsPromises = fs.promises;
 const csv = require('async-csv');
+const cliProgress = require('cli-progress');
 
-const folder = "./";
+const folder = __dirname;
 const debug = false;
-const readBufferLimit = 180;
+const readBufferLimit = 100;
+const forceUpdate = true;
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 (async () => {
   try {
+    console.log("Started...");
     await main();
+    console.log("Done.");
   } catch (e) {
     console.error(e);
   }
 })();
 
 async function main() {
+  const multibar = new cliProgress.MultiBar({
+    format: '{bar} | {filename} | {percentage}% | Duration: {duration_formatted} | ETA: {eta_formatted} | {value}/{total}',
+    etaAsynchronousUpdate: true,
+    etaBuffer: 10000,
+    notTTYSchedule: 60000,
+    noTTYOutput: true,
+    fps: 1
+  }, cliProgress.Presets.shades_classic);
   try {
-    let files = await fsPromises.readdir(folder);
-    for await (const file of files) {
+    let files = (await fsPromises.readdir(folder)).filter(f => f.endsWith(".txt"));
+    let bars = files.map(f => multibar.create(fs.readFileSync(path.join(folder, f)).length, 0, { filename: f }));
+    for (const [i, file] of files.entries()) {
+      let bar = bars[i];
       // Make one pass and make the file complete
       var filePath = path.join(folder, file);
-      if (filePath.endsWith(".txt")) {
-        await startUpdating(filePath);
+      try {
+        await startUpdating(filePath, n => bar.increment(n));
+      } catch (err) {
+        bar.stop()
+        console.error(err);
+        break;
       }
+      bar.stop()
     }
+    multibar.stop();
   } catch (err) {
+    multibar.stop();
     console.error("Could not list the directory.", err);
     throw err;
   }
 }
 
 
-async function startUpdating(f) {
+async function startUpdating(f, parseCalback = n => {}) {
   if (!f.endsWith(".txt")) {
     throw new Error("Provided non txt file!");
   }
   let asCSV = f.replace(new RegExp("\.txt$"), ".csv");
   let skipMap = new Map();
-  if (true == fs.existsSync(asCSV)) {
+  if (!forceUpdate && true == fs.existsSync(asCSV)) {
     let csvRes = await csv.parse(await fsPromises.readFile(asCSV));
     csvRes.shift();
     skipMap = csvRes.reduce((map, obj) => {
@@ -82,10 +105,12 @@ async function startUpdating(f) {
           if (debug)
             console.log(result);
         }
+        delay(100);
         readBuffer = [];
         readCount = 0;
       }
     }
+    parseCalback(line.length + 1);
   }
   for await (const result of readBuffer.map(s => downloadPasswordData(s))) {
     await fsPromises.appendFile(asCSV,
@@ -97,7 +122,7 @@ async function startUpdating(f) {
   }
 }
 
-function downloadPasswordData(password) {
+function downloadPasswordData(password, retry = 3) {
   return new Promise((resolve, reject) => {
     let pSHA1 = sha1(password).toUpperCase();
     let shaBeginning = pSHA1.substr(0, 5);
@@ -106,7 +131,8 @@ function downloadPasswordData(password) {
       hostname: 'api.pwnedpasswords.com',
       port: 443,
       path: '/range/' + shaBeginning,
-      method: 'GET'
+      method: 'GET',
+      timeout: 60 * 1000
     };
     const req = https.request(options, res => {
       let str = '';
@@ -143,6 +169,11 @@ function downloadPasswordData(password) {
       reject(error);
     });
     req.end();
+  }).catch(reason => {
+    if (retry > 0) {
+      return downloadPasswordData(password, retry - 1);
+    }
+    throw new Error(password + ':::' + reason);
   });
 }
 
