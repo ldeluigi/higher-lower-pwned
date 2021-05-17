@@ -35,7 +35,7 @@
     "cli-progress": "^3.9.0",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
-    "socket.io-client": "^4.0.1",
+    "socket.io-client": "^4.1.1",
     "supertest": "^6.1.3"
   }
 }
