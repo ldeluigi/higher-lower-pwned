@@ -233,7 +233,7 @@ function authenticationMiddleware(socket, next) {
   if (socket.handshake.query && socket.handshake.query.token) {
     try {
       let userData = jwtTools.checkJWT(socket.handshake.query.token);
-      socket.userData.id = userData.id;
+      socket.userData.id = userData.sub;
       return next();
     } catch (err) {
       return next(new Error("Authentication failed: " + err.message));
