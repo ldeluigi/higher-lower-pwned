@@ -11,13 +11,15 @@ updates:
       interval: "weekly"
     commit-message:
       # Prefix all commit messages with "npm"
-      prefix: "npm"
+      prefix: "npm-backend"
     target-branch: "develop"
+    versioning-strategy: widen # or increase-if-necessary
   - package-ecosystem: "npm"
     directory: "/frontend/angular/hlp/"
     schedule:
       interval: "weekly"
     commit-message:
       # Prefix all commit messages with "npm"
-      prefix: "npm"
+      prefix: "npm-frontend"
     target-branch: "develop"
+    versioning-strategy: widen # or increase-if-necessary
