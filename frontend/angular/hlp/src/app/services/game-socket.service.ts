@@ -130,7 +130,7 @@ export class GameSocketService {
   }
 
   get socketId(): string {
-    return this.socket?.ioSocket.io.engine.id;
+    return this.socket?.ioSocket.id;
   }
 
   private newSocket(gameMode: string, token: string | undefined): Socket {
