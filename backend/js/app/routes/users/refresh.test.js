@@ -61,9 +61,9 @@ describe("refresh API", function () {
     expect(response.body.data).toHaveProperty("refresh");
 
     let tokenBody = jwtTools.checkJWT(response.body.data.token);
-    expect(tokenBody).toHaveProperty("id", "testid");
+    expect(tokenBody).toHaveProperty("sub", "testid");
     expect(tokenBody).toHaveProperty("username", "testusername");
-    expect(tokenBody).toHaveProperty("refresh");
+    expect(tokenBody).toHaveProperty("jti");
 
     mock.mockRestore();
     mock2.mockRestore();

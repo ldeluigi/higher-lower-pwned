@@ -6,7 +6,9 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { LogLevel } from 'src/app/model/logLevel';
 import { AccountService } from 'src/app/services/account.service';
+import { LogService } from 'src/app/services/log.service';
 import { UserRegistration } from '../../../model/UserRegistration';
 
 @Component({
@@ -28,6 +30,7 @@ export class RegistrationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private logService: LogService,
     private accountService: AccountService,
     private formBuilder: FormBuilder
   ) {
@@ -36,7 +39,7 @@ export class RegistrationComponent implements OnInit {
         Validators.required,
         Validators.minLength(this.minUsernameLength),
         Validators.maxLength(this.maxUsernameLength),
-        Validators.pattern(RegExp(/^\w+$/))
+        Validators.pattern(RegExp(/^[a-zA-Z0-9]+$/))
       ])],
       password: ['', Validators.compose([
         Validators.required,
@@ -61,9 +64,8 @@ export class RegistrationComponent implements OnInit {
     return this.form.controls;
   }
 
-
-
   onSubmit(): void {
+    this.logService.log('Call submit', LogLevel.Info);
     this.usernameError = '';
     this.passwordError = '';
     this.emailError = '';
@@ -72,7 +74,7 @@ export class RegistrationComponent implements OnInit {
         if (this.f.username.errors !== null) {
           if (this.f.username.errors.required) {
             this.usernameError = 'username required';
-          } else if (this.f.username.errors.minLength !== null || this.f.username.errors.maxLength !== null) {
+          } else if (this.f.username.errors.minLength !== undefined || this.f.username.errors.maxLength !== undefined) {
             this.usernameError = 'username must be ' + this.minUsernameLength + '-' + this.maxUsernameLength + ' chars';
           } else {
             this.usernameError = 'username must be alpha-numeric';
@@ -117,13 +119,20 @@ export class RegistrationComponent implements OnInit {
       .register(user)
       .pipe(first())
       .subscribe(
-        (data) => {
+        (_) => {
+          this.logService.messageSnackBar(user.username + ' registered: it\'s time to login and play.');
           this.router.navigate([this.returnUrl]);
         },
         (error) => {
-          const inputError = error.map((elem: { param: string; }) => elem.param).join(' ,');
-          if (inputError.length > 0) {
-            this.usernameError = 'Invalid ' + inputError + '.';
+          this.logService.log('registration error:', LogLevel.Debug, error);
+          if (error.constructor.name === 'Array') {
+            if (typeof error[0] === 'object' && error[0] !== null) {
+              error = error.map((obj: { msg: string, param: string; }) => `${obj.msg} in ${obj.param}`);
+            }
+            const inputError = error.join(' ,');
+            if (inputError.length > 0) {
+              this.logService.errorSnackBar(inputError);
+            }
           }
         }
       );

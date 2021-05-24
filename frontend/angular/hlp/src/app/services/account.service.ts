@@ -15,7 +15,7 @@ import { LogService } from './log.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService implements OnDestroy {
+export class AccountService {
 
   private userSubject: BehaviorSubject<User | null>;
   private userLocalStorage = 'user';
@@ -30,14 +30,22 @@ export class AccountService implements OnDestroy {
     this.userSubject = new BehaviorSubject<User | null>(this.extractUser());
     this.user = this.userSubject.asObservable();
   }
-  ngOnDestroy(): void {
-    if (this.userValue !== null) {
-      this.logout();
-    }
-  }
 
   public get userValue(): User | null {
+    const eu = this.extractUser();
+    if (eu !== this.userSubject.value && eu !== null) {
+      this.userSubject.next(eu);
+    }
     return this.userSubject.value;
+  }
+
+  private saveUser(user: User | null): void {
+    if (user === null) {
+      localStorage.removeItem(this.userLocalStorage);
+    } else {
+      localStorage.setItem(this.userLocalStorage, JSON.stringify(user));
+    }
+    this.userSubject.next(user);
   }
 
   private extractUser(): User | null {
@@ -52,8 +60,7 @@ export class AccountService implements OnDestroy {
     // console.log({ username, password });
     return this.http.post<Response<User | null>>(`${this.apiURL.restApiUrl}/users/login`, { username, password })
       .pipe(map(u => {
-        localStorage.setItem(this.userLocalStorage, JSON.stringify(u.data));
-        this.userSubject.next(u.data);
+        this.saveUser(u.data);
         this.logService.messageSnackBar('Logged in properly');
         return u.data;
       }));
@@ -61,8 +68,7 @@ export class AccountService implements OnDestroy {
 
   logout(message?: string): void {
     // remove user from local storage and set current user to null
-    localStorage.removeItem(this.userLocalStorage);
-    this.userSubject.next(null);
+    this.saveUser(null);
     if (message) { // User is logout for some unkown reason
       this.logService.infoSnackBar(message);
     } else { // User ask for logout
@@ -112,7 +118,7 @@ export class AccountService implements OnDestroy {
       .pipe(map(a => {
         user.token = a.data.token;
         user.refresh = a.data.refresh;
-        this.userSubject.next(user);
+        this.saveUser(user);
         return a.data;
       }));
   }
@@ -125,8 +131,7 @@ export class AccountService implements OnDestroy {
     }
     return this.http.delete<Response<User>>(`${this.apiURL.restApiUrl}/users/${user.id}`)
       .pipe(map(a => {
-        localStorage.removeItem(this.userLocalStorage);
-        this.userSubject.next(null);
+        this.saveUser(null);
         return a.data;
       }));
   }

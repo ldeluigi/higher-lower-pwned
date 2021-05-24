@@ -36,8 +36,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   openDialog(paramName: string): void {
-    // TODO refactor this routine, maybe a better form
-    const passwordUpdate: boolean = paramName === 'password';
+    const passwordUpdate: boolean = this.isPasswordUpdate(paramName);
     const options: DialogData = {
       passwordUpdate,
       currentEmail: this.userInfo.email
@@ -48,6 +47,10 @@ export class UserInfoComponent implements OnInit {
       this.updateUserInfo();
     });
 
+  }
+
+  private isPasswordUpdate(paramName: string): boolean {
+    return paramName === 'password';
   }
 
   delete(): void {

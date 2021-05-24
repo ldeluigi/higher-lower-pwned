@@ -25,6 +25,7 @@ export const GRAPH_EMPTY_PERIODS = '...';
 export class UserStatsComponent implements OnInit, OnDestroy {
   expanded = true;
   showingChart = true;
+  isLoading = true;
 
   lineChartType: ChartType = 'bar';
   lineChartData: Array<object> = [];
@@ -152,12 +153,12 @@ export class UserStatsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub = this.usersTools.data.subscribe((data) => {
+      this.isLoading = false;
       const array = data?.history || [];
-      // console.log('array', array);
       this.dataSource.data = array;
       const scores: HistoryItem[] = [];
       const label: Array<string> = [];
-      if (array.length > 0) {
+      if (array.length > 0 && array[0].periodNumber !== undefined) {
         const start = this.periodBegin();
         const periods = periodIterator(
           start.period,
@@ -234,6 +235,8 @@ export class UserStatsComponent implements OnInit, OnDestroy {
                   this.datePipe.transform(startDate, Const.FORMAT_YEAR) as string
                 );
                 break;
+              default:
+                throw new Error('Illegal period');
             }
           } else {
             if (periods[periods.length - 1] === e) {
@@ -244,6 +247,9 @@ export class UserStatsComponent implements OnInit, OnDestroy {
           // save lastElement
           lastElement = element;
         });
+      } else if (array.length > 0 && array[0].periodNumber === undefined){
+        scores.push(array[0]);
+        label.push('all the time');
       }
       // console.log('scores:', scores, 'label:', label);
       let lastIndex = scores.length;
@@ -282,6 +288,7 @@ export class UserStatsComponent implements OnInit, OnDestroy {
   }
 
   updateUserStats(period?: string): void {
+    this.isLoading = true;
     if (period) {
       this.actualPeriod = period;
     }

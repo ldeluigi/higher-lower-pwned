@@ -8,6 +8,9 @@ import { RequestScore } from 'src/app/model/users/scores/requestScore';
 import { CoreUserScores, UserScores } from '../../../model/users/scores/modeScore';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ARCADE, DUEL, ROYALE } from '../../game/model/gameModes';
+import { LogService } from 'src/app/services/log.service';
+import { LogLevel } from 'src/app/model/logLevel';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-scores',
@@ -34,6 +37,7 @@ export class UserScoresComponent implements OnInit, OnDestroy {
     'duration',
   ];
 
+  isLoading = true;
   displayedColumns = this.defaultColumns;
   dataSource = new MatTableDataSource<CoreUserScores>([]);
   total = 0;
@@ -45,15 +49,16 @@ export class UserScoresComponent implements OnInit, OnDestroy {
   pageSize: number = this.pageSizeOptions[0];
   currentPage = 0;
   sort = false;
-  private filter: RequestScore = { // todo
+  private filter: RequestScore = {
     limit: this.pageSize,
     page: this.currentPage,
-    sortbyDate: this.sort // todo
+    sortbyDate: this.sort
   };
 
   constructor(
     private router: Router,
     private accountService: AccountService,
+    private logService: LogService,
     private scoreService: UserScoresService
   ) {
   }
@@ -64,13 +69,14 @@ export class UserScoresComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.accountService.userValue === null) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/account/login']);
     } else {
       this.select(this.selected);
     }
   }
 
   select(mode: string): void {
+    this.isLoading = true;
     const tmp = this.selected;
     if (this.selected !== mode) {
       this.filter.page = 0;
@@ -135,13 +141,14 @@ export class UserScoresComponent implements OnInit, OnDestroy {
   }
 
   private updateData(obs: Observable<UserScores>): void {
-    this.sub = obs.subscribe((data) => {
-      console.log(data);
+    this.sub = obs.pipe(first()).subscribe((data) => {
+      this.logService.log('meta of user-scores: ', LogLevel.Debug, false, data.meta);
       this.dataSource.data = data.data;
       this.total = data.meta.total;
       this.pageSize = data.meta.size;
       this.pageSizeOptions = [10, 20, 50];
       this.currentPage = Number(data.meta.page);
+      this.isLoading = false;
     });
   }
 

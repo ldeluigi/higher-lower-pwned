@@ -5,8 +5,11 @@ import { Observable } from 'rxjs/internal/Observable';
 import { first } from 'rxjs/operators';
 import { ARCADE, DUEL, ROYALE } from '../routes/game/model/gameModes';
 import { errorToString, OnError } from '../routes/game/model/error';
-import { GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess, UpdatePlayersInfo, GameEnd } from '../routes/game/model/gameDTO';
-import { PlayerIdName, PlayerJoin } from '../routes/game/model/player-join';
+import {
+  GameData, Guess, MultiplayerGameUpdate, NextMultiplayerGuess, NextGuess,
+  UpdatePlayersInfo, GameEndDTO, GameEnd, DRAW, LOSE, WON
+} from '../routes/game/model/gameDTO';
+import { PlayerIdName, PlayerJoin, PlayerLeave } from '../routes/game/model/player-join';
 import { SocketArcade } from '../routes/game/SocketArcade';
 import { SocketDuel } from '../routes/game/SocketDuel';
 import { SocketRoyale } from '../routes/game/SocketRoyale';
@@ -15,6 +18,7 @@ import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
 import { LogLevel } from '../model/logLevel';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +61,10 @@ export class GameSocketService {
   /// Emit errors from the server
   errorObservable!: Observable<OnError>;
 
+  private playerLeaveSubject: Subject<PlayerLeave>;
+  /// Emit the id of any player that leave a game (duel or royale)
+  playerLeaveObservable: Observable<PlayerLeave>;
+
   private socket: Socket | undefined;
 
   private connectionTry = 0;
@@ -68,7 +76,8 @@ export class GameSocketService {
   constructor(
     private accountService: AccountService,
     private apiURL: ApiURLService,
-    private logService: LogService
+    private logService: LogService,
+    private router: Router,
   ) {
     this.playersSubject = new Subject<PlayerIdName>();
     this.playerObservable = this.playersSubject.asObservable();
@@ -96,6 +105,9 @@ export class GameSocketService {
 
     this.gameEndSubject = new Subject<GameEnd>();
     this.gameEndObservable = this.gameEndSubject.asObservable();
+
+    this.playerLeaveSubject = new Subject<PlayerLeave>();
+    this.playerLeaveObservable = this.playerLeaveSubject.asObservable();
   }
 
   private setUpSocketObservable(socket: Socket): void {
@@ -104,6 +116,7 @@ export class GameSocketService {
     socket.on('waiting-opponents', this.opponents);
     socket.on('player-join', this.playerJoin);
     socket.on('game-end', this.gameEnd);
+    socket.on('player-leave', this.playerLeave);
     socket.on('error', this.error);
   }
 
@@ -167,21 +180,21 @@ export class GameSocketService {
         socket.ioSocket.io.opts.query = {};
       }
       socket.fromOneTimeEvent('disconnect')
-      .then(_ => {
-        this.logService.log('Socket disconected.', LogLevel.Info);
-        this.connectionOpen = false;
-      });
+        .then(_ => {
+          this.logService.log('Socket disconected.', LogLevel.Info);
+          this.connectionOpen = false;
+        });
       socket.connect();
       socket.fromOneTimeEvent('connect')
-      .then(() => {
-        if (this.stopConnection) {
-          this.disconnect();
-          return;
-        }
-        this.logService.log('Socket connect.', LogLevel.Info);
-        this.connectionSubject?.next(true);
-        this.connectionSubject = undefined;
-      });
+        .then(() => {
+          if (this.stopConnection) {
+            this.disconnect();
+            return;
+          }
+          this.logService.log('Socket connect.', LogLevel.Info);
+          this.connectionSubject?.next(true);
+          this.connectionSubject = undefined;
+        });
       this.connectionOpen = true;
     }
     return this.connectionSubject.asObservable();
@@ -191,7 +204,7 @@ export class GameSocketService {
    * New guess 'guess'
    */
   private guess = (guess: NextGuess | GameData) => {
-    this.logService.log('Socket guess ' + guess, LogLevel.Info);
+    this.logService.log('Socket guess ', LogLevel.Info, false, guess);
     const guessAsNextGuess = guess as NextGuess;  // contiene solo il guess
     const guessAsGameData = guess as GameData;    // contiene una lista di valori
     if (guessAsNextGuess.password1) {                   // Case arcade
@@ -215,7 +228,7 @@ export class GameSocketService {
           score: cgd.score
         });
       });
-      this.gameDataSubject.next({users: playersInfo });     // update players status
+      this.gameDataSubject.next({ users: playersInfo });     // update players status
       const myId = extractId(guessAsGameData.ids, this.socketId);
       if (myId) {
         const myData = getDataFromId(this.socketId, guessAsGameData);
@@ -226,7 +239,16 @@ export class GameSocketService {
           this.timerSubject.next(myData.timeout);             // update timer
         }
         if (gameData.every(d => d.lost === true)) {           // every one have lost
-          this.gameEndSubject.next(myData as GameEnd);
+          const ges = gameData.map(e => e as GameEndDTO);
+          const myDataEndGame = myData as GameEnd;
+          this.logService.log('GameEndDTO: ', LogLevel.Debug, false, ges);
+          if (ges.filter(e => e.won).length > 1) {
+            myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? DRAW : LOSE;
+          } else {
+            myDataEndGame.gameEndStatus = (myData as GameEndDTO).won ? WON : LOSE;
+          }
+          this.gameEndSubject.next(myDataEndGame);
+          this.logService.log('End game message sent!', LogLevel.Debug, false, myData as GameEndDTO);
         } else {
           this.nextBattleGuessSubject.next(myData);                 // update next guess
         }
@@ -236,17 +258,22 @@ export class GameSocketService {
 
   /**
    * Error 'on-error'
-   * // TODO gestire l'errore
    */
   private onError = (error: OnError) => {
     this.logService.log(errorToString(error), LogLevel.Error);
     this.logService.errorSnackBar(error);
+    this.router.navigate(['/home']);
   }
 
   /**
    * Player-join 'player-join'
    */
   private playerJoin = (data: PlayerJoin) => this.playersSubject.next(data);
+
+  /**
+   *
+   */
+  private playerLeave = (data: PlayerLeave) => this.playerLeaveSubject.next(data);
 
   /**
    * Opponents: list with all players 'opponents'
@@ -257,6 +284,7 @@ export class GameSocketService {
    * GameEnd: 'game-end'
    */
   private gameEnd = (data: GameEnd) => {
+    this.logService.log('Recive game end message from socket', LogLevel.Debug);
     this.gameEndSubject.next(data);
   }
 
@@ -266,7 +294,7 @@ export class GameSocketService {
   private error = (e: string) => {
     this.logService.log('Socket error ' + e, LogLevel.Error);
     if (this.connectionTry > 2) {
-      this.accountService.logout('Can\'t connecto to the server.'); // TODO cambiare con un error service
+      this.accountService.logout('Can\'t connecto to the server.');
       return;
     }
     if (this.accountService.userValue !== null && e.indexOf('jwt') >= 0) {
@@ -278,7 +306,7 @@ export class GameSocketService {
             this.socket = this.newSocket(this.gameMode);
             this.setUpSocketObservable(this.socket);
             this.connect(this.socket);
-          } else {}
+          } else { }
         },
         e2 => this.logService.errorSnackBar(`Can't connect with your account, please login again and retry. ` + e2)
       );

@@ -1,5 +1,5 @@
 <div class="words">
-  <div class="top not-moving" [ngClass]="topCardClass" [@cardAnimation]="element1.status"
+  <div [attr.aria-label]="'password 1 ' + element1.word" tabindex="2" class="top not-moving" [ngClass]="topCardClass" [@cardAnimation]="element1.status"
     (@cardAnimation.done)="onAnimationListDone($event)" (click)="answer(1)">
     <div id="innerDiv"></div>
     <div>
@@ -14,7 +14,7 @@
     <mat-spinner *ngIf="isWaitingOpponents" class="center"></mat-spinner>
   </div>
 
-  <div class="bot" [ngClass]="botCardClass" [@cardAnimation]="element2.status"
+  <div [attr.aria-label]="'password 2 ' + element2.word" tabindex="3" class="bot" [ngClass]="botCardClass" [@cardAnimation]="element2.status"
     (@cardAnimation.start)="onAnimationStart($event)" (@cardAnimation.done)="onAnimationListDone($event)"
     (click)="answer(2)">
     <div id="innerDiv"></div>

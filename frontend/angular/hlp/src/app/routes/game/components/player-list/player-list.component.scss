@@ -8,7 +8,7 @@ $div-player-backgroud-color: rgba(0, 0, 255, 0.3);
 
 .container {
   position: absolute;
-  display: flex;
+  // display: flex;
   height: 15vh;
   overflow: auto;
   bottom: 1vh;
@@ -30,44 +30,24 @@ $div-player-backgroud-color: rgba(0, 0, 255, 0.3);
   vertical-align: middle;
 }
 
-.positionList {
-  text-decoration: none;
-  width: 10%;
+.list {
+  margin: $default-margin;
+  display: flex;
+  width: 96%;
   .position {
-    text-align: right;
+    width: 15%;
+    font-size: min(4vw, 3vh);
   }
-  .in-game {
-    color: $default-text-color;
+  .name {
+    width: 70%;
+    font-size: min(4vw, 3vh);
   }
-
+  .score {
+    width: 15%;
+    font-size: min(4vw, 3vh);
+  }
   .lost {
-    color: black;
-  }
-}
-
-.nameList {
-  width: 80%;
-  text-align: center;
-
-  .in-game {
-    color: $default-text-color;
-  }
-
-  .lost {
-    color: black;
-  }
-}
-
-.scoreList {
-  width: 10%;
-  text-align: left;
-
-  .in-game {
-    color: $default-text-color;
-  }
-
-  .lost {
-    color: black;
+    color: $losing-player-color;
   }
 }
 
@@ -75,19 +55,19 @@ $div-player-backgroud-color: rgba(0, 0, 255, 0.3);
   transition: transform 1s;
 }
 
-.player {
-  color: aqua;
-}
+// .player {
+//   color: aqua;
+// }
 
 @include tablet {
   .container {
-    width: 75%;
+    width: 85%;
   }
 }
 
 @include desktop {
   .container {
-    width: 50%;
+    width: 70%;
   }
 }
 

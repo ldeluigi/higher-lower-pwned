@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-title>Register</mat-card-title>
   <mat-card-content>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form">
       <p>
         <mat-form-field>
           <input type="text" matInput placeholder="Username" formControlName="username" />
@@ -13,7 +13,7 @@
           <mat-label>Password</mat-label>
           <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" />
           <mat-hint *ngIf="passwordError"> {{ passwordError }} </mat-hint>
-          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" tabindex="-1"
             [attr.aria-pressed]="hide">
             <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
           </button>
@@ -26,7 +26,7 @@
         </mat-form-field>
       </p>
       <div class="button">
-        <button type="submit" mat-button>Register</button>
+        <button type="submit" (click)="onSubmit()" mat-button>Register</button>
       </div>
     </form>
   </mat-card-content>

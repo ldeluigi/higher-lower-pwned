@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserNavBarComponent } from './user-nav-bar.component';
 
@@ -7,14 +8,15 @@ describe('UserNavBarComponent', () => {
   let component: UserNavBarComponent;
   let fixture: ComponentFixture<UserNavBarComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        MatIconModule
       ],
-      declarations: [ UserNavBarComponent ]
+      declarations: [UserNavBarComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

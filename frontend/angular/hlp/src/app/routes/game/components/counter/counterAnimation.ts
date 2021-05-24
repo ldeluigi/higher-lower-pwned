@@ -16,6 +16,14 @@ const loseStyle = style({
   'background-color': 'grey',
 });
 
+const drawRoyaleStyle = style({
+  transform: 'translateY(30vh)',
+  position: 'relative',
+  'z-index': '100',
+  width: 'max-content',
+  'background-color': 'white',
+});
+
 /** case current player wins */
 const duelUserWinStyle = style({
   position: 'relative',
@@ -66,7 +74,6 @@ const drawStyle = style({
   'background-color': 'grey',
   width: 'max-content',
 });
-
 
 const DURATION = '2.0s';
 export const endGameAnimation: AnimationTriggerMetadata = trigger('endGameAnimation', [
@@ -122,5 +129,14 @@ export const endGameAnimation: AnimationTriggerMetadata = trigger('endGameAnimat
       position: 'relative',
     }),
     animate(DURATION, drawStyle)
+  ]),
+
+  // Royale
+  state('royaleDraw', drawRoyaleStyle),
+  transition('none => royaleDraw', [
+    style({
+      position: 'relative',
+    }),
+    animate(DURATION, drawRoyaleStyle)
   ]),
 ]);

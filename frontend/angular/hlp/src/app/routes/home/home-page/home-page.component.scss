@@ -2,33 +2,6 @@
 @import "../../../styles/abstracts/mixins";
 @import "../../../styles/dimensions.scss";
 
-@function home-multiple-text-shadow($n, $color, $x: 1, $y: 1) {
-  $value: "0 1px #{$color}";
-  @for $i from 2 through $n {
-    $value: "#{$value} , #{ $i * $x }px #{ $i *$y }px 2px "+lighten($color, $i);
-  }
-
-  @return unquote($value);
-}
-
-@keyframes home-animation {
-  0% {
-    text-shadow: home-multiple-text-shadow(10, $higher-color, 0, -1);
-  }
-  25% {
-    text-shadow: home-multiple-text-shadow(10, $black-bg, 0, -1);
-  }
-  50% {
-    text-shadow: home-multiple-text-shadow(10, $lower-color, 0, -1);
-  }
-  75% {
-    text-shadow: home-multiple-text-shadow(10, $black-bg, 0, -1);
-  }
-  100% {
-    text-shadow: home-multiple-text-shadow(10, $higher-color, 0, -1);
-  }
-}
-
 .title {
   display: flex;
   height: 28vh;
@@ -36,6 +9,7 @@
   width: 85%;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 
   .title-piece {
     text-shadow: -1px 0 $black-bg, 0 1px $black-bg, 1px 0 $black-bg,

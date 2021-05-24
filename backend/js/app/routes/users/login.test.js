@@ -37,9 +37,9 @@ describe("login API", function () {
     expect(response.body.data).toHaveProperty("id", "testid");
     expect(response.body.data).toHaveProperty("username", "testusername");
     let tokenBody = jwtTools.checkJWT(response.body.data.token);
-    expect(tokenBody).toHaveProperty("id", "testid");
+    expect(tokenBody).toHaveProperty("sub", "testid");
     expect(tokenBody).toHaveProperty("username", "testusername");
-    expect(tokenBody).toHaveProperty("refresh");
+    expect(tokenBody).toHaveProperty("jti");
     mock.mockRestore();
     mock2.mockRestore();
     done();

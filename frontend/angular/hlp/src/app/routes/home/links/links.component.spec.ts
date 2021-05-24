@@ -1,4 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { LinksComponent } from './links.component';
 
 
@@ -6,9 +8,15 @@ describe('LinksComponent', () => {
   let component: LinksComponent;
   let fixture: ComponentFixture<LinksComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LinksComponent ]
+      imports: [
+        HttpClientTestingModule,
+        MatIconModule,
+      ],
+      declarations: [
+        LinksComponent,
+      ]
     })
     .compileComponents();
   }));

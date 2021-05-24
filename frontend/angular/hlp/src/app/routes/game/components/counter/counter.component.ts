@@ -10,6 +10,9 @@ import { GameStatus } from '../../utils/gameStatus';
 import { rollNumber, slowDigitWord } from '../../utils/wordAnimation';
 import { endGameAnimation } from './counterAnimation';
 import { ARCADE, DUEL, ROYALE } from '../../model/gameModes';
+import { DRAW, LOSE, WON } from '../../model/gameDTO';
+import { LogService } from 'src/app/services/log.service';
+import { LogLevel } from 'src/app/model/logLevel';
 
 @Component({
   selector: 'app-counter',
@@ -39,21 +42,19 @@ export class CounterComponent implements OnInit, OnDestroy {
   private gameSub: Subscription | undefined;
   currentGameMode = '';
 
-  // Royale
-  imWinning = false;
-
   constructor(
     private accountService: AccountService,
     private socketService: GameSocketService,
+    private logService: LogService,
     private gameManagerService: GameManagerService
   ) { }
 
   ngOnInit(): void {
     this.gameSub = this.gameManagerService.gameStatusObservable.subscribe(nv => {
       if (nv === GameStatus.IDLE) {
+        this.counterSub?.unsubscribe();
         this.counter = 0;
         this.name = undefined;
-        this.counterSub?.unsubscribe();
         this.setUp();
       }
     });
@@ -63,6 +64,8 @@ export class CounterComponent implements OnInit, OnDestroy {
   private setUp(): void {
     this.animationState = 'none';
     this.endGameMessate = '';
+    this.animationStateChange.emit('none');
+    this.counter = 0;
     clearTimeout(this.timeoutValue);
     if (this.gameManagerService.currentGameMode === ARCADE) {
       this.currentGameMode = ARCADE;
@@ -101,38 +104,26 @@ export class CounterComponent implements OnInit, OnDestroy {
       this.currentGameMode = ROYALE;
       this.setupRoyaleAnimation();
       this.counterSub = this.socketService.userScoreObservable.subscribe(n => this.updateScore(n));
+      this.socketService.playerObservable.pipe(
+        filter(p => p.id.includes(this.socketService.socketId),
+        first()
+        )
+      ).subscribe(ed => this.name = ed.name);
     }
   }
 
   private setupRoyaleAnimation(): void {
     if (this.animation === true) {
-      this.counterSub?.add(
-        this.socketService.gameDataUpdate.subscribe(users => {
-            if (users.users[0].score) {
-              const scoreMax = Math.max(...users.users.map(e => e.score || 0.5));
-              const myScore = users.users.find(p => p.id.includes(this.socketService.socketId))?.score;
-              if (myScore) {
-                this.imWinning = myScore >= scoreMax;
-                console.log(myScore, scoreMax);
-              }
-            }
-          })
-      );
-
-      this.gameManagerService.gameStatusObservable
-        .pipe(
-          filter(x => x === GameStatus.END),
-          first()
-        )
-        .subscribe(ns => {
-          if (ns === GameStatus.END) {
-            if (this.imWinning) {
+      this.socketService.gameEndObservable
+        .subscribe(ge => {
+            if (ge.gameEndStatus === WON) {
               this.animationState = 'win';
-            } else {
+            } else if (ge.gameEndStatus === LOSE) {
               this.animationState = 'lose';
+            } else if (ge.gameEndStatus === DRAW) {
+              this.animationState = 'royaleDraw';
             }
-            console.log(this.animationState);
-          }
+            this.logService.log('Set animation to : ' + this.animationState, LogLevel.Debug);
         });
 
     }
@@ -140,19 +131,14 @@ export class CounterComponent implements OnInit, OnDestroy {
 
   private setupArcadeAnimation(): void {
     if (this.animation === true) {
-      this.gameManagerService.gameStatusObservable
-        .pipe(
-          filter(x => x === GameStatus.END),
-          first()
-        )
+      this.socketService.gameEndObservable
         .subscribe(ns => {
-          if (ns === GameStatus.END) {
-            if (this.counter > 0) {
+            this.counter = ns.score;
+            if (ns.score > 0) {
               this.animationState = 'win';
             } else {
               this.animationState = 'lose';
             }
-          }
         });
     }
   }
@@ -173,7 +159,7 @@ export class CounterComponent implements OnInit, OnDestroy {
   }
 
   private updateScore(newScore: number): void {
-    rollNumber(newScore, 600, c => this.counter = c, this.counter);
+    this.counterSub?.add(rollNumber(newScore, 600, c => this.counter = c, this.counter));
   }
 
   ngOnDestroy(): void {
@@ -182,6 +168,9 @@ export class CounterComponent implements OnInit, OnDestroy {
   }
 
   onAnimationEnd(event: AnimationEvent): void {
+    if (this.animationState === 'none') {
+      return;
+    }
     if (this.currentGameMode === ARCADE) {
       this.onArcadeEndGameAnimation(event);
     } else if (this.currentGameMode === DUEL) {
@@ -203,6 +192,11 @@ export class CounterComponent implements OnInit, OnDestroy {
     } else if (event.toState === 'lose') {
       this.counterSub?.add(
         slowDigitWord(this.scoreToMessageRoyale(false), this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
+      );
+      this.startTimeoutReset();
+    } else if (event.toState === 'royaleDraw') {
+      this.counterSub?.add(
+        slowDigitWord('DRAW', this.WORD_ANIMATION_TIME, s => this.endGameMessate = s)
       );
       this.startTimeoutReset();
     }
@@ -271,6 +265,8 @@ export class CounterComponent implements OnInit, OnDestroy {
       this.endGameMessate = '';
       this.animationState = 'none';
       this.animationStateChange?.emit('none');
+      this.counterSub?.unsubscribe();
+      this.counterSub = undefined;
     }, value);
   }
 
@@ -316,7 +312,7 @@ export class CounterComponent implements OnInit, OnDestroy {
         return 'Lucky dude.';
       }
       if (this.counter < 1000) {
-        return 'You win.';
+        return 'You won!';
       }
       if (this.counter < 5000) {
         return 'You deserve it!';

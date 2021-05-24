@@ -14,9 +14,14 @@ interface GameInfo {
   max: number;
 }
 
+interface PlayerLeave {
+  id: string;
+}
+
 export {
   PlayerList,
   GameInfo,
   PlayerIdName,
-  PlayerJoin
+  PlayerJoin,
+  PlayerLeave
 };

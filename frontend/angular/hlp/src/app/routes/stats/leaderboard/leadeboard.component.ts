@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
@@ -18,6 +17,7 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
 
   private statsSub: Subscription | undefined;
   mode = ARCADE;
+  isLoading = false;
 
   period: string | undefined;
   displayedColumns = ['position', 'username', 'score', 'date'];
@@ -39,6 +39,7 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
     this.statsSub.add(this.leaderboardService.observableLeaderboard
       .subscribe(newLb => {
         this.dataSource.data = newLb;
+        this.isLoading = false;
       }));
     this.dataSource.paginator = this.paginator;
     this.updateLeaderboard();
@@ -49,6 +50,7 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
   }
 
   updateLeaderboard(period?: string): void {
+    this.isLoading = true;
     if (period !== undefined) {
       this.period = period;
     }
@@ -56,6 +58,7 @@ export class LeadeboardComponent implements OnInit, OnDestroy {
   }
 
   updateLimit(limit: number): void {
+    this.isLoading = true;
     this.selected = limit;
     this.updateLeaderboard(this.period);
   }

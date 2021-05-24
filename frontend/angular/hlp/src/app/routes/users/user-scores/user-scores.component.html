@@ -41,7 +41,13 @@
   <div class="selector-border"></div>
 </div>
 <div class="container">
-  <div class="mat-elevation-z8">
+  <div class="mat-elevation-z8" class="tableContainer">
+    <div *ngIf="isLoading" class="loading">
+      <mat-progress-spinner
+        color="primary"
+        mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="score">
         <th mat-header-cell *matHeaderCellDef>Score</th>
@@ -75,14 +81,14 @@
     <!-- Exporter column -->
     <ng-container matColumnDef="checkbox">
       <td mat-footer-cell *matFooterCellDef colspan="1">
-        <mat-checkbox (click)="resort()">sort by date</mat-checkbox>
+        <mat-checkbox (click)="resort()"><span class="blockedText">sort </span> <span class="blockedText">by</span> date</mat-checkbox>
       </td>
     </ng-container>
 
     <!-- Paginator column -->
     <ng-container matColumnDef="paginator">
       <td mat-footer-cell *matFooterCellDef colspan="3">
-        <mat-paginator 
+        <mat-paginator
           [length]="total"
           [pageSize]="pageSize"
           [pageSizeOptions]="pageSizeOptions"

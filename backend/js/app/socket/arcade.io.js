@@ -9,10 +9,18 @@ module.exports = function (sio) {
     socket.userData = {
       id: null
     };
-    if (socket.handshake.query && socket.handshake.query.token) {
+    if (socket.handshake.auth && socket.handshake.auth.token) {
+      try {
+        let userData = jwtTools.checkJWT(socket.handshake.auth.token);
+        socket.userData.id = userData.sub;
+        return next();
+      } catch (err) {
+        return next(new Error("Authentication failed: " + err.message));
+      }
+    } else if (socket.handshake.query && socket.handshake.query.token) {
       try {
         let userData = jwtTools.checkJWT(socket.handshake.query.token);
-        socket.userData.id = userData.id;
+        socket.userData.id = userData.sub;
         return next();
       } catch (err) {
         return next(new Error("Authentication failed: " + err.message));
@@ -20,11 +28,11 @@ module.exports = function (sio) {
     }
     return next();
   }).on("connection", function (socket) {
-    socket.on("start", async () => {
+    socket.on("start", () => {
       try {
-        await arcade.newGame(socket.id, socket.userData.id);
+        arcade.newGame(socket.id, socket.userData.id);
         try {
-          let nextGuess = await arcade.currentGuess(socket.id);
+          let nextGuess = arcade.currentGuess(socket.id);
           socket.emit("guess", nextGuess);
         } catch (err) {
           socket.emit("on-error", {
@@ -41,7 +49,7 @@ module.exports = function (sio) {
     });
     socket.on("repeat", async () => {
       try {
-        let nextGuess = await arcade.currentGuess(socket.id);
+        let nextGuess = arcade.currentGuess(socket.id);
         if (!nextGuess.lost) {
           socket.emit("guess", nextGuess);
         } else {
@@ -65,10 +73,10 @@ module.exports = function (sio) {
     socket.on("answer", async (answer) => {
       if (answer.higher === 1 || answer.higher === 2) {
         try {
-          let isCorrect = await arcade.submitGuess(socket.id, answer.higher);
+          let isCorrect = arcade.submitGuess(socket.id, answer.higher);
           if (isCorrect) {
             try {
-              let nextGuess = await arcade.currentGuess(socket.id);
+              let nextGuess = arcade.currentGuess(socket.id);
               socket.emit("guess", nextGuess);
             } catch (err) {
               socket.emit("on-error", {

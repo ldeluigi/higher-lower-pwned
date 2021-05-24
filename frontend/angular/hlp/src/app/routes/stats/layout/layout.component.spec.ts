@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LayoutComponent } from './layout.component';
 
@@ -7,10 +8,11 @@ describe('LayoutComponent', () => {
   let component: LayoutComponent;
   let fixture: ComponentFixture<LayoutComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes([]),
+        MatIconModule,
       ],
       declarations: [ LayoutComponent ]
     })

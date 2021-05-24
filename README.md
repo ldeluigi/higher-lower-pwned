@@ -66,7 +66,7 @@ Currently supported mail services:
 
 First you need to install server dependencies with `npm install`, run inside the server folder `backend/js`.  
 To develop a server, run the docker compose file for **Development mode** with:  
-`docker-compose -f docker-compose.dev.yml up -d` from the root folder.
+`docker compose -f docker-compose.dev.yml up -d` from the root folder.
 Docker should create these containers:
 
 - `mongo` that manages the database
@@ -93,6 +93,10 @@ If you want to contribute to the main client made with Angular you can write you
 
 Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+#### Update dependencies
+
+In order to update the dependencies without accidentally changing the Angular major version, use `ng update @angular/cli@^10 @angular/core@^10`.
+
 #### Manual tests
 
 To test the angular client by hand usually you just need to run `ng serve`, but if you want to make the client available to every machine on your local network, making the angular host similar to a server, you need:
@@ -114,12 +118,15 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Production mode
 
-To run the entire project in production mode just type `docker-compose up -d` in the root folder of the repository.
+To run the entire project in production mode just type `docker compose up -d` in the root folder of the repository. This is a **simulation** of a production environment on your local machine.
+On Windows, MongoDB `/data/db` folder can't be mounted on a volume shared with the host machine. To achieve persistency of data, either user docker native modules or an external database.
+In order to use an external MongoDB database configure it properly (see the configuration file of the project) and use the `docker-compose.extdb.yml` compose file, after having defined the
+environment variable `MONGO_DB_URL`.
 
 **Note:** Only requests to `/api` or `/socket` path are forwarded to the server by Nginx.
 
 ## Stopping containers
 
-To properly stop running containers use `docker-compose [-f ...] down`.
-To stop and **clean volumes** use `docker-compose [-f ...] down -v`.  
+To properly stop running containers use `docker compose [-f ...] down`.
+To stop and **clean volumes** use `docker compose [-f ...] down -v`.  
 **Note:** _Volumes left inside docker storage could fill up the space on the host machine!_

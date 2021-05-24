@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { LogService } from 'src/app/services/log.service';
 import { ROYALE } from '../model/gameModes';
 import { GameStatus } from '../utils/gameStatus';
 import { ProgressBarHelper } from '../utils/progressBarHelper';
@@ -21,9 +23,10 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
   constructor(
     private snackBar: MatSnackBar,
     private socketService: GameSocketService,
+    private logService: LogService,
     private gameManagerService: GameManagerService
   ) {
-    super();
+    super(30000);
     gameManagerService.setCurrentGameMode(ROYALE);
   }
 
@@ -37,9 +40,11 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
       if (ns !== GameStatus.PLAYING) {
         this.subTimer?.unsubscribe();
       }
+      if (ns === GameStatus.LOST) {
+        this.resetProgressBarValue();
+      }
     }));
-    // TODO find a good way to manage errors
-    this.gameSub.add(this.socketService.errorObservable.subscribe(err => this.log(`code:[${err.code}] desc:[${err.description}]`)));
+    this.gameSub.add(this.socketService.errorObservable.subscribe(err => this.logService.errorSnackBar(err)));
   }
 
   get displayTimer(): boolean {
@@ -85,8 +90,7 @@ export class RoyaleComponent extends ProgressBarHelper implements OnInit, OnDest
       .subscribe(isStart => {
         if (!isStart) {
           this.gameManagerService.quit();
-          // TODO Log game not started
-          console.log('game not started!');
+          this.logService.errorSnackBar('Can\'t start the game');
         }
       });
   }

@@ -1,6 +1,25 @@
 @import "../../styles/dimensions.scss";
+@import "../../styles/abstracts/mixins";
 
 .group {
-  padding: $default-padding;
+  padding: $default-padding 0;
   border: transparent;
+  grid-template-columns: auto auto;
+  display: grid;
+  .always {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+}
+
+@include tablet {
+  .group {
+    display: inline-flex;
+  }
+}
+
+@include desktop {
+  .group {
+    display: inline-flex;
+  }
 }

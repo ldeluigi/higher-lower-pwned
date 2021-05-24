@@ -5,7 +5,7 @@
   (change)="onSelectPeriod(group.value)"
   class="group"
 >
-  <mat-button-toggle class="period" *ngFor="let period of periods" value="{{ period }}">{{
+  <mat-button-toggle class="period" *ngFor="let period of periods" value="{{ period }}" class="{{ period }}">{{
     period.charAt(0).toUpperCase() + period.slice(1)
   }}</mat-button-toggle>
 </mat-button-toggle-group>

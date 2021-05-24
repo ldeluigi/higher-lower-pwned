@@ -1,8 +1,8 @@
 <div class="score">
   <app-counter [user]='true' [animation]='true'></app-counter>
 </div>
-<div class="wrapper" *ngIf="inGame">
-  <app-word-spinner></app-word-spinner>
+<div class="wrapper">
+  <app-word-spinner *ngIf="inGame"></app-word-spinner>
 </div>
 
 <div *ngIf="displayTimer" class="timer">
@@ -11,13 +11,13 @@
 
 <div class="divStart">
   <div *ngIf="canStartANewGame">
-    <button class="start" mat-button (click)="start()">START</button>
+    <button class="start" mat-button (click)="start()">{{'Start' | uppercase}}</button>
   </div>
 
   <div
     *ngIf="canExit || isWaitingStart">
-    <button class="postGame" mat-button routerLink="/home" routerLinkActive="active">HOME</button>
-    <button class="postGame" mat-button *ngIf="canRestart" (click)="quit(); this.start()">NEW GAME</button>
+    <button class="postGame" mat-button routerLink="/home" routerLinkActive="active">{{'Home' | uppercase}}</button>
+    <button class="postGame" mat-button *ngIf="canRestart" (click)="quit(); this.start()">{{'New Game' | uppercase}}</button>
   </div>
 </div>
 

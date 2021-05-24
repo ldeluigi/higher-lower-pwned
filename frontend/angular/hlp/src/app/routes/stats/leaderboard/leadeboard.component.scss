@@ -1,10 +1,10 @@
 @import "../../../styles/dimensions.scss";
 @import "../../../styles/colors.scss";
 @import "../../../styles/abstracts/mixins";
+@import "../../../styles/stats/mixins";
 
-table {
-  width: 100%;
-}
+@include tableFormatter;
+@include loadingSpinnerFormatter;
 
 div.inputs {
   padding: $default-padding;

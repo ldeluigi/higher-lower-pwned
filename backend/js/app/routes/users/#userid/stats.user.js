@@ -23,7 +23,7 @@ router.get("/stats",
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    if (req.auth.id != req.params.userid) {
+    if (req.auth.sub != req.params.userid) {
       return res.status(403).json({ errors: ["User not authorized."] });
     }
     try {
@@ -67,7 +67,7 @@ router.get("/stats",
           },
           {
             $group: {
-              _id: {
+              _id: queryPeriod === "forever" ? null : {
                 periodNumber: periodGroupDB,
                 year: "$year"
               },
@@ -120,6 +120,7 @@ const mapFromPeriodToDBPeriod = {
   week: "$week",
   month: "$month",
   year: "$year",
+  forever: "$forever"
 };
 
 module.exports = router;

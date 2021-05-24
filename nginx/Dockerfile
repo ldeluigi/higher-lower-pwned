@@ -19,5 +19,8 @@ FROM nginx:1.19-alpine
 # Nginx configurations
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
+# Upload static files
+COPY nginx/static/ /usr/src/app/public/
+
 # Upload compiled static files
 COPY --from=builder /usr/src/app/dist/hlp/ /usr/src/app/public/

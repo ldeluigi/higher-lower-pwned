@@ -73,7 +73,7 @@ router.get("/:id",
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    if (req.auth.id != req.params.id) {
+    if (req.auth.sub != req.params.id) {
       return res.status(403).json({ errors: ["User not authorized."] });
     }
     try {
@@ -111,7 +111,7 @@ router.put("/:id",
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    if (req.auth.id != req.params.id) {
+    if (req.auth.sub != req.params.id) {
       return res.status(403).json({ errors: ["User not authorized."] });
     }
     let newPassword = req.body.password;
@@ -159,7 +159,7 @@ router.delete("/:id",
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    if (req.auth.id != req.params.id) {
+    if (req.auth.sub != req.params.id) {
       return res.status(403).json({ errors: ["User not authorized."] });
     }
     try {
@@ -167,8 +167,8 @@ router.delete("/:id",
       if (userQuery === null) {
         return res.status(404).json({ errors: ["User not found."] });
       }
-      await battle.deleteUser(userQuery._id);
-      await arcade.deleteUser(userQuery._id);
+      await battle.deleteUser(userQuery._id.toString());
+      await arcade.deleteUser(userQuery._id.toString());
       await scoreSchema.deleteMany({
         user: userQuery._id
       });

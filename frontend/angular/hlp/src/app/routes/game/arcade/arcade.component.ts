@@ -1,10 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { interval, Subscription } from 'rxjs';
+import { LogLevel } from 'src/app/model/logLevel';
 import { GameManagerService } from 'src/app/services/game-manager.service';
 import { GameSocketService } from 'src/app/services/game-socket.service';
+import { KeyPressDistributionService } from 'src/app/services/key-press-distribution.service';
+import { LogService } from 'src/app/services/log.service';
 import { ARCADE } from '../model/gameModes';
 import { GameStatus } from '../utils/gameStatus';
+import { ProgressBarHelper } from '../utils/progressBarHelper';
 
 export interface CardData {
   word: string;
@@ -16,17 +20,18 @@ export interface CardData {
   templateUrl: './arcade.component.html',
   styleUrls: ['./arcade.component.scss']
 })
-export class ArcadeComponent implements OnInit, OnDestroy {
-  progressbarValue = 100;
-  timeLeft = 0;
-  private timerSub: Subscription | undefined;
+export class ArcadeComponent extends ProgressBarHelper implements OnInit, OnDestroy {
+
   private gameSubs: Subscription | undefined;
+  private keySub!: Subscription;
 
   constructor(
-    private snackBar: MatSnackBar,
     private socketService: GameSocketService,
-    private gameManagerService: GameManagerService
+    private logService: LogService,
+    private gameManagerService: GameManagerService,
+    private keyService: KeyPressDistributionService
   ) {
+    super(undefined);
     gameManagerService.setCurrentGameMode(ARCADE);
   }
 
@@ -36,15 +41,23 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.timerSub?.unsubscribe();
+    this.subTimer?.unsubscribe();
     this.gameSubs?.unsubscribe();
     // this.gameSocket.disconnect();
     this.gameManagerService.quit();
+    this.keySub.unsubscribe();
   }
 
   ngOnInit(): void {
     this.setup();
     this.start();
+    this.keySub = this.keyService.keyEventObs.subscribe(e => {
+      if (!this.playing) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          this.replay();
+        }
+      }
+    });
   }
 
   replay(): void {
@@ -56,18 +69,18 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     this.gameManagerService.quit();
     this.gameSubs?.unsubscribe();
     this.gameSubs = this.socketService.timerObservable.subscribe(nt => {
-      this.timerSub?.unsubscribe();
-      this.setTimer(nt).then(() => this.gameManagerService.repeat());
+      this.subTimer?.unsubscribe();
+      this.setProgressBarTimer(nt).then(() => this.gameManagerService.repeat());
     });
   }
 
   start(): void {
+    this.resetProgressBarValue();
     this.gameManagerService.startGame(ARCADE)
       .subscribe(isStart => {
         if (!isStart) {
           this.gameManagerService.quit();
-          // TODO Log game not started
-          console.log('game not started!');
+          this.logService.errorSnackBar('Can\'t start the game');
         }
       });
   }
@@ -77,29 +90,29 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     return cgs !== GameStatus.IDLE;
   }
 
-  private async setTimer(milliseconds: number): Promise<void> {
-    const progressBarMax = 100;
-    const frames = 200;
-    const delta = progressBarMax / frames;
-    const deltaT = Math.floor(milliseconds / frames);
-    const timer$ = interval(deltaT);
+  // private async setTimer(milliseconds: number): Promise<void> {
+  //   const progressBarMax = 100;
+  //   const frames = 200;
+  //   const delta = progressBarMax / frames;
+  //   const deltaT = Math.floor(milliseconds / frames);
+  //   const timer$ = interval(deltaT);
 
-    this.timerSub?.unsubscribe();
+  //   this.timerSub?.unsubscribe();
 
-    return new Promise<void>(resolve => {
-      this.timerSub = timer$.subscribe((d) => {
-        const currentValue = delta * d;
-        const currentMillis = deltaT * d;
-        this.timeLeft = milliseconds - currentMillis;
-        this.progressbarValue = progressBarMax - currentValue;
-        if (this.timeLeft <= 0 && this.timerSub !== null) {
-          this.timerSub?.unsubscribe();
-          this.timerSub = undefined;
-          this.progressbarValue = 0;
-          this.timeLeft = 0;
-          resolve();
-        }
-      });
-    });
-  }
+  //   return new Promise<void>(resolve => {
+  //     this.timerSub = timer$.subscribe((d) => {
+  //       const currentValue = delta * d;
+  //       const currentMillis = deltaT * d;
+  //       this.timeLeft = milliseconds - currentMillis;
+  //       this.progressbarValue = progressBarMax - currentValue;
+  //       if (this.timeLeft <= 0 && this.timerSub !== null) {
+  //         this.timerSub?.unsubscribe();
+  //         this.timerSub = undefined;
+  //         this.progressbarValue = 0;
+  //         this.timeLeft = 0;
+  //         resolve();
+  //       }
+  //     });
+  //   });
+  // }
 }

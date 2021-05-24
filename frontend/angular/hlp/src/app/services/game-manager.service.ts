@@ -7,6 +7,7 @@ import { GameStatus } from '../routes/game/utils/gameStatus';
 import { ApiURLService } from './api-url.service';
 import { GameSocketService } from './game-socket.service';
 import { LogService } from './log.service';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,9 @@ export class GameManagerService {
   nextGuessObservable = this.nextGuessSubject.asObservable();
 
   constructor(
-    private socketService: GameSocketService
+    private socketService: GameSocketService,
+    private accountService: AccountService,
+    private logService: LogService,
   ) { }
 
   get currentGameStatus(): GameStatus {
@@ -87,7 +90,10 @@ export class GameManagerService {
         })
       );
       this.gameSub.add(
-        this.socketService.gameEndObservable.subscribe(_ => { // game is ended I have lost
+        this.socketService.gameEndObservable.subscribe(ge => { // game is ended I have lost
+          if (this.accountService.userValue === null && ge.guesses <= 1 && this.currentGameMode === ARCADE) {
+            this.logService.recommendALink('Do you want to learn how to play?', '/info/how-to-play');
+          }
           this.gameStatusSubject.next(GameStatus.END);
           this.disconnect();
         })
@@ -96,12 +102,12 @@ export class GameManagerService {
       this.gameStatusSubject.next(GameStatus.WAITING_START);
       this.gameSub.add(
         this.socketService.nextBattleGuessObservable.subscribe(ng => {
-          if (this.currentGameStatus === GameStatus.WAITING_N_GUESS) {
-              if (ng.lost && ng.lost) {
-                this.gameStatusSubject.next(GameStatus.LOST);
-              } else if (ng.score) {
-                this.gameStatusSubject.next(GameStatus.PLAYING);
-              }
+          if (ng.lost && ng.lost) {
+            this.gameStatusSubject.next(GameStatus.LOST);
+          } else if (this.currentGameStatus === GameStatus.WAITING_N_GUESS) {
+            if (ng.score) {
+              this.gameStatusSubject.next(GameStatus.PLAYING);
+            }
           } else if (this.currentGameStatus === GameStatus.WAITING_START) {
             this.gameStatusSubject.next(GameStatus.PLAYING);
           }
@@ -110,7 +116,7 @@ export class GameManagerService {
       );
 
       this.gameSub.add(
-        this.socketService.gameEndObservable.subscribe(_ => { // game is ended I have lost
+        this.socketService.gameEndObservable.subscribe(ge => { // game is ended I have lost
           this.gameStatusSubject.next(GameStatus.END);
           this.disconnect();
         })

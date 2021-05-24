@@ -2,15 +2,31 @@ import { interval, Subscription } from 'rxjs';
 
 export class ProgressBarHelper {
 
-  protected progressBarMax = 0;
+  private initialValue: number | undefined;
+  private progressBarMax = 0;
   progressbarValue = 100;
   timeLeft = 0;
   protected subTimer: Subscription | undefined;
 
+  constructor(maxValue: number | undefined) {
+    this.initialValue = maxValue;
+    if (this.initialValue) {
+      this.progressBarMax = this.initialValue;
+    }
+  }
 
+  protected resetProgressBarValue(): void {
+    if (this.initialValue) {
+      this.progressBarMax = this.initialValue;
+    } else {
+      this.progressBarMax = 0;
+    }
+  }
 
   protected async setProgressBarTimer(milliseconds: number): Promise<void> {
-    this.progressBarMax = Math.max(milliseconds, this.progressBarMax);
+    if (this.initialValue === undefined) {
+      this.progressBarMax = Math.max(milliseconds, this.progressBarMax);
+    }
 
     const progressBarMax = milliseconds / this.progressBarMax * 100;
     const frames = 200;

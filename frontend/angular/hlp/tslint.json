@@ -149,5 +149,10 @@
   },
   "rulesDirectory": [
     "codelyzer"
-  ]
+  ],
+  "linterOptions": {
+    "exclude": [
+        "src/app/routes/game/components/transition-group/transition-group.component.ts"
+    ]
+  }
 }

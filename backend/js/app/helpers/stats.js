@@ -88,14 +88,14 @@ module.exports = {
               avgDuration: { $ifNull: [{ $first: "$allTime.avgDuration" }, 0] },
               maxDuration: { $ifNull: [{ $first: "$allTime.maxDuration" }, 0] },
               avgPlaysPerDay: {
-                $ifNull: [{
-                  $divide: [
+                $divide: [{
+                  $ifNull: [
                     {
                       $first: "$allTime.plays"
                     },
-                    totalDays
+                    0
                   ]
-                }, 0]
+                }, totalDays]
               },
               maxPlaysPerDay: { $ifNull: [{ $first: "$byDay.maxPlaysPerDay" }, 0] },
             },

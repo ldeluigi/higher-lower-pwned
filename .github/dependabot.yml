@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/backend/js/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      # Prefix all commit messages with "npm"
+      prefix: "npm-backend"
+    target-branch: "develop"
+    versioning-strategy: widen # or increase-if-necessary
+  - package-ecosystem: "npm"
+    directory: "/frontend/angular/hlp/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      # Prefix all commit messages with "npm"
+      prefix: "npm-frontend"
+    target-branch: "develop"
+    versioning-strategy: widen # or increase-if-necessary

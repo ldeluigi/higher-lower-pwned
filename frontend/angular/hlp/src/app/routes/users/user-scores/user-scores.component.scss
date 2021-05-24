@@ -1,10 +1,29 @@
 @import "../../../styles/stats/mixins";
+@import "../../../styles/abstracts/mixins";
 @import "../../../styles/dimensions.scss";
+@import "../../../styles/stats/mixins";
 
 @include nav-bar;
-@include underNavBarContainer();
+@include underNavBarContainer;
+@include tableFormatter;
+@include loadingSpinnerFormatter;
 
 table {
-  width: 100%;
   margin-top: 2 * $default-margin;
+}
+
+.blockedText {
+  display: block;
+}
+
+@include tablet {
+  .blockedText {
+    display: inline;
+  }
+}
+
+@include desktop {
+  .blockedText {
+    display: inline;
+  }
 }

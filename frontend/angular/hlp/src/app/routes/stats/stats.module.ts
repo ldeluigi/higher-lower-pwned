@@ -7,7 +7,7 @@ import { StatisticRoutingModule } from './stats-routing.module';
 import { StatsComponent } from './stats/stats.component';
 import { ViewSelectorComponent } from './view-selector/view-selector.component';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -22,7 +22,8 @@ import { MatSelectModule } from '@angular/material/select';
   imports: [
     StatisticRoutingModule,
     MatSelectModule,
-    SharedModule
+    SharedModule,
+    MatProgressSpinnerModule
   ]
 })
 export class StatsModule { }

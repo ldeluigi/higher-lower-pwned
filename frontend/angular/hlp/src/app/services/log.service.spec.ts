@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { RouterTestingModule } from '@angular/router/testing';
 import { LogService } from './log.service';
 
 describe('LogService', () => {
@@ -9,7 +9,8 @@ describe('LogService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        MatSnackBarModule
+        RouterTestingModule,
+        MatSnackBarModule,
       ]
     });
     service = TestBed.inject(LogService);

@@ -1,5 +1,8 @@
 @import "../../../styles/abstracts/mixins.scss";
 @import "../../../styles/dimensions.scss";
+@import "../../../styles/stats/mixins";
+
+@include loadingSpinnerFormatter;
 
 @include desktop {
 

@@ -1,5 +1,5 @@
 let arcade = require("./arcade");
-const gameSchema = require("../model/game.model").schema;
+const arcades = require("../model/arcades");
 const scoreSchema = require("../model/score.model").schema;
 const passwordSetup = require("./passwords").setup;
 
@@ -13,13 +13,13 @@ beforeEach(async (done) => {
 
 describe("Arcade module", function () {
   it("should correctly create a game as anonymous", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve(null));
-    const mock2 = jest.spyOn(gameSchema, 'create');
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => null);
+    const mock2 = jest.spyOn(arcades, 'addArcade');
     mock2.mockImplementation((input) => {
       expect(input).toHaveProperty('score', 0);
       expect(input).toHaveProperty('guesses', 0);
-      return Promise.resolve();
+      return;
     });
     await arcade.newGame("1");
     mock2.mockRestore();
@@ -28,9 +28,9 @@ describe("Arcade module", function () {
   });
 
   it("should not create a game if it's already present", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve({}));
-    const mock2 = jest.spyOn(gameSchema, 'create');
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => ({}));
+    const mock2 = jest.spyOn(arcades, 'addArcade');
     mock2.mockImplementation((input) => {
       done.fail("Should have not created a new game");
       return Promise.resolve();
@@ -47,8 +47,8 @@ describe("Arcade module", function () {
   });
 
   it("should return the current guess if available", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve({
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => ({
       expiration: new Date("03-05-2020"),
       currentP1: "a",
       currentP2: "b",
@@ -69,8 +69,8 @@ describe("Arcade module", function () {
   });
 
   it("should not return a game if it's not available", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve(null));
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => null);
     try {
       await arcade.currentGuess("1");
       done.fail("Should have thrown an error.");
@@ -82,8 +82,8 @@ describe("Arcade module", function () {
   });
 
   it("should delete a game and save score if available", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve({
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => ({
       gameID: "1",
       expiration: new Date("03-05-2020"),
       currentP1: "a",
@@ -100,8 +100,8 @@ describe("Arcade module", function () {
       expect(input).toHaveProperty("guesses", 2);
       Promise.resolve(input);
     });
-    const mock3 = jest.spyOn(gameSchema, 'deleteOne');
-    mock3.mockImplementation((input) => Promise.resolve());
+    const mock3 = jest.spyOn(arcades, 'deleteArcade');
+    mock3.mockImplementation((input) => { });
     let res = await arcade.deleteGame("1");
     expect(res).toHaveProperty("score", 8);
     expect(res).toHaveProperty("guesses", 2);
@@ -116,11 +116,11 @@ describe("Arcade module", function () {
   });
 
   it("should not delete a game if it's not available", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve(null));
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => null);
     const mock2 = jest.spyOn(scoreSchema, 'create');
     mock2.mockImplementation((input) => Promise.resolve(input));
-    const mock3 = jest.spyOn(gameSchema, 'deleteOne');
+    const mock3 = jest.spyOn(arcades, 'deleteArcade');
     mock3.mockImplementation((input) => {
       done.fail(new Error("Should not delete a game that is not present"));
       Promise.resolve();
@@ -138,8 +138,8 @@ describe("Arcade module", function () {
   });
 
   it("should correctly submit a correct guess", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve({
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => ({
       gameID: "1",
       expiration: new Date(Date.now() + 100000),
       currentP1: "a",
@@ -148,8 +148,7 @@ describe("Arcade module", function () {
       valueP2: 2,
       score: 8,
       guesses: 2,
-      start: new Date(Date.now() - 100000),
-      save: () => Promise.resolve()
+      start: new Date(Date.now() - 100000)
     }));
     let res = await arcade.submitGuess("1", 2);
     expect(res).toBe(true);
@@ -158,8 +157,8 @@ describe("Arcade module", function () {
   });
 
   it("should not submit a wrong guess", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve({
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => ({
       gameID: "1",
       expiration: new Date(Date.now() + 100000),
       currentP1: "a",
@@ -168,8 +167,7 @@ describe("Arcade module", function () {
       valueP2: 2,
       score: 8,
       guesses: 2,
-      start: new Date(Date.now() - 100000),
-      save: () => Promise.resolve()
+      start: new Date(Date.now() - 100000)
     }));
     let res = await arcade.submitGuess("1", 1);
     expect(res).toBe(false);
@@ -178,8 +176,8 @@ describe("Arcade module", function () {
   });
 
   it("should not submit a guess if game is not found", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve(null));
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => null);
     try {
       await arcade.submitGuess("1", 1);
       done.fail("Should have thrown an error.");
@@ -191,8 +189,8 @@ describe("Arcade module", function () {
   });
 
   it("should not submit a guess if guess is illegal", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve({
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => ({
       gameID: "1",
       expiration: new Date(Date.now() + 100000),
       currentP1: "a",
@@ -201,8 +199,7 @@ describe("Arcade module", function () {
       valueP2: 2,
       score: 8,
       guesses: 2,
-      start: new Date(Date.now() - 100000),
-      save: () => Promise.resolve()
+      start: new Date(Date.now() - 100000)
     }));
     try {
       await arcade.submitGuess("1", 3);
@@ -215,8 +212,8 @@ describe("Arcade module", function () {
   });
 
   it("should not submit a guess if game is expired", async (done) => {
-    const mock = jest.spyOn(gameSchema, 'findOne');
-    mock.mockImplementation((input) => Promise.resolve({
+    const mock = jest.spyOn(arcades, 'findOneByGame');
+    mock.mockImplementation((input) => ({
       gameID: "1",
       expiration: new Date(Date.now() - 100000),
       currentP1: "a",
@@ -225,8 +222,7 @@ describe("Arcade module", function () {
       valueP2: 2,
       score: 8,
       guesses: 2,
-      start: new Date(Date.now() - 100000),
-      save: () => Promise.resolve()
+      start: new Date(Date.now() - 100000)
     }));
     let res = await arcade.submitGuess("1", 1);
     expect(res).toBe(false);

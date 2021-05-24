@@ -2,35 +2,43 @@
   <app-period-buttons (period)="getStats($event)"></app-period-buttons>
 </div>
 
-<mat-table [dataSource]="myStats" class="mat-elevation-z8">
-  <!-- Position Column -->
-  <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
-  </ng-container>
+<div class="tableContainer">
+  <div *ngIf="isLoading" class="loading">
+    <mat-progress-spinner
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </div>
+  <mat-table [dataSource]="myStats" class="mat-elevation-z8">
+    <!-- Position Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.name }} </mat-cell>
+    </ng-container>
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="avg">
-    <mat-header-cell *matHeaderCellDef> Average </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <span *ngIf="element.name !== 'Duration'">{{
-        element.avg | number
-      }}</span>
-      <span *ngIf="element.name === 'Duration'">{{ timeC(element.avg) }}</span>
-    </mat-cell>
-  </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="avg">
+      <mat-header-cell *matHeaderCellDef> Average </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <span *ngIf="element.name !== 'Duration'">{{
+          element.avg | number
+        }}</span>
+        <span *ngIf="element.name === 'Duration'">{{ timeC(element.avg) }}</span>
+      </mat-cell>
+    </ng-container>
 
-  <!-- Weight Column -->
-  <ng-container matColumnDef="max">
-    <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <span *ngIf="element.name !== 'Duration'">{{
-        element.max | number
-      }}</span>
-      <span *ngIf="element.name === 'Duration'">{{ timeC(element.max) }}</span>
-    </mat-cell>
-  </ng-container>
+    <!-- Weight Column -->
+    <ng-container matColumnDef="max">
+      <mat-header-cell *matHeaderCellDef> Max </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <span *ngIf="element.name !== 'Duration'">{{
+          element.max | number
+        }}</span>
+        <span *ngIf="element.name === 'Duration'">{{ timeC(element.max) }}</span>
+      </mat-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-</mat-table>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>

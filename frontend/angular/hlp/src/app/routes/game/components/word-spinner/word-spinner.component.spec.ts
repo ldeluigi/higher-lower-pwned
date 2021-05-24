@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -12,16 +13,19 @@ describe('WordSpinnerComponent', () => {
   let component: WordSpinnerComponent;
   let fixture: ComponentFixture<WordSpinnerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
         BrowserAnimationsModule,
         RouterTestingModule,
         MatSnackBarModule,
-        MatDialogModule
+        MatDialogModule,
+        MatIconModule,
       ],
-      declarations: [ WordSpinnerComponent ]
+      declarations: [
+        WordSpinnerComponent
+      ]
     })
     .compileComponents();
   }));

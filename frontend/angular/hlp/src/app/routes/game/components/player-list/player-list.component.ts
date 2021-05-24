@@ -52,6 +52,9 @@ export class PlayerListComponent implements OnInit, OnDestroy {
         this.updateData(gd);
       })
     );
+    this.dataSub.add(
+      this.socketService.playerLeaveObservable.subscribe(pl => this.removePlayer(pl as Player))
+    );
     this.setup();
   }
 
@@ -121,11 +124,12 @@ export class PlayerListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // close all
+    this.dataSub?.unsubscribe();
   }
 
   // based on player name
   removePlayer(player: Player): void {
-    this.tempData = this.tempData.filter(p => p.name !== player.name);
+    this.tempData = this.tempData.filter(p => p.id !== player.id);
     this.updateItems(this.tempData);
   }
 

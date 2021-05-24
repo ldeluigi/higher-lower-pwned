@@ -11,22 +11,10 @@ const defaultPeriods = {
   week: "week",
   month: "month",
   year: "year",
+  forever: "forever",
 };
 
-const periods = {
-  day: minMaxDate((a) =>
-    subtractPeriodNTimesFromDate(a, defaultPeriods.day, 1)
-  ),
-  week: minMaxDate((a) =>
-    subtractPeriodNTimesFromDate(a, defaultPeriods.week, 1)
-  ),
-  month: minMaxDate((a) =>
-    subtractPeriodNTimesFromDate(a, defaultPeriods.month, 1)
-  ),
-  year: minMaxDate((a) =>
-    subtractPeriodNTimesFromDate(a, defaultPeriods.year, 1)
-  ),
-};
+const periods = (p) => minMaxDate((a) => subtractPeriodNTimesFromDate(a, p, 1));
 
 function subtractPeriodNTimesFromDate(date, period, times) {
   if (!Object.keys(defaultPeriods).includes(period))
@@ -35,14 +23,19 @@ function subtractPeriodNTimesFromDate(date, period, times) {
   times--;
   //console.log(currentDate.getDay());
   let p = {
-    day: new Date(date.getFullYear(), date.getMonth(), date.getDate() - times),
-    week: new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() - date.getDay() - 7 * times
+    day: new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate() - times
     ),
-    month: new Date(date.getFullYear(), date.getMonth() - times),
-    year: new Date(date.getFullYear() - times, 0),
+    week: new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate() - date.getUTCDay() - 7 * times
+    ),
+    month: new Date(date.getUTCFullYear(), date.getUTCMonth() - times),
+    year: new Date(date.getUTCFullYear() - times, 0),
+    forever: new Date(0),
   };
   return p[period];
 }
@@ -52,7 +45,7 @@ function subtractPeriodNTimesFromToday(period, times) {
 }
 
 function periodInDays(period) {
-  const periodMinMax = periods[period];
+  const periodMinMax = periods(period);
   const periodInMilliseconds = periodMinMax[1] - periodMinMax[0];
   return periodInMilliseconds / (24 * 60 * 60 * 1000);
 }
@@ -63,7 +56,10 @@ module.exports = {
   default: "week",
 
   checkPeriod: function (check) {
-    return check.optional({ nullable: true }).trim().isIn(Object.keys(periods));
+    return check
+      .optional({ nullable: true })
+      .trim()
+      .isIn(Object.keys(defaultPeriods));
   },
 
   subtractPeriodNTimesFromToday: subtractPeriodNTimesFromToday,

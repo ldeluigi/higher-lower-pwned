@@ -21,7 +21,7 @@ $high-font-weight: 500;
       format("truetype"); /* Safari, Android, iOS */
 }
 
-$roboto-custom-typography: mat-typography-config(
+$custom-typography: mat-typography-config(
   $font-family: "subtitleFont",
   $display-4:
     mat-typography-level(
@@ -53,5 +53,5 @@ $roboto-custom-typography: mat-typography-config(
   // $body-1: mat-typography-level(1.8vw, 1.8vw, $medium-font-weight),
   // $caption: mat-typography-level(1.8vw, 1.8vw, $medium-font-weight),
   // $button: mat-typography-level(1.8vw, 1.8vw, $high-font-weight),
-  // $input: mat-typography-level(inherit, 1.125, $medium-font-weight),,,,,,,,,,,,,
+  // $input: mat-typography-level(inherit, 1.125, $medium-font-weight),,,,,,,,,,,,,,
 );

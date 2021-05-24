@@ -9,12 +9,13 @@ services:
     environment:
       NODE_ENV: production
       BACKEND_PORT: 8080
-      JWT_SECRET: ${JWT_SECRET:?}
+      JWT_SECRET: ${JWT_SECRET:?err}
       MONGO_DB_NAME: ${MONGO_DB_NAME:?err}
       MONGO_DB_USERNAME: ${MONGO_DB_USERNAME:?err}
-      MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
-      MAILER_EMAIL: ${MAILER_EMAIL:?err}
-      MAILER_PASSWORD: ${MAILER_PASSWORD:?err}
+      MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD:?err}
+      MAILER_EMAIL: ${MAILER_EMAIL}
+      MAILER_PASSWORD: ${MAILER_PASSWORD}
+      EMAIL_DEBUG: ${EMAIL_DEBUG:-false}
     restart: always
     depends_on:
       - mongo
@@ -37,15 +38,13 @@ services:
     networks:
       - hlp-network
     volumes:
-      - hlp-mongo-db-data:/data/db/ # Not working on windows unless you do the workaround
-      - ./backend/mongo/data/log/:/var/log/mongodb/
-      - ./backend/mongo/dbshell:/home/mongodb/:ro
+      - hlp-mongo-db-data:/data/db/
     environment:
       MONGO_INITDB_USERNAME: ${MONGO_DB_USERNAME:?err}
-      MONGO_INITDB_PASSWORD: ${MONGO_DB_PASSWORD}
+      MONGO_INITDB_PASSWORD: ${MONGO_DB_PASSWORD:?err}
       MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:?err}
       MONGO_INITDB_ROOT_USERNAME: root # admin username
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD} # admin password
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD:?err} # admin password
 
 networks:
   hlp-network:

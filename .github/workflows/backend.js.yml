@@ -1,0 +1,80 @@
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "backend/**"
+  pull_request:
+    branches:
+      - "**"
+  schedule:
+    - cron: 0 8 1 * *
+
+jobs:
+  build:
+    name: Build & Test NodeJs Backend
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('backend/js/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        working-directory: backend/js
+        run: npm ci
+      - name: Build
+        working-directory: backend/js
+        run: npm build
+      - name: Test
+        working-directory: backend/js
+        run: npm test
+
+  deploy:
+    name: Deploy NodeJs Backend & MongoDB
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to DCR
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY_NAME }}
+          username: ${{ secrets.DOCKER_REGISTRY_CLIENT_ID }}
+          password: ${{ secrets.DOCKER_REGISTRY_CLIENT_SECRET }}
+
+      - name: Build Production Images
+        run: |
+          docker-compose build mongo
+          docker-compose build backend
+
+      - name: Tag Images for DCR
+        run: |
+          docker tag hlp-db ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-db
+          docker tag hlp-backend ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-backend
+
+      - name: Upload Images to DCR
+        run: |
+          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-db
+          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}/hlp-backend
