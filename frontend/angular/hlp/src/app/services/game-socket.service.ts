@@ -301,7 +301,10 @@ export class GameSocketService {
             this.connect(this.socket);
           } else { }
         },
-        e2 => this.logService.errorSnackBar(`Can't connect with your account, please login again and retry. ` + e2)
+        e2 => {
+          this.logService.errorSnackBar(`Can't connect with your account, please login again and retry. ` + e2);
+          this.accountService.logout();
+        }
       );
     } else {
       this.errorSubject.next({ code: -1, description: 'Connection lost' });
