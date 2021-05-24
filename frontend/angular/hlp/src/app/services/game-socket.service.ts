@@ -133,18 +133,18 @@ export class GameSocketService {
     return this.socket?.ioSocket.io.engine.id;
   }
 
-  private newSocket(gameMode: string): Socket {
+  private newSocket(gameMode: string, token: string | undefined): Socket {
     let socket: Socket;
     this.gameMode = gameMode;
     switch (gameMode) {
       case ARCADE:
-        socket = new SocketArcade(this.apiURL.socketApiUrl);
+        socket = new SocketArcade(this.apiURL.socketApiUrl, token);
         break;
       case DUEL:
-        socket = new SocketDuel(this.apiURL.socketApiUrl);
+        socket = new SocketDuel(this.apiURL.socketApiUrl, token);
         break;
       case ROYALE:
-        socket = new SocketRoyale(this.apiURL.socketApiUrl);
+        socket = new SocketRoyale(this.apiURL.socketApiUrl, token);
         break;
       default:
         throw new Error(`Illegal argument [${gameMode}]`);
@@ -159,7 +159,7 @@ export class GameSocketService {
   setup(gameMode: string): Observable<boolean> {
     this.connectionTry = 0;
     this.socket?.disconnect();
-    this.socket = this.newSocket(gameMode);
+    this.socket = this.newSocket(gameMode, this.accountService.userValue?.token);
     this.setUpSocketObservable(this.socket);
     return this.connect(this.socket);
   }
@@ -172,13 +172,6 @@ export class GameSocketService {
     if (socket === undefined) {
       this.connectionSubject.next(false);
     } else {
-      if (this.accountService.userValue !== null) {
-        socket.ioSocket.io.opts.query = {
-          token: this.accountService.userValue.token
-        };
-      } else {
-        socket.ioSocket.io.opts.query = {};
-      }
       socket.fromOneTimeEvent('disconnect')
         .then(_ => {
           this.logService.log('Socket disconected.', LogLevel.Info);
@@ -303,7 +296,7 @@ export class GameSocketService {
         (_) => {
           if (this.socket) {
             // this.socket.disconnect();
-            this.socket = this.newSocket(this.gameMode);
+            this.socket = this.newSocket(this.gameMode, this.accountService.userValue?.token);
             this.setUpSocketObservable(this.socket);
             this.connect(this.socket);
           } else { }
