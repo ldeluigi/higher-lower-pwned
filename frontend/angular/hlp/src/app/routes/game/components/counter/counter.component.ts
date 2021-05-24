@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { Subscription } from 'rxjs';
-import { filter, first, take, takeUntil, takeWhile } from 'rxjs/operators';
+import { filter, first, take } from 'rxjs/operators';
 import { AccountService } from 'src/app/services/account.service';
 import { GameManagerService } from '../../../../services/game-manager.service';
 import { GameSocketService } from '../../../../services/game-socket.service';
@@ -66,7 +66,7 @@ export class CounterComponent implements OnInit, OnDestroy {
     this.endGameMessate = '';
     this.animationStateChange.emit('none');
     this.counter = 0;
-    clearTimeout(this.timeoutValue);
+    window.clearTimeout(this.timeoutValue);
     if (this.gameManagerService.currentGameMode === ARCADE) {
       this.currentGameMode = ARCADE;
       this.setupArcadeAnimation();
@@ -261,7 +261,7 @@ export class CounterComponent implements OnInit, OnDestroy {
   }
 
   private startTimeoutReset(value: number = this.END_GAME_TIMER): void {
-    this.timeoutValue = setTimeout(() => {
+    this.timeoutValue = window.setTimeout(() => {
       this.endGameMessate = '';
       this.animationState = 'none';
       this.animationStateChange?.emit('none');
