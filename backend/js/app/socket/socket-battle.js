@@ -187,7 +187,7 @@ function emitGuess(socket, currentGuess) {
  * @param {String} roomPrefix
  */
 function myRooms(socket, roomPrefix) {
-  return Object.keys(socket.rooms).filter((s) => s.startsWith(roomPrefix));
+  return Array.from(socket.rooms).filter((s) => s.startsWith(roomPrefix));
 }
 
 //--------------------------- Implementations ------------------------------
