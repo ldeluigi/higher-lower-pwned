@@ -102,6 +102,7 @@ In order to update the dependencies without accidentally changing the Angular ma
 To test the angular client by hand usually you just need to run `ng serve`, but if you want to make the client available to every machine on your local network, making the angular host similar to a server, you need:
 
 1. To make sure that the backend port is mapped to an host public port and reachable from the local network;
+1. To set your machine IP address and backend port inside the `environment.ts` file;
 1. To run `ng serve --host 0.0.0.0 --port <port> --disableHostCheck` to serve the client on the specified port on your machine ip under your local network.
 
 #### Code scaffolding
