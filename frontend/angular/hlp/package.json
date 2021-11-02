@@ -25,7 +25,7 @@
     "@angular/router": "~12.2.12",
     "chart.js": "^2.9.4",
     "ng2-charts": "^2.4.3",
-    "ngx-socket-io": "^4.0.0",
+    "ngx-socket-io": "~4.0.0",
     "rxjs": "~6.5.5",
     "zone.js": "~0.11.4"
   },
@@ -36,7 +36,7 @@
     "@types/hammerjs": "^2.0.40",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "^2.0.10",
-    "@types/node": "^12.19.16",
+    "@types/node": "^12.20.36",
     "codelyzer": "^6.0.2",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
