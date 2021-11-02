@@ -13,8 +13,6 @@ on:
   pull_request:
     branches:
       - "**"
-  schedule:
-    - cron: 15 8 1 * *
 
 jobs:
   build:
