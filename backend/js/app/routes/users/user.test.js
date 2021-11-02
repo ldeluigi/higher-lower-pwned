@@ -8,7 +8,7 @@ const score = require("../../model/score.model");
 
 
 describe("user API", function () {
-  it("should GET a user after login", async (done) => {
+  it("should GET a user after login", async () => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -37,11 +37,10 @@ describe("user API", function () {
       .toEqual(JSON.stringify({ data: user.toDto(userMock) }));
     mock.mockRestore();
     mock2.mockRestore();
-    done();
   });
 
 
-  it("should PUT a user after login", async (done) => {
+  it("should PUT a user after login", async () => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const modifyUserBody = {
       oldPassword: "testpassword",
@@ -82,10 +81,9 @@ describe("user API", function () {
     expect(response.body.data).toHaveProperty("password", "updated");
     mock.mockRestore();
     mock2.mockRestore();
-    done();
   });
 
-  it("should POST a new user", async (done) => {
+  it("should POST a new user", async () => {
     const mock = jest.spyOn(user.schema, 'create');
     const mock2 = jest.spyOn(user.schema, 'findOne');
     mock2.mockImplementation((input) => Promise.resolve(null));
@@ -114,11 +112,10 @@ describe("user API", function () {
     expect(response.body.data).toEqual(expectedResult);
     mock.mockRestore();
     mock2.mockRestore();
-    done();
   });
 
 
-  it("should DELETE a user after login", async (done) => {
+  it("should DELETE a user after login", async () => {
     const mock = jest.spyOn(user.schema, 'findByIdAndDelete');
     const userMock = {
       username: "testusername",
@@ -163,6 +160,5 @@ describe("user API", function () {
     mock2.mockRestore();
     mock5.mockRestore();
     mock6.mockRestore();
-    done();
   });
 });

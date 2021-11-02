@@ -8,7 +8,7 @@ const jwtTools = require("../../utils/jwt");
 
 
 describe("login API", function () {
-  it("should POST a user authentication data and do login", async (done) => {
+  it("should POST a user authentication data and do login", async () => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -42,7 +42,6 @@ describe("login API", function () {
     expect(tokenBody).toHaveProperty("jti");
     mock.mockRestore();
     mock2.mockRestore();
-    done();
   });
 
 });

@@ -13,20 +13,23 @@ var serverAddress;
 var ioServer;
 var socket;
 
-beforeAll(async (done) => {
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+beforeAll(async () => {
   jest.spyOn(ScoreSchema.prototype, 'save').mockImplementationOnce(() => Promise.resolve())
   await passwordsSetup();
   httpServer = http.createServer().listen();
   serverAddress = httpServer.address();
   ioServer = arcade(ioBack(httpServer));
-  setTimeout(done, 100)
+  await delay(100);
 });
 
 
-afterAll(async (done) => {
+afterAll(async () => {
   await ioServer.close();
   await httpServer.close();
-  done();
 });
 
 
@@ -47,17 +50,16 @@ beforeEach((done) => {
 });
 
 
-afterEach(async (done) => {
+afterEach(async () => {
   // Cleanup
   if (socket.connected) {
     await socket.close();
   }
-  done();
 });
 
 
 describe("arcade socket.io API", function () {
-  it("should start a game without jwt", async (done) => {
+  it("should start a game without jwt", (done) => {
     socket.on("on-error", (msg) => {
       done.fail(new Error(msg.description));
     });

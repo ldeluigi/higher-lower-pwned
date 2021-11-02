@@ -8,7 +8,7 @@ const pwd = require("../../../../utils/password");
 const jwtTools = require("../../../../utils/jwt");
 
 describe("scores arcade API", function () {
-  it("should GET arcade user score after login", async (done) => {
+  it("should GET arcade user score after login", async () => {
     const mock = jest.spyOn(user.schema, "findOne");
     const userMock = {
       username: "testusername",
@@ -80,7 +80,5 @@ describe("scores arcade API", function () {
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
-
-    done();
   });
 });

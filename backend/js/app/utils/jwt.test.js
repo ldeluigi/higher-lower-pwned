@@ -4,7 +4,7 @@ const tokenSchema = require("../model/token.model").schema;
 const config = require("../../config/config");
 
 describe("createJWT", function () {
-  it("should return a valid Json Web Token", async (done) => {
+  it("should return a valid Json Web Token", async () => {
     const mock = jest.spyOn(tokenSchema, 'create');
     mock.mockImplementation((input) => {
       input._id = "createdID";
@@ -19,6 +19,5 @@ describe("createJWT", function () {
     expect(tokenPayload.sub).toBe("testid");
     expect(tokenPayload.username).toBe("testusername");
     mock.mockRestore();
-    done();
   });
 });

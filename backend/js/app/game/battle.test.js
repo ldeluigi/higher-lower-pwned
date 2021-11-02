@@ -5,16 +5,15 @@ const passwordSetup = require("./passwords").setup;
 const db = require("mongoose");
 const battles = require("../model/battles");
 
-beforeEach(async (done) => {
+beforeEach(async () => {
   // reset global data
   duel = require("./battle");
   await passwordSetup();
-  done();
 });
 
 
 describe("Duel module", function () {
-  it("should correctly create a game with two anonymous", async (done) => {
+  it("should correctly create a game with two anonymous", async () => {
     const mock = jest.spyOn(battles, 'findOneByGame');
     mock.mockImplementation((input) => null);
     const mock2 = jest.spyOn(battles, 'addBattle');
@@ -27,10 +26,9 @@ describe("Duel module", function () {
     await duel.newGame(["1", "2"], [undefined, undefined]);
     mock2.mockRestore();
     mock.mockRestore();
-    done();
   });
 
-  it("should not create a game if it's already present", async (done) => {
+  it("should not create a game if it's already present", async () => {
     const mock = jest.spyOn(battles, 'findOneByGame');
     mock.mockImplementation((input) => ({}));
     const mock2 = jest.spyOn(battles, 'addBattle');
@@ -46,10 +44,9 @@ describe("Duel module", function () {
     }
     mock2.mockRestore();
     mock.mockRestore();
-    done();
   });
 
-  // it("should return the current guess if available", async (done) => {
+  // it("should return the current guess if available", async () => {
   //   const mock = jest.spyOn(battles, 'findOneByGame');
   //   const mock2 = jest
   //     .spyOn(global.Date, 'now')
@@ -91,10 +88,9 @@ describe("Duel module", function () {
   //   expect(res.data[1]).toHaveProperty("guesses", 2);
   //   mock.mockRestore();
   //   mock2.mockRestore();
-  //   done();
   // });
 
-  it("should not return a game if it's not available", async (done) => {
+  it("should not return a game if it's not available", async () => {
     const mock = jest.spyOn(battles, 'findOneByGame');
     mock.mockImplementation((input) => null);
     try {
@@ -104,10 +100,9 @@ describe("Duel module", function () {
       expect(err).toHaveProperty("message");
     }
     mock.mockRestore();
-    done();
   });
 
-  // it("should quit a game and save score if available", async (done) => {
+  // it("should quit a game and save score if available", async () => {
   //   const mock = jest.spyOn(battles, 'findOneByGame');
   //   mock.mockImplementation((input) => ({
   //     games: [
@@ -153,10 +148,9 @@ describe("Duel module", function () {
   //   mock.mockRestore();
   //   mock2.mockRestore();
   //   mock3.mockRestore();
-  //   done();
   // });
 
-  it("should not delete a game if it's not available", async (done) => {
+  it("should not delete a game if it's not available", async () => {
     const mock = jest.spyOn(battles, 'findOneByGame');
     mock.mockImplementation((input) => { });
     const mock2 = jest.spyOn(scoreSchema, 'create');
@@ -174,10 +168,9 @@ describe("Duel module", function () {
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
-    done();
   });
 
-  // it("should correctly submit a correct guess", async (done) => {
+  // it("should correctly submit a correct guess", async () => {
   //   const mock = jest.spyOn(battles, 'findOneByGame');
   //   mock.mockImplementation((input) => ({
   //     games: [
@@ -203,10 +196,9 @@ describe("Duel module", function () {
   //   let res = await duel.submitGuess("1", 2);
   //   expect(res).toBe(true);
   //   mock.mockRestore();
-  //   done();
   // });
 
-  // it("should submit even a wrong guess", async (done) => {
+  // it("should submit even a wrong guess", async () => {
   //   const mock = jest.spyOn(battles, 'findOneByGame');
   //   mock.mockImplementation((input) => ({
   //     games: [
@@ -232,10 +224,9 @@ describe("Duel module", function () {
   //   let res = await duel.submitGuess("1", 1);
   //   expect(res).toBe(true);
   //   mock.mockRestore();
-  //   done();
   // });
 
-  it("should not submit a guess if game is not found", async (done) => {
+  it("should not submit a guess if game is not found", async () => {
     const mock = jest.spyOn(battles, 'findOneByGame');
     mock.mockImplementation((input) => null);
     try {
@@ -245,10 +236,9 @@ describe("Duel module", function () {
       expect(err).toHaveProperty("message");
     }
     mock.mockRestore();
-    done();
   });
 
-  it("should not submit a guess if guess is illegal", async (done) => {
+  it("should not submit a guess if guess is illegal", async () => {
     const mock = jest.spyOn(battles, 'findOneByGame');
     mock.mockImplementation((input) => ({
       games: [
@@ -278,10 +268,9 @@ describe("Duel module", function () {
       expect(err).toHaveProperty("message");
     }
     mock.mockRestore();
-    done();
   });
 
-  // it("should submit a guess even if game is expired", async (done) => {
+  // it("should submit a guess even if game is expired", async () => {
   //   const mock = jest.spyOn(battles, 'findOneByGame');
   //   mock.mockImplementation((input) => ({
   //     games: [
@@ -308,10 +297,9 @@ describe("Duel module", function () {
   //   let res = await duel.submitGuess("1", 1);
   //   expect(res).toBe(true);
   //   mock.mockRestore();
-  //   done();
   // });
 
-  it("should not submit a guess if that player already did it", async (done) => {
+  it("should not submit a guess if that player already did it", async () => {
     const mock = jest.spyOn(battles, 'findOneByGame');
     mock.mockImplementation((input) => ({
       games: [
@@ -341,6 +329,5 @@ describe("Duel module", function () {
       expect(err).toHaveProperty("message");
     }
     mock.mockRestore();
-    done();
   });
 });
