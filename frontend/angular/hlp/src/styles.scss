@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/theming";
+@use '~@angular/material' as mat;
 @import "./app/styles/base/_typography.scss";
 @import "./app/styles/dimensions.scss";
 @import "./app/styles/colors.scss";
 
-@include mat-core($custom-typography);
+@include mat.core($custom-typography);
 
 html {
   min-height: 100%;

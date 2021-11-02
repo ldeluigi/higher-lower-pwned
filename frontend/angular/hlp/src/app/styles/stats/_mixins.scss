@@ -1,5 +1,5 @@
+@use '~@angular/material' as mat;
 @import "../abstracts/_mixins.scss";
-@import "~@angular/material/theming";
 @import "../colors.scss";
 @import "../dimensions.scss";
 
@@ -17,19 +17,19 @@
       color: $default-text-color;
     }
     .not-selected {
-      @include mat-elevation-transition;
-      @include mat-elevation(12, black, 0.8);
+      @include mat.elevation-transition;
+      @include mat.elevation(12, black, 0.8);
     }
     .not-selected:active {
-      @include mat-elevation(2);
+      @include mat.elevation(2);
     }
     .selected {
-      @include mat-elevation-transition;
-      @include mat-elevation(2);
+      @include mat.elevation-transition;
+      @include mat.elevation(2);
       background-color: $selected-button-bg;
     }
     .selected:active {
-      @include mat-elevation(12);
+      @include mat.elevation(12);
     }
   }
 

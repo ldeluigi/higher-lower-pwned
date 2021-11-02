@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 $titleFontName: TimeandSpace-Regular;
 $subtitleFontName: Xolonium;
 
@@ -21,24 +22,24 @@ $high-font-weight: 500;
       format("truetype"); /* Safari, Android, iOS */
 }
 
-$custom-typography: mat-typography-config(
+$custom-typography: mat.define-typography-config(
   $font-family: "subtitleFont",
   $display-4:
-    mat-typography-level(
+    mat.define-typography-level(
       max(8vw, 8vh),
       9vw,
       $low-font-weight,
       $letter-spacing: -0.05em
     ),
   $display-3:
-    mat-typography-level(
+    mat.define-typography-level(
       4.2vw,
       4.2vw,
       $medium-font-weight,
       $letter-spacing: -0.02em
     ),
   $display-2:
-    mat-typography-level(
+    mat.define-typography-level(
       3.6vw,
       3.6vw,
       $medium-font-weight,
