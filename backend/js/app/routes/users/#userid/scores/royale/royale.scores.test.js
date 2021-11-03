@@ -10,7 +10,7 @@ const jwtTools = require("../../../../../utils/jwt");
 
 
 describe("scores royale API", function () {
-  it("should GET royale user score after login", async (done) => {
+  it("should GET royale user score after login", async () => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -79,11 +79,9 @@ describe("scores royale API", function () {
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
-
-    done();
   });
 
-  it("should GET royale/win user score after login", async (done) => {
+  it("should GET royale/win user score after login", async () => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -152,11 +150,9 @@ describe("scores royale API", function () {
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
-
-    done();
   });
 
-  it("should GET royale/lose user score after login", async (done) => {
+  it("should GET royale/lose user score after login", async () => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -225,7 +221,5 @@ describe("scores royale API", function () {
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
-
-    done();
   });
 });

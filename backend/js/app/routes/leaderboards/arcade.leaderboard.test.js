@@ -15,7 +15,7 @@ afterAll(() => {
 })
 
 describe("leaderboards API", function () {
-  it("should GET /arcade scores for last week", async (done) => {
+  it("should GET /arcade scores for last week", async () => {
     const mock = jest.spyOn(score.schema, 'find');
     const fakeScores = [
       {
@@ -57,7 +57,6 @@ describe("leaderboards API", function () {
         ]
       });
     mock.mockRestore();
-    done();
   });
 
 });

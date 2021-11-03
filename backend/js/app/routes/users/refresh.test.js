@@ -9,7 +9,8 @@ const jwtTools = require("../../utils/jwt");
 
 
 describe("refresh API", function () {
-  it("should POST with a user tokens after login", async (done) => {
+  it("should POST with a user tokens after login", async () => {
+    jest.setTimeout(10000);
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -70,6 +71,5 @@ describe("refresh API", function () {
     mock3.mockRestore();
     mock4.mockRestore();
     mock5.mockRestore();
-    done();
   });
 });

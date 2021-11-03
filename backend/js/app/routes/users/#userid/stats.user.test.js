@@ -11,7 +11,7 @@ const { mongoose } = require("../../../../config/config");
 
 
 describe("user stats API", function () {
-  it("should GET user stats after login", async (done) => {
+  it("should GET user stats after login", async () => {
     const mock = jest.spyOn(user.schema, 'findOne');
     const userMock = {
       username: "testusername",
@@ -61,7 +61,5 @@ describe("user stats API", function () {
     mock.mockRestore();
     mock2.mockRestore();
     mock3.mockRestore();
-
-    done();
   });
 });

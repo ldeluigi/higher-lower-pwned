@@ -5,7 +5,7 @@ const score = require("../../../model/score.model");
 
 
 describe("stats API", function () {
-    it("should GET global stats", async (done) => {
+    it("should GET global stats", async () => {
         const fakeStats =
         {
             maxScore: 10,
@@ -27,10 +27,8 @@ describe("stats API", function () {
         expect(response.body).toHaveProperty("data");
         expect(response.body.data).toEqual(fakeStats);
         mock.mockRestore();
-
-        done();
     });
-    it("should GET global stats", async (done) => {
+    it("should GET global stats", async () => {
         const fakeStats =
         {
             maxScore: 10,
@@ -52,10 +50,8 @@ describe("stats API", function () {
         expect(response.body).toHaveProperty("data");
         expect(response.body.data).toEqual(fakeStats);
         mock.mockRestore();
-
-        done();
     });
-    it("should GET global stats", async (done) => {
+    it("should GET global stats", async () => {
         const fakeStats =
         {
             maxScore: 10,
@@ -77,7 +73,5 @@ describe("stats API", function () {
         expect(response.body).toHaveProperty("data");
         expect(response.body.data).toEqual(fakeStats);
         mock.mockRestore();
-
-        done();
     });
 });

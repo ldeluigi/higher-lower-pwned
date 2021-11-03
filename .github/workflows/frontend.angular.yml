@@ -10,11 +10,10 @@ on:
     paths:
       - "frontend/angular/**"
       - "nginx/**"
+      - ".github/workflows/frontend*.yml"
   pull_request:
     branches:
       - "**"
-  schedule:
-    - cron: 15 8 1 * *
 
 jobs:
   build:
@@ -23,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
 
     steps:
       - uses: actions/checkout@v2

@@ -1,6 +1,6 @@
+@use '~@angular/material' as mat;
 @use "sass:math";
 @import "../../../../styles/abstracts/mixins.scss";
-@import "~@angular/material/theming";
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/game/variables";
 
@@ -45,17 +45,17 @@ $vs_heigth: #{95% - ($card_heigth * 2)};
   }
 
   .not-moving {
-    @include mat-elevation-transition;
-    @include mat-elevation(1);
+    @include mat.elevation-transition;
+    @include mat.elevation(1);
   }
 
   .moving {
-    @include mat-elevation-transition;
-    @include mat-elevation(6, black, 1.6);
+    @include mat.elevation-transition;
+    @include mat.elevation(6, black, 1.6);
   }
 
   .selected {
-    @include mat-elevation(6, black, 1.6);
+    @include mat.elevation(6, black, 1.6);
   }
 
   div {

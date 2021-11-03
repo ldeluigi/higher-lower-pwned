@@ -6,11 +6,10 @@ on:
       - "**"
     paths:
       - "backend/**"
+      - ".github/workflows/backend*.yml"
   pull_request:
     branches:
       - "**"
-  schedule:
-    - cron: 0 8 1 * *
 
 jobs:
   build:
@@ -19,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x, 14.x, 16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -42,9 +41,9 @@ jobs:
       - name: Install dependencies
         working-directory: backend/js
         run: npm ci
-      - name: Build
-        working-directory: backend/js
-        run: npm build
+      # - name: Build
+      #   working-directory: backend/js
+      #   run: npm run build
       - name: Test
         working-directory: backend/js
         run: npm test

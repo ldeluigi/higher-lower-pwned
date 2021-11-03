@@ -1,6 +1,6 @@
+@use '~@angular/material' as mat;
 @import "../../../../styles/abstracts/mixins";
 @import "../../../../styles/colors.scss";
-@import "~@angular/material/theming";
 @import "../../../../styles/game/variables";
 
 $margin-top: 4vh;
@@ -39,7 +39,7 @@ $width-desktop: 60%;
   flex-direction: column;
   align-items: center;
   width: $width;
-  min-width: $width / 2;
+  min-width: $width * 0.5;
   margin: auto;
   text-align: center;
 }
@@ -50,10 +50,10 @@ $width-desktop: 60%;
 }
 
 .container {
-  @include mat-elevation(15);
+  @include mat.elevation(15);
   background-color: $label-bg;
   border-radius: #{$card-border-radius};
-  min-width: $width / 2;
+  min-width: $width * 0.5;
   .score {
     font-size: $text-size;
     color: $label-text;
@@ -90,7 +90,7 @@ $width-desktop: 60%;
     width: $width-desktop;
   }
   .container {
-    min-width: $width-desktop / 2;
+    min-width: $width-desktop * 0.5;
     .score {
       font-size: 6vh;
       height: 8vh;
