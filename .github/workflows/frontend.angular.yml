@@ -10,6 +10,7 @@ on:
     paths:
       - "frontend/angular/**"
       - "nginx/**"
+      - ".github/workflows/frontend*.yml"
   pull_request:
     branches:
       - "**"
