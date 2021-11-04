@@ -4,7 +4,7 @@
 @import "../../../../styles/colors.scss";
 @import "../../../../styles/game/variables";
 
-$card_width: 85vw;
+$card_width: 100%;
 $card_width_desktop: 60vw;
 
 $card_heigth: 45%;
@@ -22,6 +22,7 @@ $vs_heigth: #{95% - ($card_heigth * 2)};
 
 .words {
   height: 100%;
+  width: 100%;
   max-height: 100%;
   display: flex;
   flex-direction: column;
