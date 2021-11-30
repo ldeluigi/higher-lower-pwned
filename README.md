@@ -11,9 +11,9 @@ This project is a web game where you guess which password is the most popular be
 
 ### Needed on the host
 
-- [Angular CLI](https://github.com/angular/angular-cli) version 10.0.6.
-- [NodeJS](https://nodejs.org/) version 12.18.0.
-- [Docker](https://www.docker.com/) engine version 19.03.1.
+- [Angular CLI](https://github.com/angular/angular-cli) version 12.
+- [NodeJS](https://nodejs.org/) version 14.
+- [Docker](https://www.docker.com/).
 
 ### Used in the project
 
