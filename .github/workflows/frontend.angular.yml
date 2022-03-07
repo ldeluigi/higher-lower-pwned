@@ -25,7 +25,7 @@ jobs:
         node-version: [14.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache node modules
         uses: actions/cache@v2
         env:
@@ -56,7 +56,7 @@ jobs:
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/master')) && (github.repository == 'ldeluigi/higher-lower-pwned')
     needs: [build]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Login to DCR
         uses: docker/login-action@v1
