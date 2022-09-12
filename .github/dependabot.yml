@@ -4,11 +4,11 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
   - package-ecosystem: "npm"
     directory: "/backend/js/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     commit-message:
       # Prefix all commit messages with "npm"
       prefix: "npm-backend"
@@ -17,7 +17,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/frontend/angular/hlp/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     commit-message:
       # Prefix all commit messages with "npm"
       prefix: "npm-frontend"
